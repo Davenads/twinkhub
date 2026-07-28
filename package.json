@@ -1,0 +1,13 @@
+{
+  "name": "twinkhub",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Generalized data + timer Discord bot for the WoW Classic Era Twinking community (starting with the 10-19 WSG bracket). Planning-stage stub; no implementation yet. discord.js target.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "echo \"not implemented yet — see plans/\" && exit 1"
+  }
+}

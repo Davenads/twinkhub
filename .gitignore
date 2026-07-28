@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# secrets / runtime
+.env
+.env.*
+
+# logs
+logs/
+*.log
+
+# runtime per-guild config (content data is committed; config is not)
+data/config/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
