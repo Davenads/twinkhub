@@ -6,6 +6,7 @@ import {
   listClassNames,
   getClass,
   bracketEnchants,
+  getEnchant,
   listEnchantSlots,
   gearSlots,
   listGearClasses,
@@ -110,6 +111,29 @@ test('loadContentStore indexes gear with unique ids and declared slots', async (
   assert.ok(goggles, 'shared item resolves by id');
   assert.equal(goggles.owner, 'shared');
   assert.equal(getGearItem(store, '19', 'nope'), null);
+});
+
+test('getEnchant resolves a seeded enchant by id; null for an unknown id', async () => {
+  const store = await loadContentStore();
+  const fiery = getEnchant(store, '19', 'fiery-weapon');
+  assert.ok(fiery, 'enchant resolves by id');
+  assert.equal(fiery.slot, 'weapon');
+  assert.equal(getEnchant(store, '19', 'nope'), null);
+});
+
+test('enriched item references pass the referential guard (strict load succeeded)', async () => {
+  const store = await loadContentStore();
+
+  // A strict load reaching here proves every enchant/alternatives reference
+  // resolved. Spot-check the seeded links and that they point at real records.
+  const goggles = getGearItem(store, '19', 'green-tinted-goggles');
+  assert.ok(goggles.alternatives.includes('lucky-fishing-hat'));
+  assert.ok(getGearItem(store, '19', 'lucky-fishing-hat'), 'alternative resolves to a real item');
+
+  const boots = getGearItem(store, '19', 'feet-of-the-lynx');
+  assert.equal(boots.enchant, 'minor-speed-boots');
+  assert.ok(getEnchant(store, '19', boots.enchant), 'recommended enchant resolves to a real enchant');
+  assert.ok(boots.alternatives.includes('trailblazer-boots'));
 });
 
 test('gearForClass merges shared + class items; null when class has no BiS', async () => {

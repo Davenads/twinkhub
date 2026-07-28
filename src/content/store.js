@@ -168,6 +168,26 @@ async function loadBracket(dir, key, strict) {
   // Gear namespace loads last: per-class BiS files key off the roster loaded above.
   bracket.gear = await loadGear(dir, key, bracket.classes.index?.classes ?? [], strict);
 
+  // Referential guards for enriched item detail (03-data-model.md): a recommended
+  // `enchant` must name a real enchant in this bracket, and every `alternatives`
+  // entry must resolve to another gear item (never itself). Runs here because it
+  // needs both the gear index and the enchants file loaded above.
+  if (bracket.gear?.items?.length) {
+    const enchantIds = new Set((bracket.enchants?.enchants ?? []).map((e) => e.id));
+    for (const item of bracket.gear.items) {
+      if (item.enchant != null && enchantIds.size && !enchantIds.has(item.enchant)) {
+        fail(strict, `content ${key}/gear: item "${item.id}" references unknown enchant "${item.enchant}"`);
+      }
+      for (const alt of item.alternatives ?? []) {
+        if (alt === item.id) {
+          fail(strict, `content ${key}/gear: item "${item.id}" lists itself as an alternative`);
+        } else if (!bracket.gear.byId[alt]) {
+          fail(strict, `content ${key}/gear: item "${item.id}" references unknown alternative "${alt}"`);
+        }
+      }
+    }
+  }
+
   return bracket;
 }
 
@@ -258,6 +278,13 @@ export function getClass(store, bracket, className) {
 /** The `{ note, enchants }` bundle for a bracket, or null if none is authored. */
 export function bracketEnchants(store, bracket) {
   return store?.brackets?.[bracket]?.enchants ?? null;
+}
+
+/** A single enchant by id, or null (used to resolve an item's recommended enchant). */
+export function getEnchant(store, bracket, id) {
+  const data = bracketEnchants(store, bracket);
+  if (!data) return null;
+  return data.enchants.find((e) => e.id === String(id ?? '')) ?? null;
 }
 
 /** Distinct enchant slots for a bracket, first-seen order (for slot autocomplete). */

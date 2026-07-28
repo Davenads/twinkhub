@@ -181,6 +181,22 @@ test('validateGearIndex rejects a non-integer stat value', () => {
   assert.ok(res.errors.some((e) => e.includes('stats.agility')));
 });
 
+test('validateGearIndex accepts optional enchant + alternatives references', () => {
+  const enriched = { ...validItem(), enchant: 'minor-speed-boots', alternatives: ['lucky-fishing-hat'] };
+  assert.deepEqual(validateGearIndex({ slots: ['head'], shared: [enriched] }), { ok: true, errors: [] });
+});
+
+test('validateGearIndex rejects a blank enchant and a non-string-array alternatives', () => {
+  const badEnchant = { slots: ['head'], shared: [{ ...validItem(), enchant: '' }] };
+  assert.ok(validateGearIndex(badEnchant).errors.some((e) => e.includes('enchant')));
+
+  const badAlts = { slots: ['head'], shared: [{ ...validItem(), alternatives: [] }] };
+  assert.ok(validateGearIndex(badAlts).errors.some((e) => e.includes('alternatives')));
+
+  const nonStringAlts = { slots: ['head'], shared: [{ ...validItem(), alternatives: [7] }] };
+  assert.ok(validateGearIndex(nonStringAlts).errors.some((e) => e.includes('alternatives')));
+});
+
 test('validateGearClass accepts a class with a non-empty item list', () => {
   const ok = { class: 'hunter', items: [validItem()] };
   assert.deepEqual(validateGearClass(ok), { ok: true, errors: [] });

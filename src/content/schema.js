@@ -217,6 +217,16 @@ function validateItem(obj, at, errors) {
       require_(errors, isInteger(v), `${at}.stats.${k} must be an integer`);
     }
   }
+  // Rich detail (P3): an optional recommended-enchant reference and alternative
+  // item ids. These are structural type checks only — the referential guards
+  // (enchant id is real, alternative ids resolve) live in the store, which sees
+  // the whole bracket at once (03-data-model.md).
+  if (obj.enchant !== undefined) {
+    require_(errors, isNonEmptyString(obj.enchant), `${at}.enchant must be a non-empty string when present`);
+  }
+  if (obj.alternatives !== undefined) {
+    require_(errors, isStringArray(obj.alternatives), `${at}.alternatives must be a non-empty string array when present`);
+  }
 }
 
 /**

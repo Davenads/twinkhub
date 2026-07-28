@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
-import { getGearItem } from '../content/store.js';
+import { getGearItem, getEnchant } from '../content/store.js';
 
 const EMBED_COLOR = 0xc8aa6e;
 
@@ -52,6 +52,23 @@ export function renderItem({ store, bracket, id }) {
   }
   if (item.owner && item.owner !== 'shared') {
     fields.push({ name: 'Class', value: capitalize(item.owner), inline: true });
+  }
+  if (item.enchant) {
+    const ench = getEnchant(store, bracket, item.enchant);
+    if (ench) {
+      let value = `**${ench.name}** \u2014 ${ench.effect}`;
+      if (ench.noLevelReq) value += '\nNo level requirement.';
+      fields.push({ name: 'Recommended enchant', value });
+    } else {
+      fields.push({ name: 'Recommended enchant', value: item.enchant });
+    }
+  }
+  if (item.alternatives?.length) {
+    const lines = item.alternatives.map((altId) => {
+      const alt = getGearItem(store, bracket, altId);
+      return alt ? `**${alt.name}** (${capitalize(alt.slot)})` : altId;
+    });
+    fields.push({ name: 'Alternatives', value: lines.join('\n') });
   }
   if (item.wowheadId != null) {
     fields.push({ name: 'Wowhead', value: `https://www.wowhead.com/classic/item=${item.wowheadId}` });

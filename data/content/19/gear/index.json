@@ -29,7 +29,8 @@
       "reqLevel": 18,
       "notes": "De-facto BiS head for many specs; head has no enchant at this bracket, which is why Engineering goggles matter.",
       "wowheadId": null,
-      "priority": "core"
+      "priority": "core",
+      "alternatives": ["lucky-fishing-hat"]
     },
     {
       "id": "lucky-fishing-hat",
@@ -73,7 +74,9 @@
       "reqLevel": null,
       "notes": "Movement speed is highly valued in WSG, especially for flag carriers. Verify stats.",
       "wowheadId": null,
-      "priority": "core"
+      "priority": "core",
+      "enchant": "minor-speed-boots",
+      "alternatives": ["trailblazer-boots"]
     },
     {
       "id": "trailblazer-boots",
