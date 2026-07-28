@@ -16,7 +16,10 @@ Phased build plan. Each phase is shippable on its own. Nothing here is built yet
   injected `now` (verify against the Python outputs).
 - Implement the three delivery modes (ping / broadcast / dm) and the per-event policy table.
 - Edge detection + advance-warning latches (persisted, restart-safe, no double-ping).
-- Commands: `/events`, `/nextevent`, `/alerts`, `/timerdms`, `/testevent`.
+- Commands: `/events`, `/nextevent`, `/alerts`, `/timerdms`, `/testevent`, `/timerboard`.
+- **Persistent timer board:** the tick edits a bot-owned dashboard message in place every
+  60s (self-healing if deleted); `/timerboard` sets it up/tears it down. Reuses the
+  `/events` embed formatter. See `02-timers-module.md` §"Persistent timer board".
 - Drop per-event avatar/nickname/presence machinery (single identity).
 - **Exit criteria:** run **alongside** `wow-timers` on a separate test channel/role; match
   every event's fire timing + ping/DM behavior for one full cycle each (AGM fast, STV

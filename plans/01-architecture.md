@@ -31,7 +31,7 @@ Only what we need:
 - `GuildMessages` only if we ever read message content (we don't plan to). No
   `MessageContent` intent — everything is slash commands.
 
-## Proposed source tree (to build later — do NOT scaffold yet)
+## Proposed source tree (P0 scaffolds the foundations; deeper modules land per roadmap)
 
 ```
 TwinkHub/
@@ -112,7 +112,8 @@ Each event declares which modes it fires and when (see `02-timers-module.md`).
   "alertRoleId": "…",
   "dmEnabled": true,
   "activeBrackets": ["19"],
-  "timers": { "bg": true, "agm": true, "dmf": true, "stv": true }
+  "timers": { "bg": true, "agm": true, "dmf": true, "stv": true },
+  "timerBoard": { "channelId": "…", "messageId": "…" }
 }
 ```
 
@@ -121,3 +122,6 @@ Each event declares which modes it fires and when (see `02-timers-module.md`).
 - `activeBrackets` gates which content namespaces the data commands expose in that guild
   (default `["19"]`).
 - `timers.<event>` lets a guild disable individual event alerts.
+- `timerBoard` optional, **defaults `null`**; when set, it's the persistent auto-updating
+  dashboard message the tick edits in place (channel is independent of `alertChannelId`).
+  See `02-timers-module.md` §"Persistent timer board".

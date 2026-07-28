@@ -2,12 +2,21 @@
   "name": "twinkhub",
   "version": "0.0.0",
   "private": true,
-  "description": "Generalized data + timer Discord bot for the WoW Classic Era Twinking community (starting with the 10-19 WSG bracket). Planning-stage stub; no implementation yet. discord.js target.",
+  "description": "Generalized data + timer Discord bot for the WoW Classic Era twinking community (starting with the 10-19 WSG bracket). discord.js.",
   "type": "module",
+  "main": "src/index.js",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "start": "echo \"not implemented yet — see plans/\" && exit 1"
+    "start": "node src/index.js",
+    "deploy": "node src/deploy-commands.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "luxon": "^3.5.0",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0"
   }
 }

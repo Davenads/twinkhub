@@ -47,6 +47,7 @@ faction-specific pickups). Pure read over the content store — no user data sto
 | `/setup` | `channel`, `role` | Set the guild's alert channel + alert role. Preserves existing `dmEnabled`. |
 | `/alerts` | `event` (bg/agm/dmf/stv), `state` (on/off) | Per-event alert toggle for this guild. |
 | `/timerdms` | `state` (on/off) | Per-guild DM fan-out toggle (unifies the four `/*dms` commands). |
+| `/timerboard` | `channel` or `off` | Create/move the persistent auto-updating timer board (a bot-owned message edited every tick), or tear it down. Board channel is independent of the alert channel. See `02` §"Persistent timer board". |
 | `/brackets` | `bracket`, `state` (on/off) | Enable/disable a content bracket for this guild (default: 19 on). |
 | `/testevent` | `event`, `warning?` (bool) | Fire an event message on demand. `warning:true` → advance ping + DM; `warning:false` → occurrence (silent for AGM/STV, ping for BG/DMF). AGM spawn stays DM-free. Mirrors `wow-timers` test semantics exactly. |
 | `/reloadcontent` | — | (Later) Re-read the content store without restart, for authoring. |

@@ -108,6 +108,36 @@ consolidated bot has **one** avatar, **one** nickname, **one** presence — so:
 - **Improvement — one `/events` command** shows all four at once (next fire, active/idle,
   BG's current rotation), sorted by urgency. The four bots can't do this; the consolidated
   one can.
+- **Improvement — a persistent timer board** (below): an always-on, self-refreshing status
+  message. Impossible cleanly with four separate bots; natural with one.
+
+## Persistent timer board (live-updating dashboard message)
+
+Beyond fire-time pings/DMs, a guild can opt into a **persistent timer board**: a single
+bot-owned message the bot **edits in place every tick (60s)** to show **all tracked events
+with live countdowns** — effectively `/events` as an always-on, self-refreshing dashboard
+that lives in a dedicated channel (e.g. `#wow-timers`).
+
+- **Config:** `timerBoard: { channelId, messageId }` per guild (`null` when unset). This is
+  **separate from the alert channel** — the board can sit in its own channel while pings go
+  elsewhere, or both can share a channel. Stored in the per-guild config JSON.
+- **Setup:** `/timerboard channel:<#chan>` (dev-gated) posts the initial embed, saves its
+  `messageId`, and pins it if permitted. `/timerboard off` deletes/forgets the board.
+- **Tick behavior:** each 60s tick, after states are computed, every guild with a board gets
+  its stored message **edited** with the refreshed embed (per-event countdowns, active/idle,
+  BG rotation, soonest-next). Editing one message = zero channel spam.
+- **Self-healing:** if the stored message is gone (deleted, or the edit 404s), **repost once**
+  and update `messageId`. If the channel is missing or perms were revoked, log it and
+  **clear** the board config so we stop retrying.
+- **Always silent & ambient:** the board posts/edits with `allowedMentions: { parse: [] }`
+  and **never pings**. It is a *status board*, not an *alarm* — it does **not** replace the
+  edge-triggered ping/broadcast/DM deliveries, which still fire independently.
+- **Freshness cue:** footer carries a Discord relative timestamp (`<t:unix:R>` "updated N
+  seconds ago") so the board reads as live even between the once-a-minute edits.
+- **Permissions/limits:** needs View Channel + Send + Embed Links (+ Manage Messages to
+  pin) in the board channel; one edit/min/guild is trivially within rate limits.
+- **Reuses `/events` rendering:** build the board embed from the same formatter `/events`
+  uses, so the on-demand command and the persistent board never drift.
 
 ## Timer command surface (see 04-commands.md for full detail)
 
@@ -116,6 +146,8 @@ consolidated bot has **one** avatar, **one** nickname, **one** presence — so:
 - `/setup` — dev: set alert channel + role (admin doc).
 - `/alerts <event> <on|off>` — dev: per-event toggle for this guild.
 - `/timerdms <on|off>` — dev: per-guild DM toggle (analogue of `/stvdms` etc., unified).
+- `/timerboard <#channel|off>` — dev: create/move or tear down the persistent, auto-updating
+  timer board message (see above).
 - `/testevent <event> [warning:bool]` — dev: fire an event's message on demand. Mirrors
   `/teststv`/`/testagm` semantics: `warning:true` fires the advance ping **and** DMs;
   `warning:false` fires the occurrence (silent for AGM/STV, ping for BG/DMF). AGM's spawn
