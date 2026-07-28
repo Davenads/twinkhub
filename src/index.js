@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits, Events, MessageFlags } from 'discord.js';
 import { env } from './config/env.js';
 import { logger } from './lib/logger.js';
 import { loadCommands } from './commands/index.js';
+import { runTimerEngine } from './timers/engine.js';
 
 const TICK_MS = 60_000;
 
@@ -19,11 +20,18 @@ logger.info(
 client.once(Events.ClientReady, (c) => {
   logger.info(`Online as ${c.user.tag} (${c.user.id})`);
 
-  // 60s tick loop skeleton — the timer engine (state compute, edge detection,
-  // delivery, persistent board edits) hooks in here at P1.
+  // 60s tick: compute states, resolve edge/warning triggers, persist latches.
+  // Delivery (ping / broadcast / DM fan-out + timer board) lands next; until
+  // then `dispatch` is log-only so the engine runs live without sending pings.
   const tick = async () => {
     try {
-      // await runTimerEngine(client);  // P1
+      const { fires } = await runTimerEngine({
+        now: Date.now(),
+        dispatch: async ({ event, kind, policy }) => {
+          logger.info({ event, kind, policy }, 'timer trigger (delivery pending)');
+        }
+      });
+      if (fires.length) logger.info(`Timer engine fired ${fires.length} trigger(s)`);
     } catch (err) {
       logger.error({ err }, 'tick failed');
     }
