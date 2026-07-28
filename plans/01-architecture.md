@@ -51,7 +51,11 @@ TwinkHub/
 │   ├── commands/                # one file per top-level command; auto-loaded
 │   │   ├── data/                # /gear /enchant /consumable /quest /class /bis ...
 │   │   ├── timers/              # /events /nextevent (+ dev /testevent)
-│   │   └── admin/               # /setup /alerts /brackets (dev-gated)
+│   │   └── admin/               # /setup /alerts /brackets /panels (dev-gated)
+│   ├── services/                # render layer: renderBis/renderEnchant/... -> { embeds, components }
+│   │                            #   shared by slash commands AND panel handlers (single source)
+│   ├── components/              # button/select handlers, auto-loaded into an action registry;
+│   │                            #   router dispatches by customId action (see 08-enduser-panels.md)
 │   ├── timers/
 │   │   ├── engine.js            # tick(): compute states, run edge detection, deliver
 │   │   └── events/              # one module per event: bg, agm, dmf, stv
@@ -78,6 +82,21 @@ TwinkHub/
 - Interaction routing: single `interactionCreate` handler → look up command → `execute()`.
   Autocomplete handlers live alongside each command (heavily used by data commands, e.g.
   item-name autocomplete).
+- The same handler also routes **message components** (`isButton()` /
+  `isAnySelectMenu()`): parse the `customId`, verify the `p1` version, dispatch by action to
+  a handler in `components/`. Unlike slash commands, components are **not registered** — they
+  work indefinitely and across restarts purely from `customId` routing. See
+  `08-enduser-panels.md`.
+
+## Service (render) layer — shared front-ends
+
+Each data command's body is factored into a **render function** in `services/` that returns a
+renderable payload (`renderBis({ classSlug, bracket }) -> { embeds, components }`, etc.). Both
+the slash command `execute()` and the interactive-panel component handler call the **same**
+function and only differ in the `flags` they attach (ephemeral for panels). This keeps the two
+enduser front-ends from ever drifting — the single most important constraint for the panels
+feature. P2/P3 data commands are written against this layer from day one. See
+`08-enduser-panels.md`.
 
 ## Delivery (three modes — carried over from `wow-timers/shared.py`)
 
@@ -113,7 +132,11 @@ Each event declares which modes it fires and when (see `02-timers-module.md`).
   "dmEnabled": true,
   "activeBrackets": ["19"],
   "timers": { "bg": true, "agm": true, "dmf": true, "stv": true },
-  "timerBoard": { "channelId": "…", "messageId": "…" }
+  "timerBoard": { "channelId": "…", "messageId": "…" },
+  "panels": {
+    "channelId": "…",
+    "messageIds": { "classBuilds": "…", "enchants": "…", "consumables": "…", "reference": "…" }
+  }
 }
 ```
 
@@ -125,3 +148,7 @@ Each event declares which modes it fires and when (see `02-timers-module.md`).
 - `timerBoard` optional, **defaults `null`**; when set, it's the persistent auto-updating
   dashboard message the tick edits in place (channel is independent of `alertChannelId`).
   See `02-timers-module.md` §"Persistent timer board".
+- `panels` optional, **defaults `null`**; when set, it records the read-only channel and the
+  message ids of the persistent interactive enduser panels so `/panels refresh` can edit them
+  in place (self-healing if a message was deleted). Independent of the alert/board channels.
+  See `08-enduser-panels.md`.

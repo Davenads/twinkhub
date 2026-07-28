@@ -42,11 +42,22 @@ Phased build plan. Each phase is shippable on its own. Nothing here is built yet
 - Fill remaining 19 classes to `core`-complete.
 - **Exit criteria:** `/optimize` returns useful "you're missing X" for every 19 class.
 
-## P4 — Bracket expansion
+## P4 — Interactive enduser panels
+- Add the `components/` handler registry + extend the `interactionCreate` router to dispatch
+  buttons/selects by `customId` action (`p1|<action>|<arg>`, versioned, ≤100 chars).
+- Wrap the P2/P3 data renders (`renderBis`/`renderEnchant`/`renderClass`/…) as the shared
+  service layer both slash commands and panel handlers call.
+- Build the initial panel catalogue (Class Builds & BiS, Enchants, Consumables, Reference)
+  with content-generated controls; `/panels post|refresh|remove` (dev-gated, self-healing).
+- **Exit criteria:** a user in the read-only panels channel can click through to accurate
+  ephemeral BiS/enchant/consumable/reference results with zero re-posting, and the controls
+  keep working across a bot restart. See `08-enduser-panels.md`.
+
+## P5 — Bracket expansion
 - Add `29/` (then `49/`) per `06-bracket-expansion.md`; `/brackets` per-guild toggle.
 - **Exit criteria:** a second bracket is fully served with **no** code changes beyond data.
 
-## P5 — Cutover & retire wow-timers
+## P6 — Cutover & retire wow-timers
 - Point production alerts at TwinkHub; decommission the four Python bots (never run both
   against the same channel/role).
 - Update `wow-timers` docs to note the migration.
@@ -59,6 +70,9 @@ Phased build plan. Each phase is shippable on its own. Nothing here is built yet
 
 ## Cross-cutting, from the start
 - Keep handlers thin, data fat (no game knowledge in code).
+- **Write each data command against a shared service/render layer** (`services/`), not inline
+  in `execute()`, so the P4 panel buttons can reuse it verbatim. Doing this from P2 avoids a
+  costly refactor later. See `08-enduser-panels.md` §"Shared service layer".
 - Bracket/class namespacing everywhere.
 - Schema-validate content on boot; fail loud in dev, degrade gracefully in prod.
 - Don't re-register slash commands every boot (avoid the "outdated command" thrash).

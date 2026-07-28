@@ -24,6 +24,11 @@ Two capability pillars:
    (BG Weekend, Arena Grand Master, Darkmoon Faire, STV Fishing), folded into this one
    bot. See `02-timers-module.md`.
 
+Both pillars are reachable two ways: **slash commands** (the primary surface, with
+autocomplete and parametric queries) and — for the common enduser reads — **interactive
+panels**: persistent bot-owned embeds with buttons/select menus in a read-only channel that
+return ephemeral results via the same render logic. See `08-enduser-panels.md`.
+
 ## Initial audience & scope
 
 - **Bracket first shipped:** **Level 19**, WoW **Classic Era**, the 10–19 Warsong Gulch
@@ -80,3 +85,4 @@ Two capability pillars:
 | `05-19-twink-domain.md` | Domain research grounding the 19 content (verified facts). |
 | `06-bracket-expansion.md` | Scaling 19 → 29 / 49 / beyond. |
 | `07-roadmap.md` | Phased build plan and milestones. |
+| `08-enduser-panels.md` | Interactive button/select panels — a click-driven alternate enduser surface returning ephemeral results via a shared service layer. |

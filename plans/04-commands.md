@@ -49,6 +49,7 @@ faction-specific pickups). Pure read over the content store — no user data sto
 | `/timerdms` | `state` (on/off) | Per-guild DM fan-out toggle (unifies the four `/*dms` commands). |
 | `/timerboard` | `channel` or `off` | Create/move the persistent auto-updating timer board (a bot-owned message edited every tick), or tear it down. Board channel is independent of the alert channel. See `02` §"Persistent timer board". |
 | `/brackets` | `bracket`, `state` (on/off) | Enable/disable a content bracket for this guild (default: 19 on). |
+| `/panels` | `post channel:` / `refresh` / `remove` | Post / re-render / tear down the persistent interactive enduser panels (bot-owned embeds with buttons & select menus → ephemeral results). Best practice: a read-only channel. Self-heals deleted messages on `refresh`. See `08-enduser-panels.md`. |
 | `/testevent` | `event`, `warning?` (bool) | Fire an event message on demand. `warning:true` → advance ping + DM; `warning:false` → occurrence (silent for AGM/STV, ping for BG/DMF). AGM spawn stays DM-free. Mirrors `wow-timers` test semantics exactly. |
 | `/reloadcontent` | — | (Later) Re-read the content store without restart, for authoring. |
 
