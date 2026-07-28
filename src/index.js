@@ -51,6 +51,20 @@ client.once(Events.ClientReady, (c) => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
+  // Autocomplete arrives as its own interaction type; route it to the command's
+  // optional `autocomplete` handler before the chat-input guard below.
+  if (interaction.isAutocomplete()) {
+    const command = client.commands.get(interaction.commandName);
+    if (command?.autocomplete) {
+      try {
+        await command.autocomplete(interaction);
+      } catch (err) {
+        logger.error({ err, command: interaction.commandName }, 'autocomplete failed');
+      }
+    }
+    return;
+  }
+
   if (!interaction.isChatInputCommand()) return;
   const command = client.commands.get(interaction.commandName);
   if (!command) {
