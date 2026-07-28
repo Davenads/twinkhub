@@ -1,0 +1,65 @@
+{
+  "note": "Twinking hinges on enchants with no level requirement (flagged noLevelReq): they let a level-19 character carry effects far above the bracket's natural power. Head has no enchant at this bracket, which is why Engineering goggles matter. Verify exact values against Wowhead at authoring time.",
+  "enchants": [
+    {
+      "id": "fiery-weapon",
+      "name": "Enchant Weapon - Fiery Weapon",
+      "slot": "weapon",
+      "effect": "Chance on hit: +40 Fire damage.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "The iconic melee twink weapon enchant; no level requirement lets a 19 carry a proc far above the bracket.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
+    },
+    {
+      "id": "crusader",
+      "name": "Enchant Weapon - Crusader",
+      "slot": "weapon",
+      "effect": "Chance on hit: +100 Strength for 15s and a small heal.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Big burst window on proc; healers also run it on a caster weapon for the heal.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "priest"]
+    },
+    {
+      "id": "icy-chill",
+      "name": "Enchant Weapon - Icy Chill",
+      "slot": "weapon",
+      "effect": "Chance on hit: frost damage and a movement/attack-speed slow.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Control option for melee; the slow is valuable for kiting and flag-carrier pressure.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
+    },
+    {
+      "id": "greater-agility-2h",
+      "name": "Enchant 2H Weapon - Greater Agility",
+      "slot": "2h-weapon",
+      "effect": "+15 Agility.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Flat agility stat stick for two-handers; verify current 1H alternatives per spec.",
+      "classes": ["hunter", "rogue", "warrior", "druid", "shaman"]
+    },
+    {
+      "id": "greater-intellect-weapon",
+      "name": "Enchant Weapon - Greater Intellect",
+      "slot": "weapon",
+      "effect": "+22 Intellect.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Caster stat stick for larger mana pool and crit; verify exact enchant per weapon type.",
+      "classes": ["mage", "warlock", "priest", "paladin", "shaman", "druid"]
+    },
+    {
+      "id": "minor-speed-boots",
+      "name": "Enchant Boots - Minor Speed",
+      "slot": "boots",
+      "effect": "+8% movement speed.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Movement speed is highly valued in WSG, especially for flag carriers; a near-universal boots pick.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    }
+  ]
+}

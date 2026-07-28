@@ -4,7 +4,8 @@ import {
   validateIndex,
   validateMeta,
   validateClassIndex,
-  validateClass
+  validateClass,
+  validateEnchants
 } from '../../src/content/schema.js';
 
 const validMeta = () => ({
@@ -92,4 +93,45 @@ test('validateClass requires a non-empty specs array with stat priorities', () =
   const res = validateClass(badSpec);
   assert.equal(res.ok, false);
   assert.ok(res.errors.some((e) => e.includes('statPriority')));
+});
+
+const validEnchants = () => ({
+  note: 'No-level-req enchants are the twink cornerstone.',
+  enchants: [
+    {
+      id: 'fiery-weapon',
+      name: 'Enchant Weapon - Fiery Weapon',
+      slot: 'weapon',
+      effect: 'Chance on hit: +40 Fire damage.',
+      reqLevel: null,
+      noLevelReq: true,
+      notes: 'Iconic melee twink enchant.',
+      classes: ['warrior', 'rogue']
+    }
+  ]
+});
+
+test('validateEnchants accepts a well-formed enchant file', () => {
+  assert.deepEqual(validateEnchants(validEnchants()), { ok: true, errors: [] });
+});
+
+test('validateEnchants rejects an empty enchant list', () => {
+  assert.equal(validateEnchants({ enchants: [] }).ok, false);
+});
+
+test('validateEnchants requires a boolean noLevelReq flag', () => {
+  const bad = validEnchants();
+  delete bad.enchants[0].noLevelReq;
+  const res = validateEnchants(bad);
+  assert.equal(res.ok, false);
+  assert.ok(res.errors.some((e) => e.includes('noLevelReq')));
+});
+
+test('validateEnchants flags a duplicated id and a bad reqLevel', () => {
+  const dupe = validEnchants();
+  dupe.enchants.push({ ...dupe.enchants[0], reqLevel: 'nope' });
+  const res = validateEnchants(dupe);
+  assert.equal(res.ok, false);
+  assert.ok(res.errors.some((e) => e.includes('duplicated')));
+  assert.ok(res.errors.some((e) => e.includes('reqLevel')));
 });

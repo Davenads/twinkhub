@@ -80,3 +80,100 @@ export function validateMeta(obj, label = 'meta.json') {
 
   return { ok: errors.length === 0, errors };
 }
+
+const isStringArray = (v) => Array.isArray(v) && v.length > 0 && v.every(isNonEmptyString);
+
+/** `<bracket>/classes/index.json`: the tier roster driving /tierlist. */
+export function validateClassIndex(obj, label = 'classes/index.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  if (
+    require_(
+      errors,
+      Array.isArray(obj.classes) && obj.classes.length > 0,
+      `${label}: classes must be a non-empty array`
+    )
+  ) {
+    const seen = new Set();
+    obj.classes.forEach((entry, i) => {
+      const at = `${label}: classes[${i}]`;
+      require_(errors, isNonEmptyString(entry?.class), `${at}.class must be a non-empty string`);
+      require_(errors, isNonEmptyString(entry?.tier), `${at}.tier must be a non-empty string`);
+      require_(errors, isStringArray(entry?.roles), `${at}.roles must be a non-empty string array`);
+      require_(errors, isNonEmptyString(entry?.summary), `${at}.summary must be a non-empty string`);
+      if (isNonEmptyString(entry?.class)) {
+        require_(errors, !seen.has(entry.class), `${at}.class "${entry.class}" is duplicated`);
+        seen.add(entry.class);
+      }
+    });
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+/** `<bracket>/classes/<class>.json`: full per-class detail. */
+export function validateClass(obj, label = 'class') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  require_(errors, isNonEmptyString(obj.class), `${label}: class must be a non-empty string`);
+  require_(errors, isNonEmptyString(obj.tier), `${label}: tier must be a non-empty string`);
+  require_(errors, isStringArray(obj.roles), `${label}: roles must be a non-empty string array`);
+  require_(errors, isNonEmptyString(obj.summary), `${label}: summary must be a non-empty string`);
+
+  if (require_(errors, Array.isArray(obj.specs) && obj.specs.length > 0, `${label}: specs must be a non-empty array`)) {
+    obj.specs.forEach((spec, i) => {
+      const at = `${label}: specs[${i}]`;
+      require_(errors, isNonEmptyString(spec?.name), `${at}.name must be a non-empty string`);
+      require_(errors, isStringArray(spec?.statPriority), `${at}.statPriority must be a non-empty string array`);
+    });
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+/**
+ * `<bracket>/enchants.json`: enchants usable at this bracket. Structural checks
+ * only — the referential guard (every `classes[]` is a real roster class) lives
+ * in the store, which alone holds the loaded class index (03-data-model.md).
+ * `noLevelReq` is a required first-class flag: the entire twink enchant meta
+ * hinges on enchants that ignore the item's level requirement.
+ */
+export function validateEnchants(obj, label = 'enchants.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  if (obj.note !== undefined) {
+    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+  }
+  if (
+    require_(
+      errors,
+      Array.isArray(obj.enchants) && obj.enchants.length > 0,
+      `${label}: enchants must be a non-empty array`
+    )
+  ) {
+    const seen = new Set();
+    obj.enchants.forEach((entry, i) => {
+      const at = `${label}: enchants[${i}]`;
+      require_(errors, isNonEmptyString(entry?.id), `${at}.id must be a non-empty string`);
+      require_(errors, isNonEmptyString(entry?.name), `${at}.name must be a non-empty string`);
+      require_(errors, isNonEmptyString(entry?.slot), `${at}.slot must be a non-empty string`);
+      require_(errors, isNonEmptyString(entry?.effect), `${at}.effect must be a non-empty string`);
+      require_(errors, isBoolean(entry?.noLevelReq), `${at}.noLevelReq must be a boolean`);
+      require_(
+        errors,
+        entry?.reqLevel == null || isInteger(entry.reqLevel),
+        `${at}.reqLevel must be an integer or null`
+      );
+      require_(errors, isStringArray(entry?.classes), `${at}.classes must be a non-empty string array`);
+      if (isNonEmptyString(entry?.id)) {
+        require_(errors, !seen.has(entry.id), `${at}.id "${entry.id}" is duplicated`);
+        seen.add(entry.id);
+      }
+    });
+  }
+  return { ok: errors.length === 0, errors };
+}

@@ -4,7 +4,9 @@ import {
   loadContentStore,
   primaryBracket,
   listClassNames,
-  getClass
+  getClass,
+  bracketEnchants,
+  listEnchantSlots
 } from '../../src/content/store.js';
 
 // Integration: load the real seeded store from data/content (path is resolved
@@ -63,4 +65,26 @@ test('getClass prefers detail, falls back to roster, and is case-insensitive', a
   }
 
   assert.equal(getClass(store, '19', 'notaclass'), null);
+});
+
+test('loadContentStore loads the enchants file and passes the referential class check', async () => {
+  const store = await loadContentStore();
+  const data = bracketEnchants(store, '19');
+  assert.ok(data, 'enchants are loaded');
+  assert.ok(data.enchants.some((e) => e.id === 'fiery-weapon'));
+
+  // Referential guard: every enchant class is a real roster class (load is
+  // strict, so a bad reference would have thrown before we get here).
+  const roster = new Set(listClassNames(store, '19'));
+  for (const ench of data.enchants) {
+    for (const cls of ench.classes) assert.ok(roster.has(cls), `${cls} is a roster class`);
+  }
+});
+
+test('listEnchantSlots returns distinct slots; empty for an unknown bracket', async () => {
+  const store = await loadContentStore();
+  const slots = listEnchantSlots(store, '19');
+  assert.ok(slots.includes('weapon'));
+  assert.equal(new Set(slots).size, slots.length, 'no duplicate slots');
+  assert.deepEqual(listEnchantSlots(store, '49'), []);
 });

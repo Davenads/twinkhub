@@ -1,7 +1,13 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { validateIndex, validateMeta } from './schema.js';
+import {
+  validateIndex,
+  validateMeta,
+  validateClassIndex,
+  validateClass,
+  validateEnchants
+} from './schema.js';
 import { logger } from '../lib/logger.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -14,6 +20,94 @@ async function readJson(file) {
   return JSON.parse(await fs.readFile(file, 'utf8'));
 }
 
+/** Read an optional JSON file: returns null when it doesn't exist (ENOENT). */
+async function readOptionalJson(file) {
+  try {
+    return await readJson(file);
+  } catch (err) {
+    if (err.code === 'ENOENT') return null;
+    throw err;
+  }
+}
+
+/** In strict mode throw (fail loud); otherwise log and let the caller continue. */
+function fail(strict, msg) {
+  if (strict) throw new Error(msg);
+  logger.error(msg);
+}
+
+/**
+ * Load one bracket: required meta.json plus the optional class roster and any
+ * per-class detail files it lists. Detail files are optional (a class can be
+ * roster-only until authored); when present, their tier must match the roster
+ * (drift guard, per 03-data-model.md referential checks).
+ */
+async function loadBracket(dir, key, strict) {
+  const meta = await readJson(path.join(dir, key, 'meta.json'));
+  const metaResult = validateMeta(meta, `${key}/meta.json`);
+  if (!metaResult.ok) {
+    fail(strict, `content ${key}/meta.json invalid: ${metaResult.errors.join('; ')}`);
+    return null;
+  }
+
+  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null };
+
+  const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
+  if (classIndex) {
+    const ciResult = validateClassIndex(classIndex, `${key}/classes/index.json`);
+    if (!ciResult.ok) {
+      fail(strict, `content ${key}/classes/index.json invalid: ${ciResult.errors.join('; ')}`);
+    } else {
+      bracket.classes.index = classIndex;
+      for (const entry of classIndex.classes) {
+        const detail = await readOptionalJson(path.join(dir, key, 'classes', `${entry.class}.json`));
+        if (!detail) continue; // roster-only until a detail file is authored
+        const cResult = validateClass(detail, `${key}/classes/${entry.class}.json`);
+        if (!cResult.ok) {
+          fail(strict, `content ${key}/classes/${entry.class}.json invalid: ${cResult.errors.join('; ')}`);
+          continue;
+        }
+        if (detail.tier !== entry.tier) {
+          fail(
+            strict,
+            `content ${key}/classes/${entry.class}.json tier "${detail.tier}" != roster tier "${entry.tier}"`
+          );
+          continue;
+        }
+        bracket.classes.byClass[entry.class] = detail;
+      }
+    }
+  }
+
+  // Optional enchants file. Beyond structural validation, referential-check that
+  // every `classes[]` entry names a real roster class (03-data-model.md), the
+  // same drift guard style used for class tiers above.
+  const enchantsFile = await readOptionalJson(path.join(dir, key, 'enchants.json'));
+  if (enchantsFile) {
+    const eResult = validateEnchants(enchantsFile, `${key}/enchants.json`);
+    if (!eResult.ok) {
+      fail(strict, `content ${key}/enchants.json invalid: ${eResult.errors.join('; ')}`);
+    } else {
+      const roster = new Set((bracket.classes.index?.classes ?? []).map((e) => e.class));
+      if (roster.size) {
+        for (const ench of enchantsFile.enchants) {
+          for (const cls of ench.classes) {
+            if (!roster.has(cls)) {
+              fail(
+                strict,
+                `content ${key}/enchants.json enchant "${ench.id}" references unknown class "${cls}"`
+              );
+            }
+          }
+        }
+      }
+      bracket.enchants = enchantsFile;
+    }
+  }
+
+  return bracket;
+}
+
 /**
  * Load and validate the content store from disk, building in-memory indexes and
  * caching the result. `strict` fails loud (throws) on any invalid file — the dev
@@ -21,7 +115,9 @@ async function readJson(file) {
  * bad file can't take the bot down in prod (03-data-model.md §Loader & validation).
  *
  * The returned store shape:
- *   { schemaVersion, brackets: { <key>: { meta } }, bracketKeys: string[] }
+ *   { schemaVersion,
+ *     brackets: { <key>: { meta, classes: { index, byClass }, enchants } },
+ *     bracketKeys: string[] }
  *
  * @param {{ dir?: string, strict?: boolean }} [opts]
  */
@@ -38,24 +134,15 @@ export async function loadContentStore({ dir = CONTENT_DIR, strict = true } = {}
 
   const brackets = {};
   for (const key of index.brackets) {
-    let meta;
+    let bracket;
     try {
-      meta = await readJson(path.join(dir, key, 'meta.json'));
+      bracket = await loadBracket(dir, key, strict);
     } catch (err) {
       if (strict) throw err;
-      logger.error({ err, bracket: key }, 'content: failed to read bracket meta');
+      logger.error({ err, bracket: key }, 'content: failed to load bracket');
       continue;
     }
-
-    const metaResult = validateMeta(meta, `${key}/meta.json`);
-    if (!metaResult.ok) {
-      const msg = `content ${key}/meta.json invalid: ${metaResult.errors.join('; ')}`;
-      if (strict) throw new Error(msg);
-      logger.error(msg);
-      continue;
-    }
-
-    brackets[key] = { meta };
+    if (bracket) brackets[key] = bracket;
   }
 
   _cache = {
@@ -80,4 +167,38 @@ export function resetContentStore() {
 /** A guild's primary (default) bracket: first in activeBrackets, else "19". */
 export function primaryBracket(config) {
   return config?.activeBrackets?.[0] ?? '19';
+}
+
+/** The `{ index, byClass }` class bundle for a bracket, or null if absent. */
+export function bracketClasses(store, bracket) {
+  return store?.brackets?.[bracket]?.classes ?? null;
+}
+
+/** Ordered class keys from a bracket's roster (for /tierlist and autocomplete). */
+export function listClassNames(store, bracket) {
+  const classes = bracketClasses(store, bracket);
+  return classes?.index ? classes.index.classes.map((e) => e.class) : [];
+}
+
+/**
+ * Resolve a class for display: prefer the full detail file, fall back to the
+ * lightweight roster entry, or null if the bracket doesn't list it.
+ */
+export function getClass(store, bracket, className) {
+  const classes = bracketClasses(store, bracket);
+  if (!classes) return null;
+  const key = String(className ?? '').toLowerCase();
+  return classes.byClass[key] ?? classes.index?.classes.find((e) => e.class === key) ?? null;
+}
+
+/** The `{ note, enchants }` bundle for a bracket, or null if none is authored. */
+export function bracketEnchants(store, bracket) {
+  return store?.brackets?.[bracket]?.enchants ?? null;
+}
+
+/** Distinct enchant slots for a bracket, first-seen order (for slot autocomplete). */
+export function listEnchantSlots(store, bracket) {
+  const data = bracketEnchants(store, bracket);
+  if (!data) return [];
+  return [...new Set(data.enchants.map((e) => e.slot))];
 }
