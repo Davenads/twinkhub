@@ -5,6 +5,7 @@ import { loadCommands } from './commands/index.js';
 import { runTimerEngine } from './timers/engine.js';
 import { createDispatch } from './timers/dispatch.js';
 import { createBoardUpdater } from './timers/board.js';
+import { loadContentStore } from './content/store.js';
 
 const TICK_MS = 60_000;
 
@@ -17,6 +18,13 @@ const client = new Client({
 client.commands = await loadCommands();
 logger.info(
   `Loaded ${client.commands.size} command(s): ${[...client.commands.keys()].join(', ')}`
+);
+
+// Validate + index the authored content store up front (fail loud in dev if a
+// file is malformed) so the data commands serve from a known-good cache.
+const content = await loadContentStore();
+logger.info(
+  `Loaded content store: schema v${content.schemaVersion}, brackets [${content.bracketKeys.join(', ')}]`
 );
 
 client.once(Events.ClientReady, (c) => {
