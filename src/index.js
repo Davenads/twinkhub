@@ -3,6 +3,7 @@ import { env } from './config/env.js';
 import { logger } from './lib/logger.js';
 import { loadCommands } from './commands/index.js';
 import { runTimerEngine } from './timers/engine.js';
+import { createDispatch } from './timers/dispatch.js';
 
 const TICK_MS = 60_000;
 
@@ -20,17 +21,13 @@ logger.info(
 client.once(Events.ClientReady, (c) => {
   logger.info(`Online as ${c.user.tag} (${c.user.id})`);
 
-  // 60s tick: compute states, resolve edge/warning triggers, persist latches.
-  // Delivery (ping / broadcast / DM fan-out + timer board) lands next; until
-  // then `dispatch` is log-only so the engine runs live without sending pings.
+  // 60s tick: compute states, resolve edge/warning triggers, persist latches,
+  // then fan each fired trigger out to configured guilds (ping / silent
+  // broadcast / DM). The persistent timer board edits land next.
+  const dispatch = createDispatch(client);
   const tick = async () => {
     try {
-      const { fires } = await runTimerEngine({
-        now: Date.now(),
-        dispatch: async ({ event, kind, policy }) => {
-          logger.info({ event, kind, policy }, 'timer trigger (delivery pending)');
-        }
-      });
+      const { fires } = await runTimerEngine({ now: Date.now(), dispatch });
       if (fires.length) logger.info(`Timer engine fired ${fires.length} trigger(s)`);
     } catch (err) {
       logger.error({ err }, 'tick failed');
