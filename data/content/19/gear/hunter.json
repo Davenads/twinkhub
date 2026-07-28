@@ -1,0 +1,27 @@
+{
+  "class": "hunter",
+  "items": [
+    {
+      "id": "precisely-calibrated-boomstick",
+      "name": "Precisely Calibrated Boomstick",
+      "slot": "ranged",
+      "source": { "type": "profession", "detail": "Engineering (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Popular Engineering gun and a strong ranged pick for 19 hunters. Verify exact stats and current-meta alternatives.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "bandolier-of-the-night-watch",
+      "name": "Bandolier of the Night Watch",
+      "slot": "ammo",
+      "source": { "type": "quest", "detail": "Alliance quest: The Night Watch" },
+      "faction": "alliance",
+      "reqLevel": null,
+      "notes": "Green-or-better ammo pouch. Horde hunters lack a green+ pouch, a real mechanical disadvantage at this bracket.",
+      "wowheadId": null,
+      "priority": "core"
+    }
+  ]
+}

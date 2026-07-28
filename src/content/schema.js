@@ -14,6 +14,11 @@ const isInteger = (v) => Number.isInteger(v);
 const isBoolean = (v) => typeof v === 'boolean';
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
+// Controlled vocabularies for gear items (03-data-model.md).
+const SOURCE_TYPES = ['drop', 'quest', 'vendor', 'profession', 'pvp', 'world', 'boe'];
+const FACTIONS = ['alliance', 'horde', 'both'];
+const PRIORITIES = ['core', 'situational', 'budget'];
+
 /** Record `msg` when `cond` is false; returns `cond` for control flow. */
 function require_(errors, cond, msg) {
   if (!cond) errors.push(msg);
@@ -172,6 +177,91 @@ export function validateEnchants(obj, label = 'enchants.json') {
       if (isNonEmptyString(entry?.id)) {
         require_(errors, !seen.has(entry.id), `${at}.id "${entry.id}" is duplicated`);
         seen.add(entry.id);
+      }
+    });
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+/**
+ * Validate one gear item into a shared `errors` array (used by both gear
+ * validators so array items report with their index). Enforces the controlled
+ * source/faction/priority vocabularies; `stats`, `reqLevel`, and `wowheadId` are
+ * optional so items can be authored before every number is verified.
+ */
+function validateItem(obj, at, errors) {
+  if (!require_(errors, isObject(obj), `${at}: must be an object`)) return;
+  require_(errors, isNonEmptyString(obj.id), `${at}.id must be a non-empty string`);
+  require_(errors, isNonEmptyString(obj.name), `${at}.name must be a non-empty string`);
+  require_(errors, isNonEmptyString(obj.slot), `${at}.slot must be a non-empty string`);
+  require_(errors, FACTIONS.includes(obj.faction), `${at}.faction must be one of ${FACTIONS.join('|')}`);
+  require_(errors, PRIORITIES.includes(obj.priority), `${at}.priority must be one of ${PRIORITIES.join('|')}`);
+  if (require_(errors, isObject(obj.source), `${at}.source must be an object`)) {
+    require_(
+      errors,
+      SOURCE_TYPES.includes(obj.source.type),
+      `${at}.source.type must be one of ${SOURCE_TYPES.join('|')}`
+    );
+    require_(errors, isNonEmptyString(obj.source.detail), `${at}.source.detail must be a non-empty string`);
+  }
+  require_(errors, obj.reqLevel == null || isInteger(obj.reqLevel), `${at}.reqLevel must be an integer or null`);
+  if (obj.wowheadId !== undefined) {
+    require_(
+      errors,
+      obj.wowheadId === null || isInteger(obj.wowheadId),
+      `${at}.wowheadId must be an integer or null`
+    );
+  }
+  if (obj.stats !== undefined && require_(errors, isObject(obj.stats), `${at}.stats must be an object`)) {
+    for (const [k, v] of Object.entries(obj.stats)) {
+      require_(errors, isInteger(v), `${at}.stats.${k} must be an integer`);
+    }
+  }
+}
+
+/**
+ * `<bracket>/gear/index.json`: the slot ordering plus optional cross-class
+ * (shared / BoE) items. Item slots and bracket-wide id uniqueness are checked in
+ * the store, which sees every gear file at once (03-data-model.md).
+ */
+export function validateGearIndex(obj, label = 'gear/index.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  require_(errors, isStringArray(obj.slots), `${label}: slots must be a non-empty string array`);
+  if (obj.notes !== undefined) {
+    require_(errors, isNonEmptyString(obj.notes), `${label}: notes must be a non-empty string when present`);
+  }
+  if (obj.shared !== undefined && require_(errors, Array.isArray(obj.shared), `${label}: shared must be an array`)) {
+    const seen = new Set();
+    obj.shared.forEach((it, i) => {
+      const at = `${label}: shared[${i}]`;
+      validateItem(it, at, errors);
+      if (isNonEmptyString(it?.id)) {
+        require_(errors, !seen.has(it.id), `${at}.id "${it.id}" is duplicated`);
+        seen.add(it.id);
+      }
+    });
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+/** `<bracket>/gear/<class>.json`: a class's best-in-slot item list. */
+export function validateGearClass(obj, label = 'gear/class') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  require_(errors, isNonEmptyString(obj.class), `${label}: class must be a non-empty string`);
+  if (require_(errors, Array.isArray(obj.items) && obj.items.length > 0, `${label}: items must be a non-empty array`)) {
+    const seen = new Set();
+    obj.items.forEach((it, i) => {
+      const at = `${label}: items[${i}]`;
+      validateItem(it, at, errors);
+      if (isNonEmptyString(it?.id)) {
+        require_(errors, !seen.has(it.id), `${at}.id "${it.id}" is duplicated`);
+        seen.add(it.id);
       }
     });
   }

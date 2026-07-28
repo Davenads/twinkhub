@@ -6,7 +6,9 @@ import {
   validateMeta,
   validateClassIndex,
   validateClass,
-  validateEnchants
+  validateEnchants,
+  validateGearIndex,
+  validateGearClass
 } from './schema.js';
 import { logger } from '../lib/logger.js';
 
@@ -37,6 +39,64 @@ function fail(strict, msg) {
 }
 
 /**
+ * Load the optional gear namespace: `gear/index.json` (slot ordering + shared /
+ * cross-class items) plus a per-class `gear/<class>.json` for each roster class.
+ * Beyond structural validation this does two referential guards (03-data-model.md):
+ * every item's `slot` must be declared in `slots`, and item ids must be unique
+ * bracket-wide (across shared and all class files). Each stored item is tagged
+ * with an `owner` ('shared' or the class key) for display and BiS grouping.
+ *
+ * @returns {{ index, byClass, items: object[], byId: Record<string, object> }}
+ */
+async function loadGear(dir, key, roster, strict) {
+  const gear = { index: null, byClass: {}, items: [], byId: {} };
+
+  const gearIndex = await readOptionalJson(path.join(dir, key, 'gear', 'index.json'));
+  if (!gearIndex) return gear;
+
+  const giResult = validateGearIndex(gearIndex, `${key}/gear/index.json`);
+  if (!giResult.ok) {
+    fail(strict, `content ${key}/gear/index.json invalid: ${giResult.errors.join('; ')}`);
+    return gear;
+  }
+  gear.index = gearIndex;
+  const slots = gearIndex.slots;
+
+  const addItem = (item, owner) => {
+    if (slots && !slots.includes(item.slot)) {
+      fail(strict, `content ${key}/gear: item "${item.id}" has undeclared slot "${item.slot}"`);
+    }
+    if (gear.byId[item.id]) {
+      fail(strict, `content ${key}/gear: duplicate item id "${item.id}"`);
+      return;
+    }
+    const withOwner = { ...item, owner };
+    gear.byId[item.id] = withOwner;
+    gear.items.push(withOwner);
+  };
+
+  for (const it of gearIndex.shared ?? []) addItem(it, 'shared');
+
+  for (const entry of roster) {
+    const gc = await readOptionalJson(path.join(dir, key, 'gear', `${entry.class}.json`));
+    if (!gc) continue; // a roster class can lack a BiS list until authored
+    const gcResult = validateGearClass(gc, `${key}/gear/${entry.class}.json`);
+    if (!gcResult.ok) {
+      fail(strict, `content ${key}/gear/${entry.class}.json invalid: ${gcResult.errors.join('; ')}`);
+      continue;
+    }
+    if (gc.class !== entry.class) {
+      fail(strict, `content ${key}/gear/${entry.class}.json class "${gc.class}" != roster "${entry.class}"`);
+      continue;
+    }
+    gear.byClass[entry.class] = gc;
+    for (const it of gc.items) addItem(it, entry.class);
+  }
+
+  return gear;
+}
+
+/**
  * Load one bracket: required meta.json plus the optional class roster and any
  * per-class detail files it lists. Detail files are optional (a class can be
  * roster-only until authored); when present, their tier must match the roster
@@ -50,7 +110,7 @@ async function loadBracket(dir, key, strict) {
     return null;
   }
 
-  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null };
+  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null };
 
   const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
   if (classIndex) {
@@ -105,6 +165,9 @@ async function loadBracket(dir, key, strict) {
     }
   }
 
+  // Gear namespace loads last: per-class BiS files key off the roster loaded above.
+  bracket.gear = await loadGear(dir, key, bracket.classes.index?.classes ?? [], strict);
+
   return bracket;
 }
 
@@ -116,7 +179,8 @@ async function loadBracket(dir, key, strict) {
  *
  * The returned store shape:
  *   { schemaVersion,
- *     brackets: { <key>: { meta, classes: { index, byClass }, enchants } },
+ *     brackets: { <key>: { meta, classes: { index, byClass }, enchants,
+ *                          gear: { index, byClass, items, byId } } },
  *     bracketKeys: string[] }
  *
  * @param {{ dir?: string, strict?: boolean }} [opts]
@@ -201,4 +265,46 @@ export function listEnchantSlots(store, bracket) {
   const data = bracketEnchants(store, bracket);
   if (!data) return [];
   return [...new Set(data.enchants.map((e) => e.slot))];
+}
+
+/** The gear bundle `{ index, byClass, items, byId }` for a bracket, or null. */
+export function bracketGear(store, bracket) {
+  return store?.brackets?.[bracket]?.gear ?? null;
+}
+
+/** Ordered gear slots declared by a bracket's gear index (for slot autocomplete). */
+export function gearSlots(store, bracket) {
+  return bracketGear(store, bracket)?.index?.slots ?? [];
+}
+
+/** Class keys that have an authored BiS list (for /bis class autocomplete). */
+export function listGearClasses(store, bracket) {
+  return Object.keys(bracketGear(store, bracket)?.byClass ?? {});
+}
+
+/** Every gear item in a bracket (shared + per-class), for /item name autocomplete. */
+export function listGearItems(store, bracket) {
+  return bracketGear(store, bracket)?.items ?? [];
+}
+
+/** A single gear item by id, or null. */
+export function getGearItem(store, bracket, id) {
+  const gear = bracketGear(store, bracket);
+  if (!gear) return null;
+  return gear.byId[String(id ?? '')] ?? null;
+}
+
+/**
+ * A class's best-in-slot picks: the shared cross-class items merged with the
+ * class's own list, or null if that class has no authored BiS. Shared items come
+ * first so faction trinkets/rings sit alongside class-specific gear per slot.
+ */
+export function gearForClass(store, bracket, className) {
+  const gear = bracketGear(store, bracket);
+  if (!gear) return null;
+  const key = String(className ?? '').toLowerCase();
+  if (!gear.byClass[key]) return null;
+  const shared = gear.items.filter((i) => i.owner === 'shared');
+  const own = gear.items.filter((i) => i.owner === key);
+  return { className: key, items: [...shared, ...own] };
 }

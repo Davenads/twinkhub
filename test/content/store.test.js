@@ -6,7 +6,12 @@ import {
   listClassNames,
   getClass,
   bracketEnchants,
-  listEnchantSlots
+  listEnchantSlots,
+  gearSlots,
+  listGearClasses,
+  listGearItems,
+  getGearItem,
+  gearForClass
 } from '../../src/content/store.js';
 
 // Integration: load the real seeded store from data/content (path is resolved
@@ -87,4 +92,37 @@ test('listEnchantSlots returns distinct slots; empty for an unknown bracket', as
   assert.ok(slots.includes('weapon'));
   assert.equal(new Set(slots).size, slots.length, 'no duplicate slots');
   assert.deepEqual(listEnchantSlots(store, '49'), []);
+});
+
+test('loadContentStore indexes gear with unique ids and declared slots', async () => {
+  const store = await loadContentStore();
+
+  const slots = gearSlots(store, '19');
+  assert.ok(slots.includes('head'));
+
+  const items = listGearItems(store, '19');
+  assert.ok(items.length > 0);
+  const ids = items.map((i) => i.id);
+  assert.equal(new Set(ids).size, ids.length, 'ids are unique bracket-wide');
+  for (const it of items) assert.ok(slots.includes(it.slot), `${it.id} slot "${it.slot}" is declared`);
+
+  const goggles = getGearItem(store, '19', 'green-tinted-goggles');
+  assert.ok(goggles, 'shared item resolves by id');
+  assert.equal(goggles.owner, 'shared');
+  assert.equal(getGearItem(store, '19', 'nope'), null);
+});
+
+test('gearForClass merges shared + class items; null when class has no BiS', async () => {
+  const store = await loadContentStore();
+
+  assert.ok(listGearClasses(store, '19').includes('hunter'));
+
+  const hunter = gearForClass(store, '19', 'Hunter');
+  assert.equal(hunter.className, 'hunter');
+  assert.ok(hunter.items.some((i) => i.owner === 'shared'), 'includes shared items');
+  assert.ok(hunter.items.some((i) => i.owner === 'hunter'), 'includes hunter items');
+
+  // A roster class without an authored gear file yields null (clean degrade).
+  const withoutGear = listClassNames(store, '19').find((c) => !listGearClasses(store, '19').includes(c));
+  if (withoutGear) assert.equal(gearForClass(store, '19', withoutGear), null);
 });

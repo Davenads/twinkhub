@@ -1,0 +1,156 @@
+{
+  "slots": [
+    "head",
+    "neck",
+    "shoulder",
+    "back",
+    "chest",
+    "wrist",
+    "hands",
+    "waist",
+    "legs",
+    "feet",
+    "finger",
+    "trinket",
+    "mainhand",
+    "offhand",
+    "ranged",
+    "ammo"
+  ],
+  "notes": "Universal slot picks - a cross-class starting frame drawn from community gearing guides. Treat these as seed examples and verify each item's exact stats, source, faction availability, and current-meta status at authoring time.",
+  "shared": [
+    {
+      "id": "green-tinted-goggles",
+      "name": "Green Tinted Goggles",
+      "slot": "head",
+      "source": { "type": "profession", "detail": "Engineering (crafted)" },
+      "faction": "both",
+      "stats": { "agility": 6, "stamina": 6, "spirit": 6 },
+      "reqLevel": 18,
+      "notes": "De-facto BiS head for many specs; head has no enchant at this bracket, which is why Engineering goggles matter.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "lucky-fishing-hat",
+      "name": "Lucky Fishing Hat",
+      "slot": "head",
+      "source": { "type": "world", "detail": "Fishing (rare catch)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Alternative head; harder to obtain than the goggles. Verify current stats.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
+      "id": "talbar-mantle",
+      "name": "Talbar Mantle",
+      "slot": "shoulder",
+      "source": { "type": "quest", "detail": "Quest reward" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Common shoulder pick from the gearing guides. Verify source and stats.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "sentry-cloak",
+      "name": "Sentry Cloak",
+      "slot": "back",
+      "source": { "type": "drop", "detail": "World drop (low level)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stat cloak; swap for a resistance cloak by matchup. Verify source and stats.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "feet-of-the-lynx",
+      "name": "Feet of the Lynx",
+      "slot": "feet",
+      "source": { "type": "world", "detail": "World drop (BoE)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Movement speed is highly valued in WSG, especially for flag carriers. Verify stats.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "trailblazer-boots",
+      "name": "Trailblazer Boots",
+      "slot": "feet",
+      "source": { "type": "quest", "detail": "Quest reward" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Alternative boots emphasizing movement. Verify source and stats.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
+      "id": "seal-of-wrynn",
+      "name": "Seal of Wrynn",
+      "slot": "finger",
+      "source": { "type": "quest", "detail": "Alliance quest reward" },
+      "faction": "alliance",
+      "reqLevel": null,
+      "notes": "Alliance faction ring; pair with a stat ring. Verify stats.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "seal-of-sylvanas",
+      "name": "Seal of Sylvanas",
+      "slot": "finger",
+      "source": { "type": "quest", "detail": "Horde quest reward" },
+      "faction": "horde",
+      "reqLevel": null,
+      "notes": "Horde faction ring; pair with a stat ring. Verify stats.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "insignia-of-the-alliance",
+      "name": "Insignia of the Alliance",
+      "slot": "trinket",
+      "source": { "type": "pvp", "detail": "PvP reward (honor + Marks of Honor)" },
+      "faction": "alliance",
+      "reqLevel": null,
+      "notes": "PvP trinket (breaks stun/root effects). Watch its item level requirement.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "insignia-of-the-horde",
+      "name": "Insignia of the Horde",
+      "slot": "trinket",
+      "source": { "type": "pvp", "detail": "PvP reward (honor + Marks of Honor)" },
+      "faction": "horde",
+      "reqLevel": null,
+      "notes": "PvP trinket (breaks stun/root effects). Watch its item level requirement.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "minor-recombobulator",
+      "name": "Minor Recombobulator",
+      "slot": "trinket",
+      "source": { "type": "profession", "detail": "Engineering (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Removes polymorph and some effects; Engineering utility trinket.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
+      "id": "arena-grand-master",
+      "name": "Arena Grand Master",
+      "slot": "trinket",
+      "source": { "type": "world", "detail": "Gurubashi Arena booty chest (Stranglethorn Vale)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "From the Gurubashi Arena event this bot also tracks. Contested world PvP objective; verify current stats.",
+      "wowheadId": null,
+      "priority": "situational"
+    }
+  ]
+}

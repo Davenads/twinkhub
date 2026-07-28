@@ -5,7 +5,9 @@ import {
   validateMeta,
   validateClassIndex,
   validateClass,
-  validateEnchants
+  validateEnchants,
+  validateGearIndex,
+  validateGearClass
 } from '../../src/content/schema.js';
 
 const validMeta = () => ({
@@ -134,4 +136,57 @@ test('validateEnchants flags a duplicated id and a bad reqLevel', () => {
   assert.equal(res.ok, false);
   assert.ok(res.errors.some((e) => e.includes('duplicated')));
   assert.ok(res.errors.some((e) => e.includes('reqLevel')));
+});
+
+const validItem = () => ({
+  id: 'green-tinted-goggles',
+  name: 'Green Tinted Goggles',
+  slot: 'head',
+  source: { type: 'profession', detail: 'Engineering (crafted)' },
+  faction: 'both',
+  stats: { agility: 6, stamina: 6 },
+  reqLevel: 18,
+  wowheadId: null,
+  notes: 'BiS head.',
+  priority: 'core'
+});
+
+test('validateGearIndex accepts slots plus well-formed shared items', () => {
+  const ok = { slots: ['head', 'trinket'], notes: 'seed', shared: [validItem()] };
+  assert.deepEqual(validateGearIndex(ok), { ok: true, errors: [] });
+});
+
+test('validateGearIndex requires a non-empty slots array', () => {
+  assert.equal(validateGearIndex({ slots: [], shared: [] }).ok, false);
+});
+
+test('validateGearIndex enforces item vocabularies and unique shared ids', () => {
+  const badFaction = { slots: ['head'], shared: [{ ...validItem(), faction: 'neutral' }] };
+  assert.ok(validateGearIndex(badFaction).errors.some((e) => e.includes('faction')));
+
+  const badSource = { slots: ['head'], shared: [{ ...validItem(), source: { type: 'legendary', detail: 'x' } }] };
+  assert.ok(validateGearIndex(badSource).errors.some((e) => e.includes('source.type')));
+
+  const badPriority = { slots: ['head'], shared: [{ ...validItem(), priority: 'godlike' }] };
+  assert.ok(validateGearIndex(badPriority).errors.some((e) => e.includes('priority')));
+
+  const dupe = { slots: ['head'], shared: [validItem(), validItem()] };
+  assert.ok(validateGearIndex(dupe).errors.some((e) => e.includes('duplicated')));
+});
+
+test('validateGearIndex rejects a non-integer stat value', () => {
+  const bad = { slots: ['head'], shared: [{ ...validItem(), stats: { agility: '6' } }] };
+  const res = validateGearIndex(bad);
+  assert.equal(res.ok, false);
+  assert.ok(res.errors.some((e) => e.includes('stats.agility')));
+});
+
+test('validateGearClass accepts a class with a non-empty item list', () => {
+  const ok = { class: 'hunter', items: [validItem()] };
+  assert.deepEqual(validateGearClass(ok), { ok: true, errors: [] });
+});
+
+test('validateGearClass rejects an empty item list and a missing class', () => {
+  assert.equal(validateGearClass({ class: 'hunter', items: [] }).ok, false);
+  assert.equal(validateGearClass({ items: [validItem()] }).ok, false);
 });
