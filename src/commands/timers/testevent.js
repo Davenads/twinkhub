@@ -3,13 +3,7 @@ import { requireDevRole } from '../../lib/access.js';
 import { EVENTS } from '../../timers/events/index.js';
 import { DELIVERY } from '../../timers/triggers.js';
 import { createDispatch } from '../../timers/dispatch.js';
-
-const EVENT_CHOICES = [
-  { name: 'BG Weekend', value: 'bg' },
-  { name: 'Arena Grand Master', value: 'agm' },
-  { name: 'Darkmoon Faire', value: 'dmf' },
-  { name: 'STV Fishing', value: 'stv' }
-];
+import { EVENT_CHOICES } from '../../timers/summary.js';
 
 export const data = new SlashCommandBuilder()
   .setName('testevent')

@@ -48,3 +48,14 @@ export async function saveGuildConfig(guildId, patch) {
 export async function setDmEnabled(guildId, enabled) {
   return saveGuildConfig(guildId, { dmEnabled: Boolean(enabled) });
 }
+
+/** Pure: merge a single event toggle into a timers map without clobbering siblings. */
+export function mergeTimers(current = {}, event, enabled) {
+  return { ...current, [event]: Boolean(enabled) };
+}
+
+/** Set one event's alert toggle for a guild, preserving the other toggles. */
+export async function setEventEnabled(guildId, event, enabled) {
+  const cfg = await loadGuildConfig(guildId);
+  return saveGuildConfig(guildId, { timers: mergeTimers(cfg.timers, event, enabled) });
+}

@@ -18,6 +18,9 @@ export const DISPLAY = {
   stv: { name: 'STV Fishing' }
 };
 
+/** Slash-command choices ({ name, value }) for event-selection options. */
+export const EVENT_CHOICES = EVENT_KEYS.map((k) => ({ name: DISPLAY[k].name, value: k }));
+
 /** Urgency score: active events (by soonest to end) rank before idle ones (by soonest to start). */
 export function urgencyScore(state) {
   return state.active ? state.endsInMs : BIG + state.startsInMs;
