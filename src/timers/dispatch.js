@@ -16,15 +16,26 @@ import { logger } from '../lib/logger.js';
  * `loadConfig` is injectable for testing; it defaults to the on-disk per-guild
  * config loader.
  *
+ * The returned `dispatch(fire)` resolves to a per-guild results array
+ * (`[{ guildId, channelDelivered, dmsSent }]`) covering every guild that passed
+ * the config gates — used by `/testevent` to report what actually happened. Pass
+ * `fire.onlyGuildId` to scope delivery to a single guild (the live tick omits it
+ * to fan out to all; a dev test scopes it to the invoking guild so it can't spam
+ * every configured server).
+ *
  * @param {import('discord.js').Client} client
  * @param {{ loadConfig?: (guildId: string) => Promise<object> }} [opts]
  */
 export function createDispatch(client, { loadConfig = loadGuildConfig } = {}) {
-  return async function dispatch({ event, kind, policy, state }) {
+  return async function dispatch({ event, kind, policy, state, onlyGuildId = null }) {
     const body = renderMessage(event, kind, state);
-    if (!body) return; // nothing to say for this combination
+    if (!body) return []; // nothing to say for this combination
+
+    const results = [];
 
     for (const guild of client.guilds.cache.values()) {
+      if (onlyGuildId && guild.id !== onlyGuildId) continue;
+
       let cfg;
       try {
         cfg = await loadConfig(guild.id);
@@ -35,6 +46,9 @@ export function createDispatch(client, { loadConfig = loadGuildConfig } = {}) {
 
       if (!cfg.alertChannelId || !cfg.alertRoleId) continue; // not set up
       if (cfg.timers?.[event] === false) continue; // event disabled here
+
+      let channelDelivered = false;
+      let dmsSent = 0;
 
       // Channel delivery (ping or silent broadcast).
       try {
@@ -48,6 +62,7 @@ export function createDispatch(client, { loadConfig = loadGuildConfig } = {}) {
           } else {
             await sendBroadcast(channel, body);
           }
+          channelDelivered = true;
         } else {
           logger.warn(
             { guild: guild.id, channel: cfg.alertChannelId },
@@ -66,13 +81,17 @@ export function createDispatch(client, { loadConfig = loadGuildConfig } = {}) {
             (await guild.roles.fetch(cfg.alertRoleId).catch(() => null));
 
           if (role) {
-            const sent = await sendDms(role, body);
-            logger.info({ guild: guild.id, event, kind, sent }, 'timer dispatch: DM fan-out');
+            dmsSent = await sendDms(role, body);
+            logger.info({ guild: guild.id, event, kind, sent: dmsSent }, 'timer dispatch: DM fan-out');
           }
         } catch (err) {
           logger.warn({ err, guild: guild.id, event, kind }, 'timer dispatch: DM fan-out failed');
         }
       }
+
+      results.push({ guildId: guild.id, channelDelivered, dmsSent });
     }
+
+    return results;
   };
 }

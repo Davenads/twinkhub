@@ -127,3 +127,39 @@ test('BG occurrence renders per-guild rotation copy as a ping', async () => {
   ]);
   assert.deepEqual(w.u1.dms, [body]);
 });
+
+test('onlyGuildId scopes delivery to a single guild', async () => {
+  const w = makeWorld();
+  const dispatch = createDispatch(w.client, { loadConfig: w.loadConfig });
+
+  // STV is enabled in both gA and gB; scoping must exclude gB entirely.
+  const results = await dispatch({
+    event: 'stv',
+    kind: 'warning',
+    policy: { channel: 'ping', dm: true },
+    state: {},
+    onlyGuildId: 'gA'
+  });
+
+  const warn = renderMessage('stv', 'warning');
+  assert.deepEqual(w.chA.sends, [
+    { content: `${warn} <@&rA>`, allowedMentions: { roles: ['rA'] } }
+  ]);
+  assert.deepEqual(w.chB.sends, []); // excluded by scope
+  assert.deepEqual(results, [{ guildId: 'gA', channelDelivered: true, dmsSent: 1 }]);
+});
+
+test('dispatch returns a per-guild results summary (skips disabled/unconfigured)', async () => {
+  const w = makeWorld();
+  const dispatch = createDispatch(w.client, { loadConfig: w.loadConfig });
+
+  const results = await dispatch({
+    event: 'agm',
+    kind: 'warning',
+    policy: { channel: 'ping', dm: true },
+    state: {}
+  });
+
+  // gA delivers (1 non-bot DM); gB has AGM off; gC not set up.
+  assert.deepEqual(results, [{ guildId: 'gA', channelDelivered: true, dmsSent: 1 }]);
+});
