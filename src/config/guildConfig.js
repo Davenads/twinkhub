@@ -59,3 +59,8 @@ export async function setEventEnabled(guildId, event, enabled) {
   const cfg = await loadGuildConfig(guildId);
   return saveGuildConfig(guildId, { timers: mergeTimers(cfg.timers, event, enabled) });
 }
+
+/** Point (or clear with null) the persistent timer-board message for a guild. */
+export async function setTimerBoard(guildId, board) {
+  return saveGuildConfig(guildId, { timerBoard: board ?? null });
+}

@@ -4,6 +4,7 @@ import { logger } from './lib/logger.js';
 import { loadCommands } from './commands/index.js';
 import { runTimerEngine } from './timers/engine.js';
 import { createDispatch } from './timers/dispatch.js';
+import { createBoardUpdater } from './timers/board.js';
 
 const TICK_MS = 60_000;
 
@@ -23,12 +24,16 @@ client.once(Events.ClientReady, (c) => {
 
   // 60s tick: compute states, resolve edge/warning triggers, persist latches,
   // then fan each fired trigger out to configured guilds (ping / silent
-  // broadcast / DM). The persistent timer board edits land next.
+  // broadcast / DM). Finally, refresh each guild's persistent timer board from
+  // the same state snapshot (editing in place, reposting if it was deleted).
   const dispatch = createDispatch(client);
+  const updateBoards = createBoardUpdater(client);
   const tick = async () => {
     try {
-      const { fires } = await runTimerEngine({ now: Date.now(), dispatch });
+      const now = Date.now();
+      const { fires, states } = await runTimerEngine({ now, dispatch });
       if (fires.length) logger.info(`Timer engine fired ${fires.length} trigger(s)`);
+      await updateBoards({ states, now });
     } catch (err) {
       logger.error({ err }, 'tick failed');
     }
