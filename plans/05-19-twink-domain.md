@@ -90,13 +90,58 @@ stat-weight/optimizer feature.
   - Physical mitigation: `reduction% = Armor / (Armor + 2015)` (the low-level armor
     constant; do **not** reuse the level-60 constant).
   - Melee/ranged DPS from AP: `DPS = AP / 14`.
-  - Spell "up to X": scales by the spell's coefficient (~`0.35–1.0+`), **reduced further**
-    for sub-level-20 spells.
+  - Spell scaling: each spell benefits from spell power by its **coefficient**; sub-level-20
+    spells are penalized further. Full per-spell table + the penalty formula in **Spell
+    power coefficients** below.
 - **PvP hit caps:** melee/ranged **5%**; spells **3%** (4% base miss minus talents). Note
   these when recommending hit-itemization vs raw stats.
 
 > Store these as a per-bracket `scaling.json` (constants + per-class overrides) so the
 > numbers live in data, not code, and shift cleanly for 29/49.
+
+### Spell power coefficients (for `spellcoefficients.json` + `/spellcoef`)
+
+Casters and hybrids benefit from spell power by a per-spell **coefficient**. At 19 these are
+small — both because low-rank spells have short cast times and because of a hard low-level
+penalty — which is *why* raw spell power is worth less here than stamina/survivability.
+
+- **Base coefficient (standard vanilla rule):** direct damage/heal ≈ `castTime / 3.5` (with a
+  **1.5s cast-time floor** for scaling); DoT/HoT ≈ `duration / 15`, applied **per tick**;
+  instant procs (weapon/shield/orb) use their own reduced factor.
+- **Sub-level-20 penalty (the twink-specific part):** a spell **learned at level X < 20**
+  benefits `3.75% * (20 - X)` **less** from spell power. A spell learned at 4 therefore loses
+  `3.75% * 16 = 60%` of its spell-power benefit. This stacks on top of the base coefficient.
+- **Store the level-19-effective coefficient per spell rank** (the community list already
+  gives values reduced for level 19). Group each entry by `type`: `direct-damage | dot |
+  direct-heal | hot | shield | proc`. For `dot | hot | proc`, the coefficient is **per tick /
+  per hit / per orb**, not per cast.
+
+Representative level-19 values (from the XPOff coefficient list — verify each at authoring):
+
+| Class | Spell (rank) | Coeff | Type |
+|---|---|---|---|
+| Mage | Frostbolt (3) | 0.463 | direct-damage |
+| Mage | Fireball (4) | 0.793 | direct-damage |
+| Mage | Fireball (DoT) | 0 | dot (no scaling) |
+| Warlock | Shadow Bolt (3) | 0.56 | direct-damage |
+| Warlock | Corruption (2) | 0.155/tick | dot |
+| Priest | Lesser Heal (3) | 0.446 | direct-heal |
+| Priest | Shadow Word: Pain (3) | 0.154/tick | dot |
+| Shaman | Lightning Bolt (3) | 0.554 | direct-damage |
+| Druid | Wrath (3) | 0.443 | direct-damage |
+| Hunter | Serpent Sting (3) | 0.185/tick | dot |
+| Paladin | Holy Light (3) | 0.554 | direct-heal |
+
+**Verify-at-authoring flags:** several source entries are **not Wowhead-confirmed** (Paladin
+Holy Light / Judgement of Righteousness, Power Word: Shield, Flametongue Weapon) and a few are
+**TBD/unconfirmed** (Arcane Missiles, Fire Nova Totem, Searing Totem, Life Tap R1) — mark these
+`confirmed: false` in data and never present them as authoritative. Also confirm whether a
+given source value is **raw** or already **level-19-effective** before storing.
+
+> Lives in a per-bracket **`spellcoefficients.json`** (penalty constant + per-class spell
+> table), surfaced by a caster-facing **`/spellcoef`** command — the spell-power counterpart
+> to `/statweights` (which covers melee / primary-stat scaling). Melee-only classes
+> (warrior, rogue) have no entry.
 
 ## Universal slot picks (representative — verify each at authoring)
 
@@ -215,6 +260,8 @@ High-value examples (verify exact values at authoring):
   https://xpoff.com/threads/jamesbs-19-vanilla-gearing-guide.83959/
 - XPOff — In-depth stat guide for 19s with scaling formulas:
   https://xpoff.com/threads/in-depth-stat-guide-for-19s-with-scaling-formulas.93237/
+- XPOff — Spell power coefficient list for all level-19 spells:
+  https://xpoff.com/threads/spell-power-coefficient-list-for-all-level-19-spells.93250/
 - XPOff — Hunters: pets and leveling / XP management mini-guide:
   https://xpoff.com/threads/hunters-pets-and-leveling-xp-management-mini-guide.90695/
 - Sixty Upgrades (Era) — gearset planner; example shared set:

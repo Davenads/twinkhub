@@ -28,6 +28,7 @@ data/content/
 │   ├── consumables.json             # potions, poisons, food, explosives, world buffs
 │   ├── quests.json                  # gear-reward quests worth doing before the cap
 │   ├── scaling.json                 # stat conversion constants + per-class overrides
+│   ├── spellcoefficients.json       # caster spell power coefficients + sub-20 penalty
 │   ├── pets.json                    # hunter pet families/abilities (class-extra data)
 │   ├── sets.json                    # curated per-class Sixty Upgrades set links
 │   └── guides/
@@ -47,8 +48,9 @@ expansion is pure copy-the-shape-and-fill-data.
   builds in-memory indexes: by bracket, by class, by slot, by item name (for autocomplete).
 - **Fail loud on invalid content at boot** in dev; in prod, skip the bad file, log an
   error, and keep serving the rest. Never crash the bot over one malformed guide.
-- Hot-reload (optional, later): a dev `/reloadcontent` command re-reads the store without a
-  restart, for fast content authoring.
+- Hot-reload (implemented): the dev `/reloadcontent` command re-reads and re-validates the
+  store without a restart (strict reload; keeps the last-good store on error), for fast
+  content authoring.
 
 ## Core schemas (v1 draft — refine at build time)
 
@@ -147,6 +149,36 @@ Constants and per-class overrides so numbers live in data, not code (see
 ```
 Use the **low-level** `armorConstant` (2015), not the level-60 value.
 
+### spellCoefficients (in `spellcoefficients.json`) — backs `/spellcoef`
+Level-19-effective spell power coefficients per caster/hybrid spell, plus the sub-level-20
+penalty constant. It's a big per-class table, so it lives in its **own file**, not
+`scaling.json`.
+```json
+{
+  "penalty": {
+    "perLevelBelow20": 0.0375,
+    "note": "A spell learned at level X<20 benefits 3.75%*(20-X) less from spell power; the coefficients below are already level-19-effective."
+  },
+  "byClass": {
+    "mage": [
+      { "spell": "Frostbolt", "rank": 3, "coefficient": 0.463, "type": "direct-damage", "confirmed": true },
+      { "spell": "Fireball", "rank": 1, "coefficient": 0, "type": "dot", "confirmed": true, "notes": "DoT component does not scale." }
+    ],
+    "priest": [
+      { "spell": "Lesser Heal", "rank": 3, "coefficient": 0.446, "type": "direct-heal" }
+    ],
+    "paladin": [
+      { "spell": "Holy Light", "rank": 3, "coefficient": 0.554, "type": "direct-heal", "confirmed": false }
+    ]
+  }
+}
+```
+`type` ∈ `direct-damage | dot | direct-heal | hot | shield | proc`. For `dot | hot | proc`
+the coefficient is **per tick / per hit / per orb**, not per cast. `confirmed: false` marks a
+value not yet Wowhead-verified — the command must not present it as authoritative. Melee-only
+classes (warrior, rogue) simply have **no key** here, and `/spellcoef` degrades cleanly for
+them ("no spell scaling at 19").
+
 ### pets (in `pets.json`) — hunter class-extra, backs `/pets`
 ```json
 {
@@ -194,7 +226,8 @@ set" link. These are **human-curated links**, not scraped — Sixty Upgrades is 
 
 - Schema-validate all content files.
 - Referential checks: every `itemId` referenced by a class/guide exists in gear; every
-  `enchant.classes[]` is a real class; no duplicate `id`s within a bracket.
+  `enchant.classes[]` is a real class; every `spellcoefficients.byClass` key is a real class;
+  no duplicate `id`s within a bracket.
 - Lint: every `core`-priority gear slot is filled per class (flag gaps).
 - Game-version check: every bracket's `meta.json.gameVersion.flavor` is `classic-era` with
   `contentState: all-pre-tbc-unlocked` (guards against SoD/TBC/Anniversary content creeping in).

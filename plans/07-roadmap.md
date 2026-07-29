@@ -37,7 +37,7 @@ Phased build plan. Each phase is shippable on its own. Nothing here is built yet
 
 ## P3 — Rich data + optimization
 - `/gear` (filters), `/consumable`, `/quest`, `/guide` (paginated), `/optimize` (gap
-  checklist).
+  checklist), `/statweights` + `/spellcoef` (stat & spell-power scaling), `/pets`.
 - `/reloadcontent` for fast authoring; content validation in CI.
 - Fill remaining 19 classes to `core`-complete.
 - **Exit criteria:** `/optimize` returns useful "you're missing X" for every 19 class.

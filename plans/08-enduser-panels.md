@@ -32,7 +32,7 @@ component router + handlers being present in the running bot. No DB, no re-posti
   - The `p1` version prefix lets the router detect **stale** buttons after an encoding change
     and reply "this panel is out of date — ask an admin to `/panels refresh`."
   - `action` = the logical operation (`bis`, `class`, `enchant`, `consumable`, `gear`,
-    `xprules`, `tierlist`, `statweights`, `pets`, `guide`, `pick`).
+    `xprules`, `tierlist`, `statweights`, `spellcoef`, `pets`, `guide`, `pick`).
   - `arg`s = short **slugs** only (class slug, slot, bracket, guide slug). Never free text.
 - **Examples:**
   - Button "XP Rules" → `p1|xprules`
@@ -70,7 +70,8 @@ appear on the next `/panels refresh` — never hardcoded.
 1. **Class Builds & BiS** — embed + a **class select menu** (options = the bracket's class
    index, with per-class emoji). Pick a class → ephemeral `renderBis(class)` (same as `/bis`
    / `/class`). The ephemeral result carries **follow-up buttons**: `Enchants`, `Consumables`,
-   `Stat Weights`, `Pets` (Hunter only) — each customId carries the class, so no re-picking.
+   `Stat Weights`, `Spell Scaling` (casters/hybrids only), `Pets` (Hunter only) — each customId
+   carries the class, so no re-picking.
 2. **Enchants** — a **slot select** → ephemeral list of enchants for that slot, **no-level-req
    flagged** (same as `/enchant`).
 3. **Consumables** — buttons per **type**: `Potions`, `Poisons`, `Food`, `Explosives`,
