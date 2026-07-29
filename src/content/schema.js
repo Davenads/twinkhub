@@ -23,6 +23,9 @@ const PRIORITIES = ['core', 'situational', 'budget'];
 // the coefficient is per tick/hit/orb rather than per cast.
 const SPELL_TYPES = ['direct-damage', 'dot', 'direct-heal', 'hot', 'shield', 'proc'];
 
+// Controlled consumable types (03-data-model.md) — the same five `/consumable type:` exposes.
+const CONSUMABLE_TYPES = ['potion', 'poison', 'food', 'explosive', 'worldbuff'];
+
 /** Record `msg` when `cond` is false; returns `cond` for control flow. */
 function require_(errors, cond, msg) {
   if (!cond) errors.push(msg);
@@ -458,6 +461,64 @@ export function validateSpellCoefficients(obj, label = 'spellcoefficients.json')
         }
       });
     }
+  }
+
+  return { ok: errors.length === 0, errors };
+}
+
+/**
+ * `<bracket>/consumables.json`: potions, poisons, food, explosives, and world
+ * buffs backing `/consumable`. Structural checks only — the referential guard
+ * (every `classes[]` entry is a real roster class) lives in the store. `faction`,
+ * `reqLevel`, `source`, `classes`, and `notes` are optional so an item can be
+ * authored before every detail is verified; a missing `classes` means the
+ * consumable applies to everyone (a present one makes it class-specific).
+ */
+export function validateConsumables(obj, label = 'consumables.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  if (obj.note !== undefined) {
+    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+  }
+
+  if (
+    require_(
+      errors,
+      Array.isArray(obj.consumables) && obj.consumables.length > 0,
+      `${label}: consumables must be a non-empty array`
+    )
+  ) {
+    const seen = new Set();
+    obj.consumables.forEach((c, i) => {
+      const at = `${label}: consumables[${i}]`;
+      if (!require_(errors, isObject(c), `${at} must be an object`)) return;
+      require_(errors, isNonEmptyString(c.id), `${at}.id must be a non-empty string`);
+      require_(errors, isNonEmptyString(c.name), `${at}.name must be a non-empty string`);
+      require_(errors, CONSUMABLE_TYPES.includes(c.type), `${at}.type must be one of ${CONSUMABLE_TYPES.join('|')}`);
+      require_(errors, isNonEmptyString(c.effect), `${at}.effect must be a non-empty string`);
+      if (c.faction !== undefined) {
+        require_(errors, FACTIONS.includes(c.faction), `${at}.faction must be one of ${FACTIONS.join('|')}`);
+      }
+      if (c.reqLevel !== undefined) {
+        require_(errors, c.reqLevel === null || isInteger(c.reqLevel), `${at}.reqLevel must be an integer or null`);
+      }
+      if (c.classes !== undefined) {
+        require_(errors, isStringArray(c.classes), `${at}.classes must be a non-empty string array when present`);
+      }
+      if (c.source !== undefined && require_(errors, isObject(c.source), `${at}.source must be an object when present`)) {
+        require_(errors, SOURCE_TYPES.includes(c.source.type), `${at}.source.type must be one of ${SOURCE_TYPES.join('|')}`);
+        require_(errors, isNonEmptyString(c.source.detail), `${at}.source.detail must be a non-empty string`);
+      }
+      if (c.notes !== undefined) {
+        require_(errors, isNonEmptyString(c.notes), `${at}.notes must be a non-empty string when present`);
+      }
+      if (isNonEmptyString(c.id)) {
+        require_(errors, !seen.has(c.id), `${at}.id "${c.id}" is duplicated`);
+        seen.add(c.id);
+      }
+    });
   }
 
   return { ok: errors.length === 0, errors };

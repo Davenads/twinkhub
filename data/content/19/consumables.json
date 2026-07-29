@@ -1,0 +1,52 @@
+{
+  "note": "Seeded from the verified domain notes; ranks, reqLevels, and exact sources are nulled pending per-item verification at authoring.",
+  "consumables": [
+    {
+      "id": "healing-potion",
+      "name": "Healing Potion",
+      "type": "potion",
+      "effect": "Instant health restore; shares the potion cooldown. Keep the highest rank usable at level 19 on cooldown.",
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Verify exact rank/reqLevel at authoring."
+    },
+    {
+      "id": "mana-potion",
+      "name": "Mana Potion",
+      "type": "potion",
+      "effect": "Instant mana restore; shares the potion cooldown. Mana-using classes keep one on cooldown.",
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "For mana-using classes. Verify exact rank/reqLevel at authoring."
+    },
+    {
+      "id": "green-tea-leaf",
+      "name": "Green Tea Leaf",
+      "type": "food",
+      "effect": "Off-cooldown heal that does NOT share the potion cooldown; stack around a healing potion for extra effective healing.",
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Verify source/reqLevel at authoring."
+    },
+    {
+      "id": "venomhide-poison",
+      "name": "Venomhide Poison",
+      "type": "poison",
+      "effect": "Long-duration weapon poison with stacking damage per tick \u2014 a meaningful DPS add.",
+      "faction": "both",
+      "classes": ["rogue"],
+      "reqLevel": null,
+      "notes": "Verify stack/application specifics at authoring."
+    },
+    {
+      "id": "heavy-dynamite",
+      "name": "Heavy Dynamite",
+      "type": "explosive",
+      "effect": "Thrown AoE fire damage (Engineering) \u2014 burst, finisher, and tag utility.",
+      "faction": "both",
+      "reqLevel": null,
+      "source": { "type": "profession", "detail": "Engineering (crafted)" },
+      "notes": "Verify rank/damage at authoring."
+    }
+  ]
+}

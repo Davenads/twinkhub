@@ -115,6 +115,26 @@ expansion is pure copy-the-shape-and-fill-data.
 `noLevelReq: true` is a **first-class flag** — the entire twink enchant meta hinges on
 enchants that ignore the item's level requirement.
 
+### consumable (in `consumables.json`) — backs `/consumable`
+```json
+{
+  "id": "green-tea-leaf",
+  "name": "Green Tea Leaf",
+  "type": "food",
+  "effect": "Off-cooldown heal that does NOT share the potion cooldown; stack around a healing potion for extra effective healing.",
+  "faction": "both",
+  "classes": ["rogue"],
+  "reqLevel": null,
+  "source": { "type": "vendor", "detail": "…" },
+  "notes": "…"
+}
+```
+`type` ∈ `potion | poison | food | explosive | worldbuff` (the same five `/consumable type:`
+exposes). `classes` is **optional**: when present the consumable is class-specific (poisons →
+`rogue`) and each entry must be a real roster class; when absent it applies to everyone.
+`faction`/`reqLevel`/`source`/`notes` are optional so an item can be authored before every
+detail is verified. Ids are unique bracket-wide.
+
 ### class (in `classes/*.json`)
 ```json
 {
@@ -227,7 +247,7 @@ set" link. These are **human-curated links**, not scraped — Sixty Upgrades is 
 - Schema-validate all content files.
 - Referential checks: every `itemId` referenced by a class/guide exists in gear; every
   `enchant.classes[]` is a real class; every `spellcoefficients.byClass` key is a real class;
-  no duplicate `id`s within a bracket.
+  every `consumable.classes[]` is a real class; no duplicate `id`s within a bracket.
 - Lint: every `core`-priority gear slot is filled per class (flag gaps).
 - Game-version check: every bracket's `meta.json.gameVersion.flavor` is `classic-era` with
   `contentState: all-pre-tbc-unlocked` (guards against SoD/TBC/Anniversary content creeping in).

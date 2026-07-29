@@ -11,7 +11,8 @@ import {
   validateGearClass,
   validateScaling,
   validatePets,
-  validateSpellCoefficients
+  validateSpellCoefficients,
+  validateConsumables
 } from './schema.js';
 import { logger } from '../lib/logger.js';
 
@@ -113,7 +114,7 @@ async function loadBracket(dir, key, strict) {
     return null;
   }
 
-  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null };
+  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null, consumables: null };
 
   const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
   if (classIndex) {
@@ -249,6 +250,28 @@ async function loadBracket(dir, key, strict) {
         }
       }
       bracket.spellcoef = spellcoefFile;
+    }
+  }
+
+  // Optional consumables file backing /consumable. Referential guard: every
+  // entry's optional `classes[]` must name a real roster class (03-data-model.md).
+  const consumablesFile = await readOptionalJson(path.join(dir, key, 'consumables.json'));
+  if (consumablesFile) {
+    const cResult = validateConsumables(consumablesFile, `${key}/consumables.json`);
+    if (!cResult.ok) {
+      fail(strict, `content ${key}/consumables.json invalid: ${cResult.errors.join('; ')}`);
+    } else {
+      const roster = new Set((bracket.classes.index?.classes ?? []).map((e) => e.class));
+      if (roster.size) {
+        for (const c of consumablesFile.consumables) {
+          for (const cls of c.classes ?? []) {
+            if (!roster.has(cls)) {
+              fail(strict, `content ${key}/consumables.json consumable "${c.id}" references unknown class "${cls}"`);
+            }
+          }
+        }
+      }
+      bracket.consumables = consumablesFile;
     }
   }
 
@@ -475,6 +498,35 @@ export function spellcoefForClass(store, bracket, className) {
   if (!data) return null;
   const key = String(className ?? '').toLowerCase();
   return data.byClass[key] ?? null;
+}
+
+/** The consumables bundle (`{ note, consumables }`) for a bracket, or null. */
+export function bracketConsumables(store, bracket) {
+  return store?.brackets?.[bracket]?.consumables ?? null;
+}
+
+/** Distinct consumable types present in a bracket, first-seen order (for reference). */
+export function listConsumableTypes(store, bracket) {
+  const data = bracketConsumables(store, bracket);
+  if (!data) return [];
+  return [...new Set(data.consumables.map((c) => c.type))];
+}
+
+/**
+ * Consumables for a bracket, optionally filtered by `type` and/or `className`.
+ * A class filter keeps entries that either name the class in `classes` or have
+ * no `classes` at all (universal consumables). Returns [] when none are loaded.
+ */
+export function consumablesFor(store, bracket, { type = null, className = null } = {}) {
+  const data = bracketConsumables(store, bracket);
+  if (!data) return [];
+  const typeKey = type ? String(type).toLowerCase() : null;
+  const classKey = className ? String(className).toLowerCase() : null;
+  return data.consumables.filter(
+    (c) =>
+      (!typeKey || c.type === typeKey) &&
+      (!classKey || !c.classes || c.classes.some((cl) => cl.toLowerCase() === classKey))
+  );
 }
 
 /**

@@ -24,7 +24,10 @@ import {
   getPetFamily,
   bracketSpellcoef,
   listSpellcoefClasses,
-  spellcoefForClass
+  spellcoefForClass,
+  bracketConsumables,
+  listConsumableTypes,
+  consumablesFor
 } from '../../src/content/store.js';
 
 // Integration: load the real seeded store from data/content (path is resolved
@@ -249,6 +252,40 @@ test('loadContentStore loads spell coefficients with valid class references', as
   assert.equal(spellcoefForClass(store, '19', 'notaclass'), null);
   assert.equal(bracketSpellcoef(store, '49'), null);
   assert.deepEqual(listSpellcoefClasses(store, '49'), []);
+});
+
+test('loadContentStore loads consumables with valid class references and filters cleanly', async () => {
+  const store = await loadContentStore();
+
+  const data = bracketConsumables(store, '19');
+  assert.ok(data, 'consumables are loaded');
+  assert.ok(data.consumables.length > 0);
+
+  const types = listConsumableTypes(store, '19');
+  assert.ok(types.includes('potion'));
+
+  // A strict load reaching here proves every class-specific consumable names a
+  // real roster class.
+  const roster = new Set(listClassNames(store, '19'));
+  for (const c of data.consumables) {
+    for (const cls of c.classes ?? []) assert.ok(roster.has(cls), `${cls} is a roster class`);
+  }
+
+  // Type filter.
+  const potions = consumablesFor(store, '19', { type: 'potion' });
+  assert.ok(potions.length > 0 && potions.every((c) => c.type === 'potion'));
+
+  // Class filter keeps universal consumables plus class-specific ones; rogue sees
+  // the poison, a class without a poison does not.
+  const rogue = consumablesFor(store, '19', { className: 'Rogue' });
+  assert.ok(rogue.some((c) => c.id === 'venomhide-poison'), 'rogue sees its poison');
+  assert.ok(rogue.some((c) => !c.classes), 'rogue also sees universal consumables');
+  const priest = consumablesFor(store, '19', { className: 'priest' });
+  assert.ok(!priest.some((c) => c.id === 'venomhide-poison'), 'priest does not see the rogue poison');
+
+  assert.equal(bracketConsumables(store, '49'), null);
+  assert.deepEqual(consumablesFor(store, '49', { type: 'potion' }), []);
+  assert.deepEqual(listConsumableTypes(store, '49'), []);
 });
 
 test('reloadContentStore reloads from disk and summarizeStore reports per-bracket counts', async () => {

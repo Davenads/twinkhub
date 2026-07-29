@@ -10,7 +10,8 @@ import {
   validateGearClass,
   validateScaling,
   validatePets,
-  validateSpellCoefficients
+  validateSpellCoefficients,
+  validateConsumables
 } from '../../src/content/schema.js';
 
 const validMeta = () => ({
@@ -349,4 +350,50 @@ test('validateSpellCoefficients flags a same-type duplicate and a bad confirmed 
   const badFlag = validSpellcoef();
   badFlag.byClass.mage[0].confirmed = 'yes';
   assert.ok(validateSpellCoefficients(badFlag).errors.some((e) => e.includes('confirmed')));
+});
+
+const validConsumables = () => ({
+  note: 'Seeded from verified domain notes.',
+  consumables: [
+    { id: 'healing-potion', name: 'Healing Potion', type: 'potion', effect: 'Instant heal on cooldown.', faction: 'both', reqLevel: null },
+    { id: 'venomhide-poison', name: 'Venomhide Poison', type: 'poison', effect: 'Stacking DPS poison.', classes: ['rogue'] },
+    { id: 'heavy-dynamite', name: 'Heavy Dynamite', type: 'explosive', effect: 'Thrown AoE fire.', source: { type: 'profession', detail: 'Engineering (crafted)' } }
+  ]
+});
+
+test('validateConsumables accepts a well-formed file with optional fields', () => {
+  assert.deepEqual(validateConsumables(validConsumables()), { ok: true, errors: [] });
+});
+
+test('validateConsumables requires a non-empty consumables array with valid core fields', () => {
+  assert.equal(validateConsumables({ consumables: [] }).ok, false);
+  const badType = validConsumables();
+  badType.consumables[0].type = 'elixir';
+  assert.ok(validateConsumables(badType).errors.some((e) => e.includes('type')));
+  const badEffect = validConsumables();
+  delete badEffect.consumables[0].effect;
+  assert.ok(validateConsumables(badEffect).errors.some((e) => e.includes('effect')));
+});
+
+test('validateConsumables enforces optional faction/classes/source vocabularies', () => {
+  const badFaction = validConsumables();
+  badFaction.consumables[0].faction = 'neutral';
+  assert.ok(validateConsumables(badFaction).errors.some((e) => e.includes('faction')));
+
+  const badClasses = validConsumables();
+  badClasses.consumables[1].classes = [];
+  assert.ok(validateConsumables(badClasses).errors.some((e) => e.includes('classes')));
+
+  const badSource = validConsumables();
+  badSource.consumables[2].source = { type: 'legendary', detail: 'x' };
+  assert.ok(validateConsumables(badSource).errors.some((e) => e.includes('source.type')));
+});
+
+test('validateConsumables flags a duplicated id and a bad reqLevel', () => {
+  const dupe = validConsumables();
+  dupe.consumables.push({ ...dupe.consumables[0], reqLevel: 'twelve' });
+  const res = validateConsumables(dupe);
+  assert.equal(res.ok, false);
+  assert.ok(res.errors.some((e) => e.includes('duplicated')));
+  assert.ok(res.errors.some((e) => e.includes('reqLevel')));
 });
