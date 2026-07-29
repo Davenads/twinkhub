@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { getContentStore, primaryBracket } from '../../content/store.js';
-import { loadGuildConfig } from '../../config/guildConfig.js';
+import { getContentStore } from '../../content/store.js';
+import { resolveBracket } from '../../content/bracket.js';
 import { renderXpRules } from '../../services/xprules.js';
 
 // Enduser data command — open to everyone (only admin/ and timer test commands
@@ -17,10 +17,7 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction) {
-  const explicit = interaction.options.getString('bracket');
-  const config = interaction.inGuild() ? await loadGuildConfig(interaction.guildId) : null;
-  const bracket = explicit ?? primaryBracket(config);
-
+  const bracket = await resolveBracket(interaction);
   const store = await getContentStore();
   const payload = renderXpRules({ store, bracket });
 
