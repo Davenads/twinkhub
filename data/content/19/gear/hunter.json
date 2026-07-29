@@ -23,5 +23,17 @@
       "wowheadId": null,
       "priority": "core"
     }
+  ],
+  "builds": [
+    {
+      "id": "hunter-offense",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "both",
+      "default": true,
+      "slots": {
+        "ranged": { "item": "precisely-calibrated-boomstick", "enchant": null }
+      }
+    }
   ]
 }

@@ -13,5 +13,17 @@
       "priority": "core",
       "enchant": "fiery-weapon"
     }
+  ],
+  "builds": [
+    {
+      "id": "rogue-offense",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "both",
+      "default": true,
+      "slots": {
+        "mainhand": { "item": "shadowfang", "enchant": "fiery-weapon" }
+      }
+    }
   ]
 }

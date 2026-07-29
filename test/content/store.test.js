@@ -16,6 +16,8 @@ import {
   listGearItems,
   getGearItem,
   gearForClass,
+  buildsForClass,
+  getBuild,
   bracketScaling,
   listStatweightClasses,
   statweightsForClass,
@@ -210,6 +212,39 @@ test('rogue is authored end-to-end: tier-A detail and a merged BiS list', async 
   assert.equal(shadowfang.enchant, 'fiery-weapon');
   assert.ok(getEnchant(store, '19', shadowfang.enchant), 'its enchant resolves');
   assert.ok(gear.items.some((i) => i.owner === 'shared'), 'shared items are merged in');
+});
+
+test('gear builds load, resolve their picks, and expose one default per class', async () => {
+  const store = await loadContentStore();
+
+  // Rogue migrated its anchor into a default build; a strict load reaching here
+  // proves every pick item + enchant resolved and slot keys are declared.
+  const rogueBuilds = buildsForClass(store, '19', 'Rogue');
+  assert.ok(rogueBuilds.length > 0, 'rogue has at least one build');
+  const rogueDefaults = rogueBuilds.filter((b) => b.default === true);
+  assert.equal(rogueDefaults.length, 1, 'exactly one default rogue build');
+  const rogueDefault = rogueDefaults[0];
+  assert.equal(rogueDefault.owner, 'rogue');
+  assert.ok(['flag-carrier', 'defense', 'midfield', 'offense'].includes(rogueDefault.role));
+  const mh = rogueDefault.slots.mainhand;
+  assert.equal(mh.item, 'shadowfang');
+  assert.ok(getGearItem(store, '19', mh.item), 'build pick resolves to a real item');
+  assert.ok(getEnchant(store, '19', mh.enchant), 'build enchant resolves to a real enchant');
+
+  // Hunter likewise, and getBuild resolves by id.
+  const hunterBuilds = buildsForClass(store, '19', 'Hunter');
+  assert.equal(hunterBuilds.filter((b) => b.default === true).length, 1, 'exactly one default hunter build');
+  const byId = getBuild(store, '19', hunterBuilds[0].id);
+  assert.ok(byId, 'getBuild resolves by id');
+  assert.equal(byId.id, hunterBuilds[0].id);
+
+  // Adding builds is additive: the existing merged item list is unchanged.
+  assert.ok(gearForClass(store, '19', 'Rogue').items.some((i) => i.id === 'shadowfang'));
+
+  // A class without authored builds yields an empty list, not an error.
+  assert.deepEqual(buildsForClass(store, '19', 'priest'), []);
+  assert.equal(getBuild(store, '19', 'nope-not-a-build'), null);
+  assert.deepEqual(buildsForClass(store, '49', 'rogue'), []);
 });
 
 test('loadContentStore loads scaling with valid per-class priority references', async () => {

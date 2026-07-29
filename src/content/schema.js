@@ -19,6 +19,10 @@ const SOURCE_TYPES = ['drop', 'quest', 'vendor', 'profession', 'pvp', 'world', '
 const FACTIONS = ['alliance', 'horde', 'both'];
 const PRIORITIES = ['core', 'situational', 'budget'];
 
+// Controlled role vocabulary for gear builds (multi-loadout model, 09-bis-reference.md):
+// the chart's class-role columns.
+const BUILD_ROLES = ['flag-carrier', 'defense', 'midfield', 'offense'];
+
 // Controlled spell-coefficient effect types (03-data-model.md). For dot/hot/proc
 // the coefficient is per tick/hit/orb rather than per cast.
 const SPELL_TYPES = ['direct-damage', 'dot', 'direct-heal', 'hot', 'shield', 'proc'];
@@ -264,7 +268,60 @@ export function validateGearIndex(obj, label = 'gear/index.json') {
   return { ok: errors.length === 0, errors };
 }
 
-/** `<bracket>/gear/<class>.json`: a class's best-in-slot item list. */
+/**
+ * One build slot pick: `{ item, enchant? }`. `item` is an item id resolved in the
+ * store (class registry or shared); `enchant` is an enchant id or null (slots with
+ * no enchant, e.g. waist). Referential resolution is a store guard.
+ */
+function validatePick(obj, at, errors) {
+  if (!require_(errors, isObject(obj), `${at}: must be an object`)) return;
+  require_(errors, isNonEmptyString(obj.item), `${at}.item must be a non-empty string`);
+  if (obj.enchant !== undefined) {
+    require_(
+      errors,
+      obj.enchant === null || isNonEmptyString(obj.enchant),
+      `${at}.enchant must be a non-empty string or null`
+    );
+  }
+}
+
+/**
+ * One gear build (multi-loadout model, 03/09 docs): a role loadout that references
+ * items by id and names the enchant per slot. `slots` maps a declared slot to a
+ * single `{ item, enchant }` pick or — for slots equipped more than once (two
+ * rings, two trinkets) — an array of picks. `default` marks the build `/bis` shows
+ * with no build argument. Structural checks only; the referential guards (items /
+ * enchants resolve, slots are declared, ids unique bracket-wide, one default per
+ * class) live in the store, which sees the whole bracket (03-data-model.md).
+ */
+function validateBuild(obj, at, errors) {
+  if (!require_(errors, isObject(obj), `${at}: must be an object`)) return;
+  require_(errors, isNonEmptyString(obj.id), `${at}.id must be a non-empty string`);
+  require_(errors, isNonEmptyString(obj.name), `${at}.name must be a non-empty string`);
+  require_(errors, BUILD_ROLES.includes(obj.role), `${at}.role must be one of ${BUILD_ROLES.join('|')}`);
+  require_(errors, FACTIONS.includes(obj.faction), `${at}.faction must be one of ${FACTIONS.join('|')}`);
+  if (obj.default !== undefined) {
+    require_(errors, isBoolean(obj.default), `${at}.default must be a boolean when present`);
+  }
+  if (require_(errors, isObject(obj.slots) && Object.keys(obj.slots).length > 0, `${at}.slots must be a non-empty object`)) {
+    for (const [slot, val] of Object.entries(obj.slots)) {
+      const slotAt = `${at}.slots.${slot}`;
+      if (Array.isArray(val)) {
+        if (require_(errors, val.length > 0, `${slotAt} must be a non-empty array when an array`)) {
+          val.forEach((p, i) => validatePick(p, `${slotAt}[${i}]`, errors));
+        }
+      } else {
+        validatePick(val, slotAt, errors);
+      }
+    }
+  }
+}
+
+/**
+ * `<bracket>/gear/<class>.json`: a class's item registry (`items[]`) plus optional
+ * role `builds[]` (multi-loadout model). Item slots and bracket-wide id uniqueness,
+ * and every build's referential resolution, are store guards (03-data-model.md).
+ */
 export function validateGearClass(obj, label = 'gear/class') {
   const errors = [];
   if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
@@ -281,6 +338,25 @@ export function validateGearClass(obj, label = 'gear/class') {
         seen.add(it.id);
       }
     });
+  }
+  if (obj.builds !== undefined) {
+    if (
+      require_(
+        errors,
+        Array.isArray(obj.builds) && obj.builds.length > 0,
+        `${label}: builds must be a non-empty array when present`
+      )
+    ) {
+      const seenBuilds = new Set();
+      obj.builds.forEach((b, i) => {
+        const at = `${label}: builds[${i}]`;
+        validateBuild(b, at, errors);
+        if (isNonEmptyString(b?.id)) {
+          require_(errors, !seenBuilds.has(b.id), `${at}.id "${b.id}" is duplicated`);
+          seenBuilds.add(b.id);
+        }
+      });
+    }
   }
   return { ok: errors.length === 0, errors };
 }

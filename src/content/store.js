@@ -53,10 +53,16 @@ function fail(strict, msg) {
  * bracket-wide (across shared and all class files). Each stored item is tagged
  * with an `owner` ('shared' or the class key) for display and BiS grouping.
  *
- * @returns {{ index, byClass, items: object[], byId: Record<string, object> }}
+ * Per-class files may also carry role `builds[]` (multi-loadout model): these are
+ * collected owner-tagged into `builds` / `buildsByClass`; their referential guards
+ * (picks resolve, one default per class) run in loadBracket, which also has the
+ * enchants file loaded.
+ *
+ * @returns {{ index, byClass, items: object[], byId: Record<string, object>,
+ *             builds: object[], buildsByClass: Record<string, object[]> }}
  */
 async function loadGear(dir, key, roster, strict) {
-  const gear = { index: null, byClass: {}, items: [], byId: {} };
+  const gear = { index: null, byClass: {}, items: [], byId: {}, builds: [], buildsByClass: {} };
 
   const gearIndex = await readOptionalJson(path.join(dir, key, 'gear', 'index.json'));
   if (!gearIndex) return gear;
@@ -98,6 +104,10 @@ async function loadGear(dir, key, roster, strict) {
     }
     gear.byClass[entry.class] = gc;
     for (const it of gc.items) addItem(it, entry.class);
+    if (Array.isArray(gc.builds)) {
+      gear.buildsByClass[entry.class] = gc.builds;
+      for (const b of gc.builds) gear.builds.push({ ...b, owner: entry.class });
+    }
   }
 
   return gear;
@@ -238,6 +248,53 @@ async function loadBracket(dir, key, strict) {
         } else if (!bracket.gear.byId[alt]) {
           fail(strict, `content ${key}/gear: item "${item.id}" references unknown alternative "${alt}"`);
         }
+      }
+    }
+  }
+
+  // Referential guards for gear builds (multi-loadout model, 03/09 docs): every
+  // build slot pick resolves to a shared or same-class item whose declared slot
+  // matches the key, every non-null enchant resolves to a real enchant, every
+  // slot key is declared, build ids are unique bracket-wide, and each class has
+  // exactly one default build. Runs here because it needs the gear index, the
+  // full item map, and the enchants file all loaded.
+  if (bracket.gear?.builds?.length) {
+    const declaredSlots = new Set(bracket.gear.index?.slots ?? []);
+    const enchantIds = new Set((bracket.enchants?.enchants ?? []).map((e) => e.id));
+    const byId = bracket.gear.byId;
+    const seenBuildIds = new Set();
+    for (const build of bracket.gear.builds) {
+      if (seenBuildIds.has(build.id)) {
+        fail(strict, `content ${key}/gear: duplicate build id "${build.id}"`);
+      }
+      seenBuildIds.add(build.id);
+      for (const [slot, val] of Object.entries(build.slots)) {
+        if (declaredSlots.size && !declaredSlots.has(slot)) {
+          fail(strict, `content ${key}/gear: build "${build.id}" references undeclared slot "${slot}"`);
+        }
+        const picks = Array.isArray(val) ? val : [val];
+        for (const pick of picks) {
+          const item = byId[pick.item];
+          if (!item) {
+            fail(strict, `content ${key}/gear: build "${build.id}" slot "${slot}" references unknown item "${pick.item}"`);
+          } else {
+            if (item.owner !== 'shared' && item.owner !== build.owner) {
+              fail(strict, `content ${key}/gear: build "${build.id}" slot "${slot}" references item "${pick.item}" owned by "${item.owner}"`);
+            }
+            if (item.slot !== slot) {
+              fail(strict, `content ${key}/gear: build "${build.id}" places "${pick.item}" (slot "${item.slot}") in slot "${slot}"`);
+            }
+          }
+          if (pick.enchant != null && enchantIds.size && !enchantIds.has(pick.enchant)) {
+            fail(strict, `content ${key}/gear: build "${build.id}" slot "${slot}" references unknown enchant "${pick.enchant}"`);
+          }
+        }
+      }
+    }
+    for (const [cls, builds] of Object.entries(bracket.gear.buildsByClass)) {
+      const defaults = builds.filter((b) => b.default === true);
+      if (defaults.length !== 1) {
+        fail(strict, `content ${key}/gear: class "${cls}" must have exactly one default build (has ${defaults.length})`);
       }
     }
   }
@@ -481,7 +538,7 @@ export function listEnchantSlots(store, bracket) {
   return [...new Set(data.enchants.map((e) => e.slot))];
 }
 
-/** The gear bundle `{ index, byClass, items, byId }` for a bracket, or null. */
+/** The gear bundle `{ index, byClass, items, byId, builds, buildsByClass }`, or null. */
 export function bracketGear(store, bracket) {
   return store?.brackets?.[bracket]?.gear ?? null;
 }
@@ -521,6 +578,25 @@ export function gearForClass(store, bracket, className) {
   const shared = gear.items.filter((i) => i.owner === 'shared');
   const own = gear.items.filter((i) => i.owner === key);
   return { className: key, items: [...shared, ...own] };
+}
+
+/**
+ * The role builds authored for a class (owner-tagged, multi-loadout model), or []
+ * if the class has none. Each build's `slots` map references item ids resolved via
+ * `getGearItem` and enchant ids via `getEnchant` (a strict load proves they exist).
+ */
+export function buildsForClass(store, bracket, className) {
+  const gear = bracketGear(store, bracket);
+  if (!gear) return [];
+  const key = String(className ?? '').toLowerCase();
+  return gear.builds.filter((b) => b.owner === key);
+}
+
+/** A single gear build by id (owner-tagged), or null. */
+export function getBuild(store, bracket, buildId) {
+  const gear = bracketGear(store, bracket);
+  if (!gear) return null;
+  return gear.builds.find((b) => b.id === String(buildId ?? '')) ?? null;
 }
 
 /** The scaling bundle (stats/derived/hitCaps/classes) for a bracket, or null. */

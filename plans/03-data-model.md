@@ -143,6 +143,8 @@ data, never code.
   `default` (exactly one build per class, the one `/bis class:X` shows with no build arg), and
   `slots` — a map of slot → `{ item, enchant }`. `item` resolves to a registry/shared item id;
   `enchant` resolves to an `enchants.json` id or is `null` (slots with no enchant, e.g. waist).
+  A slot value may instead be an **array** of `{ item, enchant }` picks for slots equipped more
+  than once (two rings under `finger`, two trinkets under `trinket`).
 - **Backward-compatible:** a class file with only `items[]` and no `builds[]` still loads
   exactly as today (`gearForClass` keeps working). Migration is: add a `default` build whose
   slots point at the existing anchors — no behavior change.

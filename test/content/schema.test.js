@@ -214,6 +214,58 @@ test('validateGearClass rejects an empty item list and a missing class', () => {
   assert.equal(validateGearClass({ items: [validItem()] }).ok, false);
 });
 
+const validBuild = () => ({
+  id: 'hunter-offense',
+  name: 'Offense',
+  role: 'offense',
+  faction: 'both',
+  default: true,
+  slots: {
+    head: { item: 'lucky-fishing-hat', enchant: 'lesser-arcanum-voracity' },
+    waist: { item: 'deviate-scale-belt', enchant: null },
+    finger: [
+      { item: 'seal-of-sylvanas', enchant: null },
+      { item: 'advisors-ring', enchant: null }
+    ]
+  }
+});
+
+test('validateGearClass accepts optional role builds (single + array slots)', () => {
+  const ok = { class: 'hunter', items: [validItem()], builds: [validBuild()] };
+  assert.deepEqual(validateGearClass(ok), { ok: true, errors: [] });
+});
+
+test('validateGearClass enforces the build role/faction vocabularies', () => {
+  const badRole = { class: 'hunter', items: [validItem()], builds: [{ ...validBuild(), role: 'tank' }] };
+  assert.ok(validateGearClass(badRole).errors.some((e) => e.includes('role')));
+
+  const badFaction = { class: 'hunter', items: [validItem()], builds: [{ ...validBuild(), faction: 'neutral' }] };
+  assert.ok(validateGearClass(badFaction).errors.some((e) => e.includes('faction')));
+});
+
+test('validateGearClass rejects an empty builds array and a duplicated build id', () => {
+  assert.ok(validateGearClass({ class: 'hunter', items: [validItem()], builds: [] }).errors.some((e) => e.includes('builds')));
+
+  const dupe = { class: 'hunter', items: [validItem()], builds: [validBuild(), validBuild()] };
+  assert.ok(validateGearClass(dupe).errors.some((e) => e.includes('duplicated')));
+});
+
+test('validateGearClass flags a build with empty slots and a bad pick', () => {
+  const noSlots = { class: 'hunter', items: [validItem()], builds: [{ ...validBuild(), slots: {} }] };
+  assert.ok(validateGearClass(noSlots).errors.some((e) => e.includes('slots')));
+
+  const badPick = validBuild();
+  badPick.slots.head = { item: '', enchant: 7 };
+  const res = validateGearClass({ class: 'hunter', items: [validItem()], builds: [badPick] });
+  assert.equal(res.ok, false);
+  assert.ok(res.errors.some((e) => e.includes('slots.head.item')));
+  assert.ok(res.errors.some((e) => e.includes('slots.head.enchant')));
+
+  const badArray = validBuild();
+  badArray.slots.finger = [];
+  assert.ok(validateGearClass({ class: 'hunter', items: [validItem()], builds: [badArray] }).errors.some((e) => e.includes('slots.finger')));
+});
+
 const validScaling = () => ({
   note: 'Concrete conversions at 19.',
   stats: {
