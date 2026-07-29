@@ -37,6 +37,39 @@ test('itemLine joins stats and source with a middle dot', () => {
   assert.ok(line.includes('+6 Agility \u00b7 profession: Engineering'));
 });
 
+test('itemLine appends an italic marker for a recommended enchant and alternatives', () => {
+  const line = itemLine({
+    name: 'Feet of the Lynx',
+    faction: 'both',
+    priority: 'core',
+    source: { type: 'world', detail: 'World drop' },
+    enchant: 'minor-speed-boots',
+    alternatives: ['trailblazer-boots']
+  });
+  assert.ok(line.includes('_enchant, 1 alt_'));
+});
+
+test('itemLine pluralizes the alternatives count and shows it without an enchant', () => {
+  const line = itemLine({
+    name: 'Viridian Band',
+    faction: 'both',
+    priority: 'core',
+    alternatives: ['blood-ring', 'other-ring']
+  });
+  assert.ok(line.includes('_2 alts_'));
+  assert.ok(!line.includes('enchant'));
+});
+
+test('itemLine adds no marker when there is no enchant or alternatives', () => {
+  const line = itemLine({
+    name: 'Talbar Mantle',
+    faction: 'both',
+    priority: 'core',
+    source: { type: 'quest', detail: 'Quest reward' }
+  });
+  assert.ok(!line.includes('_'));
+});
+
 test('slotFields groups by slot in declared order, unknown slots last', () => {
   const items = [
     { name: 'B', slot: 'trinket', priority: 'core' },

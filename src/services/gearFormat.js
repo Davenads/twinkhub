@@ -11,7 +11,12 @@ export function statLine(stats) {
     .join(', ');
 }
 
-/** One compact display line for a gear item, tagging faction and non-core priority. */
+/**
+ * One compact display line for a gear item, tagging faction and non-core
+ * priority. A trailing italic marker (`_enchant, 2 alts_`) hints when the item
+ * carries the fuller P3 detail — a recommended enchant and/or alternatives —
+ * that `/item` spells out, so `/bis` and `/gear` point the way without bloating.
+ */
 export function itemLine(item) {
   let head = `**${item.name}**`;
   if (item.faction && item.faction !== 'both') head += ` [${item.faction}]`;
@@ -20,6 +25,11 @@ export function itemLine(item) {
   const s = statLine(item.stats);
   if (s) bits.push(s);
   if (item.source) bits.push(`${item.source.type}: ${item.source.detail}`);
+  const tags = [];
+  if (item.enchant) tags.push('enchant');
+  const altCount = item.alternatives?.length ?? 0;
+  if (altCount) tags.push(`${altCount} alt${altCount === 1 ? '' : 's'}`);
+  if (tags.length) bits.push(`_${tags.join(', ')}_`);
   return bits.length ? `${head} \u2014 ${bits.join(' \u00b7 ')}` : head;
 }
 
