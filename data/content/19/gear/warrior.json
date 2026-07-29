@@ -1,0 +1,232 @@
+{
+  "class": "warrior",
+  "items": [
+    {
+      "id": "defender-spaulders",
+      "name": "Defender Spaulders",
+      "slot": "shoulder",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Warrior shoulder across all three role builds; enchanted with Fortitude of the Scourge (defense/midfield) or Might of the Scourge (offense). Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "sentrys-cape-of-strength",
+      "name": "Sentry's Cape of Strength",
+      "slot": "back",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Strength random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Strength cloak for the offensive build. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "steel-clasped-bracers",
+      "name": "Steel-clasped Bracers",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stamina bracers for the defense/midfield builds; enchanted with Superior Stamina. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "fortified-bracers-of-power",
+      "name": "Fortified Bracers of Power",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Power (+AP) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Attack-power bracers for the offensive build; enchanted with Superior Strength. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "thorbias-gauntlets",
+      "name": "Thorbia's Gauntlets",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Warrior gloves across all three builds; enchanted with Superior Agility (defense/midfield) or Greater Strength (offense). Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "cobrahns-grasp",
+      "name": "Cobrahn's Grasp",
+      "slot": "waist",
+      "source": { "type": "drop", "detail": "Wailing Caverns (dungeon drop, Cobrahn)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Waist pick for the midfield/offense builds. Verify stats and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "draftsman-boots",
+      "name": "Draftsman Boots",
+      "slot": "feet",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Boots for the offensive build; enchanted with Minor Speed. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "deadskull-shield",
+      "name": "Deadskull Shield",
+      "slot": "offhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Shield for the defense/midfield builds; enchanted with Greater Stamina. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "arctic-buckler",
+      "name": "Arctic Buckler",
+      "slot": "offhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Shield for the offensive build; enchanted with Frost Resistance. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "redbeard-crest",
+      "name": "Redbeard Crest",
+      "slot": "offhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Alternate shield listed on the warrior chart; carries a Thorium Shield Spike for retaliation damage. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "thorium-shield-spike"
+    },
+    {
+      "id": "night-reaver",
+      "name": "Night Reaver",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Alternate one-hand weapon listed on the warrior defense/midfield chart; carries a no-level-req weapon enchant. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "fiery-weapon"
+    },
+    {
+      "id": "runic-darkblade",
+      "name": "Runic Darkblade",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Alternate one-hand weapon listed on the warrior offense chart; carries a no-level-req weapon enchant. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "fiery-weapon"
+    }
+  ],
+  "builds": [
+    {
+      "id": "warrior-offense",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "horde",
+      "default": true,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-voracity" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "defender-spaulders", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentrys-cape-of-strength", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "greater-stats" },
+        "wrist": { "item": "fortified-bracers-of-power", "enchant": "superior-strength" },
+        "hands": { "item": "thorbias-gauntlets", "enchant": "greater-strength-gloves" },
+        "waist": { "item": "cobrahns-grasp", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-voracity" },
+        "feet": { "item": "draftsman-boots", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "zircon-band-of-frost-resistance", "enchant": null },
+          { "item": "zircon-band-of-frost-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "fiery-weapon" },
+        "offhand": { "item": "arctic-buckler", "enchant": "frost-resistance-shield" },
+        "ranged": { "item": "keen-throwing-knife", "enchant": null }
+      }
+    },
+    {
+      "id": "warrior-midfield",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "defender-spaulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "sentry-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "major-health" },
+        "wrist": { "item": "steel-clasped-bracers", "enchant": "superior-stamina" },
+        "hands": { "item": "thorbias-gauntlets", "enchant": "superior-agility" },
+        "waist": { "item": "cobrahns-grasp", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "legionnaires-band", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "lifestealing" },
+        "offhand": { "item": "deadskull-shield", "enchant": "greater-stamina-shield" },
+        "ranged": { "item": "keen-throwing-knife", "enchant": null }
+      }
+    },
+    {
+      "id": "warrior-defense",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "defender-spaulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "firebane-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "major-health" },
+        "wrist": { "item": "steel-clasped-bracers", "enchant": "superior-stamina" },
+        "hands": { "item": "thorbias-gauntlets", "enchant": "superior-agility" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "lifestealing" },
+        "offhand": { "item": "deadskull-shield", "enchant": "greater-stamina-shield" },
+        "ranged": { "item": "keen-throwing-knife", "enchant": null }
+      }
+    }
+  ]
+}

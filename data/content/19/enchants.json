@@ -180,6 +180,66 @@
       "noLevelReq": true,
       "notes": "Engineering ranged-weapon scope with no level requirement; flat damage on a bow/crossbow/gun. Verify exact value at authoring.",
       "classes": ["warrior", "rogue", "hunter"]
+    },
+    {
+      "id": "fortitude-of-the-scourge",
+      "name": "Fortitude of the Scourge",
+      "slot": "shoulder",
+      "effect": "+16 Stamina and +100 Armor.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Defensive Scourge shoulder enchant with no level requirement; the survivability counterpart to Might of the Scourge. Verify exact values and availability at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
+    },
+    {
+      "id": "shadow-resistance",
+      "name": "Enchant Cloak - Shadow Resistance",
+      "slot": "cloak",
+      "effect": "+10 Shadow Resistance.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Shadow-resistance cloak enchant; situational against warlocks, shadow priests, and rogue poisons. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "greater-strength-gloves",
+      "name": "Enchant Gloves - Greater Strength",
+      "slot": "gloves",
+      "effect": "+7 Strength.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Strength gloves enchant for melee damage builds; an alternative to Superior Agility on strength-scaling classes. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
+    },
+    {
+      "id": "greater-stamina-shield",
+      "name": "Enchant Shield - Greater Stamina",
+      "slot": "shield",
+      "effect": "+7 Stamina.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Stamina shield enchant for shield-using builds. Verify exact value at authoring.",
+      "classes": ["warrior", "paladin", "shaman"]
+    },
+    {
+      "id": "frost-resistance-shield",
+      "name": "Enchant Shield - Frost Resistance",
+      "slot": "shield",
+      "effect": "+8 Frost Resistance.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Frost-resistance shield enchant; situational against mages and frost effects. Verify exact value at authoring.",
+      "classes": ["warrior", "paladin", "shaman"]
+    },
+    {
+      "id": "thorium-shield-spike",
+      "name": "Thorium Shield Spike",
+      "slot": "shield",
+      "effect": "Chance on block to deal Physical damage to the attacker.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Blacksmithing shield spike with no level requirement; retaliation damage on block for shield builds. Verify exact value at authoring.",
+      "classes": ["warrior", "paladin", "shaman"]
     }
   ]
 }

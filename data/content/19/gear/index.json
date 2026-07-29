@@ -212,6 +212,39 @@
       "priority": "core"
     },
     {
+      "id": "firebane-cloak",
+      "name": "Firebane Cloak",
+      "slot": "back",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Resistance-leaning cloak recurring across defensive/flag-carrier builds on the BiS chart; often enchanted for shadow resistance. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
+      "id": "zircon-band-of-frost-resistance",
+      "name": "Zircon Band of Frost Resistance",
+      "slot": "finger",
+      "source": { "type": "drop", "detail": "Low-level drop of the Zircon Band base (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Frost-resistance ring used in resistance-oriented builds on the BiS chart; situational against mages. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
+      "id": "zircon-band-of-shadow-resistance",
+      "name": "Zircon Band of Shadow Resistance",
+      "slot": "finger",
+      "source": { "type": "drop", "detail": "Low-level drop of the Zircon Band base (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Shadow-resistance ring used in resistance-oriented builds on the BiS chart; situational against warlocks and shadow priests. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
       "id": "feet-of-the-lynx",
       "name": "Feet of the Lynx",
       "slot": "feet",
