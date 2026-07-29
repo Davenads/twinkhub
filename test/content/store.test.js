@@ -206,8 +206,8 @@ test('rogue is authored end-to-end: tier-A detail and a merged BiS list', async 
   const gear = gearForClass(store, '19', 'Rogue');
   assert.equal(gear.className, 'rogue');
   const shadowfang = gear.items.find((i) => i.id === 'shadowfang');
-  assert.ok(shadowfang, 'rogue anchor is present');
-  assert.equal(shadowfang.owner, 'rogue');
+  assert.ok(shadowfang, 'shared cross-class weapon is merged into the rogue list');
+  assert.equal(shadowfang.owner, 'shared');
   assert.equal(shadowfang.slot, 'mainhand');
   assert.equal(shadowfang.enchant, 'fiery-weapon');
   assert.ok(getEnchant(store, '19', shadowfang.enchant), 'its enchant resolves');
