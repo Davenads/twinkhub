@@ -1,0 +1,1860 @@
+{
+  "source": "bis-chart-19-horde.csv",
+  "builds": [
+    "Druid Flag Carrier",
+    "Druid Midfield",
+    "Hunter Defense",
+    "Hunter Midfield",
+    "Hunter Offense",
+    "Mage Defense",
+    "Mage Midfield",
+    "Mage Offense",
+    "Priest Defense",
+    "Priest Midfield",
+    "Priest Offense",
+    "Rogue Midfield",
+    "Rogue Offense",
+    "Shaman Defense",
+    "Shaman Midfield",
+    "Shaman Offense",
+    "Warlock Defense",
+    "Warlock Midfield",
+    "Warlock Offense",
+    "Warrior Defense",
+    "Warrior Midfield",
+    "Warrior Offense"
+  ],
+  "slotOrder": 22,
+  "rows": [
+    {
+      "srcRow": 2,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Druid Midfield": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Hunter Defense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Hunter Midfield": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "8 Agility Lesser Arcanum of Voracity"
+        },
+        "Hunter Offense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "8 Agility Lesser Arcanum of Voracity"
+        },
+        "Mage Defense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Mage Midfield": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Mage Offense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Priest Defense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Priest Midfield": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Priest Offense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Rogue Midfield": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Rogue Offense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "8 Agility Lesser Arcanum of Voracity"
+        },
+        "Shaman Defense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Shaman Midfield": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Shaman Offense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Warlock Defense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warlock Midfield": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warlock Offense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warrior Defense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warrior Midfield": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warrior Offense": {
+          "item": "Lucky Fishing Hat",
+          "enchant": "8 Strength Lesser Arcanum of Voracity"
+        }
+      }
+    },
+    {
+      "srcRow": 3,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Druid Midfield": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Hunter Defense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Hunter Midfield": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Hunter Offense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Mage Defense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Mage Midfield": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Mage Offense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Priest Defense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Priest Midfield": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Priest Offense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Rogue Midfield": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Rogue Offense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Shaman Defense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Shaman Midfield": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Shaman Offense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Warlock Defense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Warlock Midfield": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Warlock Offense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Warrior Defense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Warrior Midfield": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        },
+        "Warrior Offense": {
+          "item": "Scout's Medallion",
+          "enchant": null
+        }
+      }
+    },
+    {
+      "srcRow": 4,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "16 Stamina +100 Armor F. of the Scourge"
+        },
+        "Druid Midfield": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "31 Healing 5 Mana per 5 sec R. of the Scourge"
+        },
+        "Hunter Defense": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "16 Stamina +100 Armor F. of the Scourge"
+        },
+        "Hunter Midfield": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "26 Attack Power 1% Crit Rate M. of the Scourge"
+        },
+        "Hunter Offense": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "26 Attack Power 1% Crit Rate M. of the Scourge"
+        },
+        "Mage Defense": {
+          "item": "Reinforced Woolen Shoulders",
+          "enchant": "16 Stamina +100 Armor F. of the Scourge"
+        },
+        "Mage Midfield": {
+          "item": "Reinforced Woolen Shoulders",
+          "enchant": "16 Stamina +100 Armor F. of the Scourge"
+        },
+        "Mage Offense": {
+          "item": "Reinforced Woolen Shoulders",
+          "enchant": "15 Spellpower 1% Crit Rate P. of the Scourge"
+        },
+        "Priest Defense": {
+          "item": "Reinforced Woolen Shoulders",
+          "enchant": "16 Stamina +100 Armor F. of the Scourge"
+        },
+        "Priest Midfield": {
+          "item": "Reinforced Woolen Shoulders",
+          "enchant": "31 Healing 5 Mana per 5 sec R. of the Scourge"
+        },
+        "Priest Offense": {
+          "item": "Reinforced Woolen Shoulders",
+          "enchant": "31 Healing 5 Mana per 5 sec R. of the Scourge"
+        },
+        "Rogue Midfield": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "26 Attack Power 1% Crit Rate M. of the Scourge"
+        },
+        "Rogue Offense": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "26 Attack Power 1% Crit Rate M. of the Scourge"
+        },
+        "Shaman Defense": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "31 Healing 5 Mana per 5 sec R. of the Scourge"
+        },
+        "Shaman Midfield": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "16 Stamina +100 Armor F. of the Scourge"
+        },
+        "Shaman Offense": {
+          "item": "Feral Shoulder Pads",
+          "enchant": "26 Attack Power 1% Crit Rate M. of the Scourge"
+        },
+        "Warlock Defense": {
+          "item": "Reinforced Woolen Shoulders",
+          "enchant": "16 Stamina +100 Armor F. of the Scourge"
+        },
+        "Warlock Midfield": {
+          "item": "Reinforced Woolen Shoulders",
+          "enchant": "18 Spellpower Zandalar Signet of Mojo"
+        },
+        "Warlock Offense": {
+          "item": "Reinforced Woolen Shoulders",
+          "enchant": "18 Spellpower Zandalar Signet of Mojo"
+        },
+        "Warrior Defense": {
+          "item": "Defender Spaulders",
+          "enchant": "16 Stamina +100 Armor F. of the Scourge"
+        },
+        "Warrior Midfield": {
+          "item": "Defender Spaulders",
+          "enchant": "16 Stamina +100 Armor F. of the Scourge"
+        },
+        "Warrior Offense": {
+          "item": "Defender Spaulders",
+          "enchant": "26 Attack Power 1% Crit Rate M. of the Scourge"
+        }
+      }
+    },
+    {
+      "srcRow": 5,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Firebane Cloak",
+          "enchant": "10 Shadow Resist Enchant Cloak Shadow Resistance"
+        },
+        "Druid Midfield": {
+          "item": "Battle Healer's Cloak",
+          "enchant": "10 Shadow Resist Enchant Cloak Shadow Resistance"
+        },
+        "Hunter Defense": {
+          "item": "Engineer's Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Hunter Midfield": {
+          "item": "Sentry Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Hunter Offense": {
+          "item": "Sentry Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Mage Defense": {
+          "item": "Firebane Cloak",
+          "enchant": "10 Shadow Resist Enchant Cloak Shadow Resistance"
+        },
+        "Mage Midfield": {
+          "item": "Engineer's Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Mage Offense": {
+          "item": "Watcher's Cape of Frozen Wrath",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Priest Defense": {
+          "item": "Battle Healer's Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Priest Midfield": {
+          "item": "Battle Healer's Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Priest Offense": {
+          "item": "Engineer's Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Rogue Midfield": {
+          "item": "Sentry Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Rogue Offense": {
+          "item": "Sentry Cloak",
+          "enchant": "15 Nature Resist Enchant Cloak Greater Nature Res."
+        },
+        "Shaman Defense": {
+          "item": "Battle Healer's Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Shaman Midfield": {
+          "item": "Engineer's Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Shaman Offense": {
+          "item": "Sentry Cape of the Gorilla",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Warlock Defense": {
+          "item": "Firebane Cloak",
+          "enchant": "10 Shadow Resist Enchant Cloak Shadow Resistance"
+        },
+        "Warlock Midfield": {
+          "item": "Watcher's Cape of Shadow Wrath",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Warlock Offense": {
+          "item": "Watcher's Cape of Shadow Wrath",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Warrior Defense": {
+          "item": "Firebane Cloak",
+          "enchant": "10 Shadow Resist Enchant Cloak Shadow Resistance"
+        },
+        "Warrior Midfield": {
+          "item": "Sentry Cloak",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        },
+        "Warrior Offense": {
+          "item": "Sentry's Cape of Strength",
+          "enchant": "5 All Resist Enchant Cloak Greater Resistance"
+        }
+      }
+    },
+    {
+      "srcRow": 6,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Blackened Defias Armor",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Druid Midfield": {
+          "item": "Tree Bark Jacket",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Hunter Defense": {
+          "item": "Tree Bark Jacket",
+          "enchant": "4 All Stats Enchant Chest Greater Stats"
+        },
+        "Hunter Midfield": {
+          "item": "Blackened Defias Armor",
+          "enchant": "4 All Stats Enchant Chest Greater Stats"
+        },
+        "Hunter Offense": {
+          "item": "Tree Bark Jacket",
+          "enchant": "4 All Stats Enchant Chest Greater Stats"
+        },
+        "Mage Defense": {
+          "item": "Tree Bark Jacket",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Mage Midfield": {
+          "item": "Tree Bark Jacket",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Mage Offense": {
+          "item": "Tree Bark Jacket",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Priest Defense": {
+          "item": "Tree Bark Jacket",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Priest Midfield": {
+          "item": "Tree Bark Jacket",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Priest Offense": {
+          "item": "Tree Bark Jacket",
+          "enchant": "100 Mana Enchant Chest Major Mana"
+        },
+        "Rogue Midfield": {
+          "item": "Blackened Defias Armor",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Rogue Offense": {
+          "item": "Blackened Defias Armor",
+          "enchant": "4 All Stats Enchant Chest Greater Stats"
+        },
+        "Shaman Defense": {
+          "item": "Tree Bark Jacket",
+          "enchant": "4 All Stats Enchant Chest Greater Stats"
+        },
+        "Shaman Midfield": {
+          "item": "Blackened Defias Armor",
+          "enchant": "4 All Stats Enchant Chest Greater Stats"
+        },
+        "Shaman Offense": {
+          "item": "Blackened Defias Armor",
+          "enchant": "4 All Stats Enchant Chest Greater Stats"
+        },
+        "Warlock Defense": {
+          "item": "Tree Bark Jacket",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Warlock Midfield": {
+          "item": "Tree Bark Jacket",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Warlock Offense": {
+          "item": "Ritual Shroud of Shadow Wrath",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Warrior Defense": {
+          "item": "Blackened Defias Armor",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Warrior Midfield": {
+          "item": "Blackened Defias Armor",
+          "enchant": "100 Health Enchant Chest Major Health"
+        },
+        "Warrior Offense": {
+          "item": "Blackened Defias Armor",
+          "enchant": "4 All Stats Enchant Chest Greater Stats"
+        }
+      }
+    },
+    {
+      "srcRow": 7,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Wrangler's Wristbands of Stamina",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Druid Midfield": {
+          "item": "Wrangler's Wristbands of the Eagle",
+          "enchant": "24 Healing Enchant Bracer Healing Power"
+        },
+        "Hunter Defense": {
+          "item": "Wrangler's Wristbands of the Eagle",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Hunter Midfield": {
+          "item": "Wrangler's Wristbands of the Monkey",
+          "enchant": "7 Intellect Enchant Bracer Greater Intellect"
+        },
+        "Hunter Offense": {
+          "item": "Mindthrust Bracers",
+          "enchant": "7 Intellect Enchant Bracer Greater Intellect"
+        },
+        "Mage Defense": {
+          "item": "Greenweave Bracers of Stamina",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Mage Midfield": {
+          "item": "Greenweave Bracers of Stamina",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Mage Offense": {
+          "item": "Greenweave Bracers of Frozen Wrath",
+          "enchant": "7 Intellect Enchant Bracer Greater Intellect"
+        },
+        "Priest Defense": {
+          "item": "Greenweave Bracers of Stamina",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Priest Midfield": {
+          "item": "Mindthrust Bracers",
+          "enchant": "24 Healing Enchant Bracer Healing Power"
+        },
+        "Priest Offense": {
+          "item": "Mindthrust Bracers",
+          "enchant": "7 Intellect Enchant Bracer Greater Intellect"
+        },
+        "Rogue Midfield": {
+          "item": "Wrangler's Wristbands of the Monkey",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Rogue Offense": {
+          "item": "Wrangler's Wristbands of Power",
+          "enchant": "9 Strength Enchant Bracer Superior Strength"
+        },
+        "Shaman Defense": {
+          "item": "Wrangler's Wristbands of the Eagle",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Shaman Midfield": {
+          "item": "Wrangler's Wristbands of the Eagle",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Shaman Offense": {
+          "item": "Wrangler's Wristbands of the Eagle",
+          "enchant": "9 Strength Enchant Bracer Superior Strength"
+        },
+        "Warlock Defense": {
+          "item": "Greenweave Bracers of Stamina",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Warlock Midfield": {
+          "item": "Greenweave Bracers of Shadow Wrath",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Warlock Offense": {
+          "item": "Greenweave Bracers of Shadow Wrath",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Warrior Defense": {
+          "item": "Steel-clasped Bracers",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Warrior Midfield": {
+          "item": "Steel-clasped Bracers",
+          "enchant": "9 Stamina Enchant Bracer Superior Stamina"
+        },
+        "Warrior Offense": {
+          "item": "Foritfied Bracers of Power",
+          "enchant": "9 Strength Enchant Bracer Superior Strength"
+        }
+      }
+    },
+    {
+      "srcRow": 8,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Scouting Gloves of the Eagle",
+          "enchant": "30 Healing Enchant Gloves Healing Power"
+        },
+        "Druid Midfield": {
+          "item": "Magefist Gloves",
+          "enchant": "30 Healing Enchant Gloves Healing Power"
+        },
+        "Hunter Defense": {
+          "item": "Scouting Gloves of the Eagle",
+          "enchant": "15 Agility Enchant Gloves Superior Agility"
+        },
+        "Hunter Midfield": {
+          "item": "Scouting Gloves of the Monkey",
+          "enchant": "15 Agility Enchant Gloves Superior Agility"
+        },
+        "Hunter Offense": {
+          "item": "Scouting Gloves of the Falcon",
+          "enchant": "15 Agility Enchant Gloves Superior Agility"
+        },
+        "Mage Defense": {
+          "item": "Pagan Mitts of the Eagle",
+          "enchant": "20 Frost Power Enchant Gloves Frost Power"
+        },
+        "Mage Midfield": {
+          "item": "Magefist Gloves",
+          "enchant": "20 Frost Power Enchant Gloves Frost Power"
+        },
+        "Mage Offense": {
+          "item": "Gnoll Casting Gloves",
+          "enchant": "20 Frost Power Enchant Gloves Frost Power"
+        },
+        "Priest Defense": {
+          "item": "Magefist Gloves",
+          "enchant": "30 Healing Enchant Gloves Healing Power"
+        },
+        "Priest Midfield": {
+          "item": "Magefist Gloves",
+          "enchant": "30 Healing Enchant Gloves Healing Power"
+        },
+        "Priest Offense": {
+          "item": "Magefist Gloves",
+          "enchant": "30 Healing Enchant Gloves Healing Power"
+        },
+        "Rogue Midfield": {
+          "item": "Scouting Gloves of the Monkey",
+          "enchant": "15 Agility Enchant Gloves Superior Agility"
+        },
+        "Rogue Offense": {
+          "item": "Bristlebark Gloves",
+          "enchant": "15 Agility Enchant Gloves Superior Agility"
+        },
+        "Shaman Defense": {
+          "item": "Magefist Gloves",
+          "enchant": "30 Healing Enchant Gloves Healing Power"
+        },
+        "Shaman Midfield": {
+          "item": "Jutebraid Gloves",
+          "enchant": "15 Agility Enchant Gloves Superior Agility"
+        },
+        "Shaman Offense": {
+          "item": "Jutebraid Gloves",
+          "enchant": "7 Strength Enchant Gloves Greater Strength"
+        },
+        "Warlock Defense": {
+          "item": "Pagan Mitts of the Eagle",
+          "enchant": "20 Shadow Power Enchant Gloves Shadow Power"
+        },
+        "Warlock Midfield": {
+          "item": "Gnoll Casting Gloves",
+          "enchant": "20 Shadow Power Enchant Gloves Shadow Power"
+        },
+        "Warlock Offense": {
+          "item": "Gnoll Casting Gloves",
+          "enchant": "20 Shadow Power Enchant Gloves Shadow Power"
+        },
+        "Warrior Defense": {
+          "item": "Thorbia's Gauntlets",
+          "enchant": "15 Agility Enchant Gloves Superior Agility"
+        },
+        "Warrior Midfield": {
+          "item": "Thorbia's Gauntlets",
+          "enchant": "15 Agility Enchant Gloves Superior Agility"
+        },
+        "Warrior Offense": {
+          "item": "Thorbia's Gauntlets",
+          "enchant": "7 Strength Enchant Gloves Greater Strength"
+        }
+      }
+    },
+    {
+      "srcRow": 9,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Deviate Scale Belt",
+          "enchant": null
+        },
+        "Druid Midfield": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Hunter Defense": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Hunter Midfield": {
+          "item": "Screecher Belt",
+          "enchant": null
+        },
+        "Hunter Offense": {
+          "item": "Screecher Belt",
+          "enchant": null
+        },
+        "Mage Defense": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Mage Midfield": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Mage Offense": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Priest Defense": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Priest Midfield": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Priest Offense": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Rogue Midfield": {
+          "item": "Deviate Scale Belt",
+          "enchant": null
+        },
+        "Rogue Offense": {
+          "item": "Screecher Belt",
+          "enchant": null
+        },
+        "Shaman Defense": {
+          "item": "Screecher Belt",
+          "enchant": null
+        },
+        "Shaman Midfield": {
+          "item": "Screecher Belt",
+          "enchant": null
+        },
+        "Shaman Offense": {
+          "item": "Screecher Belt",
+          "enchant": null
+        },
+        "Warlock Defense": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Warlock Midfield": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Warlock Offense": {
+          "item": "Keller's Girdle",
+          "enchant": null
+        },
+        "Warrior Defense": {
+          "item": "Deviate Scale Belt",
+          "enchant": null
+        },
+        "Warrior Midfield": {
+          "item": "Cobrahn's Grasp",
+          "enchant": null
+        },
+        "Warrior Offense": {
+          "item": "Cobrahn's Grasp",
+          "enchant": null
+        }
+      }
+    },
+    {
+      "srcRow": 10,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Scouting Trousers of the Eagle",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Druid Midfield": {
+          "item": "Darkweave Breeches",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Hunter Defense": {
+          "item": "Darkweave Breeches",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Hunter Midfield": {
+          "item": "Leggings of the Fang",
+          "enchant": "8 Agility Lesser Arcanum of Voracity"
+        },
+        "Hunter Offense": {
+          "item": "Leggings of the Fang",
+          "enchant": "8 Agility Lesser Arcanum of Voracity"
+        },
+        "Mage Defense": {
+          "item": "Shimmering Trousers of the Eagle",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Mage Midfield": {
+          "item": "Darkweave Breeches",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Mage Offense": {
+          "item": "Darkweave Breeches",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Priest Defense": {
+          "item": "Darkweave Breeches",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Priest Midfield": {
+          "item": "Darkweave Breeches",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Priest Offense": {
+          "item": "Darkweave Breeches",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Rogue Midfield": {
+          "item": "Leggings of the Fang",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Rogue Offense": {
+          "item": "Leggings of the Fang",
+          "enchant": "8 Agility Lesser Arcanum of Voracity"
+        },
+        "Shaman Defense": {
+          "item": "Darkweave Breeches",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Shaman Midfield": {
+          "item": "Leggings of the Fang",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Shaman Offense": {
+          "item": "Leggings of the Fang",
+          "enchant": "150 Mana Lesser Arcanum of Rumination"
+        },
+        "Warlock Defense": {
+          "item": "Shimmering Trousers of the Eagle",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warlock Midfield": {
+          "item": "Darkweave Breeches",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warlock Offense": {
+          "item": "Darkweave Breeches",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warrior Defense": {
+          "item": "Leggings of the Fang",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warrior Midfield": {
+          "item": "Leggings of the Fang",
+          "enchant": "100 Health Lesser Arcanum of Constitution"
+        },
+        "Warrior Offense": {
+          "item": "Leggings of the Fang",
+          "enchant": "8 Strength Lesser Arcanum of Voracity"
+        }
+      }
+    },
+    {
+      "srcRow": 11,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Druid Midfield": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Hunter Defense": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Hunter Midfield": {
+          "item": "Trailblazer Boots",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Hunter Offense": {
+          "item": "Feet of the Lynx",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Mage Defense": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Mage Midfield": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Mage Offense": {
+          "item": "Greenweave Sandals of Frozen Wrath",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Priest Defense": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Priest Midfield": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Priest Offense": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Rogue Midfield": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Rogue Offense": {
+          "item": "Feet of the Lynx",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Shaman Defense": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Shaman Midfield": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Shaman Offense": {
+          "item": "Draftsman Boots",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Warlock Defense": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Warlock Midfield": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Warlock Offense": {
+          "item": "Greenweave Sandals of Shadow Wrath",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Warrior Defense": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Warrior Midfield": {
+          "item": "Nat Pagle's Extreme Anglers",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        },
+        "Warrior Offense": {
+          "item": "Draftsman Boots",
+          "enchant": "Minor Speed Enchant Boots Minor Speed"
+        }
+      }
+    },
+    {
+      "srcRow": 12,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Druid Midfield": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Hunter Defense": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Hunter Midfield": {
+          "item": "Legionnaire' s Band",
+          "enchant": null
+        },
+        "Hunter Offense": {
+          "item": "Zircon Band of Frost Resistance",
+          "enchant": null
+        },
+        "Mage Defense": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Mage Midfield": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Mage Offense": {
+          "item": "Lavishly Jeweled Ring",
+          "enchant": null
+        },
+        "Priest Defense": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Priest Midfield": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Priest Offense": {
+          "item": "Zircon Band of Arcane Resistance",
+          "enchant": null
+        },
+        "Rogue Midfield": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Rogue Offense": {
+          "item": "Zircon Band of Nature Resistance",
+          "enchant": null
+        },
+        "Shaman Defense": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Shaman Midfield": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Shaman Offense": {
+          "item": "Zircon Band of Frost Resistance",
+          "enchant": null
+        },
+        "Warlock Defense": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Warlock Midfield": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Warlock Offense": {
+          "item": "Advisor's Ring",
+          "enchant": null
+        },
+        "Warrior Defense": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Warrior Midfield": {
+          "item": "Seal of Sylvanas",
+          "enchant": null
+        },
+        "Warrior Offense": {
+          "item": "Zircon Band of Frost Resistance",
+          "enchant": null
+        }
+      }
+    },
+    {
+      "srcRow": 13,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Zircon Band of Shadow Resistance",
+          "enchant": null
+        },
+        "Druid Midfield": {
+          "item": "Advisor's Ring",
+          "enchant": null
+        },
+        "Hunter Defense": {
+          "item": "Zircon Band of Shadow Resistance",
+          "enchant": null
+        },
+        "Hunter Midfield": {
+          "item": "Lavishly Jeweled Ring",
+          "enchant": null
+        },
+        "Hunter Offense": {
+          "item": "Zircon Band of Frost Resistance",
+          "enchant": null
+        },
+        "Mage Defense": {
+          "item": "Zircon Band of Shadow Resistance",
+          "enchant": null
+        },
+        "Mage Midfield": {
+          "item": "Advisor's Ring",
+          "enchant": null
+        },
+        "Mage Offense": {
+          "item": "Advisor's Ring",
+          "enchant": null
+        },
+        "Priest Defense": {
+          "item": "Zircon Band of Shadow Resistance",
+          "enchant": null
+        },
+        "Priest Midfield": {
+          "item": "Zircon Band of Arcane Resistance",
+          "enchant": null
+        },
+        "Priest Offense": {
+          "item": "Zircon Band of Arcane Resistance",
+          "enchant": null
+        },
+        "Rogue Midfield": {
+          "item": "Legionnaire' s Band",
+          "enchant": null
+        },
+        "Rogue Offense": {
+          "item": "Zircon Band of Nature Resistance",
+          "enchant": null
+        },
+        "Shaman Defense": {
+          "item": "Zircon Band of Nature Resistance",
+          "enchant": null
+        },
+        "Shaman Midfield": {
+          "item": "Legionnaire' s Band",
+          "enchant": null
+        },
+        "Shaman Offense": {
+          "item": "Zircon Band of Frost Resistance",
+          "enchant": null
+        },
+        "Warlock Defense": {
+          "item": "Zircon Band of Shadow Resistance",
+          "enchant": null
+        },
+        "Warlock Midfield": {
+          "item": "Advisor's Ring",
+          "enchant": null
+        },
+        "Warlock Offense": {
+          "item": "Zircon Band of Frost Resistance",
+          "enchant": null
+        },
+        "Warrior Defense": {
+          "item": "Zircon Band of Shadow Resistance",
+          "enchant": null
+        },
+        "Warrior Midfield": {
+          "item": "Legionnaire' s Band",
+          "enchant": null
+        },
+        "Warrior Offense": {
+          "item": "Zircon Band of Frost Resistance",
+          "enchant": null
+        }
+      }
+    },
+    {
+      "srcRow": 14,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Druid Midfield": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Hunter Defense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Hunter Midfield": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Hunter Offense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Mage Defense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Mage Midfield": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Mage Offense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Priest Defense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Priest Midfield": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Priest Offense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Rogue Midfield": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Rogue Offense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Shaman Defense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Shaman Midfield": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Shaman Offense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Warlock Defense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Warlock Midfield": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Warlock Offense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Warrior Defense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Warrior Midfield": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        },
+        "Warrior Offense": {
+          "item": "Insignia of the Horde",
+          "enchant": null
+        }
+      }
+    },
+    {
+      "srcRow": 15,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Arena Grand Master",
+          "enchant": null
+        },
+        "Druid Midfield": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Hunter Defense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Hunter Midfield": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Hunter Offense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Mage Defense": {
+          "item": "Arena Grand Master",
+          "enchant": null
+        },
+        "Mage Midfield": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Mage Offense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Priest Defense": {
+          "item": "Arena Grand Master",
+          "enchant": null
+        },
+        "Priest Midfield": {
+          "item": "Arena Grand Master",
+          "enchant": null
+        },
+        "Priest Offense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Rogue Midfield": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Rogue Offense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Shaman Defense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Shaman Midfield": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Shaman Offense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Warlock Defense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Warlock Midfield": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Warlock Offense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Warrior Defense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Warrior Midfield": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Warrior Offense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        }
+      }
+    },
+    {
+      "srcRow": 16,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Druid Midfield": {
+          "item": "Arena Grand Master",
+          "enchant": null
+        },
+        "Hunter Defense": {
+          "item": "Wingblade",
+          "enchant": "Immune Disarm Steel Weapon Chain"
+        },
+        "Hunter Midfield": {
+          "item": "Massive Battle Axe of Agility",
+          "enchant": "25 Agility Enchant 2H Weapon Agility"
+        },
+        "Hunter Offense": {
+          "item": "Massive Battle Axe of Agility",
+          "enchant": "25 Agility Enchant 2H Weapon Agility"
+        },
+        "Mage Defense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Mage Midfield": {
+          "item": "Night Watch Shortsword",
+          "enchant": "30 Spellpower Enchant Weapon Spell Power"
+        },
+        "Mage Offense": {
+          "item": "Hook Dagger of Frozen Wrath",
+          "enchant": "30 Spellpower Enchant Weapon Spell Power"
+        },
+        "Priest Defense": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Priest Midfield": {
+          "item": "Minor Recombobulator",
+          "enchant": null
+        },
+        "Priest Offense": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Rogue Midfield": {
+          "item": "Shadowfang",
+          "enchant": "Lifestealing Enchant Weapon Lifestealing"
+        },
+        "Rogue Offense": {
+          "item": "Shadowfang",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Shaman Defense": {
+          "item": "Jagged Star of Healing",
+          "enchant": "55 Healing Enchant Weapon Healing Power"
+        },
+        "Shaman Midfield": {
+          "item": "Assasin's Blade",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Shaman Offense": {
+          "item": "Assasin's Blade",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Warlock Defense": {
+          "item": "Night Watch Shortsword",
+          "enchant": "30 Spellpower Enchant Weapon Spell Power"
+        },
+        "Warlock Midfield": {
+          "item": "Witching Stave",
+          "enchant": "30 Spellpower Enchant Weapon Spell Power"
+        },
+        "Warlock Offense": {
+          "item": "Witching Stave",
+          "enchant": "30 Spellpower Enchant Weapon Spell Power"
+        },
+        "Warrior Defense": {
+          "item": "Shadowfang",
+          "enchant": "Lifestealing Enchant Weapon Lifestealing"
+        },
+        "Warrior Midfield": {
+          "item": "Shadowfang",
+          "enchant": "Lifestealing Enchant Weapon Lifestealing"
+        },
+        "Warrior Offense": {
+          "item": "Shadowfang",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        }
+      }
+    },
+    {
+      "srcRow": 17,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Face Smasher",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Druid Midfield": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Hunter Defense": {
+          "item": "Furbolg Medicine Pouch",
+          "enchant": null
+        },
+        "Hunter Midfield": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Hunter Offense": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Mage Defense": {
+          "item": "Night Watch Shortsword",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Mage Midfield": {
+          "item": "Furbolg Medicine Pouch",
+          "enchant": null
+        },
+        "Mage Offense": {
+          "item": "Antipodean Rod",
+          "enchant": null
+        },
+        "Priest Defense": {
+          "item": "Jagged Star of Healing",
+          "enchant": "55 Healing Enchant Weapon Healing Power"
+        },
+        "Priest Midfield": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Priest Offense": {
+          "item": "Gravestone Scepter",
+          "enchant": null
+        },
+        "Rogue Midfield": {
+          "item": "Cruel Barb",
+          "enchant": "Lifestealing Enchant Weapon Lifestealing"
+        },
+        "Rogue Offense": {
+          "item": "Cruel Barb",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Shaman Defense": {
+          "item": "Deadskull Shield",
+          "enchant": "7 Stamina Enchant Shield Greater Stamina"
+        },
+        "Shaman Midfield": {
+          "item": "Redbeard Crest",
+          "enchant": "7 Stamina Enchant Shield Greater Stamina"
+        },
+        "Shaman Offense": {
+          "item": "Arctic Buckler",
+          "enchant": "8 Frost Resist Enchant Shield Frost Resistance"
+        },
+        "Warlock Defense": {
+          "item": "Furbolg Medicine Pouch",
+          "enchant": null
+        },
+        "Warlock Midfield": {
+          "item": "Gravestone Scepter",
+          "enchant": null
+        },
+        "Warlock Offense": {
+          "item": "Gravestone Scepter",
+          "enchant": null
+        },
+        "Warrior Defense": {
+          "item": "Deadskull Shield",
+          "enchant": "7 Stamina Enchant Shield Greater Stamina"
+        },
+        "Warrior Midfield": {
+          "item": "Deadskull Shield",
+          "enchant": "7 Stamina Enchant Shield Greater Stamina"
+        },
+        "Warrior Offense": {
+          "item": "Arctic Buckler",
+          "enchant": "8 Frost Resist Enchant Shield Frost Resistance"
+        }
+      }
+    },
+    {
+      "srcRow": 18,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Furbolg Medicine Pouch",
+          "enchant": null
+        },
+        "Druid Midfield": {
+          "item": "Staff of the Blessed Seer",
+          "enchant": "55 Healing Enchant Weapon Healing Power"
+        },
+        "Hunter Defense": {
+          "item": "Venomstrike",
+          "enchant": "3 Damage Accurate Scope"
+        },
+        "Hunter Midfield": {
+          "item": "Venomstrike",
+          "enchant": "3 Damage Accurate Scope"
+        },
+        "Hunter Offense": {
+          "item": "Venomstrike",
+          "enchant": "3 Damage Accurate Scope"
+        },
+        "Mage Defense": {
+          "item": "Furbolg Medicine Pouch",
+          "enchant": null
+        },
+        "Mage Midfield": {
+          "item": "Gravestone Scepter",
+          "enchant": null
+        },
+        "Mage Offense": {
+          "item": "Gravestone Scepter",
+          "enchant": null
+        },
+        "Priest Defense": {
+          "item": "Furbolg Medicine Pouch",
+          "enchant": null
+        },
+        "Priest Midfield": {
+          "item": "Staff of the Blessed Seer",
+          "enchant": "55 Healing Enchant Weapon Healing Power"
+        },
+        "Priest Offense": {
+          "item": "Staff of the Blessed Seer",
+          "enchant": "55 Healing Enchant Weapon Healing Power"
+        },
+        "Rogue Midfield": {
+          "item": "Assasin's Blade",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Rogue Offense": {
+          "item": "Assasin's Blade",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Shaman Defense": {
+          "item": "Evocator's Blade",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Shaman Midfield": {
+          "item": "Evocator's Blade",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Shaman Offense": {
+          "item": "Evocator's Blade",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Warlock Defense": {
+          "item": "Gravestone Scepter",
+          "enchant": null
+        },
+        "Warlock Midfield": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Warlock Offense": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Warrior Defense": {
+          "item": "Night Reaver",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Warrior Midfield": {
+          "item": "Night Reaver",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Warrior Offense": {
+          "item": "Runic Darkblade",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        }
+      }
+    },
+    {
+      "srcRow": 19,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Face Smasher",
+          "enchant": "55 Healing Enchant Weapon Healing Power"
+        },
+        "Druid Midfield": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Hunter Defense": {
+          "item": "Runic Darkblade",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Hunter Midfield": {
+          "item": "Runic Darkblade",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Hunter Offense": {
+          "item": "Runic Darkblade",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Mage Defense": {
+          "item": "Gravestone Scepter",
+          "enchant": null
+        },
+        "Mage Midfield": {
+          "item": "Evocator's Blade",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Mage Offense": {
+          "item": "Evocator's Blade",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Priest Defense": {
+          "item": "Gravestone Scepter",
+          "enchant": null
+        },
+        "Priest Midfield": {
+          "item": "Gravestone Scepter",
+          "enchant": null
+        },
+        "Priest Offense": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Rogue Midfield": {
+          "item": "Keen Throwing Knife",
+          "enchant": null
+        },
+        "Rogue Offense": {
+          "item": "Keen Throwing Knife",
+          "enchant": null
+        },
+        "Shaman Defense": {
+          "item": "Forester Axe of the Whale",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Shaman Midfield": {
+          "item": "Arctic Buckler",
+          "enchant": "8 Frost Resist Enchant Shield Frost Resistance"
+        },
+        "Shaman Offense": {
+          "item": "Redbeard Crest",
+          "enchant": "7 Stamina Enchant Shield Greater Stamina"
+        },
+        "Warlock Defense": {
+          "item": "Evocator's Blade",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Warlock Midfield": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Warlock Offense": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Warrior Defense": {
+          "item": "Redbeard Crest",
+          "enchant": "Thorium Spike Thorium Shield Spike"
+        },
+        "Warrior Midfield": {
+          "item": "Redbeard Crest",
+          "enchant": "Thorium Spike Thorium Shield Spike"
+        },
+        "Warrior Offense": {
+          "item": "Keen Throwing Knife",
+          "enchant": null
+        }
+      }
+    },
+    {
+      "srcRow": 20,
+      "picks": {
+        "Druid Flag Carrier": {
+          "item": "Face Smasher",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Hunter Defense": {
+          "item": "Sharp Arrow",
+          "enchant": null
+        },
+        "Hunter Midfield": {
+          "item": "Sharp Arrow",
+          "enchant": null
+        },
+        "Hunter Offense": {
+          "item": "Sharp Arrow",
+          "enchant": null
+        },
+        "Mage Defense": {
+          "item": "Night Watch Shortsword",
+          "enchant": "30 Spellpower Enchant Weapon Spell Power"
+        },
+        "Mage Midfield": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Mage Offense": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Priest Defense": {
+          "item": "Evocator's Blade",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Priest Midfield": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Rogue Midfield": {
+          "item": "Outrider's Bow",
+          "enchant": "3 Damage Accurate Scope"
+        },
+        "Rogue Offense": {
+          "item": "Outrider's Bow",
+          "enchant": "3 Damage Accurate Scope"
+        },
+        "Shaman Defense": {
+          "item": "Arctic Buckler",
+          "enchant": "9 Spirit Enchant Shield Superior Spirit"
+        },
+        "Shaman Midfield": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Shaman Offense": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "Fiery Weapon Enchant Weapon Fiery Weapon"
+        },
+        "Warlock Defense": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Warrior Defense": {
+          "item": "Keen Throwing Knife",
+          "enchant": null
+        },
+        "Warrior Midfield": {
+          "item": "Keen Throwing Knife",
+          "enchant": null
+        },
+        "Warrior Offense": {
+          "item": "Outrider's Bow",
+          "enchant": "3 Damage Accurate Scope"
+        }
+      }
+    },
+    {
+      "srcRow": 21,
+      "picks": {
+        "Hunter Defense": {
+          "item": "Medium Quiver",
+          "enchant": null
+        },
+        "Hunter Midfield": {
+          "item": "Medium Quiver",
+          "enchant": null
+        },
+        "Hunter Offense": {
+          "item": "Medium Quiver",
+          "enchant": null
+        },
+        "Mage Defense": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Priest Defense": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Rogue Midfield": {
+          "item": "Sharp Arrow",
+          "enchant": null
+        },
+        "Rogue Offense": {
+          "item": "Sharp Arrow",
+          "enchant": null
+        },
+        "Warrior Defense": {
+          "item": "Outrider's Bow",
+          "enchant": "3 Damage Accurate Scope"
+        },
+        "Warrior Midfield": {
+          "item": "Outrider's Bow",
+          "enchant": "3 Damage Accurate Scope"
+        },
+        "Warrior Offense": {
+          "item": "Sharp Arrow",
+          "enchant": null
+        }
+      }
+    },
+    {
+      "srcRow": 22,
+      "picks": {
+        "Hunter Defense": {
+          "item": "Twisted Chanter's Staff",
+          "enchant": "22 Intellect Enchant Weapon Mighty Intellect"
+        },
+        "Hunter Midfield": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Hunter Offense": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        },
+        "Warrior Defense": {
+          "item": "Sharp Arrow",
+          "enchant": null
+        },
+        "Warrior Midfield": {
+          "item": "Sharp Arrow",
+          "enchant": null
+        }
+      }
+    },
+    {
+      "srcRow": 23,
+      "picks": {
+        "Hunter Defense": {
+          "item": "Staff of the Friar",
+          "enchant": "20 Spirit Enchant Weapon Mighty Spirit"
+        }
+      }
+    }
+  ]
+}
