@@ -1,0 +1,24 @@
+{
+  "slug": "19-twink-basics",
+  "title": "19 Twink Basics: XP, Gearing, and WSG",
+  "summary": "What the level-19 bracket is, how to avoid dinging 20, and the gearing principles that define the meta. This is a curated summary of copy verified elsewhere in the content store \u2014 verify specifics per class and spec.",
+  "tags": ["beginner", "xp", "gearing"],
+  "sections": [
+    {
+      "heading": "The bracket",
+      "body": "The level-19 bracket spans levels 10\u201319; its battleground is **Warsong Gulch**. Because a character that dings 20 leaves the bracket, the whole game is played at exactly level 19. Everything below \u2014 XP control and gearing \u2014 exists to keep you competitive at that cap."
+    },
+    {
+      "heading": "Managing XP",
+      "body": "Classic Era has **no in-game XP-off toggle**. XP must be managed manually; BGs award no XP, but mob and quest XP can still ding you past 19. Stop turning in XP quests near the cap, avoid killing mobs that would ding you, and complete only gear-reward quests whose XP won't overflow. See `/xprules` for the bracket's full rules and `/quest` for which turn-ins are flagged XP-risk."
+    },
+    {
+      "heading": "Enchants win the bracket",
+      "body": "Twinking hinges on **enchants with no level requirement**: they let a level-19 character carry effects far above the bracket's natural power. Head has no enchant at this bracket, which is why Engineering goggles matter. Browse the no-level-req list with `/enchant` and see what your core pieces should carry via `/optimize`."
+    },
+    {
+      "heading": "Stats: stamina for WSG",
+      "body": "Warsong Gulch rewards survivability. As a rough guide, **1 Stamina \u2248 10 Health** and the meta targets **~1000+ HP for flag carriers**; in competitive play stamina effectively beats every other primary stat. This is a general rule \u2014 confirm your class's exact conversions and stat priority with `/statweights` before committing gems, enchants, and gear."
+    }
+  ]
+}

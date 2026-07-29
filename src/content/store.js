@@ -13,7 +13,9 @@ import {
   validatePets,
   validateSpellCoefficients,
   validateConsumables,
-  validateQuests
+  validateQuests,
+  validateGuideIndex,
+  validateGuide
 } from './schema.js';
 import { logger } from '../lib/logger.js';
 
@@ -102,6 +104,53 @@ async function loadGear(dir, key, roster, strict) {
 }
 
 /**
+ * Load the optional guides namespace: `guides/index.json` (the slug + title +
+ * summary catalogue) plus an optional `guides/<slug>.json` body per entry.
+ * Referential guards (03-data-model.md): a guide's optional `class` must name a
+ * real roster class, and a body file's `slug` must match its index entry. A slug
+ * can be catalogued before its body is authored (like a roster-only class), in
+ * which case it browses but can't yet be opened.
+ *
+ * @returns {{ note: string|null, list: object[], bySlug: Record<string, object> } | null}
+ */
+async function loadGuides(dir, key, roster, strict) {
+  const guidesIndex = await readOptionalJson(path.join(dir, key, 'guides', 'index.json'));
+  if (!guidesIndex) return null;
+
+  const giResult = validateGuideIndex(guidesIndex, `${key}/guides/index.json`);
+  if (!giResult.ok) {
+    fail(strict, `content ${key}/guides/index.json invalid: ${giResult.errors.join('; ')}`);
+    return null;
+  }
+
+  const rosterSet = new Set(roster.map((e) => e.class));
+  const out = { note: guidesIndex.note ?? null, list: guidesIndex.guides, bySlug: {} };
+
+  for (const entry of guidesIndex.guides) {
+    if (rosterSet.size && entry.class != null && !rosterSet.has(entry.class)) {
+      fail(strict, `content ${key}/guides/index.json guide "${entry.slug}" references unknown class "${entry.class}"`);
+    }
+    const body = await readOptionalJson(path.join(dir, key, 'guides', `${entry.slug}.json`));
+    if (!body) continue; // catalogued but not yet authored
+    const bResult = validateGuide(body, `${key}/guides/${entry.slug}.json`);
+    if (!bResult.ok) {
+      fail(strict, `content ${key}/guides/${entry.slug}.json invalid: ${bResult.errors.join('; ')}`);
+      continue;
+    }
+    if (body.slug !== entry.slug) {
+      fail(strict, `content ${key}/guides/${entry.slug}.json slug "${body.slug}" != index slug "${entry.slug}"`);
+      continue;
+    }
+    if (rosterSet.size && body.class != null && !rosterSet.has(body.class)) {
+      fail(strict, `content ${key}/guides/${entry.slug}.json references unknown class "${body.class}"`);
+    }
+    out.bySlug[entry.slug] = body;
+  }
+
+  return out;
+}
+
+/**
  * Load one bracket: required meta.json plus the optional class roster and any
  * per-class detail files it lists. Detail files are optional (a class can be
  * roster-only until authored); when present, their tier must match the roster
@@ -115,7 +164,7 @@ async function loadBracket(dir, key, strict) {
     return null;
   }
 
-  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null, consumables: null, quests: null };
+  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null, consumables: null, quests: null, guides: null };
 
   const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
   if (classIndex) {
@@ -302,6 +351,11 @@ async function loadBracket(dir, key, strict) {
       bracket.quests = questsFile;
     }
   }
+
+  // Optional guides namespace loads last: its catalogue + bodies key off the
+  // roster loaded above (a guide's `class` must be a real roster class). See
+  // loadGuides for the referential guards.
+  bracket.guides = await loadGuides(dir, key, bracket.classes.index?.classes ?? [], strict);
 
   return bracket;
 }
@@ -580,6 +634,39 @@ export function questsFor(store, bracket, { faction = null, className = null } =
   );
 }
 
+/** The guides bundle (`{ note, list, bySlug }`) for a bracket, or null. */
+export function bracketGuides(store, bracket) {
+  return store?.brackets?.[bracket]?.guides ?? null;
+}
+
+/** The guide catalogue (index entries) for a bracket (for /guide autocomplete/browse). */
+export function listGuides(store, bracket) {
+  return bracketGuides(store, bracket)?.list ?? [];
+}
+
+/** A single guide body by slug, or null (only slugs whose body file is authored). */
+export function getGuide(store, bracket, slug) {
+  const guides = bracketGuides(store, bracket);
+  if (!guides) return null;
+  return guides.bySlug[String(slug ?? '').toLowerCase()] ?? null;
+}
+
+/**
+ * Guide catalogue entries filtered by `className` and/or `tag`. A class filter
+ * keeps guides that either name the class or have none (universal); a tag filter
+ * keeps guides whose `tags` include it. Returns [] when none are loaded.
+ */
+export function guidesFor(store, bracket, { className = null, tag = null } = {}) {
+  const list = listGuides(store, bracket);
+  const classKey = className ? String(className).toLowerCase() : null;
+  const tagKey = tag ? String(tag).toLowerCase() : null;
+  return list.filter(
+    (g) =>
+      (!classKey || g.class == null || String(g.class).toLowerCase() === classKey) &&
+      (!tagKey || (g.tags ?? []).some((t) => t.toLowerCase() === tagKey))
+  );
+}
+
 /**
  * A compact per-bracket count summary — `{ bracket, classes, enchants, gearItems,
  * scalingClasses }` per bracket — for the /reloadcontent report and quick health
@@ -591,6 +678,7 @@ export function summarizeStore(store) {
     classes: listClassNames(store, bracket).length,
     enchants: bracketEnchants(store, bracket)?.enchants.length ?? 0,
     gearItems: listGearItems(store, bracket).length,
-    scalingClasses: listStatweightClasses(store, bracket).length
+    scalingClasses: listStatweightClasses(store, bracket).length,
+    guides: listGuides(store, bracket).length
   }));
 }

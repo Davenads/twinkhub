@@ -29,7 +29,11 @@ import {
   listConsumableTypes,
   consumablesFor,
   bracketQuests,
-  questsFor
+  questsFor,
+  bracketGuides,
+  listGuides,
+  getGuide,
+  guidesFor
 } from '../../src/content/store.js';
 
 // Integration: load the real seeded store from data/content (path is resolved
@@ -318,6 +322,37 @@ test('loadContentStore loads quests with valid reward/class references and filte
   assert.deepEqual(questsFor(store, '49', { faction: 'alliance' }), []);
 });
 
+test('loadContentStore loads guides with a matching body slug and valid class refs', async () => {
+  const store = await loadContentStore();
+
+  const guides = bracketGuides(store, '19');
+  assert.ok(guides, 'guides are loaded');
+  assert.ok(guides.list.length > 0, 'catalogue is non-empty');
+
+  // A strict load reaching here proves each body slug matched its index entry and
+  // any guide `class` names a real roster class.
+  const roster = new Set(listClassNames(store, '19'));
+  for (const g of guides.list) {
+    if (g.class != null) assert.ok(roster.has(g.class), `${g.class} is a roster class`);
+  }
+
+  // The seeded basics guide resolves by slug (case-insensitive) and paginates.
+  const basics = getGuide(store, '19', '19-Twink-Basics');
+  assert.ok(basics, 'seeded guide body resolves case-insensitively');
+  assert.equal(basics.slug, '19-twink-basics');
+  assert.ok(Array.isArray(basics.sections) && basics.sections.length > 0);
+
+  // Browse filters: a matching tag keeps it, a non-matching tag drops it.
+  assert.ok(guidesFor(store, '19', { tag: 'beginner' }).some((g) => g.slug === '19-twink-basics'));
+  assert.deepEqual(guidesFor(store, '19', { tag: 'nope-not-a-tag' }), []);
+  // A class-less guide is universal, surfacing for any class filter.
+  assert.ok(guidesFor(store, '19', { className: 'Hunter' }).some((g) => g.slug === '19-twink-basics'));
+
+  assert.equal(bracketGuides(store, '49'), null);
+  assert.deepEqual(listGuides(store, '49'), []);
+  assert.equal(getGuide(store, '49', 'x'), null);
+});
+
 test('reloadContentStore reloads from disk and summarizeStore reports per-bracket counts', async () => {
   const result = await reloadContentStore();
   assert.equal(result.ok, true);
@@ -328,6 +363,7 @@ test('reloadContentStore reloads from disk and summarizeStore reports per-bracke
   assert.ok(s19.classes > 0, 'reports class count');
   assert.ok(s19.gearItems > 0, 'reports gear item count');
   assert.ok(s19.scalingClasses > 0, 'reports stat-weight class count');
+  assert.ok(s19.guides > 0, 'reports guide count');
 });
 
 test('reloadContentStore fails cleanly and keeps the last-good store on a bad load', async () => {

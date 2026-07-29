@@ -580,3 +580,69 @@ export function validateQuests(obj, label = 'quests.json') {
 
   return { ok: errors.length === 0, errors };
 }
+
+/**
+ * `<bracket>/guides/index.json`: the guide catalogue (slug + title + summary,
+ * optional `class`/`tags`) that drives `/guide` autocomplete and browsing.
+ * Structural checks only — the referential guard (an optional `class` names a
+ * real roster class) lives in the store. A slug may be catalogued before its
+ * body file is authored, so a missing body is not an error here.
+ */
+export function validateGuideIndex(obj, label = 'guides/index.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) return { ok: false, errors };
+  if (obj.note !== undefined) {
+    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+  }
+  if (require_(errors, Array.isArray(obj.guides) && obj.guides.length > 0, `${label}: guides must be a non-empty array`)) {
+    const seen = new Set();
+    obj.guides.forEach((g, i) => {
+      const at = `${label}: guides[${i}]`;
+      if (!require_(errors, isObject(g), `${at} must be an object`)) return;
+      require_(errors, isNonEmptyString(g.slug), `${at}.slug must be a non-empty string`);
+      require_(errors, isNonEmptyString(g.title), `${at}.title must be a non-empty string`);
+      require_(errors, isNonEmptyString(g.summary), `${at}.summary must be a non-empty string`);
+      if (g.class !== undefined) {
+        require_(errors, isNonEmptyString(g.class), `${at}.class must be a non-empty string when present`);
+      }
+      if (g.tags !== undefined) {
+        require_(errors, isStringArray(g.tags), `${at}.tags must be a non-empty string array when present`);
+      }
+      if (isNonEmptyString(g.slug)) {
+        require_(errors, !seen.has(g.slug), `${at}.slug "${g.slug}" is duplicated`);
+        seen.add(g.slug);
+      }
+    });
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+/**
+ * `<bracket>/guides/<slug>.json`: one guide's body. Carries the same front-matter
+ * as its catalogue entry (`slug`, `title`, `summary`, optional `class`/`tags`)
+ * plus an ordered `sections[]` of `{ heading, body }` that the renderer paginates
+ * into embed fields (Discord-flavored markdown is allowed in `body`). The
+ * body/index slug match and the `class` guard live in the store.
+ */
+export function validateGuide(obj, label = 'guide') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) return { ok: false, errors };
+  require_(errors, isNonEmptyString(obj.slug), `${label}: slug must be a non-empty string`);
+  require_(errors, isNonEmptyString(obj.title), `${label}: title must be a non-empty string`);
+  require_(errors, isNonEmptyString(obj.summary), `${label}: summary must be a non-empty string`);
+  if (obj.class !== undefined) {
+    require_(errors, isNonEmptyString(obj.class), `${label}: class must be a non-empty string when present`);
+  }
+  if (obj.tags !== undefined) {
+    require_(errors, isStringArray(obj.tags), `${label}: tags must be a non-empty string array when present`);
+  }
+  if (require_(errors, Array.isArray(obj.sections) && obj.sections.length > 0, `${label}: sections must be a non-empty array`)) {
+    obj.sections.forEach((s, i) => {
+      const at = `${label}: sections[${i}]`;
+      if (!require_(errors, isObject(s), `${at} must be an object`)) return;
+      require_(errors, isNonEmptyString(s.heading), `${at}.heading must be a non-empty string`);
+      require_(errors, isNonEmptyString(s.body), `${at}.body must be a non-empty string`);
+    });
+  }
+  return { ok: errors.length === 0, errors };
+}

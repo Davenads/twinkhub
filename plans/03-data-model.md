@@ -167,9 +167,15 @@ required (`alliance | horde | both`); a `both`/matching-faction quest shows unde
 filter. `zone` is nullable and `classes` is optional (present = class-specific) so a quest can
 be authored before every detail is verified. Ids are unique bracket-wide.
 
-### guide (in `guides/`)
-- guide: front-matter (`slug`, `title`, `summary`, `class?`, `tags[]`) + markdown body,
-  rendered into embeds (chunked to Discord's field limits).
+### guide (in `guides/`) — backs `/guide`
+- `guides/index.json`: `{ note?, guides: [{ slug, title, summary, class?, tags[]? }] }` — the
+  catalogue that drives `/guide` autocomplete and browsing. Slugs are unique.
+- `guides/<slug>.json`: the body — the same front-matter (`slug`, `title`, `summary`,
+  `class?`, `tags[]?`) plus an ordered `sections[]` of `{ heading, body }` (Discord-flavored
+  markdown allowed in `body`). The renderer paginates sections into embed fields.
+- A slug may be catalogued before its body is authored (browses as "coming soon", can't open).
+- Referential checks (in the store): a guide's `class` is a real roster class, and a body
+  file's `slug` matches its index entry.
 
 ### scaling (in `scaling.json`) — backs `/statweights` + explains stat priority
 Constants and per-class overrides so numbers live in data, not code (see

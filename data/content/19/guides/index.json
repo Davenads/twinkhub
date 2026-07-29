@@ -1,0 +1,11 @@
+{
+  "note": "Curated guides for the bracket. This catalogue is seeded minimally: each guide consolidates copy already verified elsewhere in the content store (meta, enchants, scaling notes) rather than introducing new claims. Add a guide by dropping a slug entry here plus a matching guides/<slug>.json body.",
+  "guides": [
+    {
+      "slug": "19-twink-basics",
+      "title": "19 Twink Basics: XP, Gearing, and WSG",
+      "summary": "What the level-19 bracket is, how to avoid dinging 20, and the gearing principles that define the meta.",
+      "tags": ["beginner", "xp", "gearing"]
+    }
+  ]
+}

@@ -12,7 +12,9 @@ import {
   validatePets,
   validateSpellCoefficients,
   validateConsumables,
-  validateQuests
+  validateQuests,
+  validateGuideIndex,
+  validateGuide
 } from '../../src/content/schema.js';
 
 const validMeta = () => ({
@@ -445,4 +447,60 @@ test('validateQuests flags a non-string zone, a bad classes array, and a duplica
   const dupe = validQuests();
   dupe.quests.push({ ...dupe.quests[0] });
   assert.ok(validateQuests(dupe).errors.some((e) => e.includes('duplicated')));
+});
+
+const validGuideIndex = () => ({
+  note: 'Curated guides for the bracket.',
+  guides: [
+    { slug: '19-twink-basics', title: '19 Twink Basics', summary: 'Start here.', tags: ['beginner', 'xp'] },
+    { slug: 'hunter-pets', title: 'Hunter Pets', summary: 'Pet XP and families.', class: 'hunter' }
+  ]
+});
+
+test('validateGuideIndex accepts a well-formed catalogue with optional class/tags', () => {
+  assert.deepEqual(validateGuideIndex(validGuideIndex()), { ok: true, errors: [] });
+});
+
+test('validateGuideIndex requires slug/title/summary and rejects a duplicated slug', () => {
+  assert.equal(validateGuideIndex({ guides: [] }).ok, false);
+  const missing = validGuideIndex();
+  delete missing.guides[0].summary;
+  assert.ok(validateGuideIndex(missing).errors.some((e) => e.includes('summary')));
+
+  const badTags = validGuideIndex();
+  badTags.guides[0].tags = [];
+  assert.ok(validateGuideIndex(badTags).errors.some((e) => e.includes('tags')));
+
+  const dupe = validGuideIndex();
+  dupe.guides.push({ ...dupe.guides[0] });
+  assert.ok(validateGuideIndex(dupe).errors.some((e) => e.includes('duplicated')));
+});
+
+const validGuide = () => ({
+  slug: '19-twink-basics',
+  title: '19 Twink Basics',
+  summary: 'Start here.',
+  tags: ['beginner'],
+  sections: [
+    { heading: 'The bracket', body: 'Levels 10\u201319, Warsong Gulch.' },
+    { heading: 'Managing XP', body: 'No XP-off toggle in Classic Era.' }
+  ]
+});
+
+test('validateGuide accepts a well-formed body', () => {
+  assert.deepEqual(validateGuide(validGuide()), { ok: true, errors: [] });
+});
+
+test('validateGuide requires a non-empty sections array with heading and body', () => {
+  const noSections = validGuide();
+  noSections.sections = [];
+  assert.ok(validateGuide(noSections).errors.some((e) => e.includes('sections')));
+
+  const blankHeading = validGuide();
+  blankHeading.sections[0].heading = '';
+  assert.ok(validateGuide(blankHeading).errors.some((e) => e.includes('heading')));
+
+  const blankBody = validGuide();
+  blankBody.sections[1].body = '   ';
+  assert.ok(validateGuide(blankBody).errors.some((e) => e.includes('body')));
 });
