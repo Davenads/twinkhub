@@ -111,6 +111,85 @@
       "priority": "situational"
     },
     {
+      "id": "shadowfang",
+      "name": "Shadowfang",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Shadowfang Keep (dungeon drop)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Iconic low-level one-hand sword from Shadowfang Keep and a common melee-twink weapon across physical class builds; much of its value is the no-level-req weapon enchant it carries. Verify the exact required level (~18), stats, and current-meta status at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "fiery-weapon"
+    },
+    {
+      "id": "leggings-of-the-fang",
+      "name": "Leggings of the Fang",
+      "slot": "legs",
+      "source": { "type": "drop", "detail": "Wailing Caverns (dungeon drop)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Leather legs from the Fang set in Wailing Caverns; a common melee-twink leg piece recurring across class builds. Verify stats and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "deviate-scale-belt",
+      "name": "Deviate Scale Belt",
+      "slot": "waist",
+      "source": { "type": "profession", "detail": "Leatherworking (crafted from Deviate Scales)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Crafted belt from Wailing Caverns Deviate Scales; the survivability-leaning waist pick recurring across class builds. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "legionnaires-band",
+      "name": "Legionnaire's Band",
+      "slot": "finger",
+      "source": { "type": "pvp", "detail": "Horde PvP reward (verify exact source)" },
+      "faction": "horde",
+      "reqLevel": null,
+      "notes": "Horde faction ring paired with a seal in midfield builds across classes. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "keen-throwing-knife",
+      "name": "Keen Throwing Knife",
+      "slot": "ranged",
+      "source": { "type": "drop", "detail": "Low-level drop with the Keen (+crit) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Thrown weapon occupying the ranged slot; the default ranged pick when not using a bow (no ammo required). Recurs across melee class builds. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "outriders-bow",
+      "name": "Outrider's Bow",
+      "slot": "ranged",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Bow alternative for the ranged slot; takes an Accurate Scope and requires ammo. Recurs across melee class builds. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "accurate-scope"
+    },
+    {
+      "id": "sharp-arrow",
+      "name": "Sharp Arrow",
+      "slot": "ammo",
+      "source": { "type": "vendor", "detail": "Ammo vendor" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Ammunition for a bow/crossbow build; only needed when using a bow rather than a thrown weapon. Verify current best available ammo at authoring.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
       "id": "talbar-mantle",
       "name": "Talbar Mantle",
       "slot": "shoulder",
