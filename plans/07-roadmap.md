@@ -43,6 +43,14 @@ Phased build plan. Each phase is shippable on its own. Nothing here is built yet
   coefficients are done for all 9 classes; per-class **gear anchors** remain (Hunter and
   Rogue today) — each needs a verified item, not a fabricated one, before `/bis`/`/optimize`
   light up for that class.
+- **Multi-build gear model:** each class carries **multiple role builds** (flag-carrier /
+  defense / midfield / offense), not one list, so we can seed the verified Cowblackout chart
+  (`09-bis-reference.md`) and keep adding gearsets by data edit only. Land the `builds[]`
+  schema + loader guards + tests, migrate the Hunter/Rogue anchors into a `default` build (no
+  behavior change), then seed the 22 Horde builds slot-by-slot with backfilled Wowhead ids.
+  Then export the **Alliance** tab (adds Paladin + Alliance faction variants) and resolve the
+  head-enchant discrepancy (Lesser Arcanum) flagged in `03-data-model.md`. See
+  `09-bis-reference.md` for source, taxonomy, and the store mapping.
 - **Exit criteria:** `/optimize` returns useful "you're missing X" for every class with an
   authored BiS list; extend to a new class by dropping in a verified gear anchor, no code
   changes.

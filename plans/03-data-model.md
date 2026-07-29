@@ -99,6 +99,61 @@ expansion is pure copy-the-shape-and-fill-data.
 `faction` ∈ `alliance | horde | both`.
 `priority` ∈ `core | situational | budget`.
 
+> ⚠️ The `notes` line above ("head has no enchant at this bracket") is **contradicted** by the
+> verified Cowblackout chart, which shows a universal Lesser Arcanum head enchant. Flagged in
+> `09-bis-reference.md`; correct here + in `enchants.json` when head gear is authored.
+
+### Gear: builds (multi-loadout model)
+
+The verified BiS source (`09-bis-reference.md`) is organized as **one class → many role
+builds** (flag-carrier / defense / midfield / offense), and the **same item takes different
+enchants in different builds**. So the item is stored once in a registry, and a *build*
+references items by id and names the enchant per slot. This lets us add gearsets by editing
+data, never code.
+
+`gear/<class>.json` (new shape, backward-compatible):
+```json
+{
+  "class": "rogue",
+  "items": [
+    { "id": "shadowfang", "name": "Shadowfang", "slot": "mainhand", "priority": "core",
+      "source": { "type": "drop", "detail": "Deadmines" }, "faction": "both",
+      "stats": null, "reqLevel": null, "wowheadId": null, "notes": "Verify at authoring." }
+  ],
+  "builds": [
+    {
+      "id": "rogue-offense",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "both",
+      "default": true,
+      "slots": {
+        "head":    { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-voracity" },
+        "mainhand":{ "item": "shadowfang",         "enchant": "fiery-weapon" },
+        "waist":   { "item": "deviate-scale-belt", "enchant": null }
+      }
+    }
+  ]
+}
+```
+- **`items[]`** is the per-class item registry (the existing schema, unchanged). Universal
+  picks stay in `gear/index.json` `shared[]`. A build slot may reference either.
+- **`builds[]`** is new and optional. Each build: `id` (unique bracket-wide), `name`, `role`
+  (∈ `flag-carrier | defense | midfield | offense`), `faction` (∈ `alliance | horde | both`),
+  `default` (exactly one build per class, the one `/bis class:X` shows with no build arg), and
+  `slots` — a map of slot → `{ item, enchant }`. `item` resolves to a registry/shared item id;
+  `enchant` resolves to an `enchants.json` id or is `null` (slots with no enchant, e.g. waist).
+- **Backward-compatible:** a class file with only `items[]` and no `builds[]` still loads
+  exactly as today (`gearForClass` keeps working). Migration is: add a `default` build whose
+  slots point at the existing anchors — no behavior change.
+- **Referential guards (store, on load):** every build `slots[].item` resolves to a known item
+  (class registry or shared), every non-null `slots[].enchant` resolves to a real enchant,
+  every `slots` key is a declared slot, each build `role`/`faction` is in-vocabulary, build ids
+  are unique bracket-wide, and **exactly one** build per class is `default`.
+- **Commands:** `/bis class:X [build:Y]` renders the named build (or the default); `/optimize`
+  diffs an authored build's `core` slots. `renderBis` stays in `services/` so P4 panels reuse
+  it. Adding a build (or the whole Alliance mirror) is a pure data edit.
+
 ### enchant (in `enchants.json`)
 ```json
 {
@@ -271,8 +326,9 @@ set" link. These are **human-curated links**, not scraped — Sixty Upgrades is 
 - Schema-validate all content files.
 - Referential checks: every `itemId` referenced by a class/guide/`quest.reward` exists in gear;
   every `enchant.classes[]` is a real class; every `spellcoefficients.byClass` key is a real
-  class; every `consumable.classes[]` and `quest.classes[]` is a real class; no duplicate `id`s
-  within a bracket.
+  class; every `consumable.classes[]` and `quest.classes[]` is a real class; every gear
+  `builds[].slots[].item` resolves to a known item and every non-null `.enchant` to a real
+  enchant; exactly one `default` build per class; no duplicate `id`s within a bracket.
 - Lint: every `core`-priority gear slot is filled per class (flag gaps).
 - Game-version check: every bracket's `meta.json.gameVersion.flavor` is `classic-era` with
   `contentState: all-pre-tbc-unlocked` (guards against SoD/TBC/Anniversary content creeping in).
