@@ -1,0 +1,33 @@
+{
+  "class": "hunter",
+  "families": [
+    {
+      "family": "boar",
+      "exampleName": "Great Goretusk",
+      "keyAbility": "Charge",
+      "tameLevel": null,
+      "zone": null,
+      "notes": "Charge utility (snare/stun on the pull). Verify tame level/zone at authoring."
+    },
+    {
+      "family": "cat",
+      "exampleName": "The Rake",
+      "keyAbility": null,
+      "attackSpeed": 1.2,
+      "tameLevel": null,
+      "zone": null,
+      "notes": "Fastest 1.2 attack speed; pushes back casters. Verify tame level/zone at authoring."
+    },
+    {
+      "family": "wind-serpent",
+      "exampleName": "Deviate Stinglash",
+      "keyAbility": null,
+      "tameLevel": null,
+      "zone": null,
+      "notes": "Ranged nature damage; strong vs plate and casters. Verify tame level/zone and ability name at authoring."
+    }
+  ],
+  "xpNote": "Pets need only ~25% of the XP a player needs, so a 19 can level a full pet stable within budget. Pets gain NO XP from quest turn-ins \u2014 only the player does. Sync pets to your level BEFORE turning in gear quests or you'll out-level them.",
+  "abilityNote": "Ability-shop while taming: tame temporary pets to learn ability ranks (e.g. Bite Rank 3, Claw Rank 3) before taming the keeper \u2014 learned abilities persist on the hunter.",
+  "budgetNote": "At level 18 with three level-18 pets you have roughly a 6,000 XP surplus for the few required gear quests before hitting 19. Sync pets first, then turn in."
+}

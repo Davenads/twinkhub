@@ -337,3 +337,59 @@ export function validateScaling(obj, label = 'scaling.json') {
 
   return { ok: errors.length === 0, errors };
 }
+
+/**
+ * `<bracket>/pets.json`: hunter pet families plus XP-management notes, backing
+ * `/pets`. Structural checks only — the referential guard (`class` is a real
+ * roster class) lives in the store. `keyAbility`, `tameLevel`, and `zone` are
+ * nullable so a family can be authored before those specifics are verified;
+ * `notes` carries the verified defining trait and any verify-at-authoring caveat.
+ */
+export function validatePets(obj, label = 'pets.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  require_(errors, isNonEmptyString(obj.class), `${label}: class must be a non-empty string`);
+  require_(errors, isNonEmptyString(obj.xpNote), `${label}: xpNote must be a non-empty string`);
+  for (const opt of ['abilityNote', 'budgetNote']) {
+    if (obj[opt] !== undefined) {
+      require_(errors, isNonEmptyString(obj[opt]), `${label}: ${opt} must be a non-empty string when present`);
+    }
+  }
+
+  if (
+    require_(
+      errors,
+      Array.isArray(obj.families) && obj.families.length > 0,
+      `${label}: families must be a non-empty array`
+    )
+  ) {
+    const seen = new Set();
+    obj.families.forEach((f, i) => {
+      const at = `${label}: families[${i}]`;
+      if (!require_(errors, isObject(f), `${at} must be an object`)) return;
+      require_(errors, isNonEmptyString(f.family), `${at}.family must be a non-empty string`);
+      require_(errors, isNonEmptyString(f.exampleName), `${at}.exampleName must be a non-empty string`);
+      require_(errors, isNonEmptyString(f.notes), `${at}.notes must be a non-empty string`);
+      if (f.keyAbility != null) {
+        require_(errors, isNonEmptyString(f.keyAbility), `${at}.keyAbility must be a non-empty string or null`);
+      }
+      if (f.zone != null) {
+        require_(errors, isNonEmptyString(f.zone), `${at}.zone must be a non-empty string or null`);
+      }
+      if (f.tameLevel != null) {
+        require_(errors, isInteger(f.tameLevel), `${at}.tameLevel must be an integer or null`);
+      }
+      if (f.attackSpeed !== undefined) {
+        require_(errors, typeof f.attackSpeed === 'number', `${at}.attackSpeed must be a number when present`);
+      }
+      if (isNonEmptyString(f.family)) {
+        require_(errors, !seen.has(f.family), `${at}.family "${f.family}" is duplicated`);
+        seen.add(f.family);
+      }
+    });
+  }
+
+  return { ok: errors.length === 0, errors };
+}

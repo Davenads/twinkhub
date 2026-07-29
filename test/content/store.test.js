@@ -18,7 +18,10 @@ import {
   gearForClass,
   bracketScaling,
   listStatweightClasses,
-  statweightsForClass
+  statweightsForClass,
+  bracketPets,
+  listPetFamilies,
+  getPetFamily
 } from '../../src/content/store.js';
 
 // Integration: load the real seeded store from data/content (path is resolved
@@ -198,6 +201,28 @@ test('loadContentStore loads scaling with valid per-class priority references', 
   assert.equal(statweightsForClass(store, '19', 'notaclass'), null);
   assert.deepEqual(listStatweightClasses(store, '49'), []);
   assert.equal(bracketScaling(store, '49'), null);
+});
+
+test('loadContentStore loads hunter pets with a valid class reference', async () => {
+  const store = await loadContentStore();
+
+  const pets = bracketPets(store, '19');
+  assert.ok(pets, 'pets are loaded');
+  assert.equal(pets.class, 'hunter');
+  // A strict load reaching here proves the pets class is a real roster class.
+  assert.ok(listClassNames(store, '19').includes(pets.class), 'pets class is a roster class');
+
+  const families = listPetFamilies(store, '19');
+  assert.ok(families.includes('boar'));
+  assert.ok(families.includes('cat'));
+
+  const cat = getPetFamily(store, '19', 'Cat');
+  assert.ok(cat, 'family lookup is case-insensitive');
+  assert.equal(cat.family, 'cat');
+
+  assert.equal(getPetFamily(store, '19', 'dragon'), null);
+  assert.equal(bracketPets(store, '49'), null);
+  assert.deepEqual(listPetFamilies(store, '49'), []);
 });
 
 test('reloadContentStore reloads from disk and summarizeStore reports per-bracket counts', async () => {

@@ -9,7 +9,8 @@ import {
   validateEnchants,
   validateGearIndex,
   validateGearClass,
-  validateScaling
+  validateScaling,
+  validatePets
 } from './schema.js';
 import { logger } from '../lib/logger.js';
 
@@ -111,7 +112,7 @@ async function loadBracket(dir, key, strict) {
     return null;
   }
 
-  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null };
+  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null };
 
   const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
   if (classIndex) {
@@ -211,6 +212,22 @@ async function loadBracket(dir, key, strict) {
         }
       }
       bracket.scaling = scalingFile;
+    }
+  }
+
+  // Optional pets file (hunter class-extra) backing /pets. Referential guard
+  // mirrors the others: its `class` must be a real roster class.
+  const petsFile = await readOptionalJson(path.join(dir, key, 'pets.json'));
+  if (petsFile) {
+    const pResult = validatePets(petsFile, `${key}/pets.json`);
+    if (!pResult.ok) {
+      fail(strict, `content ${key}/pets.json invalid: ${pResult.errors.join('; ')}`);
+    } else {
+      const roster = new Set((bracket.classes.index?.classes ?? []).map((e) => e.class));
+      if (roster.size && !roster.has(petsFile.class)) {
+        fail(strict, `content ${key}/pets.json references unknown class "${petsFile.class}"`);
+      }
+      bracket.pets = petsFile;
     }
   }
 
@@ -401,6 +418,24 @@ export function statweightsForClass(store, bracket, className) {
   const entry = scaling.classes[key];
   if (!entry) return null;
   return { className: key, entry, scaling };
+}
+
+/** The pets bundle (families + xp/ability/budget notes) for a bracket, or null. */
+export function bracketPets(store, bracket) {
+  return store?.brackets?.[bracket]?.pets ?? null;
+}
+
+/** Pet family keys authored for a bracket (for /pets family autocomplete). */
+export function listPetFamilies(store, bracket) {
+  return (bracketPets(store, bracket)?.families ?? []).map((f) => f.family);
+}
+
+/** A single pet family entry by key, or null. */
+export function getPetFamily(store, bracket, family) {
+  const pets = bracketPets(store, bracket);
+  if (!pets) return null;
+  const key = String(family ?? '').toLowerCase();
+  return pets.families.find((f) => f.family === key) ?? null;
 }
 
 /**

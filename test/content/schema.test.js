@@ -8,7 +8,8 @@ import {
   validateEnchants,
   validateGearIndex,
   validateGearClass,
-  validateScaling
+  validateScaling,
+  validatePets
 } from '../../src/content/schema.js';
 
 const validMeta = () => ({
@@ -253,4 +254,48 @@ test('validateScaling flags malformed derived and hitCaps entries', () => {
   assert.equal(res.ok, false);
   assert.ok(res.errors.some((e) => e.includes('derived[0].formula')));
   assert.ok(res.errors.some((e) => e.includes('hitCaps[0].value')));
+});
+
+const validPets = () => ({
+  class: 'hunter',
+  families: [
+    { family: 'boar', exampleName: 'Great Goretusk', keyAbility: 'Charge', tameLevel: null, zone: null, notes: 'Charge utility.' },
+    { family: 'cat', exampleName: 'The Rake', keyAbility: null, attackSpeed: 1.2, tameLevel: null, zone: null, notes: 'Fast swing.' }
+  ],
+  xpNote: 'Pets need ~25% of player XP and gain none from turn-ins.',
+  abilityNote: 'Ability-shop while taming.',
+  budgetNote: 'Sync pets first, then turn in.'
+});
+
+test('validatePets accepts a well-formed pets file with nullable specifics', () => {
+  assert.deepEqual(validatePets(validPets()), { ok: true, errors: [] });
+});
+
+test('validatePets requires class, xpNote, and a non-empty families array', () => {
+  assert.equal(validatePets({ ...validPets(), class: '' }).ok, false);
+  assert.equal(validatePets({ ...validPets(), xpNote: '' }).ok, false);
+  assert.equal(validatePets({ ...validPets(), families: [] }).ok, false);
+});
+
+test('validatePets flags a family missing notes and a bad attackSpeed', () => {
+  const badNotes = validPets();
+  delete badNotes.families[0].notes;
+  const r1 = validatePets(badNotes);
+  assert.equal(r1.ok, false);
+  assert.ok(r1.errors.some((e) => e.includes('families[0].notes')));
+
+  const badSpeed = validPets();
+  badSpeed.families[1].attackSpeed = '1.2';
+  const r2 = validatePets(badSpeed);
+  assert.equal(r2.ok, false);
+  assert.ok(r2.errors.some((e) => e.includes('attackSpeed')));
+});
+
+test('validatePets flags a duplicated family key and a bad tameLevel', () => {
+  const dupe = validPets();
+  dupe.families.push({ ...dupe.families[0], tameLevel: 'sixteen' });
+  const res = validatePets(dupe);
+  assert.equal(res.ok, false);
+  assert.ok(res.errors.some((e) => e.includes('duplicated')));
+  assert.ok(res.errors.some((e) => e.includes('tameLevel')));
 });
