@@ -8,7 +8,8 @@ import {
   validateClass,
   validateEnchants,
   validateGearIndex,
-  validateGearClass
+  validateGearClass,
+  validateScaling
 } from './schema.js';
 import { logger } from '../lib/logger.js';
 
@@ -110,7 +111,7 @@ async function loadBracket(dir, key, strict) {
     return null;
   }
 
-  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null };
+  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null };
 
   const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
   if (classIndex) {
@@ -185,6 +186,31 @@ async function loadBracket(dir, key, strict) {
           fail(strict, `content ${key}/gear: item "${item.id}" references unknown alternative "${alt}"`);
         }
       }
+    }
+  }
+
+  // Optional scaling file (stat conversions + per-class priority overrides)
+  // backing /statweights. Referential guards mirror the enchant style: every
+  // `classes` key is a real roster class, every priority names a declared stat.
+  const scalingFile = await readOptionalJson(path.join(dir, key, 'scaling.json'));
+  if (scalingFile) {
+    const sResult = validateScaling(scalingFile, `${key}/scaling.json`);
+    if (!sResult.ok) {
+      fail(strict, `content ${key}/scaling.json invalid: ${sResult.errors.join('; ')}`);
+    } else {
+      const roster = new Set((bracket.classes.index?.classes ?? []).map((e) => e.class));
+      const statKeys = new Set(Object.keys(scalingFile.stats ?? {}));
+      for (const [cls, entry] of Object.entries(scalingFile.classes)) {
+        if (roster.size && !roster.has(cls)) {
+          fail(strict, `content ${key}/scaling.json references unknown class "${cls}"`);
+        }
+        for (const stat of entry.priority) {
+          if (!statKeys.has(stat)) {
+            fail(strict, `content ${key}/scaling.json class "${cls}" priority references unknown stat "${stat}"`);
+          }
+        }
+      }
+      bracket.scaling = scalingFile;
     }
   }
 
@@ -334,4 +360,27 @@ export function gearForClass(store, bracket, className) {
   const shared = gear.items.filter((i) => i.owner === 'shared');
   const own = gear.items.filter((i) => i.owner === key);
   return { className: key, items: [...shared, ...own] };
+}
+
+/** The scaling bundle (stats/derived/hitCaps/classes) for a bracket, or null. */
+export function bracketScaling(store, bracket) {
+  return store?.brackets?.[bracket]?.scaling ?? null;
+}
+
+/** Class keys that have a stat-weight override (for /statweights autocomplete). */
+export function listStatweightClasses(store, bracket) {
+  return Object.keys(bracketScaling(store, bracket)?.classes ?? {});
+}
+
+/**
+ * A class's stat-weight view: its priority/notes override plus the shared scaling
+ * bundle (stats, derived formulas, hit caps), or null if the class has none.
+ */
+export function statweightsForClass(store, bracket, className) {
+  const scaling = bracketScaling(store, bracket);
+  if (!scaling) return null;
+  const key = String(className ?? '').toLowerCase();
+  const entry = scaling.classes[key];
+  if (!entry) return null;
+  return { className: key, entry, scaling };
 }

@@ -277,3 +277,63 @@ export function validateGearClass(obj, label = 'gear/class') {
   }
   return { ok: errors.length === 0, errors };
 }
+
+/**
+ * `<bracket>/scaling.json`: stat conversions/formulas (constants) plus per-class
+ * priority overrides, backing `/statweights`. Structural checks only — the
+ * referential guards (each `classes` key is a real roster class, each priority
+ * names a declared stat) live in the store, which sees the class roster too.
+ */
+export function validateScaling(obj, label = 'scaling.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  if (obj.note !== undefined) {
+    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+  }
+
+  if (require_(errors, isObject(obj.stats), `${label}: stats must be an object`)) {
+    const keys = Object.keys(obj.stats);
+    require_(errors, keys.length > 0, `${label}: stats must have at least one entry`);
+    for (const [key, s] of Object.entries(obj.stats)) {
+      const at = `${label}: stats.${key}`;
+      if (!require_(errors, isObject(s), `${at} must be an object`)) continue;
+      require_(errors, isNonEmptyString(s.label), `${at}.label must be a non-empty string`);
+      require_(errors, isNonEmptyString(s.summary), `${at}.summary must be a non-empty string`);
+      require_(errors, isStringArray(s.conversions), `${at}.conversions must be a non-empty string array`);
+    }
+  }
+
+  if (obj.derived !== undefined && require_(errors, Array.isArray(obj.derived), `${label}: derived must be an array`)) {
+    obj.derived.forEach((d, i) => {
+      const at = `${label}: derived[${i}]`;
+      require_(errors, isNonEmptyString(d?.name), `${at}.name must be a non-empty string`);
+      require_(errors, isNonEmptyString(d?.formula), `${at}.formula must be a non-empty string`);
+      if (d?.notes !== undefined) {
+        require_(errors, isNonEmptyString(d.notes), `${at}.notes must be a non-empty string when present`);
+      }
+    });
+  }
+
+  if (obj.hitCaps !== undefined && require_(errors, Array.isArray(obj.hitCaps), `${label}: hitCaps must be an array`)) {
+    obj.hitCaps.forEach((h, i) => {
+      const at = `${label}: hitCaps[${i}]`;
+      require_(errors, isNonEmptyString(h?.type), `${at}.type must be a non-empty string`);
+      require_(errors, isNonEmptyString(h?.value), `${at}.value must be a non-empty string`);
+    });
+  }
+
+  if (require_(errors, isObject(obj.classes), `${label}: classes must be an object`)) {
+    const keys = Object.keys(obj.classes);
+    require_(errors, keys.length > 0, `${label}: classes must have at least one entry`);
+    for (const [key, c] of Object.entries(obj.classes)) {
+      const at = `${label}: classes.${key}`;
+      if (!require_(errors, isObject(c), `${at} must be an object`)) continue;
+      require_(errors, isStringArray(c.priority), `${at}.priority must be a non-empty string array`);
+      require_(errors, isStringArray(c.notes), `${at}.notes must be a non-empty string array`);
+    }
+  }
+
+  return { ok: errors.length === 0, errors };
+}

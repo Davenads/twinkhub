@@ -7,7 +7,8 @@ import {
   validateClass,
   validateEnchants,
   validateGearIndex,
-  validateGearClass
+  validateGearClass,
+  validateScaling
 } from '../../src/content/schema.js';
 
 const validMeta = () => ({
@@ -205,4 +206,51 @@ test('validateGearClass accepts a class with a non-empty item list', () => {
 test('validateGearClass rejects an empty item list and a missing class', () => {
   assert.equal(validateGearClass({ class: 'hunter', items: [] }).ok, false);
   assert.equal(validateGearClass({ items: [validItem()] }).ok, false);
+});
+
+const validScaling = () => ({
+  note: 'Concrete conversions at 19.',
+  stats: {
+    agility: { label: 'Agility', summary: 'Armor, crit, dodge, AP.', conversions: ['1 Agility = 2 armor'] },
+    stamina: { label: 'Stamina', summary: 'Health.', conversions: ['1 Stamina = 10 health'] }
+  },
+  derived: [{ name: 'DPS from AP', formula: 'DPS = AP / 14' }],
+  hitCaps: [{ type: 'melee', value: '5%' }],
+  classes: {
+    hunter: { priority: ['agility', 'stamina'], notes: ['Ranged hit cap is 5%.'] }
+  }
+});
+
+test('validateScaling accepts a well-formed scaling file', () => {
+  assert.deepEqual(validateScaling(validScaling()), { ok: true, errors: [] });
+});
+
+test('validateScaling requires stats and classes objects with entries', () => {
+  assert.equal(validateScaling({ ...validScaling(), stats: {} }).ok, false);
+  assert.equal(validateScaling({ ...validScaling(), classes: {} }).ok, false);
+  assert.equal(validateScaling({ stats: validScaling().stats }).ok, false);
+});
+
+test('validateScaling flags a bad stat entry and a non-array class priority', () => {
+  const badStat = validScaling();
+  badStat.stats.agility.conversions = [];
+  const r1 = validateScaling(badStat);
+  assert.equal(r1.ok, false);
+  assert.ok(r1.errors.some((e) => e.includes('stats.agility.conversions')));
+
+  const badClass = validScaling();
+  badClass.classes.hunter.priority = 'agility';
+  const r2 = validateScaling(badClass);
+  assert.equal(r2.ok, false);
+  assert.ok(r2.errors.some((e) => e.includes('classes.hunter.priority')));
+});
+
+test('validateScaling flags malformed derived and hitCaps entries', () => {
+  const bad = validScaling();
+  bad.derived = [{ name: 'x' }];
+  bad.hitCaps = [{ type: 'melee' }];
+  const res = validateScaling(bad);
+  assert.equal(res.ok, false);
+  assert.ok(res.errors.some((e) => e.includes('derived[0].formula')));
+  assert.ok(res.errors.some((e) => e.includes('hitCaps[0].value')));
 });

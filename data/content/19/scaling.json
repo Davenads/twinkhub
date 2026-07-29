@@ -1,0 +1,97 @@
+{
+  "note": "Concrete stat conversions at level 19. These explain why a stat is prioritized and back a future stat-weight tool. Verify per class at authoring time.",
+  "stats": {
+    "strength": {
+      "label": "Strength",
+      "summary": "Attack power for strength-based melee, plus a little block value.",
+      "conversions": [
+        "1 Strength = 2 attack power (Warrior, Paladin, Shaman, Druid Bear)",
+        "1 Strength = 1 attack power (all other classes)",
+        "20 Strength = 1 block value"
+      ]
+    },
+    "agility": {
+      "label": "Agility",
+      "summary": "Armor, crit, dodge, and attack power for agility classes.",
+      "conversions": [
+        "1 Agility = 2 armor (all classes)",
+        "Crit chance ~0.07%-0.13% per Agility (class-dependent)",
+        "Dodge ~0.13% per Agility (Rogue ~0.26%)",
+        "1 Agility = +1 melee attack power (Hunter, Rogue)",
+        "1 Agility = +2 ranged attack power (Hunter)"
+      ]
+    },
+    "stamina": {
+      "label": "Stamina",
+      "summary": "Health - the stat the WSG meta prizes above all others; survivability wins games.",
+      "conversions": [
+        "1 Stamina = 10 health (Tauren 10.5)",
+        "Flag-carrier target is ~1000+ health",
+        "Stamina effectively beats every other primary stat in competitive play"
+      ]
+    },
+    "intellect": {
+      "label": "Intellect",
+      "summary": "Mana pool and spell crit for casters.",
+      "conversions": [
+        "1 Intellect = 15 mana (Gnome 15.75)",
+        "Spell crit ~0.058%-0.063% per Intellect"
+      ]
+    },
+    "spirit": {
+      "label": "Spirit",
+      "summary": "Mana regeneration and minor health regeneration.",
+      "conversions": [
+        "Mana regen ~0.2-0.25 per Spirit every 5 seconds (class-dependent)",
+        "Minor health regeneration"
+      ]
+    }
+  },
+  "derived": [
+    {
+      "name": "Physical damage reduction",
+      "formula": "reduction% = Armor / (Armor + 2015)",
+      "notes": "Uses the low-level armor constant (2015) - do not reuse the level-60 constant."
+    },
+    {
+      "name": "Melee/ranged DPS from attack power",
+      "formula": "DPS = AP / 14"
+    },
+    {
+      "name": "Spell power scaling",
+      "formula": "A spell's 'up to X' scales by its coefficient (~0.35-1.0+)",
+      "notes": "Reduced further for sub-level-20 spells."
+    }
+  ],
+  "hitCaps": [
+    { "type": "melee", "value": "5%" },
+    { "type": "ranged", "value": "5%" },
+    { "type": "spell", "value": "3% (4% base miss minus talents)" }
+  ],
+  "classes": {
+    "hunter": {
+      "priority": ["agility", "stamina"],
+      "notes": [
+        "1 Agility gives Hunters +1 melee and +2 ranged attack power, plus armor and crit.",
+        "Ranged hit cap is 5%.",
+        "Stamina still matters: survivability wins WSG even for a ranged class."
+      ]
+    },
+    "rogue": {
+      "priority": ["agility", "stamina"],
+      "notes": [
+        "1 Agility gives Rogues +1 melee attack power, and Rogue dodge is ~0.26% per Agility - double the baseline.",
+        "Melee hit cap is 5%.",
+        "Stamina to survive the burst trades that decide WSG fights."
+      ]
+    },
+    "warrior": {
+      "priority": ["strength", "stamina"],
+      "notes": [
+        "1 Strength = 2 attack power for Warriors.",
+        "Melee hit cap is 5%.",
+        "The Protection flag-carrier build inverts the order - stamina first, to reach the ~1000+ health the meta targets."
+      ]
+    }
+  }
+}

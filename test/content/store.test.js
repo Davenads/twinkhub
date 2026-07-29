@@ -12,7 +12,10 @@ import {
   listGearClasses,
   listGearItems,
   getGearItem,
-  gearForClass
+  gearForClass,
+  bracketScaling,
+  listStatweightClasses,
+  statweightsForClass
 } from '../../src/content/store.js';
 
 // Integration: load the real seeded store from data/content (path is resolved
@@ -165,4 +168,31 @@ test('gearForClass merges shared + class items; null when class has no BiS', asy
   // A roster class without an authored gear file yields null (clean degrade).
   const withoutGear = listClassNames(store, '19').find((c) => !listGearClasses(store, '19').includes(c));
   if (withoutGear) assert.equal(gearForClass(store, '19', withoutGear), null);
+});
+
+test('loadContentStore loads scaling with valid per-class priority references', async () => {
+  const store = await loadContentStore();
+
+  const scaling = bracketScaling(store, '19');
+  assert.ok(scaling, 'scaling is loaded');
+  assert.ok(scaling.stats.agility, 'agility is a declared stat');
+
+  const classes = listStatweightClasses(store, '19');
+  assert.ok(classes.includes('hunter'));
+
+  const hunter = statweightsForClass(store, '19', 'Hunter');
+  assert.equal(hunter.className, 'hunter');
+  assert.ok(hunter.entry.priority.includes('agility'));
+
+  // A strict load reaching here proves every class priority stat is a declared
+  // stat and every scaling class is a real roster class.
+  const roster = new Set(listClassNames(store, '19'));
+  for (const [cls, entry] of Object.entries(scaling.classes)) {
+    assert.ok(roster.has(cls), `${cls} is a roster class`);
+    for (const s of entry.priority) assert.ok(scaling.stats[s], `${s} is a declared stat`);
+  }
+
+  assert.equal(statweightsForClass(store, '19', 'notaclass'), null);
+  assert.deepEqual(listStatweightClasses(store, '49'), []);
+  assert.equal(bracketScaling(store, '49'), null);
 });
