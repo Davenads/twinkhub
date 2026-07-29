@@ -92,6 +92,14 @@
         "Melee hit cap is 5%.",
         "The Protection flag-carrier build inverts the order - stamina first, to reach the ~1000+ health the meta targets."
       ]
+    },
+    "priest": {
+      "priority": ["intellect", "stamina", "spirit"],
+      "notes": [
+        "1 Intellect = 15 mana, deepening the pool a healer leans on across a long flag game.",
+        "Stamina keeps the healer alive under focus - survivability still wins WSG.",
+        "Spirit adds between-cast mana regen; weighed behind stamina in competitive play."
+      ]
     }
   }
 }

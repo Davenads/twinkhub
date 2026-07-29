@@ -239,6 +239,25 @@ test('loadContentStore loads scaling with valid per-class priority references', 
   assert.equal(bracketScaling(store, '49'), null);
 });
 
+test('priest is authored as a tier-A healer with mana-first stat weights', async () => {
+  const store = await loadContentStore();
+
+  const priest = getClass(store, '19', 'Priest');
+  assert.equal(priest.class, 'priest');
+  assert.equal(priest.tier, 'A');
+  assert.ok(priest.roles.includes('healer'));
+  assert.ok(priest.specs.length > 0);
+  assert.ok(priest.specs[0].statPriority.includes('intellect'));
+  assert.ok(priest.factionNotes, 'carries faction notes surfaced by /class and /optimize');
+
+  // Stat weights are registered and lead with the caster stats.
+  assert.ok(listStatweightClasses(store, '19').includes('priest'));
+  const sw = statweightsForClass(store, '19', 'Priest');
+  assert.equal(sw.className, 'priest');
+  assert.equal(sw.entry.priority[0], 'intellect');
+  assert.ok(sw.entry.priority.includes('stamina'));
+});
+
 test('loadContentStore loads hunter pets with a valid class reference', async () => {
   const store = await loadContentStore();
 
