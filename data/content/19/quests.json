@@ -1,0 +1,15 @@
+{
+  "note": "Seeded minimally from the verified domain notes. Only quests whose name is confirmed are authored; the Horde SFK-ring/Screecher-Belt turn-ins and Talbar Mantle shoulder quest are described in the domain doc by reward only, so they await name/zone verification before authoring.",
+  "quests": [
+    {
+      "id": "the-night-watch",
+      "name": "The Night Watch",
+      "zone": null,
+      "faction": "alliance",
+      "reward": { "desc": "Quiver/Bandolier of the Night Watch (ammo bag)" },
+      "xpWarning": true,
+      "classes": ["hunter"],
+      "notes": "Alliance hunter ammo-bag quest. Verify zone and exact reward name at authoring."
+    }
+  ]
+}

@@ -11,7 +11,8 @@ import {
   validateScaling,
   validatePets,
   validateSpellCoefficients,
-  validateConsumables
+  validateConsumables,
+  validateQuests
 } from '../../src/content/schema.js';
 
 const validMeta = () => ({
@@ -396,4 +397,52 @@ test('validateConsumables flags a duplicated id and a bad reqLevel', () => {
   assert.equal(res.ok, false);
   assert.ok(res.errors.some((e) => e.includes('duplicated')));
   assert.ok(res.errors.some((e) => e.includes('reqLevel')));
+});
+
+const validQuests = () => ({
+  note: 'Seeded from verified domain notes.',
+  quests: [
+    { id: 'the-night-watch', name: 'The Night Watch', zone: null, faction: 'alliance', reward: { desc: 'Quiver of the Night Watch' }, xpWarning: true, classes: ['hunter'] },
+    { id: 'talbar-mantle', name: 'Talbar Mantle Quest', zone: 'Redridge', faction: 'both', reward: { itemId: 'talbar-mantle' }, xpWarning: false }
+  ]
+});
+
+test('validateQuests accepts a well-formed file with nullable zone and both reward shapes', () => {
+  assert.deepEqual(validateQuests(validQuests()), { ok: true, errors: [] });
+});
+
+test('validateQuests requires name, a faction in the vocabulary, and a boolean xpWarning', () => {
+  assert.equal(validateQuests({ quests: [] }).ok, false);
+  const badFaction = validQuests();
+  badFaction.quests[0].faction = 'neutral';
+  assert.ok(validateQuests(badFaction).errors.some((e) => e.includes('faction')));
+  const badFlag = validQuests();
+  badFlag.quests[0].xpWarning = 'yes';
+  assert.ok(validateQuests(badFlag).errors.some((e) => e.includes('xpWarning')));
+});
+
+test('validateQuests requires reward to carry an itemId or a desc', () => {
+  const emptyReward = validQuests();
+  emptyReward.quests[0].reward = {};
+  const res = validateQuests(emptyReward);
+  assert.equal(res.ok, false);
+  assert.ok(res.errors.some((e) => e.includes('reward must have an itemId or a desc')));
+
+  const blankItem = validQuests();
+  blankItem.quests[1].reward = { itemId: '' };
+  assert.ok(validateQuests(blankItem).errors.some((e) => e.includes('reward.itemId')));
+});
+
+test('validateQuests flags a non-string zone, a bad classes array, and a duplicated id', () => {
+  const badZone = validQuests();
+  badZone.quests[0].zone = 7;
+  assert.ok(validateQuests(badZone).errors.some((e) => e.includes('zone')));
+
+  const badClasses = validQuests();
+  badClasses.quests[0].classes = [];
+  assert.ok(validateQuests(badClasses).errors.some((e) => e.includes('classes')));
+
+  const dupe = validQuests();
+  dupe.quests.push({ ...dupe.quests[0] });
+  assert.ok(validateQuests(dupe).errors.some((e) => e.includes('duplicated')));
 });

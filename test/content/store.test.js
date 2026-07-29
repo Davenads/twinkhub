@@ -27,7 +27,9 @@ import {
   spellcoefForClass,
   bracketConsumables,
   listConsumableTypes,
-  consumablesFor
+  consumablesFor,
+  bracketQuests,
+  questsFor
 } from '../../src/content/store.js';
 
 // Integration: load the real seeded store from data/content (path is resolved
@@ -286,6 +288,34 @@ test('loadContentStore loads consumables with valid class references and filters
   assert.equal(bracketConsumables(store, '49'), null);
   assert.deepEqual(consumablesFor(store, '49', { type: 'potion' }), []);
   assert.deepEqual(listConsumableTypes(store, '49'), []);
+});
+
+test('loadContentStore loads quests with valid reward/class references and filters cleanly', async () => {
+  const store = await loadContentStore();
+
+  const data = bracketQuests(store, '19');
+  assert.ok(data, 'quests are loaded');
+  assert.ok(data.quests.length > 0);
+
+  // A strict load reaching here proves every reward.itemId resolves to a real
+  // gear item and every class-specific quest names a real roster class.
+  const roster = new Set(listClassNames(store, '19'));
+  for (const q of data.quests) {
+    assert.equal(typeof q.xpWarning, 'boolean');
+    if (q.reward.itemId) assert.ok(getGearItem(store, '19', q.reward.itemId), `${q.id} reward resolves`);
+    for (const cls of q.classes ?? []) assert.ok(roster.has(cls), `${cls} is a roster class`);
+  }
+
+  // The seeded Alliance hunter quest surfaces under matching filters and is
+  // excluded by a mismatched faction.
+  const nightWatch = data.quests.find((q) => q.id === 'the-night-watch');
+  assert.ok(nightWatch, 'seeded Alliance quest is present');
+  assert.ok(questsFor(store, '19', { faction: 'alliance' }).some((q) => q.id === 'the-night-watch'));
+  assert.ok(!questsFor(store, '19', { faction: 'horde' }).some((q) => q.id === 'the-night-watch'));
+  assert.ok(questsFor(store, '19', { className: 'Hunter' }).some((q) => q.id === 'the-night-watch'));
+
+  assert.equal(bracketQuests(store, '49'), null);
+  assert.deepEqual(questsFor(store, '49', { faction: 'alliance' }), []);
 });
 
 test('reloadContentStore reloads from disk and summarizeStore reports per-bracket counts', async () => {

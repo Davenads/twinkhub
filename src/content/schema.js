@@ -523,3 +523,60 @@ export function validateConsumables(obj, label = 'consumables.json') {
 
   return { ok: errors.length === 0, errors };
 }
+
+/**
+ * `<bracket>/quests.json`: gear-reward quests worth doing before the cap, backing
+ * `/quest`. Structural checks only — the referential guards (`reward.itemId`
+ * resolves to a real gear item, `classes[]` are real roster classes) live in the
+ * store, which sees the gear index and roster. `reward` must carry exactly one of
+ * `itemId` or `desc`. `xpWarning` is a required first-class flag: it marks turn-ins
+ * that risk pushing a near-cap character to 20. `zone` is nullable and `classes`
+ * optional so a quest can be authored before every detail is verified.
+ */
+export function validateQuests(obj, label = 'quests.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  if (obj.note !== undefined) {
+    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+  }
+
+  if (
+    require_(
+      errors,
+      Array.isArray(obj.quests) && obj.quests.length > 0,
+      `${label}: quests must be a non-empty array`
+    )
+  ) {
+    const seen = new Set();
+    obj.quests.forEach((q, i) => {
+      const at = `${label}: quests[${i}]`;
+      if (!require_(errors, isObject(q), `${at} must be an object`)) return;
+      require_(errors, isNonEmptyString(q.id), `${at}.id must be a non-empty string`);
+      require_(errors, isNonEmptyString(q.name), `${at}.name must be a non-empty string`);
+      require_(errors, q.zone === null || isNonEmptyString(q.zone), `${at}.zone must be a non-empty string or null`);
+      require_(errors, FACTIONS.includes(q.faction), `${at}.faction must be one of ${FACTIONS.join('|')}`);
+      require_(errors, isBoolean(q.xpWarning), `${at}.xpWarning must be a boolean`);
+      if (require_(errors, isObject(q.reward), `${at}.reward must be an object`)) {
+        const hasItem = q.reward.itemId !== undefined;
+        const hasDesc = q.reward.desc !== undefined;
+        require_(errors, hasItem || hasDesc, `${at}.reward must have an itemId or a desc`);
+        if (hasItem) require_(errors, isNonEmptyString(q.reward.itemId), `${at}.reward.itemId must be a non-empty string`);
+        if (hasDesc) require_(errors, isNonEmptyString(q.reward.desc), `${at}.reward.desc must be a non-empty string`);
+      }
+      if (q.classes !== undefined) {
+        require_(errors, isStringArray(q.classes), `${at}.classes must be a non-empty string array when present`);
+      }
+      if (q.notes !== undefined) {
+        require_(errors, isNonEmptyString(q.notes), `${at}.notes must be a non-empty string when present`);
+      }
+      if (isNonEmptyString(q.id)) {
+        require_(errors, !seen.has(q.id), `${at}.id "${q.id}" is duplicated`);
+        seen.add(q.id);
+      }
+    });
+  }
+
+  return { ok: errors.length === 0, errors };
+}

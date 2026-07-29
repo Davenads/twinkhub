@@ -12,7 +12,8 @@ import {
   validateScaling,
   validatePets,
   validateSpellCoefficients,
-  validateConsumables
+  validateConsumables,
+  validateQuests
 } from './schema.js';
 import { logger } from '../lib/logger.js';
 
@@ -114,7 +115,7 @@ async function loadBracket(dir, key, strict) {
     return null;
   }
 
-  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null, consumables: null };
+  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null, consumables: null, quests: null };
 
   const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
   if (classIndex) {
@@ -272,6 +273,33 @@ async function loadBracket(dir, key, strict) {
         }
       }
       bracket.consumables = consumablesFile;
+    }
+  }
+
+  // Optional quests file backing /quest. Two referential guards (03-data-model.md):
+  // every reward `itemId` resolves to a real gear item in this bracket, and every
+  // optional `classes[]` entry names a real roster class. Runs after gear loads.
+  const questsFile = await readOptionalJson(path.join(dir, key, 'quests.json'));
+  if (questsFile) {
+    const qResult = validateQuests(questsFile, `${key}/quests.json`);
+    if (!qResult.ok) {
+      fail(strict, `content ${key}/quests.json invalid: ${qResult.errors.join('; ')}`);
+    } else {
+      const roster = new Set((bracket.classes.index?.classes ?? []).map((e) => e.class));
+      const gearIds = bracket.gear?.byId ?? {};
+      for (const q of questsFile.quests) {
+        if (q.reward?.itemId != null && Object.keys(gearIds).length && !gearIds[q.reward.itemId]) {
+          fail(strict, `content ${key}/quests.json quest "${q.id}" reward references unknown item "${q.reward.itemId}"`);
+        }
+        if (roster.size) {
+          for (const cls of q.classes ?? []) {
+            if (!roster.has(cls)) {
+              fail(strict, `content ${key}/quests.json quest "${q.id}" references unknown class "${cls}"`);
+            }
+          }
+        }
+      }
+      bracket.quests = questsFile;
     }
   }
 
@@ -526,6 +554,29 @@ export function consumablesFor(store, bracket, { type = null, className = null }
     (c) =>
       (!typeKey || c.type === typeKey) &&
       (!classKey || !c.classes || c.classes.some((cl) => cl.toLowerCase() === classKey))
+  );
+}
+
+/** The quests bundle (`{ note, quests }`) for a bracket, or null. */
+export function bracketQuests(store, bracket) {
+  return store?.brackets?.[bracket]?.quests ?? null;
+}
+
+/**
+ * Quests for a bracket, optionally filtered by `faction` and/or `className`. A
+ * faction filter keeps quests of that faction plus `both`; a class filter keeps
+ * quests that either name the class in `classes` or have none (universal). Returns
+ * [] when none are loaded.
+ */
+export function questsFor(store, bracket, { faction = null, className = null } = {}) {
+  const data = bracketQuests(store, bracket);
+  if (!data) return [];
+  const factionKey = faction ? String(faction).toLowerCase() : null;
+  const classKey = className ? String(className).toLowerCase() : null;
+  return data.quests.filter(
+    (q) =>
+      (!factionKey || q.faction === factionKey || q.faction === 'both') &&
+      (!classKey || !q.classes || q.classes.some((cl) => cl.toLowerCase() === classKey))
   );
 }
 

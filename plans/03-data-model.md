@@ -147,9 +147,27 @@ detail is verified. Ids are unique bracket-wide.
 }
 ```
 
-### quest (in `quests.json`) and guide (in `guides/`)
-- quest: `{ id, name, zone, faction, reward: {itemId|desc}, xpWarning: bool, notes }`.
-  `xpWarning` flags turn-ins that risk pushing a near-cap character to 20.
+### quest (in `quests.json`) — backs `/quest`
+```json
+{
+  "id": "the-night-watch",
+  "name": "The Night Watch",
+  "zone": null,
+  "faction": "alliance",
+  "reward": { "desc": "Quiver/Bandolier of the Night Watch (ammo bag)" },
+  "xpWarning": true,
+  "classes": ["hunter"],
+  "notes": "Verify zone/exact reward at authoring."
+}
+```
+`reward` carries **exactly one of** `itemId` (must resolve to a real gear item in this bracket)
+or `desc` (free text). `xpWarning: true` is a **first-class flag** — the twink XP-management
+theme hinges on flagging turn-ins that risk pushing a near-cap character to 20. `faction` is
+required (`alliance | horde | both`); a `both`/matching-faction quest shows under a faction
+filter. `zone` is nullable and `classes` is optional (present = class-specific) so a quest can
+be authored before every detail is verified. Ids are unique bracket-wide.
+
+### guide (in `guides/`)
 - guide: front-matter (`slug`, `title`, `summary`, `class?`, `tags[]`) + markdown body,
   rendered into embeds (chunked to Discord's field limits).
 
@@ -245,9 +263,10 @@ set" link. These are **human-curated links**, not scraped — Sixty Upgrades is 
 ## Validation gates (CI-later)
 
 - Schema-validate all content files.
-- Referential checks: every `itemId` referenced by a class/guide exists in gear; every
-  `enchant.classes[]` is a real class; every `spellcoefficients.byClass` key is a real class;
-  every `consumable.classes[]` is a real class; no duplicate `id`s within a bracket.
+- Referential checks: every `itemId` referenced by a class/guide/`quest.reward` exists in gear;
+  every `enchant.classes[]` is a real class; every `spellcoefficients.byClass` key is a real
+  class; every `consumable.classes[]` and `quest.classes[]` is a real class; no duplicate `id`s
+  within a bracket.
 - Lint: every `core`-priority gear slot is filled per class (flag gaps).
 - Game-version check: every bracket's `meta.json.gameVersion.flavor` is `classic-era` with
   `contentState: all-pre-tbc-unlocked` (guards against SoD/TBC/Anniversary content creeping in).
