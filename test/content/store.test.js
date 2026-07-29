@@ -188,6 +188,30 @@ test('gearForClass merges shared + class items; null when class has no BiS', asy
   if (withoutGear) assert.equal(gearForClass(store, '19', withoutGear), null);
 });
 
+test('rogue is authored end-to-end: tier-A detail and a merged BiS list', async () => {
+  const store = await loadContentStore();
+
+  // Class detail resolves with the roster tier and rogue-specific stat priority.
+  const rogue = getClass(store, '19', 'Rogue');
+  assert.equal(rogue.class, 'rogue');
+  assert.equal(rogue.tier, 'A');
+  assert.ok(rogue.specs.length > 0);
+  assert.ok(rogue.specs[0].statPriority.includes('agility'));
+  assert.ok(rogue.factionNotes, 'carries faction notes surfaced by /class and /optimize');
+
+  // Gear list is registered and merges the rogue anchor with the shared set.
+  assert.ok(listGearClasses(store, '19').includes('rogue'));
+  const gear = gearForClass(store, '19', 'Rogue');
+  assert.equal(gear.className, 'rogue');
+  const shadowfang = gear.items.find((i) => i.id === 'shadowfang');
+  assert.ok(shadowfang, 'rogue anchor is present');
+  assert.equal(shadowfang.owner, 'rogue');
+  assert.equal(shadowfang.slot, 'mainhand');
+  assert.equal(shadowfang.enchant, 'fiery-weapon');
+  assert.ok(getEnchant(store, '19', shadowfang.enchant), 'its enchant resolves');
+  assert.ok(gear.items.some((i) => i.owner === 'shared'), 'shared items are merged in');
+});
+
 test('loadContentStore loads scaling with valid per-class priority references', async () => {
   const store = await loadContentStore();
 

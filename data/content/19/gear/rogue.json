@@ -1,0 +1,17 @@
+{
+  "class": "rogue",
+  "items": [
+    {
+      "id": "shadowfang",
+      "name": "Shadowfang",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Shadowfang Keep (dungeon drop)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Iconic low-level one-hand sword from Shadowfang Keep and a common melee-twink weapon at this bracket; much of its value is the no-level-req weapon enchant it carries. This is a seed anchor \u2014 verify the exact required level (~18), stats, off-hand pairing, and current-meta status against the Wowhead Rogue BiS guide at authoring, and fill the remaining rogue-specific slots there.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "fiery-weapon"
+    }
+  ]
+}
