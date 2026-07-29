@@ -1,0 +1,28 @@
+{
+  "slug": "19-wsg-roles",
+  "title": "Warsong Gulch Roles & Composition (19)",
+  "summary": "How the nine Classic classes fill WSG's roles — healer, flag carrier, and damage — and why survivability and coordination decide the 19 bracket. Synthesized from the seeded tier roster and scaling notes; confirm class specifics with `/class` and `/statweights`.",
+  "tags": ["strategy", "composition", "wsg"],
+  "sections": [
+    {
+      "heading": "The objective",
+      "body": "Warsong Gulch is capture-the-flag, played at exactly level 19. Because gear gaps between capped twinks are small, games are decided by **survivability and coordination** more than raw damage. The roles below map the nine Classic classes onto that. Use `/tierlist` for the full role and tier breakdown."
+    },
+    {
+      "heading": "Healers anchor the premade",
+      "body": "**Priest** is the premier healer — dispels and Power Word: Shield make it the backbone of a premade, and losing the healer usually loses the fight. **Paladin** (Alliance) and **Shaman** (Horde) add off-heals and utility as hybrids. Protect your healer and focus the enemy's. See `/class class:priest`."
+    },
+    {
+      "heading": "Flag carriers",
+      "body": "**Warrior** (Protection) and **Druid** (Bear Form) make the best carriers: high armor plus the stamina to reach the meta's **~1000+ HP** target, and tools to shed roots and snares. Stack stamina and a movement-speed boots enchant so the carrier lives and moves. Check exact conversions with `/statweights`."
+    },
+    {
+      "heading": "Damage and control",
+      "body": "**Hunter** brings top-tier ranged burst plus a pet, **Rogue** a stealth opener with Sap and Blind control, **Mage** Frost Nova roots and Frostbolt slows on a fragile frame, and **Warlock** DoT pressure plus Fear. In a flag game, **control** — slows, roots, stuns, peels — often frees or stops a carrier better than damage alone."
+    },
+    {
+      "heading": "Why coordination and stamina win",
+      "body": "With everyone capped at 19, fights come down to focus fire, peels for your carrier, and simply staying alive. As a rough guide **1 Stamina ≈ 10 Health**, and in competitive play stamina effectively beats every other primary stat. Coordinate targets and protect the carrier, and the survivability edge closes out games."
+    }
+  ]
+}

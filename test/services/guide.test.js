@@ -108,4 +108,10 @@ test('renderGuide/Index run over the real seeded content store', async () => {
   assert.ok(fieldsOf(one.embeds).length > 0, 'real guide renders sections');
   const dir = renderGuideIndex({ store: real, bracket: '19' });
   assert.ok(fieldsOf(dir.embeds).some((f) => f.value.includes('19-twink-basics')));
+
+  // The roles & composition guide renders and browses under its strategy tag.
+  const roles = renderGuide({ store: real, bracket: '19', slug: '19-wsg-roles' });
+  assert.ok(fieldsOf(roles.embeds).length > 0, 'roles guide renders sections');
+  const strat = renderGuideIndex({ store: real, bracket: '19', tag: 'strategy' });
+  assert.ok(fieldsOf(strat.embeds).some((f) => f.value.includes('19-wsg-roles')));
 });

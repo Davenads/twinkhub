@@ -39,8 +39,13 @@ Phased build plan. Each phase is shippable on its own. Nothing here is built yet
 - `/gear` (filters), `/consumable`, `/quest`, `/guide` (paginated), `/optimize` (gap
   checklist), `/statweights` + `/spellcoef` (stat & spell-power scaling), `/pets`.
 - `/reloadcontent` for fast authoring; content validation in CI.
-- Fill remaining 19 classes to `core`-complete.
-- **Exit criteria:** `/optimize` returns useful "you're missing X" for every 19 class.
+- Fill the class roster to `core`-complete: class detail, stat weights, and spell
+  coefficients are done for all 9 classes; per-class **gear anchors** remain (Hunter and
+  Rogue today) — each needs a verified item, not a fabricated one, before `/bis`/`/optimize`
+  light up for that class.
+- **Exit criteria:** `/optimize` returns useful "you're missing X" for every class with an
+  authored BiS list; extend to a new class by dropping in a verified gear anchor, no code
+  changes.
 
 ## P4 — Interactive enduser panels
 - Add the `components/` handler registry + extend the `interactionCreate` router to dispatch
