@@ -60,6 +60,126 @@
       "noLevelReq": true,
       "notes": "Movement speed is highly valued in WSG, especially for flag carriers; a near-universal boots pick.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "lesser-arcanum-of-constitution",
+      "name": "Lesser Arcanum of Constitution",
+      "slot": "head-legs",
+      "effect": "+100 Health (applies to head or legs).",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Zul'Gurub-style head/leg arcanum with no level requirement; the defensive head/leg enchant for survivability builds. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "lesser-arcanum-of-voracity",
+      "name": "Lesser Arcanum of Voracity",
+      "slot": "head-legs",
+      "effect": "+8 Agility (applies to head or legs).",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Offensive head/leg arcanum with no level requirement; the agility head/leg enchant for damage builds. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "shaman", "druid"]
+    },
+    {
+      "id": "might-of-the-scourge",
+      "name": "Might of the Scourge",
+      "slot": "shoulder",
+      "effect": "+26 Attack Power and +1% critical strike chance.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Shoulder enchant with no level requirement; a strong melee/physical shoulder pick. Verify exact values and availability at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "shaman", "druid"]
+    },
+    {
+      "id": "greater-resistance",
+      "name": "Enchant Cloak - Greater Resistance",
+      "slot": "cloak",
+      "effect": "+5 to all resistances.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "All-resistance cloak enchant; a balanced defensive back pick. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "greater-nature-resistance",
+      "name": "Enchant Cloak - Greater Nature Resistance",
+      "slot": "cloak",
+      "effect": "+15 Nature Resistance.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Nature-resistance cloak enchant; situational against nature-heavy matchups (e.g. shaman, druid, hunter). Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "major-health",
+      "name": "Enchant Chest - Major Health",
+      "slot": "chest",
+      "effect": "+100 Health.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Flat health chest enchant for survivability builds. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "greater-stats",
+      "name": "Enchant Chest - Greater Stats",
+      "slot": "chest",
+      "effect": "+4 to all stats.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "All-stats chest enchant for balanced/offensive builds. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "superior-stamina",
+      "name": "Enchant Bracer - Superior Stamina",
+      "slot": "bracer",
+      "effect": "+9 Stamina.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Stamina bracer enchant for survivability builds. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "superior-strength",
+      "name": "Enchant Bracer - Superior Strength",
+      "slot": "bracer",
+      "effect": "+9 Strength.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Strength bracer enchant for melee damage builds. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
+    },
+    {
+      "id": "superior-agility",
+      "name": "Enchant Gloves - Superior Agility",
+      "slot": "gloves",
+      "effect": "+15 Agility.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Agility gloves enchant; a strong pick for physical damage classes. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "shaman", "druid"]
+    },
+    {
+      "id": "lifestealing",
+      "name": "Enchant Weapon - Lifestealing",
+      "slot": "weapon",
+      "effect": "Chance on hit: deal Shadow damage and heal the attacker for the amount dealt.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Sustain weapon enchant with no level requirement; favored on midfield/duelist builds for self-healing. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
+    },
+    {
+      "id": "accurate-scope",
+      "name": "Accurate Scope",
+      "slot": "scope",
+      "effect": "+3 weapon damage (applies to a bow, crossbow, or gun).",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Engineering ranged-weapon scope with no level requirement; flat damage on a bow/crossbow/gun. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter"]
     }
   ]
 }

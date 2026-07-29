@@ -55,6 +55,62 @@
       "priority": "core"
     },
     {
+      "id": "scouts-medallion",
+      "name": "Scout's Medallion",
+      "slot": "neck",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Recurring neck pick across many class builds on the BiS chart. Verify source, stats, and faction availability at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "feral-shoulder-pads",
+      "name": "Feral Shoulder Pads",
+      "slot": "shoulder",
+      "source": { "type": "drop", "detail": "World/dungeon drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Leather shoulder recurring across physical class builds on the BiS chart; typically enchanted with Might of the Scourge. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "blackened-defias-armor",
+      "name": "Blackened Defias Armor",
+      "slot": "chest",
+      "source": { "type": "drop", "detail": "The Deadmines (dungeon drop)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Leather chest recurring across many class builds on the BiS chart. Verify exact required level, stats, and current-meta status at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "nat-pagles-extreme-anglers",
+      "name": "Nat Pagle's Extreme Anglers",
+      "slot": "feet",
+      "source": { "type": "quest", "detail": "Fishing quest reward (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Boots recurring across several class builds on the BiS chart; typically enchanted with Minor Speed. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "minor-speed-boots"
+    },
+    {
+      "id": "zircon-band-of-nature-resistance",
+      "name": "Zircon Band of Nature Resistance",
+      "slot": "finger",
+      "source": { "type": "drop", "detail": "Low-level drop of the Zircon Band base (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Nature-resistance ring used in resistance-oriented builds on the BiS chart. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
       "id": "talbar-mantle",
       "name": "Talbar Mantle",
       "slot": "shoulder",
