@@ -136,6 +136,22 @@ test('enriched item references pass the referential guard (strict load succeeded
   assert.ok(boots.alternatives.includes('trailblazer-boots'));
 });
 
+test('shared set fills the neck slot and cross-links the stat rings', async () => {
+  const store = await loadContentStore();
+
+  const neck = getGearItem(store, '19', 'sentinels-medallion');
+  assert.ok(neck, 'a neck item is authored');
+  assert.equal(neck.slot, 'neck');
+  assert.ok(listGearItems(store, '19').some((i) => i.slot === 'neck'), 'neck slot is populated');
+
+  // The two stat rings list each other as alternatives; a strict load reaching
+  // here proves those references resolved.
+  const viridian = getGearItem(store, '19', 'viridian-band');
+  assert.ok(viridian.alternatives.includes('blood-ring'));
+  const blood = getGearItem(store, '19', 'blood-ring');
+  assert.ok(blood.alternatives.includes('viridian-band'));
+});
+
 test('gearForClass merges shared + class items; null when class has no BiS', async () => {
   const store = await loadContentStore();
 

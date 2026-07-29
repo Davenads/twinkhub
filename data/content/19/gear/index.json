@@ -44,6 +44,17 @@
       "priority": "situational"
     },
     {
+      "id": "sentinels-medallion",
+      "name": "Sentinel's Medallion",
+      "slot": "neck",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Common neck pick from the gearing guides; the neck slot otherwise lacks a standout at this bracket. Verify source and stats.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
       "id": "talbar-mantle",
       "name": "Talbar Mantle",
       "slot": "shoulder",
@@ -110,6 +121,30 @@
       "notes": "Horde faction ring; pair with a stat ring. Verify stats.",
       "wowheadId": null,
       "priority": "core"
+    },
+    {
+      "id": "viridian-band",
+      "name": "Viridian Band",
+      "slot": "finger",
+      "source": { "type": "quest", "detail": "Quest reward (verify)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stat ring to pair with a faction seal (Seal of Wrynn / Seal of Sylvanas). Verify source and stats.",
+      "wowheadId": null,
+      "priority": "core",
+      "alternatives": ["blood-ring"]
+    },
+    {
+      "id": "blood-ring",
+      "name": "Blood Ring",
+      "slot": "finger",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Alternative stat ring; also pairs with a faction seal. Verify source and stats.",
+      "wowheadId": null,
+      "priority": "situational",
+      "alternatives": ["viridian-band"]
     },
     {
       "id": "insignia-of-the-alliance",
