@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   loadContentStore,
+  getContentStore,
+  reloadContentStore,
+  summarizeStore,
   primaryBracket,
   listClassNames,
   getClass,
@@ -195,4 +198,31 @@ test('loadContentStore loads scaling with valid per-class priority references', 
   assert.equal(statweightsForClass(store, '19', 'notaclass'), null);
   assert.deepEqual(listStatweightClasses(store, '49'), []);
   assert.equal(bracketScaling(store, '49'), null);
+});
+
+test('reloadContentStore reloads from disk and summarizeStore reports per-bracket counts', async () => {
+  const result = await reloadContentStore();
+  assert.equal(result.ok, true);
+  assert.ok(result.store.bracketKeys.includes('19'));
+
+  const s19 = summarizeStore(result.store).find((s) => s.bracket === '19');
+  assert.ok(s19, 'summary includes the 19 bracket');
+  assert.ok(s19.classes > 0, 'reports class count');
+  assert.ok(s19.gearItems > 0, 'reports gear item count');
+  assert.ok(s19.scalingClasses > 0, 'reports stat-weight class count');
+});
+
+test('reloadContentStore fails cleanly and keeps the last-good store on a bad load', async () => {
+  // Prime a known-good singleton.
+  const good = await reloadContentStore();
+  assert.equal(good.ok, true);
+  const before = await getContentStore();
+
+  // Point a reload at a directory with no index.json: the strict load throws
+  // before the singleton is reassigned, so we get a failure result and the
+  // previously loaded store keeps serving.
+  const result = await reloadContentStore({ dir: './does-not-exist-twinkhub-xyz' });
+  assert.equal(result.ok, false);
+  assert.ok(result.error instanceof Error);
+  assert.equal(await getContentStore(), before, 'last-good store is still served');
 });

@@ -274,6 +274,24 @@ export function resetContentStore() {
   _cache = null;
 }
 
+/**
+ * Force a fresh strict reload from disk for the dev /reloadcontent command.
+ * A strict load throws on the first invalid/parse error, and it does so before
+ * loadContentStore reassigns the singleton — so a bad edit surfaces the error
+ * while the last-good store keeps serving. Never throws: it returns a result.
+ *
+ * @param {{ dir?: string }} [opts]
+ * @returns {Promise<{ ok: true, store: object } | { ok: false, error: Error }>}
+ */
+export async function reloadContentStore(opts = {}) {
+  try {
+    const store = await loadContentStore({ ...opts, strict: true });
+    return { ok: true, store };
+  } catch (error) {
+    return { ok: false, error };
+  }
+}
+
 /** A guild's primary (default) bracket: first in activeBrackets, else "19". */
 export function primaryBracket(config) {
   return config?.activeBrackets?.[0] ?? '19';
@@ -383,4 +401,19 @@ export function statweightsForClass(store, bracket, className) {
   const entry = scaling.classes[key];
   if (!entry) return null;
   return { className: key, entry, scaling };
+}
+
+/**
+ * A compact per-bracket count summary — `{ bracket, classes, enchants, gearItems,
+ * scalingClasses }` per bracket — for the /reloadcontent report and quick health
+ * checks. Reads through the same accessors the commands use.
+ */
+export function summarizeStore(store) {
+  return (store?.bracketKeys ?? []).map((bracket) => ({
+    bracket,
+    classes: listClassNames(store, bracket).length,
+    enchants: bracketEnchants(store, bracket)?.enchants.length ?? 0,
+    gearItems: listGearItems(store, bracket).length,
+    scalingClasses: listStatweightClasses(store, bracket).length
+  }));
 }
