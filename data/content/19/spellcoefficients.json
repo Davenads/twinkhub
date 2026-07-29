@@ -1,0 +1,35 @@
+{
+  "penalty": {
+    "perLevelBelow20": 0.0375,
+    "note": "A spell learned at level X<20 benefits 3.75%*(20-X) less from spell power. The coefficients below are already level-19-effective. Base rule: direct = castTime/3.5 (1.5s floor); dot/hot = duration/15 per tick."
+  },
+  "byClass": {
+    "mage": [
+      { "spell": "Frostbolt", "rank": 3, "coefficient": 0.463, "type": "direct-damage", "confirmed": false },
+      { "spell": "Fireball", "rank": 4, "coefficient": 0.793, "type": "direct-damage", "confirmed": false },
+      { "spell": "Fireball", "rank": 4, "coefficient": 0, "type": "dot", "confirmed": false, "notes": "DoT component does not scale with spell power." }
+    ],
+    "warlock": [
+      { "spell": "Shadow Bolt", "rank": 3, "coefficient": 0.56, "type": "direct-damage", "confirmed": false },
+      { "spell": "Searing Pain", "rank": 1, "coefficient": 0.396, "type": "direct-damage", "confirmed": false },
+      { "spell": "Corruption", "rank": 2, "coefficient": 0.155, "type": "dot", "confirmed": false, "notes": "Per tick." }
+    ],
+    "priest": [
+      { "spell": "Lesser Heal", "rank": 3, "coefficient": 0.446, "type": "direct-heal", "confirmed": false },
+      { "spell": "Heal", "rank": 1, "coefficient": 0.729, "type": "direct-heal", "confirmed": false },
+      { "spell": "Shadow Word: Pain", "rank": 3, "coefficient": 0.154, "type": "dot", "confirmed": false, "notes": "Per tick." }
+    ],
+    "shaman": [
+      { "spell": "Lightning Bolt", "rank": 3, "coefficient": 0.554, "type": "direct-damage", "confirmed": false }
+    ],
+    "druid": [
+      { "spell": "Wrath", "rank": 3, "coefficient": 0.443, "type": "direct-damage", "confirmed": false }
+    ],
+    "paladin": [
+      { "spell": "Holy Light", "rank": 3, "coefficient": 0.554, "type": "direct-heal", "confirmed": false }
+    ],
+    "hunter": [
+      { "spell": "Serpent Sting", "rank": 3, "coefficient": 0.185, "type": "dot", "confirmed": false, "notes": "Per tick; scales with ranged attack power, not spell power." }
+    ]
+  }
+}

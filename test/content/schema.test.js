@@ -9,7 +9,8 @@ import {
   validateGearIndex,
   validateGearClass,
   validateScaling,
-  validatePets
+  validatePets,
+  validateSpellCoefficients
 } from '../../src/content/schema.js';
 
 const validMeta = () => ({
@@ -298,4 +299,54 @@ test('validatePets flags a duplicated family key and a bad tameLevel', () => {
   assert.equal(res.ok, false);
   assert.ok(res.errors.some((e) => e.includes('duplicated')));
   assert.ok(res.errors.some((e) => e.includes('tameLevel')));
+});
+
+const validSpellcoef = () => ({
+  penalty: { perLevelBelow20: 0.0375, note: 'Sub-20 penalty; coefficients are level-19-effective.' },
+  byClass: {
+    mage: [
+      { spell: 'Frostbolt', rank: 3, coefficient: 0.463, type: 'direct-damage', confirmed: false },
+      { spell: 'Fireball', rank: 4, coefficient: 0.793, type: 'direct-damage', confirmed: false },
+      { spell: 'Fireball', rank: 4, coefficient: 0, type: 'dot', confirmed: false, notes: 'DoT does not scale.' }
+    ],
+    priest: [{ spell: 'Lesser Heal', rank: 3, coefficient: 0.446, type: 'direct-heal' }]
+  }
+});
+
+test('validateSpellCoefficients accepts a well-formed file (same-rank direct+dot allowed)', () => {
+  assert.deepEqual(validateSpellCoefficients(validSpellcoef()), { ok: true, errors: [] });
+});
+
+test('validateSpellCoefficients requires penalty and a non-empty byClass', () => {
+  assert.equal(validateSpellCoefficients({ ...validSpellcoef(), penalty: undefined }).ok, false);
+  assert.equal(validateSpellCoefficients({ ...validSpellcoef(), byClass: {} }).ok, false);
+  const badPct = validSpellcoef();
+  badPct.penalty.perLevelBelow20 = '0.0375';
+  assert.ok(validateSpellCoefficients(badPct).errors.some((e) => e.includes('perLevelBelow20')));
+});
+
+test('validateSpellCoefficients enforces the type vocabulary and numeric coefficient', () => {
+  const badType = validSpellcoef();
+  badType.byClass.mage[0].type = 'melee';
+  assert.ok(validateSpellCoefficients(badType).errors.some((e) => e.includes('type')));
+
+  const badCoef = validSpellcoef();
+  badCoef.byClass.mage[0].coefficient = -1;
+  assert.ok(validateSpellCoefficients(badCoef).errors.some((e) => e.includes('coefficient')));
+
+  const badRank = validSpellcoef();
+  badRank.byClass.mage[0].rank = '3';
+  assert.ok(validateSpellCoefficients(badRank).errors.some((e) => e.includes('rank')));
+});
+
+test('validateSpellCoefficients flags a same-type duplicate and a bad confirmed flag', () => {
+  const dupe = validSpellcoef();
+  dupe.byClass.mage.push({ spell: 'Frostbolt', rank: 3, coefficient: 0.463, type: 'direct-damage' });
+  const r1 = validateSpellCoefficients(dupe);
+  assert.equal(r1.ok, false);
+  assert.ok(r1.errors.some((e) => e.includes('duplicates')));
+
+  const badFlag = validSpellcoef();
+  badFlag.byClass.mage[0].confirmed = 'yes';
+  assert.ok(validateSpellCoefficients(badFlag).errors.some((e) => e.includes('confirmed')));
 });

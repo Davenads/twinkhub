@@ -19,6 +19,10 @@ const SOURCE_TYPES = ['drop', 'quest', 'vendor', 'profession', 'pvp', 'world', '
 const FACTIONS = ['alliance', 'horde', 'both'];
 const PRIORITIES = ['core', 'situational', 'budget'];
 
+// Controlled spell-coefficient effect types (03-data-model.md). For dot/hot/proc
+// the coefficient is per tick/hit/orb rather than per cast.
+const SPELL_TYPES = ['direct-damage', 'dot', 'direct-heal', 'hot', 'shield', 'proc'];
+
 /** Record `msg` when `cond` is false; returns `cond` for control flow. */
 function require_(errors, cond, msg) {
   if (!cond) errors.push(msg);
@@ -389,6 +393,71 @@ export function validatePets(obj, label = 'pets.json') {
         seen.add(f.family);
       }
     });
+  }
+
+  return { ok: errors.length === 0, errors };
+}
+
+/**
+ * `<bracket>/spellcoefficients.json`: level-19-effective spell power coefficients
+ * per caster/hybrid spell, plus the sub-level-20 penalty constant, backing
+ * `/spellcoef`. Structural checks only — the referential guard (every `byClass`
+ * key is a real roster class) lives in the store. Coefficients are per cast for
+ * direct-damage/heal/shield and per tick/hit/orb for dot/hot/proc; `confirmed`
+ * defaults to true and is set false for values not yet Wowhead-verified so the
+ * command never presents them as authoritative. Melee-only classes simply have
+ * no key here.
+ */
+export function validateSpellCoefficients(obj, label = 'spellcoefficients.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+
+  if (require_(errors, isObject(obj.penalty), `${label}: penalty must be an object`)) {
+    require_(
+      errors,
+      typeof obj.penalty.perLevelBelow20 === 'number',
+      `${label}: penalty.perLevelBelow20 must be a number`
+    );
+    if (obj.penalty.note !== undefined) {
+      require_(errors, isNonEmptyString(obj.penalty.note), `${label}: penalty.note must be a non-empty string when present`);
+    }
+  }
+
+  if (require_(errors, isObject(obj.byClass), `${label}: byClass must be an object`)) {
+    const keys = Object.keys(obj.byClass);
+    require_(errors, keys.length > 0, `${label}: byClass must have at least one class`);
+    for (const [cls, list] of Object.entries(obj.byClass)) {
+      const clsAt = `${label}: byClass.${cls}`;
+      if (!require_(errors, Array.isArray(list) && list.length > 0, `${clsAt} must be a non-empty array`)) continue;
+      const seen = new Set();
+      list.forEach((s, i) => {
+        const at = `${clsAt}[${i}]`;
+        if (!require_(errors, isObject(s), `${at} must be an object`)) return;
+        require_(errors, isNonEmptyString(s.spell), `${at}.spell must be a non-empty string`);
+        require_(errors, isInteger(s.rank), `${at}.rank must be an integer`);
+        require_(
+          errors,
+          typeof s.coefficient === 'number' && s.coefficient >= 0,
+          `${at}.coefficient must be a number >= 0`
+        );
+        require_(errors, SPELL_TYPES.includes(s.type), `${at}.type must be one of ${SPELL_TYPES.join('|')}`);
+        if (s.confirmed !== undefined) {
+          require_(errors, isBoolean(s.confirmed), `${at}.confirmed must be a boolean when present`);
+        }
+        if (s.notes !== undefined) {
+          require_(errors, isNonEmptyString(s.notes), `${at}.notes must be a non-empty string when present`);
+        }
+        // A spell can carry both a direct and a dot/hot entry at the same rank
+        // (Fireball, Immolate, Moonfire), so the type is part of the identity.
+        if (isNonEmptyString(s.spell) && isInteger(s.rank) && SPELL_TYPES.includes(s.type)) {
+          const dupKey = `${s.spell}#${s.rank}#${s.type}`;
+          require_(errors, !seen.has(dupKey), `${at} duplicates "${s.spell}" rank ${s.rank} (${s.type})`);
+          seen.add(dupKey);
+        }
+      });
+    }
   }
 
   return { ok: errors.length === 0, errors };

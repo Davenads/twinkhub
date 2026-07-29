@@ -21,7 +21,10 @@ import {
   statweightsForClass,
   bracketPets,
   listPetFamilies,
-  getPetFamily
+  getPetFamily,
+  bracketSpellcoef,
+  listSpellcoefClasses,
+  spellcoefForClass
 } from '../../src/content/store.js';
 
 // Integration: load the real seeded store from data/content (path is resolved
@@ -223,6 +226,29 @@ test('loadContentStore loads hunter pets with a valid class reference', async ()
   assert.equal(getPetFamily(store, '19', 'dragon'), null);
   assert.equal(bracketPets(store, '49'), null);
   assert.deepEqual(listPetFamilies(store, '49'), []);
+});
+
+test('loadContentStore loads spell coefficients with valid class references', async () => {
+  const store = await loadContentStore();
+
+  const data = bracketSpellcoef(store, '19');
+  assert.ok(data, 'spell coefficients are loaded');
+  assert.equal(typeof data.penalty.perLevelBelow20, 'number');
+
+  const classes = listSpellcoefClasses(store, '19');
+  assert.ok(classes.includes('mage'));
+
+  // A strict load reaching here proves every byClass key is a real roster class.
+  const roster = new Set(listClassNames(store, '19'));
+  for (const cls of classes) assert.ok(roster.has(cls), `${cls} is a roster class`);
+
+  const mage = spellcoefForClass(store, '19', 'Mage');
+  assert.ok(Array.isArray(mage) && mage.length > 0, 'lookup is case-insensitive');
+  assert.ok(mage.some((s) => s.spell === 'Frostbolt'));
+
+  assert.equal(spellcoefForClass(store, '19', 'notaclass'), null);
+  assert.equal(bracketSpellcoef(store, '49'), null);
+  assert.deepEqual(listSpellcoefClasses(store, '49'), []);
 });
 
 test('reloadContentStore reloads from disk and summarizeStore reports per-bracket counts', async () => {

@@ -10,7 +10,8 @@ import {
   validateGearIndex,
   validateGearClass,
   validateScaling,
-  validatePets
+  validatePets,
+  validateSpellCoefficients
 } from './schema.js';
 import { logger } from '../lib/logger.js';
 
@@ -112,7 +113,7 @@ async function loadBracket(dir, key, strict) {
     return null;
   }
 
-  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null };
+  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null };
 
   const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
   if (classIndex) {
@@ -228,6 +229,26 @@ async function loadBracket(dir, key, strict) {
         fail(strict, `content ${key}/pets.json references unknown class "${petsFile.class}"`);
       }
       bracket.pets = petsFile;
+    }
+  }
+
+  // Optional spell-coefficient file backing /spellcoef. Referential guard mirrors
+  // the others: every `byClass` key must be a real roster class (03-data-model.md).
+  const spellcoefFile = await readOptionalJson(path.join(dir, key, 'spellcoefficients.json'));
+  if (spellcoefFile) {
+    const scResult = validateSpellCoefficients(spellcoefFile, `${key}/spellcoefficients.json`);
+    if (!scResult.ok) {
+      fail(strict, `content ${key}/spellcoefficients.json invalid: ${scResult.errors.join('; ')}`);
+    } else {
+      const roster = new Set((bracket.classes.index?.classes ?? []).map((e) => e.class));
+      if (roster.size) {
+        for (const cls of Object.keys(spellcoefFile.byClass)) {
+          if (!roster.has(cls)) {
+            fail(strict, `content ${key}/spellcoefficients.json references unknown class "${cls}"`);
+          }
+        }
+      }
+      bracket.spellcoef = spellcoefFile;
     }
   }
 
@@ -436,6 +457,24 @@ export function getPetFamily(store, bracket, family) {
   if (!pets) return null;
   const key = String(family ?? '').toLowerCase();
   return pets.families.find((f) => f.family === key) ?? null;
+}
+
+/** The spell-coefficient bundle (`{ penalty, byClass }`) for a bracket, or null. */
+export function bracketSpellcoef(store, bracket) {
+  return store?.brackets?.[bracket]?.spellcoef ?? null;
+}
+
+/** Class keys with authored spell coefficients (for /spellcoef autocomplete). */
+export function listSpellcoefClasses(store, bracket) {
+  return Object.keys(bracketSpellcoef(store, bracket)?.byClass ?? {});
+}
+
+/** A class's spell list (each `{ spell, rank, coefficient, type, ... }`), or null. */
+export function spellcoefForClass(store, bracket, className) {
+  const data = bracketSpellcoef(store, bracket);
+  if (!data) return null;
+  const key = String(className ?? '').toLowerCase();
+  return data.byClass[key] ?? null;
 }
 
 /**
