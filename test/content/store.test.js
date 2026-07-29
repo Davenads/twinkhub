@@ -258,6 +258,26 @@ test('priest is authored as a tier-A healer with mana-first stat weights', async
   assert.ok(sw.entry.priority.includes('stamina'));
 });
 
+test('the full roster is class-detail complete with scaling for every class', async () => {
+  const store = await loadContentStore();
+
+  const roster = listClassNames(store, '19');
+  assert.equal(roster.length, 9, 'all nine Classic classes are on the roster');
+
+  // Every roster class now resolves to a detail file (specs present) and a
+  // stat-weight entry - a strict load reaching here already proved each tier
+  // matches the roster and each scaling priority names a declared stat.
+  for (const cls of roster) {
+    const detail = getClass(store, '19', cls);
+    assert.ok(detail.specs && detail.specs.length > 0, `${cls} has an authored detail file`);
+    assert.ok(listStatweightClasses(store, '19').includes(cls), `${cls} has stat weights`);
+  }
+
+  // Spot-check a newly authored caster and a hybrid flag carrier.
+  assert.ok(getClass(store, '19', 'mage').specs[0].statPriority.includes('intellect'));
+  assert.ok(getClass(store, '19', 'druid').roles.includes('flag-carrier'));
+});
+
 test('loadContentStore loads hunter pets with a valid class reference', async () => {
   const store = await loadContentStore();
 

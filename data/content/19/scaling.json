@@ -100,6 +100,46 @@
         "Stamina keeps the healer alive under focus - survivability still wins WSG.",
         "Spirit adds between-cast mana regen; weighed behind stamina in competitive play."
       ]
+    },
+    "druid": {
+      "priority": ["stamina", "agility"],
+      "notes": [
+        "Stamina leads on the flag-carrier build - the ~1000+ health target wins WSG.",
+        "1 Agility = 2 armor and adds dodge, hardening a Bear-form carrier.",
+        "Shifting forms removes roots and snares, part of why druids carry flags well."
+      ]
+    },
+    "paladin": {
+      "priority": ["strength", "stamina", "intellect"],
+      "notes": [
+        "1 Strength = 2 attack power for Paladins, feeding Retribution seal and judgement burst.",
+        "Melee hit cap is 5%.",
+        "Holy and flag-support builds invert toward intellect and stamina; survivability still wins WSG."
+      ]
+    },
+    "shaman": {
+      "priority": ["intellect", "stamina", "spirit"],
+      "notes": [
+        "1 Intellect = 15 mana, fueling Lightning Bolt and Earth Shock burst.",
+        "Stamina keeps the shaman alive to keep totems down - survivability wins WSG.",
+        "Enhancement inverts toward strength (1 Strength = 2 attack power for Shamans) and agility."
+      ]
+    },
+    "mage": {
+      "priority": ["intellect", "stamina", "spirit"],
+      "notes": [
+        "1 Intellect = 15 mana and adds spell crit, the mage's core damage stat.",
+        "Spell hit cap is 3% after talents.",
+        "Stamina is still valued - a fragile mage that survives one burst wins the trade."
+      ]
+    },
+    "warlock": {
+      "priority": ["intellect", "stamina", "spirit"],
+      "notes": [
+        "1 Intellect = 15 mana for sustained DoT and drain pressure.",
+        "Stamina pairs with the Voidwalker and Imp Blood Pact for survivability - staying alive wins WSG.",
+        "Spell hit cap is 3% after talents."
+      ]
     }
   }
 }

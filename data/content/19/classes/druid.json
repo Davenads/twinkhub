@@ -1,0 +1,11 @@
+{
+  "class": "druid",
+  "tier": "B",
+  "roles": ["flag-carrier", "hybrid"],
+  "specs": [
+    { "name": "Feral (flag carrier)", "statPriority": ["stamina", "agility"] },
+    { "name": "Balance (caster harass)", "statPriority": ["intellect", "stamina", "spirit"] }
+  ],
+  "summary": "A strong flag carrier: Bear Form adds armor and health while shifting sheds roots and snares, and Entangling Roots plus instant Moonfire give peel and harass. Note Cat Form and Travel Form unlock at levels 20 and 30, so a 19 druid carries in Bear Form. Value swings on team composition.",
+  "factionNotes": "Druids play both factions - Night Elf (Alliance) and Tauren (Horde). Tauren bring the Endurance racial (+5% base health), prized on the flag-carrier build, while Night Elf offer Shadowmeld and the Quickness dodge racial. Verify current racial and form specifics against the Wowhead Druid guide at authoring."
+}

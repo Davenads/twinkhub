@@ -1,0 +1,11 @@
+{
+  "class": "paladin",
+  "tier": "B",
+  "roles": ["hybrid"],
+  "specs": [
+    { "name": "Retribution (burst)", "statPriority": ["strength", "stamina", "intellect"] },
+    { "name": "Holy (support)", "statPriority": ["intellect", "stamina", "spirit"] }
+  ],
+  "summary": "Alliance hybrid: Blessing of Freedom (learned at 18) makes paladins strong flag-carrier support against snares, backed by seal-and-judgement burst and off-heals like Lay on Hands. Value swings on composition.",
+  "factionNotes": "Paladins are Alliance-only in Classic Era (Human, Dwarf). Human weapon-skill racials and Dwarf Stoneform (removes bleed, poison, and disease) shape matchups. Verify current racial and blessing specifics against the Wowhead Paladin guide at authoring."
+}

@@ -1,0 +1,11 @@
+{
+  "class": "shaman",
+  "tier": "B",
+  "roles": ["hybrid"],
+  "specs": [
+    { "name": "Elemental (caster burst)", "statPriority": ["intellect", "stamina", "spirit"] },
+    { "name": "Enhancement (melee)", "statPriority": ["strength", "stamina", "agility"] }
+  ],
+  "summary": "Horde hybrid: totem utility, Earth Shock and Lightning Bolt burst, and weapon imbues for melee. Note Ghost Wolf and Frost Shock unlock at level 20, so a 19 shaman leans on totems for map control. Value swings on composition.",
+  "factionNotes": "Shamans are Horde-only in Classic Era (Orc, Tauren, Troll). Orc Hardiness (reduced stun duration), Tauren Endurance (+5% health), and Troll Berserking (haste) shape flag fights. Verify current racial, totem, and weapon-imbue specifics against the Wowhead Shaman guide at authoring."
+}
