@@ -34,6 +34,17 @@
       "notes": "Gloves for the offensive build; enchanted with Superior Agility. Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
+    },
+    {
+      "id": "tunic-of-westfall",
+      "name": "Tunic of Westfall",
+      "slot": "chest",
+      "source": { "type": "drop", "detail": "The Deadmines / Westfall area (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Chest pick for the Alliance offense build; enchanted with Greater Stats. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
     }
   ],
   "builds": [
@@ -94,6 +105,66 @@
         ],
         "mainhand": { "item": "shadowfang", "enchant": "lifestealing" },
         "offhand": { "item": "cruel-barb", "enchant": "lifestealing" },
+        "ranged": { "item": "keen-throwing-knife", "enchant": null }
+      }
+    },
+    {
+      "id": "rogue-midfield-alliance",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentry-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "major-health" },
+        "wrist": { "item": "wranglers-wristbands-of-the-monkey", "enchant": "superior-stamina" },
+        "hands": { "item": "scouting-gloves-of-the-monkey", "enchant": "superior-agility" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "protectors-band", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "lifestealing" },
+        "offhand": { "item": "cruel-barb", "enchant": "lifestealing" },
+        "ranged": { "item": "keen-throwing-knife", "enchant": null }
+      }
+    },
+    {
+      "id": "rogue-offense-alliance",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-voracity" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentry-cloak", "enchant": "greater-nature-resistance" },
+        "chest": { "item": "tunic-of-westfall", "enchant": "greater-stats" },
+        "wrist": { "item": "wranglers-wristbands-of-power", "enchant": "superior-strength" },
+        "hands": { "item": "bristlebark-gloves", "enchant": "superior-agility" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-voracity" },
+        "feet": { "item": "feet-of-the-lynx", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "zircon-band-of-nature-resistance", "enchant": null },
+          { "item": "zircon-band-of-nature-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "fiery-weapon" },
+        "offhand": { "item": "cruel-barb", "enchant": "fiery-weapon" },
         "ranged": { "item": "keen-throwing-knife", "enchant": null }
       }
     }

@@ -57,17 +57,6 @@
       "priority": "core"
     },
     {
-      "id": "protectors-band",
-      "name": "Protector's Band",
-      "slot": "finger",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Stamina/defensive ring paired with Seal of Wrynn in the midfield build. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "fortified-bracers-of-strength",
       "name": "Fortified Bracers of Strength",
       "slot": "wrist",

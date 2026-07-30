@@ -776,6 +776,17 @@
       "notes": "Mail waist recurring across warrior and paladin midfield/offense builds. Verify stats and required level at authoring.",
       "wowheadId": 6460,
       "priority": "core"
+    },
+    {
+      "id": "protectors-band",
+      "name": "Protector's Band",
+      "slot": "finger",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stamina/defensive ring shared by paladin and rogue midfield builds; paired with a faction seal ring. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
     }
   ]
 }
