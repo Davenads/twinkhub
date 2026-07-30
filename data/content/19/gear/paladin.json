@@ -2,17 +2,6 @@
   "class": "paladin",
   "items": [
     {
-      "id": "beetle-clasps",
-      "name": "Beetle Clasps",
-      "slot": "wrist",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Stamina bracers for the flag-carrier build; enchanted with Superior Stamina. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "defender-gauntlets-of-the-eagle",
       "name": "Defender Gauntlets of the Eagle",
       "slot": "hands",
@@ -42,17 +31,6 @@
       "faction": "both",
       "reqLevel": null,
       "notes": "Intellect/stamina bracers for the midfield build; enchanted with Superior Stamina. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "chausses-of-westfall",
-      "name": "Chausses of Westfall",
-      "slot": "legs",
-      "source": { "type": "drop", "detail": "The Deadmines / Westfall area (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Leg pick for the midfield and offense builds; enchanted with a Lesser Arcanum (Constitution or Voracity). Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
     },

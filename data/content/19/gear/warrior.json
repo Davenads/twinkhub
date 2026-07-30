@@ -126,6 +126,96 @@
         "offhand": { "item": "deadskull-shield", "enchant": "greater-stamina-shield" },
         "ranged": { "item": "keen-throwing-knife", "enchant": null }
       }
+    },
+    {
+      "id": "warrior-offense-alliance",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-voracity" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "defender-spaulders", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentrys-cape-of-strength", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "greater-stats" },
+        "wrist": { "item": "fortified-bracers-of-power", "enchant": "superior-strength" },
+        "hands": { "item": "thorbias-gauntlets", "enchant": "greater-strength-gloves" },
+        "waist": { "item": "cobrahns-grasp", "enchant": null },
+        "legs": { "item": "chausses-of-westfall", "enchant": "lesser-arcanum-of-voracity" },
+        "feet": { "item": "draftsman-boots", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "zircon-band-of-frost-resistance", "enchant": null },
+          { "item": "zircon-band-of-frost-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "fiery-weapon" },
+        "offhand": { "item": "arctic-buckler", "enchant": "frost-resistance-shield" },
+        "ranged": { "item": "keen-throwing-knife", "enchant": null }
+      }
+    },
+    {
+      "id": "warrior-midfield-alliance",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "defender-spaulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "sentry-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "major-health" },
+        "wrist": { "item": "beetle-clasps", "enchant": "superior-stamina" },
+        "hands": { "item": "thorbias-gauntlets", "enchant": "superior-agility" },
+        "waist": { "item": "cobrahns-grasp", "enchant": null },
+        "legs": { "item": "chausses-of-westfall", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "protectors-band", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "lifestealing" },
+        "offhand": { "item": "arctic-buckler", "enchant": "greater-stamina-shield" },
+        "ranged": { "item": "keen-throwing-knife", "enchant": null }
+      }
+    },
+    {
+      "id": "warrior-defense-alliance",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "defender-spaulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "firebane-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "major-health" },
+        "wrist": { "item": "beetle-clasps", "enchant": "superior-stamina" },
+        "hands": { "item": "thorbias-gauntlets", "enchant": "superior-agility" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "chausses-of-westfall", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "lifestealing" },
+        "offhand": { "item": "arctic-buckler", "enchant": "greater-stamina-shield" },
+        "ranged": { "item": "keen-throwing-knife", "enchant": null }
+      }
     }
   ]
 }

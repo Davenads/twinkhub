@@ -820,6 +820,28 @@
       "notes": "Cloth legs shared by Alliance mage and warlock defensive builds; enchanted with a Lesser Arcanum of Constitution. Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
+    },
+    {
+      "id": "beetle-clasps",
+      "name": "Beetle Clasps",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stamina bracers shared by paladin flag-carrier and Alliance warrior defense/midfield builds; enchanted with Superior Stamina. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "chausses-of-westfall",
+      "name": "Chausses of Westfall",
+      "slot": "legs",
+      "source": { "type": "drop", "detail": "The Deadmines / Westfall area (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Leg pick shared by paladin and Alliance warrior midfield/offense builds; enchanted with a Lesser Arcanum (Constitution or Voracity). Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
     }
   ]
 }
