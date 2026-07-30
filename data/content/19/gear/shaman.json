@@ -1,0 +1,175 @@
+{
+  "class": "shaman",
+  "items": [
+    {
+      "id": "battle-healers-cloak",
+      "name": "Battle Healer's Cloak",
+      "slot": "back",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Healing-leaning cloak for the defensive build; enchanted with Greater Resistance. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "sentry-cape-of-the-gorilla",
+      "name": "Sentry Cape of the Gorilla",
+      "slot": "back",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Gorilla (+Str/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Strength/stamina cloak for the offensive build; enchanted with Greater Resistance. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "magefist-gloves",
+      "name": "Magefist Gloves",
+      "slot": "hands",
+      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Cloth gloves for the defensive build; enchanted with Healing Power. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "healing-power-gloves"
+    },
+    {
+      "id": "jutebraid-gloves",
+      "name": "Jutebraid Gloves",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Gloves for the midfield/offense builds; enchanted with Superior Agility (midfield) or Greater Strength (offense). Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "jagged-star-of-healing",
+      "name": "Jagged Star of Healing",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Healing random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand mace for the defensive/restoration build; enchanted with Healing Power. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "healing-power-weapon"
+    },
+    {
+      "id": "evocators-blade",
+      "name": "Evocator's Blade",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand caster weapon carried as an intellect stat-stick option across all three builds; enchanted with Mighty Intellect. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "mighty-intellect-weapon"
+    },
+    {
+      "id": "forester-axe-of-the-whale",
+      "name": "Forester Axe of the Whale",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Whale (+Sta/+Spi) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand axe carried as a spirit stat-stick option in the defensive build; enchanted with Mighty Spirit. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "mighty-spirit-weapon"
+    }
+  ],
+  "builds": [
+    {
+      "id": "shaman-offense",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "horde",
+      "default": true,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-rumination" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentry-cape-of-the-gorilla", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "greater-stats" },
+        "wrist": { "item": "wranglers-wristbands-of-the-eagle", "enchant": "superior-strength" },
+        "hands": { "item": "jutebraid-gloves", "enchant": "greater-strength-gloves" },
+        "waist": { "item": "screecher-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-rumination" },
+        "feet": { "item": "draftsman-boots", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "zircon-band-of-frost-resistance", "enchant": null },
+          { "item": "zircon-band-of-frost-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "assassins-blade", "enchant": "fiery-weapon" },
+        "offhand": { "item": "arctic-buckler", "enchant": "frost-resistance-shield" }
+      }
+    },
+    {
+      "id": "shaman-midfield",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "engineers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "greater-stats" },
+        "wrist": { "item": "wranglers-wristbands-of-the-eagle", "enchant": "superior-stamina" },
+        "hands": { "item": "jutebraid-gloves", "enchant": "superior-agility" },
+        "waist": { "item": "screecher-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "legionnaires-band", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "assassins-blade", "enchant": "fiery-weapon" },
+        "offhand": { "item": "redbeard-crest", "enchant": "greater-stamina-shield" }
+      }
+    },
+    {
+      "id": "shaman-defense",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "resilience-of-the-scourge" },
+        "back": { "item": "battle-healers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "greater-stats" },
+        "wrist": { "item": "wranglers-wristbands-of-the-eagle", "enchant": "superior-stamina" },
+        "hands": { "item": "magefist-gloves", "enchant": "healing-power-gloves" },
+        "waist": { "item": "screecher-belt", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "zircon-band-of-nature-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "jagged-star-of-healing", "enchant": "healing-power-weapon" },
+        "offhand": { "item": "deadskull-shield", "enchant": "greater-stamina-shield" }
+      }
+    }
+  ]
+}

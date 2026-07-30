@@ -290,6 +290,56 @@
       "noLevelReq": true,
       "notes": "Spirit weapon enchant with no level requirement; a regen-focused stat-stick option on staves. Verify exact value at authoring.",
       "classes": ["hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "lesser-arcanum-of-rumination",
+      "name": "Lesser Arcanum of Rumination",
+      "slot": "head-legs",
+      "effect": "+150 Mana (applies to head or legs).",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Zul'Gurub-style head/leg arcanum with no level requirement; the mana head/leg enchant for caster-hybrid damage builds. Verify exact value at authoring.",
+      "classes": ["shaman", "druid", "paladin", "mage", "warlock", "priest", "hunter"]
+    },
+    {
+      "id": "resilience-of-the-scourge",
+      "name": "Resilience of the Scourge",
+      "slot": "shoulder",
+      "effect": "+31 Healing and +5 Mana per 5 sec.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Healing-oriented Scourge shoulder enchant with no level requirement; the restoration counterpart to Might/Fortitude of the Scourge. Verify exact values and availability at authoring.",
+      "classes": ["shaman", "druid", "paladin", "priest"]
+    },
+    {
+      "id": "healing-power-gloves",
+      "name": "Enchant Gloves - Healing Power",
+      "slot": "gloves",
+      "effect": "+30 Healing.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Healing-power gloves enchant for restoration/support hybrid builds. Verify exact value at authoring.",
+      "classes": ["shaman", "druid", "paladin", "priest"]
+    },
+    {
+      "id": "healing-power-weapon",
+      "name": "Enchant Weapon - Healing Power",
+      "slot": "weapon",
+      "effect": "+55 Healing.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Healing-power weapon enchant with no level requirement; a restoration stat-stick option on a one-hand caster weapon. Verify exact value at authoring.",
+      "classes": ["shaman", "druid", "paladin", "priest"]
+    },
+    {
+      "id": "superior-spirit-shield",
+      "name": "Enchant Shield - Superior Spirit",
+      "slot": "shield",
+      "effect": "+9 Spirit.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Spirit shield enchant for regen-leaning shield-using caster-hybrid builds. Verify exact value at authoring.",
+      "classes": ["shaman", "paladin"]
     }
   ]
 }
