@@ -748,11 +748,11 @@
       "id": "sentrys-cape-of-strength",
       "name": "Sentry's Cape of Strength",
       "slot": "back",
-      "source": { "type": "drop", "detail": "Low-level drop with the of Strength random suffix (verify exact source)" },
+      "source": { "type": "drop", "detail": "Base item Sentry's Cape (item=15526); the of Strength random suffix (+4-5 Strength) confirmed via Wowhead Classic" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Strength cloak for offensive warrior and paladin builds. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Strength cloak for offensive warrior and paladin builds. wowheadId is the base item; the +4-5 Str of Strength suffix is a random enchantment.",
+      "wowheadId": 15526,
       "priority": "core"
     },
     {
