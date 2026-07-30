@@ -1,0 +1,930 @@
+,,"Druid
+Flag Carrier",,,,"Druid
+Midfield",,,,"Hunter
+Defense",,,,"Hunter
+Midfield",,,,"Hunter
+Offense",,,,"Mage
+Defense",,,,"Mage
+Midfield",,,,"Mage
+Offense",,,,"Paladin
+Flag Carrier",,,,"Paladin
+Midfield",,,,"Paladin
+Offensive",,,,"Priest
+Defense",,,,"Priest
+Midfield",,,,"Priest
+Offense",,,,"Rogue
+Midfield",,,,"Rogue
+Offense",,,,"Warlock
+Defensive",,,,"Warlock
+Midfield",,,,"Warlock
+Offensive",,,,"Warrior
+Defensive",,,,"Warrior
+Midfield",,,,"Warrior
+Offensive",
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","150 Mana
+Lesser Arcanum
+of Rumination",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","8 Agility
+Lesser Arcanum
+of Voracity",,,"Lucky 
+Fishing Hat","8 Agility
+Lesser Arcanum
+of Voracity",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","150 Mana
+Lesser Arcanum
+of Rumination",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","8 Strength
+Lesser Arcanum
+of Voracity",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","150 Mana
+Lesser Arcanum
+of Rumination",,,"Lucky 
+Fishing Hat","150 Mana
+Lesser Arcanum
+of Rumination",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","8 Agility
+Lesser Arcanum
+of Voracity",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","100 Health
+Lesser Arcanum
+of Constitution",,,"Lucky 
+Fishing Hat","8 Strength
+Lesser Arcanum
+of Voracity"
+,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",,,,"Sentinel's
+Medallion",
+,,"Feral 
+Shoulder Pads","16 Stamina
++100 Armor
+F. of the Scourge",,,"Feral 
+Shoulder Pads","31 Healing
+5 Mana per 5 sec
+R. of the Scourge",,,"Feral 
+Shoulder Pads","16 Stamina
++100 Armor
+F. of the Scourge",,,"Feral 
+Shoulder Pads","26 Attack Power
+1% Crit Rate
+M. of the Scourge",,,"Feral 
+Shoulder Pads","26 Attack Power
+1% Crit Rate
+M. of the Scourge",,,"Reinforced
+Woolen 
+Shoulders","16 Stamina
++100 Armor
+F. of the Scourge",,,"Reinforced
+Woolen 
+Shoulders","16 Stamina
++100 Armor
+F. of the Scourge",,,"Reinforced
+Woolen 
+Shoulders","15 Spellpower
+1% Crit Rate
+P. of the Scourge",,,"Defender
+Spaulders","16 Stamina
++100 Armor
+F. of the Scourge",,,"Defender
+Spaulders","16 Stamina
++100 Armor
+F. of the Scourge",,,"Defender
+Spaulders","26 Attack Power
+1% Crit Rate
+M. of the Scourge",,,"Reinforced
+Woolen 
+Shoulders","16 Stamina
++100 Armor
+F. of the Scourge",,,"Reinforced
+Woolen 
+Shoulders","31 Healing
+5 Mana per 5 sec
+R. of the Scourge",,,"Reinforced
+Woolen 
+Shoulders","31 Healing
+5 Mana per 5 sec
+R. of the Scourge",,,"Feral 
+Shoulder Pads","26 Attack Power
+1% Crit Rate
+M. of the Scourge",,,"Feral 
+Shoulder Pads","26 Attack Power
+1% Crit Rate
+M. of the Scourge",,,"Reinforced
+Woolen 
+Shoulders","16 Stamina
++100 Armor
+F. of the Scourge",,,"Reinforced
+Woolen 
+Shoulders","18 Spellpower
+Zandalar Signet
+of Mojo",,,"Reinforced
+Woolen 
+Shoulders","18 Spellpower
+Zandalar Signet
+of Mojo",,,"Defender
+Spaulders","16 Stamina
++100 Armor
+F. of the Scourge",,,"Defender
+Spaulders","16 Stamina
++100 Armor
+F. of the Scourge",,,"Defender
+Spaulders","26 Attack Power
+1% Crit Rate
+M. of the Scourge"
+,,Firebane Cloak,"10 Shadow Resist
+Enchant Cloak
+Shadow Resistance",,,"Battle Healer's
+Cloak","10 Shadow Resist
+Enchant Cloak
+Shadow Resistance",,,Sentry Cloak,"5 All Resist
+Enchant Cloak
+Greater Resistance",,,Sentry Cloak,"5 All Resist
+Enchant Cloak
+Greater Resistance",,,Sentry Cloak,"5 All Resist
+Enchant Cloak
+Greater Resistance",,,Firebane Cloak,"10 Shadow Resist
+Enchant Cloak
+Shadow Resistance",,,Engineer's Cloak,"5 All Resist
+Enchant Cloak
+Greater Resistance",,,"Watcher's Cape
+of Frozen Wrath","5 All Resist
+Enchant Cloak
+Greater Resistance",,,Firebane Cloak,"10 Shadow Resist
+Enchant Cloak
+Shadow Resistance",,,Engineer's Cloak,"5 All Resist
+Enchant Cloak
+Greater Resistance",,,"Sentry's Cape
+of Strength","5 All Resist
+Enchant Cloak
+Greater Resistance",,,"Battle Healer's
+Cloak","5 All Resist
+Enchant Cloak
+Greater Resistance",,,"Battle Healer's
+Cloak","5 All Resist
+Enchant Cloak
+Greater Resistance",,,Engineer's Cloak,"5 All Resist
+Enchant Cloak
+Greater Resistance",,,Sentry Cloak,"5 All Resist
+Enchant Cloak
+Greater Resistance",,,Sentry Cloak,"15 Nature Resist
+Enchant Cloak
+Greater Nature Res.",,,Firebane Cloak,"10 Shadow Resist
+Enchant Cloak
+Shadow Resistance",,,"Watcher's Cape
+of Shadow Wrath","5 All Resist
+Enchant Cloak
+Greater Resistance",,,"Watcher's Cape
+of Shadow Wrath","5 All Resist
+Enchant Cloak
+Greater Resistance",,,Firebane Cloak,"10 Shadow Resist
+Enchant Cloak
+Shadow Resistance",,,Sentry Cloak,"5 All Resist
+Enchant Cloak
+Greater Resistance",,,"Sentry's Cape
+of Strength","5 All Resist
+Enchant Cloak
+Greater Resistance"
+,,"Blackened
+Defias Armor","100 Health
+Enchant Chest
+Major Health",,,"Tree Bark
+Jacket","100 Health
+Enchant Chest
+Major Health",,,"Blackened
+Defias Armor","4 All Stats
+Enchant Chest
+Greater Stats",,,"Tunic of
+Westfall","4 All Stats
+Enchant Chest
+Greater Stats",,,"Tunic of
+Westfall","4 All Stats
+Enchant Chest
+Greater Stats",,,"Tree Bark
+Jacket","100 Health
+Enchant Chest
+Major Health",,,"Tree Bark
+Jacket","100 Health
+Enchant Chest
+Major Health",,,"Tree Bark
+Jacket","100 Health
+Enchant Chest
+Major Health",,,"Blackened
+Defias Armor","100 Health
+Enchant Chest
+Major Health",,,"Blackened
+Defias Armor","4 All Stats
+Enchant Chest
+Greater Stats",,,"Blackened
+Defias Armor","4 All Stats
+Enchant Chest
+Greater Stats",,,"Tree Bark
+Jacket","100 Health
+Enchant Chest
+Major Health",,,"Tree Bark
+Jacket","100 Health
+Enchant Chest
+Major Health",,,"Tree Bark
+Jacket","100 Mana
+Enchant Chest
+Major Mana",,,"Blackened
+Defias Armor","100 Health
+Enchant Chest
+Major Health",,,"Tunic of
+Westfall","4 All Stats
+Enchant Chest
+Greater Stats",,,"Tree Bark
+Jacket","100 Health
+Enchant Chest
+Major Health",,,"Tree Bark
+Jacket","100 Health
+Enchant Chest
+Major Health",,,"Ritual Shroud
+of Shadow Wrath","100 Health
+Enchant Chest
+Major Health",,,"Blackened
+Defias Armor","100 Health
+Enchant Chest
+Major Health",,,"Blackened
+Defias Armor","100 Health
+Enchant Chest
+Major Health",,,"Blackened
+Defias Armor","4 All Stats
+Enchant Chest
+Greater Stats"
+,,"Wrangler's
+Wristbands 
+of Stamina","9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Wrangler's
+Wristbands 
+of the Eagle","24 Healing
+Enchant Bracer
+Healing Power",,,"Wrangler's
+Wristbands 
+of the Monkey","9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Wrangler's
+Wristbands 
+of the Falcon","7 Intellect
+Enchant Bracer
+Greater Intellect",,,"Mindthrust
+Bracers","7 Intellect
+Enchant Bracer
+Greater Intellect",,,"Greenweave
+Bracers
+of Stamina","9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Greenweave
+Bracers
+of Stamina","9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Greenweave
+Bracers
+of Frozen Wrath","7 Intellect
+Enchant Bracer
+Greater Intellect",,,Beetle Clasps,"9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Foritfied Bracers
+of the Eagle","9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Foritfied Bracers
+of Strength","9 Strength
+Enchant Bracer
+Superior Strength",,,"Greenweave
+Bracers
+of Stamina","9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Mindthrust
+Bracers","24 Healing
+Enchant Bracer
+Healing Power",,,"Mindthrust
+Bracers","7 Intellect
+Enchant Bracer
+Greater Intellect",,,"Wrangler's
+Wristbands 
+of the Monkey","9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Wrangler's
+Wristbands 
+of Power","9 Strength
+Enchant Bracer
+Superior Strength",,,"Greenweave
+Bracers
+of Stamina","9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Greenweave
+Bracers
+of Shadow Wrath","9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Greenweave
+Bracers
+of Shadow Wrath","9 Stamina
+Enchant Bracer
+Superior Stamina",,,Beetle Clasps,"9 Stamina
+Enchant Bracer
+Superior Stamina",,,Beetle Clasps,"9 Stamina
+Enchant Bracer
+Superior Stamina",,,"Foritfied Bracers
+of Power","9 Strength
+Enchant Bracer
+Superior Strength"
+,,"Scouting
+Gloves
+of the Eagle","30 Healing
+Enchant Gloves
+Healing Power",,,Magefist Gloves,"30 Healing
+Enchant Gloves
+Healing Power",,,"Scouting
+Gloves
+of the Monkey","15 Agility
+Enchant Gloves
+Superior Agility",,,"Scouting
+Gloves
+of the Falcon","15 Agility
+Enchant Gloves
+Superior Agility",,,"Scouting
+Gloves
+of the Falcon","15 Agility
+Enchant Gloves
+Superior Agility",,,"Pagan Mitts
+of the Eagle","20 Frost Power
+Enchant Gloves
+Frost Power",,,Magefist Gloves,"20 Frost Power
+Enchant Gloves
+Frost Power",,,"Gnoll Casting 
+Gloves","20 Frost Power
+Enchant Gloves
+Frost Power",,,"Dedender 
+Gauntlets
+of the Eagle","30 Healing
+Enchant Gloves
+Healing Power",,,"Dedender 
+Gauntlets
+of the Eagle","30 Healing
+Enchant Gloves
+Healing Power",,,"Thorbia's
+Gauntlets","7 Strength
+Enchant Gloves
+Greater Strength",,,Magefist Gloves,"30 Healing
+Enchant Gloves
+Healing Power",,,Magefist Gloves,"30 Healing
+Enchant Gloves
+Healing Power",,,Magefist Gloves,"30 Healing
+Enchant Gloves
+Healing Power",,,"Scouting
+Gloves
+of the Monkey","15 Agility
+Enchant Gloves
+Superior Agility",,,"Bristlebark
+Gloves","15 Agility
+Enchant Gloves
+Superior Agility",,,"Pagan Mitts
+of the Eagle","20 Shadow Power
+Enchant Gloves
+Shadow Power",,,"Gnoll Casting 
+Gloves","20 Shadow Power
+Enchant Gloves
+Shadow Power",,,"Gnoll Casting 
+Gloves","20 Shadow Power
+Enchant Gloves
+Shadow Power",,,"Thorbia's
+Gauntlets","15 Agility
+Enchant Gloves
+Superior Agility",,,"Thorbia's
+Gauntlets","15 Agility
+Enchant Gloves
+Superior Agility",,,"Thorbia's
+Gauntlets","7 Strength
+Enchant Gloves
+Greater Strength"
+,,"Deviate Scale
+Belt",,,,Keller's Girdle,,,,"Deviate Scale
+Belt",,,,"Deviate Scale
+Belt",,,,"Deviate Scale
+Belt",,,,Keller's Girdle,,,,Keller's Girdle,,,,Keller's Girdle,,,,"Deviate Scale
+Belt",,,,Cobrahn's Grasp,,,,Cobrahn's Grasp,,,,Keller's Girdle,,,,Keller's Girdle,,,,Keller's Girdle,,,,"Deviate Scale
+Belt",,,,"Deviate Scale
+Belt",,,,Keller's Girdle,,,,Keller's Girdle,,,,Keller's Girdle,,,,"Deviate Scale
+Belt",,,,Cobrahn's Grasp,,,,Cobrahn's Grasp,
+,,"Pious
+Legwraps","100 Health
+Lesser Arcanum
+of Constitution",,,"Darkweave 
+Breeches","150 Mana
+Lesser Arcanum
+of Rumination",,,"Leggings
+of the Fang","100 Health
+Lesser Arcanum
+of Constitution",,,"Leggings
+of the Fang","8 Agility
+Lesser Arcanum
+of Voracity",,,"Leggings
+of the Fang","8 Agility
+Lesser Arcanum
+of Voracity",,,"Pious
+Legwraps","100 Health
+Lesser Arcanum
+of Constitution",,,"Darkweave 
+Breeches","100 Health
+Lesser Arcanum
+of Constitution",,,"Darkweave 
+Breeches","150 Mana
+Lesser Arcanum
+of Rumination",,,"Grunt's
+Legguards
+of the Eagle","100 Health
+Lesser Arcanum
+of Constitution",,,"Chausses
+of Westfall","100 Health
+Lesser Arcanum
+of Constitution",,,"Chausses
+of Westfall","8 Strength
+Lesser Arcanum
+of Voracity",,,"Darkweave 
+Breeches","100 Health
+Lesser Arcanum
+of Constitution",,,"Darkweave 
+Breeches","150 Mana
+Lesser Arcanum
+of Rumination",,,"Darkweave 
+Breeches","150 Mana
+Lesser Arcanum
+of Rumination",,,"Leggings
+of the Fang","100 Health
+Lesser Arcanum
+of Constitution",,,"Leggings
+of the Fang","8 Agility
+Lesser Arcanum
+of Voracity",,,"Pious
+Legwraps","100 Health
+Lesser Arcanum
+of Constitution",,,"Darkweave 
+Breeches","100 Health
+Lesser Arcanum
+of Constitution",,,"Darkweave 
+Breeches","100 Health
+Lesser Arcanum
+of Constitution",,,"Chausses
+of Westfall","100 Health
+Lesser Arcanum
+of Constitution",,,"Chausses
+of Westfall","100 Health
+Lesser Arcanum
+of Constitution",,,"Chausses
+of Westfall","8 Strength
+Lesser Arcanum
+of Voracity"
+,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,Feet of the Lynx,"Minor Speed
+Enchant Boots
+Minor Speed",,,Feet of the Lynx,"Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Greenweave
+Sandals
+of Frozen Wrath","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Defender Boots
+of the Gorilla","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,Feet of the Lynx,"Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Greenweave
+Sandals
+of Shadow Wrath","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,"Nat Pagle's
+Extreme Anglers","Minor Speed
+Enchant Boots
+Minor Speed",,,Draftsman Boots,"Minor Speed
+Enchant Boots
+Minor Speed"
+,,"Seal of 
+Wrynn",,,,"Seal of 
+Wrynn",,,,"Seal of 
+Wrynn",,,,"Legionnaire' s
+Band",,,,"Zircon Band
+of Frost
+Resistance",,,,"Seal of 
+Wrynn",,,,"Seal of 
+Wrynn",,,,"Seal of 
+Wrynn",,,,"Seal of 
+Wrynn",,,,"Seal of 
+Wrynn",,,,"Zircon Band
+of Frost
+Resistance",,,,"Lorekeeper's
+Ring",,,,"Seal of 
+Wrynn",,,,"Zircon Band
+of Arcane
+Resistance",,,,"Seal of 
+Wrynn",,,,"Zircon Band
+of Nature
+Resistance",,,,"Seal of 
+Wrynn",,,,"Seal of 
+Wrynn",,,,"Zircon Band
+of Frost
+Resistance",,,,"Seal of 
+Wrynn",,,,"Seal of 
+Wrynn",,,,"Zircon Band
+of Frost
+Resistance",
+,,"Zircon Band
+of Shadow
+Resistance",,,,"Lorekeeper's
+Ring",,,,"Zircon Band
+of Shadow
+Resistance",,,,"Lavishly
+Jeweled Ring",,,,"Zircon Band
+of Frost
+Resistance",,,,"Zircon Band
+of Shadow
+Resistance",,,,"Lorekeeper's
+Ring",,,,"Lorekeeper's
+Ring",,,,"Zircon Band
+of Shadow
+Resistance",,,,"Protector's
+Band",,,,"Zircon Band
+of Frost
+Resistance",,,,"Zircon Band
+of Shadow
+Resistance",,,,"Zircon Band
+of Arcane
+Resistance",,,,"Zircon Band
+of Arcane
+Resistance",,,,"Protector's
+Band",,,,"Zircon Band
+of Nature
+Resistance",,,,"Zircon Band
+of Shadow
+Resistance",,,,"Lorekeeper's
+Ring",,,,"Zircon Band
+of Frost
+Resistance",,,,"Zircon Band
+of Shadow
+Resistance",,,,"Protector's
+Band",,,,"Zircon Band
+of Frost
+Resistance",
+,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",,,,"Insignia
+of the Alliance",
+,,"Arena 
+Grand Master",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Arena 
+Grand Master",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Arena 
+Grand Master",,,,"Arena 
+Grand Master",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",
+,,"Minor 
+Recombobulator",,,,"Arena 
+Grand Master",,,,Sentinel's Blade,"15 Agility
+Enchant Weapon
+Agility",,,"Massive
+Battle Axe
+of Agility","25 Agility
+Enchant 2H Weapon
+Agility",,,"Massive
+Battle Axe
+of Agility","25 Agility
+Enchant 2H Weapon
+Agility",,,"Minor 
+Recombobulator",,,,"Night Watch
+Shortsword","30 Spellpower
+Enchant Weapon
+Spell Power",,,"Hook Dagger
+of Frozen Wrath","30 Spellpower
+Enchant Weapon
+Spell Power",,,"Night Watch
+Shortsword","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,Shadowfang,"Lifestealing
+Enchant Weapon
+Lifestealing",,,Shadowfang,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,"Minor 
+Recombobulator",,,,"Minor 
+Recombobulator",,,,"Twisted
+ Chanter's Staff","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,Shadowfang,"Lifestealing
+Enchant Weapon
+Lifestealing",,,Shadowfang,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,"Night Watch
+Shortsword","30 Spellpower
+Enchant Weapon
+Spell Power",,,Witching Stave,"30 Spellpower
+Enchant Weapon
+Spell Power",,,Witching Stave,"30 Spellpower
+Enchant Weapon
+Spell Power",,,Shadowfang,"Lifestealing
+Enchant Weapon
+Lifestealing",,,Shadowfang,"Lifestealing
+Enchant Weapon
+Lifestealing",,,Shadowfang,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon"
+,,Face Smasher,"22 Intellect
+Enchant Weapon
+Mighty Intellect",,,"Twisted
+ Chanter's Staff","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,"Furbolg 
+Medicine Pouch",,,,"Twisted
+ Chanter's Staff","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,"Twisted
+ Chanter's Staff","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,"Night Watch
+Shortsword","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,"Furbolg 
+Medicine Pouch",,,,Antipodean Rod,,,,Arctic Buckler,"7 Stamina
+Enchant Shield
+Greater Stamina",,,Shadowfang,"22 Intellect
+Enchant Weapon
+Mighty Intellect",,,Shadowfang,"22 Intellect
+Enchant Weapon
+Mighty Intellect",,,"Jagged Star
+of Healing","55 Healing
+Enchant Weapon
+Healing Power",,,"Twisted
+ Chanter's Staff","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,"Gravestone
+Scepter",,,,Cruel Barb,"Lifestealing
+Enchant Weapon
+Lifestealing",,,Cruel Barb,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,"Furbolg 
+Medicine Pouch",,,,"Gravestone
+Scepter",,,,"Gravestone
+Scepter",,,,Arctic Buckler,"7 Stamina
+Enchant Shield
+Greater Stamina",,,Arctic Buckler,"7 Stamina
+Enchant Shield
+Greater Stamina",,,Arctic Buckler,"8 Frost Resist
+Enchant Shield
+Frost Resistance"
+,,"Furbolg 
+Medicine Pouch",,,,"Staff of the
+Blessed Seer","55 Healing
+Enchant Weapon
+Healing Power",,,Venomstrike,"3 Damage
+Accurate Scope",,,Venomstrike,"3 Damage
+Accurate Scope",,,Venomstrike,"3 Damage
+Accurate Scope",,,"Furbolg 
+Medicine Pouch",,,,"Gravestone
+Scepter",,,,"Gravestone
+Scepter",,,,"Night Watch
+Shortsword","55 Healing
+Enchant Weapon
+Healing Power",,,Redbeard Crest,"7 Stamina
+Enchant Shield
+Greater Stamina",,,Arctic Buckler,"8 Frost Resist
+Enchant Shield
+Frost Resistance",,,"Furbolg 
+Medicine Pouch",,,,"Staff of the
+Blessed Seer","55 Healing
+Enchant Weapon
+Healing Power",,,"Staff of the
+Blessed Seer","55 Healing
+Enchant Weapon
+Healing Power",,,Assasin's Blade,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,Assasin's Blade,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,"Gravestone
+Scepter",,,,"Twisted
+ Chanter's Staff","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,"Twisted
+ Chanter's Staff","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,Glacial Stone,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,Glacial Stone,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,Glacial Stone,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon"
+,,Face Smasher,"55 Healing
+Enchant Weapon
+Healing Power",,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,Night Reaver,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,Night Reaver,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,Night Reaver,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,"Gravestone
+Scepter",,,,Evocator's Blade,"22 Intellect
+Enchant Weapon
+Mighty Intellect",,,Evocator's Blade,"22 Intellect
+Enchant Weapon
+Mighty Intellect",,,"Night Watch
+Shortsword","20 Spirit
+Enchant Weapon
+Mighty Spirit",,,Arctic Buckler,"8 Frost Resist
+Enchant Shield
+Frost Resistance",,,Glacial Stone,"Fiery Weapon
+Enchant Weapon
+Fiery Weapon",,,"Gravestone
+Scepter",,,,"Gravestone
+Scepter",,,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,"Keen Throwing
+Knife",,,,"Keen Throwing
+Knife",,,,Evocator's Blade,"22 Intellect
+Enchant Weapon
+Mighty Intellect",,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,Redbeard Crest,"Thorium Spike
+Thorium
+Shield Spike",,,Redbeard Crest,"Thorium Spike
+Thorium
+Shield Spike",,,"Keen Throwing
+Knife",
+,,Face Smasher,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,,,,,Sharp Arrow,,,,Sharp Arrow,,,,Sharp Arrow,,,,"Night Watch
+Shortsword","30 Spellpower
+Enchant Weapon
+Spell Power",,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,Shadowfang,"Lifestealing
+Enchant Weapon
+Lifestealing",,,,,,,,,,,Evocator's Blade,"22 Intellect
+Enchant Weapon
+Mighty Intellect",,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,,,,,Outrunner's Bow,"3 Damage
+Accurate Scope",,,Outrunner's Bow,"3 Damage
+Accurate Scope",,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,,,,,,,,,"Keen Throwing
+Knife",,,,"Keen Throwing
+Knife",,,,Outrunner's Bow,"3 Damage
+Accurate Scope"
+,,,,,,,,,,"Quiver of
+the Night Watch",,,,"Quiver of
+the Night Watch",,,,"Quiver of
+the Night Watch",,,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,,,,,,,,,Redbeard Crest,"Thorium Spike
+Thorium
+Shield Spike",,,,,,,,,,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,,,,,,,,,Sharp Arrow,,,,Sharp Arrow,,,,,,,,,,,,,,,,Outrunner's Bow,"3 Damage
+Accurate Scope",,,Outrunner's Bow,"3 Damage
+Accurate Scope",,,Sharp Arrow,
+,,,,,,,,,,"Twisted
+ Chanter's Staff","22 Intellect
+Enchant Weapon
+Mighty Intellect",,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Sharp Arrow,,,,Sharp Arrow,,,,,
+,,,,,,,,,,Staff of the Friar,"20 Spirit
+Enchant Weapon
+Mighty Spirit",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
