@@ -66,8 +66,8 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Common neck pick from the gearing guides; the neck slot otherwise lacks a standout at this bracket. Verify source and stats.",
-      "wowheadId": null,
+      "notes": "Common neck pick from the gearing guides; the neck slot otherwise lacks a standout at this bracket. wowheadId 20444 is the Classic Era (Requires Level 18) 10-19 bracket version confirmed via Warcraft Wiki; Alliance Warsong Gulch reputation reward (Silverwing Sentinels, from Illiyana Moonblaze in Ashenvale); converts to Scout's Medallion for Horde.",
+      "wowheadId": 20444,
       "priority": "core"
     },
     {
@@ -80,8 +80,8 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Recurring neck pick across many class builds on the BiS chart. Verify source, stats, and faction availability at authoring.",
-      "wowheadId": null,
+      "notes": "Recurring neck pick across many class builds on the BiS chart. wowheadId 20442 is the Classic Era (Requires Level 18) 10-19 bracket version confirmed via Warcraft Wiki; Horde Warsong Gulch reputation reward (Warsong Outriders, from Kelm Hargunth in The Barrens); converts to Sentinel's Medallion for Alliance.",
+      "wowheadId": 20442,
       "priority": "core"
     },
     {
@@ -194,8 +194,8 @@
       },
       "faction": "horde",
       "reqLevel": null,
-      "notes": "Horde faction ring paired with a seal in midfield builds across classes. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Horde faction ring paired with a seal in midfield builds across classes. wowheadId 20429 is the Classic Era (Requires Level 18, ilvl 23) 10-19 bracket version confirmed via Warcraft Wiki; Horde Warsong Gulch reputation reward (Warsong Outriders - Honored).",
+      "wowheadId": 20429,
       "priority": "core"
     },
     {
@@ -222,8 +222,8 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Bow alternative for the ranged slot; takes an Accurate Scope and requires ammo. Recurs across melee class builds. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Bow alternative for the ranged slot; takes an Accurate Scope and requires ammo. Recurs across melee class builds. wowheadId 20437 is the Level-9/Classic-shared ID for this Warsong Gulch reputation reward (Warsong Outriders) inferred from the identical bracket pattern of its sibling WSG rewards on Warcraft Wiki; the bow lacked an explicit Classic row, so verify the exact 10-19 bracket ID at authoring.",
+      "wowheadId": 20437,
       "priority": "situational",
       "enchant": "accurate-scope"
     },
@@ -237,8 +237,8 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Ammunition for a bow/crossbow build; only needed when using a bow rather than a thrown weapon. Verify current best available ammo at authoring.",
-      "wowheadId": null,
+      "notes": "Ammunition for a bow/crossbow build; only needed when using a bow rather than a thrown weapon. wowheadId 2515 confirmed via Wowhead Classic (Requires Level 10, 3.5 dps, sold by General Goods/bowyer vendors).",
+      "wowheadId": 2515,
       "priority": "situational"
     },
     {
@@ -410,8 +410,8 @@
       },
       "faction": "alliance",
       "reqLevel": null,
-      "notes": "Alliance faction ring; pair with a stat ring. Verify stats.",
-      "wowheadId": null,
+      "notes": "Alliance faction ring; pair with a stat ring. wowheadId 2933 confirmed via Wowhead Classic; quest reward An Audience with the King (Deadmines chain), ilvl 31, not a bracketed PvP item.",
+      "wowheadId": 2933,
       "priority": "core"
     },
     {
@@ -424,8 +424,8 @@
       },
       "faction": "horde",
       "reqLevel": null,
-      "notes": "Horde faction ring; pair with a stat ring. Verify stats.",
-      "wowheadId": null,
+      "notes": "Horde faction ring; pair with a stat ring. wowheadId 6414 confirmed via Wowhead Classic; quest reward Arugal Must Die (Silverpine Forest), ilvl 29, not a bracketed PvP item.",
+      "wowheadId": 6414,
       "priority": "core"
     },
     {
@@ -472,8 +472,8 @@
       },
       "faction": "alliance",
       "reqLevel": null,
-      "notes": "PvP trinket (breaks stun/root effects). Watch its item level requirement.",
-      "wowheadId": null,
+      "notes": "PvP trinket (breaks stun/root/slow effects, 5 min cd). wowheadId 18854 confirmed via Wowhead Classic; single Classic item (not bracketed), purchased in Stormwind and requires Honor Rank 2.",
+      "wowheadId": 18854,
       "priority": "core"
     },
     {
@@ -486,8 +486,8 @@
       },
       "faction": "horde",
       "reqLevel": null,
-      "notes": "PvP trinket (breaks stun/root effects). Watch its item level requirement.",
-      "wowheadId": null,
+      "notes": "PvP trinket (breaks stun/root/slow effects, 5 min cd). wowheadId 18834 confirmed via Wowhead Classic; single Classic item (not bracketed), purchased in Orgrimmar and requires Honor Rank 2.",
+      "wowheadId": 18834,
       "priority": "core"
     },
     {
@@ -803,8 +803,8 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Healing-leaning cloak recurring across defensive/support class builds; typically enchanted with Greater Resistance. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Healing-leaning cloak recurring across defensive/support class builds; typically enchanted with Greater Resistance. wowheadId 20427 is the Classic Era (Requires Level 18, ilvl 23) 10-19 bracket version confirmed via Warcraft Wiki; Warsong Gulch reputation reward (Warsong Outriders - Honored).",
+      "wowheadId": 20427,
       "priority": "core"
     },
     {
@@ -888,8 +888,8 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stat ring recurring across caster class builds. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Stat ring recurring across caster class builds. wowheadId 20426 is the Classic Era (ilvl 23) version confirmed via Wowhead Classic; Horde Warsong Gulch reputation reward (Warsong Outriders, caster ring: +Sta/+spell damage/+mp5); the Alliance equivalent is Lorekeeper's Ring.",
+      "wowheadId": 20426,
       "priority": "core"
     },
     {
@@ -1002,8 +1002,8 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stamina/defensive ring shared by paladin and rogue midfield builds; paired with a faction seal ring. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Stamina/defensive ring shared by paladin and rogue midfield builds; paired with a faction seal ring. wowheadId 20439 is the Classic Era (Requires Level 18) 10-19 bracket version confirmed via Warcraft Wiki (+4 Str/+4 Agi/+2 Sta); Alliance Warsong Gulch reputation reward (Silverwing Sentinels - Honored).",
+      "wowheadId": 20439,
       "priority": "core"
     },
     {
@@ -1030,8 +1030,8 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Caster ring shared by Alliance mage, priest, and warlock builds; paired with Seal of Wrynn. Verify source, faction availability, and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Caster ring shared by Alliance mage, priest, and warlock builds; paired with Seal of Wrynn. wowheadId 20431 is the Classic Era (ilvl 23) version confirmed via Wowhead Classic; Alliance Warsong Gulch reputation reward (Silverwing Sentinels, +6 Stamina, +12 spell damage/healing, +4 mp5); the Horde equivalent is Advisor's Ring.",
+      "wowheadId": 20431,
       "priority": "core"
     },
     {
