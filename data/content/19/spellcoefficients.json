@@ -1,35 +1,125 @@
 {
   "penalty": {
     "perLevelBelow20": 0.0375,
-    "note": "A spell learned at level X<20 benefits 3.75%*(20-X) less from spell power. The coefficients below are already level-19-effective. Base rule: direct = castTime/3.5 (1.5s floor); dot/hot = duration/15 per tick."
+    "note": "A spell learned at level X<20 benefits 3.75%*(20-X) less from spell power. The coefficients below are already level-19-effective (source: XPOff level-19 coefficient list). Base rule: direct = castTime/3.5 (1.5s floor); dot/hot = duration/15 per tick."
   },
   "byClass": {
     "mage": [
-      { "spell": "Frostbolt", "rank": 3, "coefficient": 0.463, "type": "direct-damage", "confirmed": false },
-      { "spell": "Fireball", "rank": 4, "coefficient": 0.793, "type": "direct-damage", "confirmed": false },
-      { "spell": "Fireball", "rank": 4, "coefficient": 0, "type": "dot", "confirmed": false, "notes": "DoT component does not scale with spell power." }
+      { "spell": "Arcane Explosion", "rank": 1, "coefficient": 0.111, "type": "direct-damage" },
+      { "spell": "Fireball", "rank": 1, "coefficient": 0.123, "type": "direct-damage" },
+      { "spell": "Fireball", "rank": 2, "coefficient": 0.271, "type": "direct-damage" },
+      { "spell": "Fireball", "rank": 3, "coefficient": 0.5, "type": "direct-damage" },
+      { "spell": "Fireball", "rank": 4, "coefficient": 0.793, "type": "direct-damage" },
+      { "spell": "Fireball", "rank": 4, "coefficient": 0, "type": "dot", "notes": "DoT component does not scale with spell power." },
+      { "spell": "Fire Blast", "rank": 1, "coefficient": 0.204, "type": "direct-damage" },
+      { "spell": "Fire Blast", "rank": 2, "coefficient": 0.332, "type": "direct-damage" },
+      { "spell": "Flamestrike", "rank": 1, "coefficient": 0.134, "type": "direct-damage" },
+      { "spell": "Flamestrike", "rank": 1, "coefficient": 0.017, "type": "dot" },
+      { "spell": "Frost Nova", "rank": 1, "coefficient": 0.018, "type": "direct-damage" },
+      { "spell": "Frostbolt", "rank": 1, "coefficient": 0.163, "type": "direct-damage" },
+      { "spell": "Frostbolt", "rank": 2, "coefficient": 0.269, "type": "direct-damage" },
+      { "spell": "Frostbolt", "rank": 3, "coefficient": 0.463, "type": "direct-damage" }
     ],
     "warlock": [
-      { "spell": "Shadow Bolt", "rank": 3, "coefficient": 0.56, "type": "direct-damage", "confirmed": false },
-      { "spell": "Searing Pain", "rank": 1, "coefficient": 0.396, "type": "direct-damage", "confirmed": false },
-      { "spell": "Corruption", "rank": 2, "coefficient": 0.155, "type": "dot", "confirmed": false, "notes": "Per tick." }
+      { "spell": "Shadow Bolt", "rank": 1, "coefficient": 0.14, "type": "direct-damage" },
+      { "spell": "Shadow Bolt", "rank": 2, "coefficient": 0.299, "type": "direct-damage" },
+      { "spell": "Shadow Bolt", "rank": 3, "coefficient": 0.56, "type": "direct-damage" },
+      { "spell": "Searing Pain", "rank": 1, "coefficient": 0.396, "type": "direct-damage" },
+      { "spell": "Immolate", "rank": 1, "coefficient": 0.058, "type": "direct-damage" },
+      { "spell": "Immolate", "rank": 2, "coefficient": 0.125, "type": "direct-damage" },
+      { "spell": "Immolate", "rank": 1, "coefficient": 0.037, "type": "dot" },
+      { "spell": "Immolate", "rank": 2, "coefficient": 0.081, "type": "dot" },
+      { "spell": "Corruption", "rank": 1, "coefficient": 0.08, "type": "dot" },
+      { "spell": "Corruption", "rank": 2, "coefficient": 0.155, "type": "dot" },
+      { "spell": "Curse of Agony", "rank": 1, "coefficient": 0.046, "type": "dot" },
+      { "spell": "Curse of Agony", "rank": 2, "coefficient": 0.077, "type": "dot" },
+      { "spell": "Drain Life", "rank": 1, "coefficient": 0.078, "type": "dot" },
+      { "spell": "Drain Soul", "rank": 1, "coefficient": 0.063, "type": "dot" }
     ],
     "priest": [
-      { "spell": "Lesser Heal", "rank": 3, "coefficient": 0.446, "type": "direct-heal", "confirmed": false },
-      { "spell": "Heal", "rank": 1, "coefficient": 0.729, "type": "direct-heal", "confirmed": false },
-      { "spell": "Shadow Word: Pain", "rank": 3, "coefficient": 0.154, "type": "dot", "confirmed": false, "notes": "Per tick." }
+      { "spell": "Smite", "rank": 1, "coefficient": 0.123, "type": "direct-damage" },
+      { "spell": "Smite", "rank": 2, "coefficient": 0.271, "type": "direct-damage" },
+      { "spell": "Smite", "rank": 3, "coefficient": 0.554, "type": "direct-damage" },
+      { "spell": "Mind Blast", "rank": 1, "coefficient": 0.268, "type": "direct-damage" },
+      { "spell": "Mind Blast", "rank": 2, "coefficient": 0.364, "type": "direct-damage" },
+      { "spell": "Starshards", "rank": 1, "coefficient": 0.104, "type": "direct-damage", "notes": "Per shard (Night Elf priest racial)." },
+      { "spell": "Starshards", "rank": 2, "coefficient": 0.154, "type": "direct-damage", "notes": "Per shard (Night Elf priest racial)." },
+      { "spell": "Shadow Word: Pain", "rank": 1, "coefficient": 0.067, "type": "dot" },
+      { "spell": "Shadow Word: Pain", "rank": 2, "coefficient": 0.104, "type": "dot" },
+      { "spell": "Shadow Word: Pain", "rank": 3, "coefficient": 0.154, "type": "dot" },
+      { "spell": "Lesser Heal", "rank": 1, "coefficient": 0.123, "type": "direct-heal" },
+      { "spell": "Lesser Heal", "rank": 2, "coefficient": 0.229, "type": "direct-heal" },
+      { "spell": "Lesser Heal", "rank": 3, "coefficient": 0.446, "type": "direct-heal" },
+      { "spell": "Heal", "rank": 1, "coefficient": 0.729, "type": "direct-heal" },
+      { "spell": "Desperate Prayer", "rank": 1, "coefficient": 0.268, "type": "direct-heal" },
+      { "spell": "Desperate Prayer", "rank": 2, "coefficient": 0.396, "type": "direct-heal" },
+      { "spell": "Renew", "rank": 1, "coefficient": 0.11, "type": "hot" },
+      { "spell": "Renew", "rank": 2, "coefficient": 0.155, "type": "hot" },
+      { "spell": "Power Word: Shield", "rank": 1, "coefficient": 0.0475, "type": "shield" },
+      { "spell": "Power Word: Shield", "rank": 2, "coefficient": 0.07, "type": "shield" },
+      { "spell": "Power Word: Shield", "rank": 3, "coefficient": 0.0925, "type": "shield", "confirmed": false, "notes": "Rank 3 value not confirmed by Wowhead." }
     ],
     "shaman": [
-      { "spell": "Lightning Bolt", "rank": 3, "coefficient": 0.554, "type": "direct-damage", "confirmed": false }
+      { "spell": "Lightning Bolt", "rank": 1, "coefficient": 0.123, "type": "direct-damage" },
+      { "spell": "Lightning Bolt", "rank": 2, "coefficient": 0.314, "type": "direct-damage" },
+      { "spell": "Lightning Bolt", "rank": 3, "coefficient": 0.554, "type": "direct-damage" },
+      { "spell": "Earth Shock", "rank": 1, "coefficient": 0.154, "type": "direct-damage" },
+      { "spell": "Earth Shock", "rank": 2, "coefficient": 0.212, "type": "direct-damage" },
+      { "spell": "Earth Shock", "rank": 3, "coefficient": 0.299, "type": "direct-damage" },
+      { "spell": "Flame Shock", "rank": 1, "coefficient": 0.134, "type": "direct-damage" },
+      { "spell": "Flame Shock", "rank": 2, "coefficient": 0.198, "type": "direct-damage" },
+      { "spell": "Flame Shock", "rank": 1, "coefficient": 0.063, "type": "dot" },
+      { "spell": "Flame Shock", "rank": 2, "coefficient": 0.093, "type": "dot" },
+      { "spell": "Lightning Shield", "rank": 1, "coefficient": 0.147, "type": "direct-damage", "notes": "Per orb." },
+      { "spell": "Lightning Shield", "rank": 2, "coefficient": 0.227, "type": "direct-damage", "notes": "Per orb." },
+      { "spell": "Flametongue Weapon", "rank": 1, "coefficient": 0.0625, "type": "direct-damage", "confirmed": false, "notes": "Per hit; not confirmed by Wowhead." },
+      { "spell": "Flametongue Weapon", "rank": 2, "coefficient": 0.0925, "type": "direct-damage", "confirmed": false, "notes": "Per hit; not confirmed by Wowhead." },
+      { "spell": "Healing Wave", "rank": 1, "coefficient": 0.123, "type": "direct-heal" },
+      { "spell": "Healing Wave", "rank": 2, "coefficient": 0.271, "type": "direct-heal" },
+      { "spell": "Healing Wave", "rank": 3, "coefficient": 0.5, "type": "direct-heal" },
+      { "spell": "Healing Wave", "rank": 4, "coefficient": 0.793, "type": "direct-heal" }
     ],
     "druid": [
-      { "spell": "Wrath", "rank": 3, "coefficient": 0.443, "type": "direct-damage", "confirmed": false }
+      { "spell": "Wrath", "rank": 1, "coefficient": 0.123, "type": "direct-damage" },
+      { "spell": "Wrath", "rank": 2, "coefficient": 0.231, "type": "direct-damage" },
+      { "spell": "Wrath", "rank": 3, "coefficient": 0.443, "type": "direct-damage" },
+      { "spell": "Moonfire", "rank": 1, "coefficient": 0.06, "type": "direct-damage" },
+      { "spell": "Moonfire", "rank": 2, "coefficient": 0.094, "type": "direct-damage" },
+      { "spell": "Moonfire", "rank": 3, "coefficient": 0.128, "type": "direct-damage" },
+      { "spell": "Moonfire", "rank": 1, "coefficient": 0.052, "type": "dot" },
+      { "spell": "Moonfire", "rank": 2, "coefficient": 0.081, "type": "dot" },
+      { "spell": "Moonfire", "rank": 3, "coefficient": 0.111, "type": "dot" },
+      { "spell": "Entangling Roots", "rank": 1, "coefficient": 0.033, "type": "dot" },
+      { "spell": "Entangling Roots", "rank": 2, "coefficient": 0.056, "type": "dot" },
+      { "spell": "Healing Touch", "rank": 1, "coefficient": 0.123, "type": "direct-heal" },
+      { "spell": "Healing Touch", "rank": 2, "coefficient": 0.314, "type": "direct-heal" },
+      { "spell": "Healing Touch", "rank": 3, "coefficient": 0.554, "type": "direct-heal" },
+      { "spell": "Regrowth", "rank": 1, "coefficient": 0.2, "type": "direct-heal" },
+      { "spell": "Regrowth", "rank": 2, "coefficient": 0.264, "type": "direct-heal" },
+      { "spell": "Regrowth", "rank": 1, "coefficient": 0.05, "type": "hot" },
+      { "spell": "Regrowth", "rank": 2, "coefficient": 0.066, "type": "hot" },
+      { "spell": "Rejuvenation", "rank": 1, "coefficient": 0.08, "type": "hot" },
+      { "spell": "Rejuvenation", "rank": 2, "coefficient": 0.0125, "type": "hot", "confirmed": false, "notes": "Anomalous coefficient reported by source; verify against Wowhead." },
+      { "spell": "Rejuvenation", "rank": 3, "coefficient": 0.17, "type": "hot" }
     ],
     "paladin": [
-      { "spell": "Holy Light", "rank": 3, "coefficient": 0.554, "type": "direct-heal", "confirmed": false }
+      { "spell": "Judgement of Righteousness", "rank": 1, "coefficient": 0.123, "type": "direct-damage" },
+      { "spell": "Judgement of Righteousness", "rank": 2, "coefficient": 0.268, "type": "direct-damage" },
+      { "spell": "Judgement of Righteousness", "rank": 3, "coefficient": 0.396, "type": "direct-damage", "confirmed": false, "notes": "Rank 3 value not confirmed by Wowhead." },
+      { "spell": "Seal of Righteousness", "rank": 1, "coefficient": 0.029, "type": "direct-damage" },
+      { "spell": "Seal of Righteousness", "rank": 2, "coefficient": 0.063, "type": "direct-damage" },
+      { "spell": "Seal of Righteousness", "rank": 3, "coefficient": 0.093, "type": "direct-damage" },
+      { "spell": "Holy Light", "rank": 1, "coefficient": 0.205, "type": "direct-heal" },
+      { "spell": "Holy Light", "rank": 2, "coefficient": 0.339, "type": "direct-heal" },
+      { "spell": "Holy Light", "rank": 3, "coefficient": 0.554, "type": "direct-heal", "confirmed": false, "notes": "Rank 3 value not confirmed by Wowhead." }
     ],
     "hunter": [
-      { "spell": "Serpent Sting", "rank": 3, "coefficient": 0.185, "type": "dot", "confirmed": false, "notes": "Per tick; scales with ranged attack power, not spell power." }
+      { "spell": "Arcane Shot", "rank": 1, "coefficient": 0.204, "type": "direct-damage", "confirmed": false, "notes": "Scales with ranged attack power, not spell power." },
+      { "spell": "Arcane Shot", "rank": 2, "coefficient": 0.3, "type": "direct-damage", "confirmed": false, "notes": "Scales with ranged attack power, not spell power." },
+      { "spell": "Serpent Sting", "rank": 1, "coefficient": 0.08, "type": "dot", "confirmed": false, "notes": "Per tick; scales with ranged attack power, not spell power." },
+      { "spell": "Serpent Sting", "rank": 2, "coefficient": 0.125, "type": "dot", "confirmed": false, "notes": "Per tick; scales with ranged attack power, not spell power." },
+      { "spell": "Serpent Sting", "rank": 3, "coefficient": 0.185, "type": "dot", "confirmed": false, "notes": "Per tick; scales with ranged attack power, not spell power." },
+      { "spell": "Mend Pet", "rank": 1, "coefficient": 0.14, "type": "hot", "confirmed": false, "notes": "Pet heal; does not scale with the hunter's spell power." }
     ]
   }
 }
