@@ -94,6 +94,63 @@
         ],
         "mainhand": { "item": "twisted-chanters-staff", "enchant": "mighty-intellect-weapon" }
       }
+    },
+    {
+      "id": "druid-flag-carrier-alliance",
+      "name": "Flag Carrier",
+      "role": "flag-carrier",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "firebane-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "major-health" },
+        "wrist": { "item": "wranglers-wristbands-of-stamina", "enchant": "superior-stamina" },
+        "hands": { "item": "scouting-gloves-of-the-eagle", "enchant": "healing-power-gloves" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "pious-legwraps", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "arena-grand-master", "enchant": null }
+        ],
+        "mainhand": { "item": "face-smasher", "enchant": "mighty-intellect-weapon" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
+      }
+    },
+    {
+      "id": "druid-midfield-alliance",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-rumination" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "resilience-of-the-scourge" },
+        "back": { "item": "battle-healers-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "wranglers-wristbands-of-the-eagle", "enchant": "healing-power-bracer" },
+        "hands": { "item": "magefist-gloves", "enchant": "healing-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-rumination" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "lorekeepers-ring", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "twisted-chanters-staff", "enchant": "mighty-intellect-weapon" }
+      }
     }
   ]
 }
