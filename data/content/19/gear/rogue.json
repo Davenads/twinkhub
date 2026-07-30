@@ -7,9 +7,9 @@
       "slot": "offhand",
       "source": { "type": "drop", "detail": "The Deadmines (dungeon drop)" },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Off-hand one-hand sword for dual-wield rogues; pairs with a no-level-req weapon enchant. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "reqLevel": 19,
+      "notes": "Off-hand one-hand sword (30-57 dmg, 2.80 speed, ilvl 24, Requires Level 19) confirmed via Wowhead Classic; drops from Edwin VanCleef in The Deadmines; pairs with a no-level-req weapon enchant.",
+      "wowheadId": 5191,
       "priority": "core",
       "enchant": "fiery-weapon"
     },
@@ -20,19 +20,19 @@
       "source": { "type": "drop", "detail": "Low-level drop with the of Power (+AP) random suffix (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Attack-power bracers for the offensive build. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Attack-power bracers for the offensive build. wowheadId is the base item Wrangler's Wristbands (item=15331, green leather wrist, ilvl 23) confirmed via Wowhead Classic; the of Power (+AP) bonus is a random suffix. Verify exact suffix stats and required level at authoring.",
+      "wowheadId": 15331,
       "priority": "core"
     },
     {
       "id": "bristlebark-gloves",
       "name": "Bristlebark Gloves",
       "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": { "type": "drop", "detail": "Drops from Stormscale Warrior (Ashenvale); green leather, item level 24" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Gloves for the offensive build; enchanted with Superior Agility. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Green leather gloves (ilvl 24) confirmed via Wowhead Classic; enchanted with Superior Agility for the offensive build. Required level not confirmed on tooltip; verify exact stats at authoring.",
+      "wowheadId": 14572,
       "priority": "core"
     }
   ],

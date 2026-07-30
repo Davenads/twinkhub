@@ -7,9 +7,9 @@
       "slot": "finger",
       "source": { "type": "profession", "detail": "Jewelcrafting/Enchanting resistance band (verify exact source)" },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Arcane-resistance ring used across the midfield/offense builds; the arcane counterpart to the other Zircon resistance bands. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "reqLevel": 18,
+      "notes": "Arcane-resistance ring used across the midfield/offense builds; the arcane counterpart to the other Zircon resistance bands. wowheadId is the base item Zircon Band (item=11967, green finger, ilvl 23, Requires Level 18, BoE) confirmed via Wowhead Classic; the of Arcane Resistance bonus is a random suffix.",
+      "wowheadId": 11967,
       "priority": "core"
     }
   ],
