@@ -80,28 +80,6 @@
       "priority": "core"
     },
     {
-      "id": "kellers-girdle",
-      "name": "Keller's Girdle",
-      "slot": "waist",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Waist pick for the defensive build. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "lavishly-jeweled-ring",
-      "name": "Lavishly Jeweled Ring",
-      "slot": "finger",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Stat ring paired with a faction ring in the midfield build. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "wingblade",
       "name": "Wingblade",
       "slot": "mainhand",
@@ -124,29 +102,6 @@
       "wowheadId": null,
       "priority": "core",
       "enchant": "agility-2h"
-    },
-    {
-      "id": "furbolg-medicine-pouch",
-      "name": "Furbolg Medicine Pouch",
-      "slot": "offhand",
-      "source": { "type": "quest", "detail": "Quest reward (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Held-in-off-hand item with an on-use heal, paired with a one-hand weapon in the defensive build. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "situational"
-    },
-    {
-      "id": "staff-of-the-friar",
-      "name": "Staff of the Friar",
-      "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Staff carried as a spirit stat stick option; enchanted with Mighty Spirit. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
-      "priority": "situational",
-      "enchant": "mighty-spirit-weapon"
     }
   ],
   "builds": [

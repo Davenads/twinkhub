@@ -517,6 +517,74 @@
       "priority": "core",
       "enchant": "fiery-weapon",
       "alternatives": ["shadowfang"]
+    },
+    {
+      "id": "kellers-girdle",
+      "name": "Keller's Girdle",
+      "slot": "waist",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Waist pick recurring across defensive and caster class builds on the BiS chart. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "lavishly-jeweled-ring",
+      "name": "Lavishly Jeweled Ring",
+      "slot": "finger",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stat ring recurring across class builds, typically paired with a faction ring. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "furbolg-medicine-pouch",
+      "name": "Furbolg Medicine Pouch",
+      "slot": "offhand",
+      "source": { "type": "quest", "detail": "Quest reward (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Held-in-off-hand item with an on-use heal, recurring across class builds paired with a one-hand weapon. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
+      "id": "staff-of-the-friar",
+      "name": "Staff of the Friar",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Staff carried as a spirit stat-stick option across caster-hybrid class builds; typically enchanted with Mighty Spirit. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "mighty-spirit-weapon"
+    },
+    {
+      "id": "magefist-gloves",
+      "name": "Magefist Gloves",
+      "slot": "hands",
+      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Crafted cloth gloves recurring across caster class builds; enchant varies by build (Healing Power, Frost Power). Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "evocators-blade",
+      "name": "Evocator's Blade",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand caster weapon carried as an intellect stat-stick option across caster class builds; typically enchanted with Mighty Intellect. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "mighty-intellect-weapon"
     }
   ]
 }

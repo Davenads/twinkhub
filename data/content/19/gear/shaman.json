@@ -24,18 +24,6 @@
       "priority": "core"
     },
     {
-      "id": "magefist-gloves",
-      "name": "Magefist Gloves",
-      "slot": "hands",
-      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Cloth gloves for the defensive build; enchanted with Healing Power. Verify recipe and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core",
-      "enchant": "healing-power-gloves"
-    },
-    {
       "id": "jutebraid-gloves",
       "name": "Jutebraid Gloves",
       "slot": "hands",
@@ -57,18 +45,6 @@
       "wowheadId": null,
       "priority": "core",
       "enchant": "healing-power-weapon"
-    },
-    {
-      "id": "evocators-blade",
-      "name": "Evocator's Blade",
-      "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "One-hand caster weapon carried as an intellect stat-stick option across all three builds; enchanted with Mighty Intellect. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
-      "priority": "situational",
-      "enchant": "mighty-intellect-weapon"
     },
     {
       "id": "forester-axe-of-the-whale",
