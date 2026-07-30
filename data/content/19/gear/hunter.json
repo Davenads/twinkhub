@@ -8,7 +8,7 @@
       "source": { "type": "profession", "detail": "Engineering (crafted)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Popular Engineering gun and a strong ranged pick for 19 hunters. Verify exact stats and current-meta alternatives.",
+      "notes": "Popular Engineering gun and a strong ranged pick for 19 hunters; an alternative to the bow. Verify exact stats and current-meta alternatives.",
       "wowheadId": null,
       "priority": "core"
     },
@@ -22,6 +22,187 @@
       "notes": "Green-or-better ammo pouch. Horde hunters lack a green+ pouch, a real mechanical disadvantage at this bracket.",
       "wowheadId": null,
       "priority": "core"
+    },
+    {
+      "id": "venomstrike",
+      "name": "Venomstrike",
+      "slot": "ranged",
+      "source": { "type": "drop", "detail": "Wailing Caverns (dungeon drop)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Bow with a nature-damage proc; the primary ranged weapon across all three Horde hunter builds. Verify stats and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "accurate-scope"
+    },
+    {
+      "id": "medium-quiver",
+      "name": "Medium Quiver",
+      "slot": "quiver",
+      "source": { "type": "vendor", "detail": "Trade goods / quiver vendor (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Quiver providing ranged attack-speed haste; a standard hunter carry across all builds. Occupies the quiver/ammo-pouch slot. Verify current best available quiver at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "engineers-cloak",
+      "name": "Engineer's Cloak",
+      "slot": "back",
+      "source": { "type": "profession", "detail": "Engineering (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Crafted Engineering cloak for the defensive build. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "tree-bark-jacket",
+      "name": "Tree Bark Jacket",
+      "slot": "chest",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Leather chest for the defense/offense builds. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "wranglers-wristbands-of-the-eagle",
+      "name": "Wrangler's Wristbands of the Eagle",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina bracers for the defensive build. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "mindthrust-bracers",
+      "name": "Mindthrust Bracers",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "The Deadmines (dungeon drop)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect bracers for the offensive build; enchanted with Greater Intellect. Verify stats and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "scouting-gloves-of-the-eagle",
+      "name": "Scouting Gloves of the Eagle",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina gloves for the defensive build; enchanted with Superior Agility. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "scouting-gloves-of-the-falcon",
+      "name": "Scouting Gloves of the Falcon",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Falcon (+Agi/+crit) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Agility/crit gloves for the offensive build; enchanted with Superior Agility. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "kellers-girdle",
+      "name": "Keller's Girdle",
+      "slot": "waist",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Waist pick for the defensive build. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "darkweave-breeches",
+      "name": "Darkweave Breeches",
+      "slot": "legs",
+      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Cloth legs for the defensive build; carries intellect/spirit and shadow resistance. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "lavishly-jeweled-ring",
+      "name": "Lavishly Jeweled Ring",
+      "slot": "finger",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stat ring paired with a faction ring in the midfield build. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "wingblade",
+      "name": "Wingblade",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand sword for the defensive build; carries a Steel Weapon Chain to prevent disarm. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "steel-weapon-chain"
+    },
+    {
+      "id": "massive-battle-axe-of-agility",
+      "name": "Massive Battle Axe of Agility",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Agility random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Two-hand axe carried as an agility stat stick in the midfield/offense builds; enchanted with 2H Agility. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "agility-2h"
+    },
+    {
+      "id": "furbolg-medicine-pouch",
+      "name": "Furbolg Medicine Pouch",
+      "slot": "offhand",
+      "source": { "type": "quest", "detail": "Quest reward (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Held-in-off-hand item with an on-use heal, paired with a one-hand weapon in the defensive build. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
+      "id": "twisted-chanters-staff",
+      "name": "Twisted Chanter's Staff",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Staff carried as an intellect stat stick option; enchanted with Mighty Intellect. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "mighty-intellect-weapon"
+    },
+    {
+      "id": "staff-of-the-friar",
+      "name": "Staff of the Friar",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Staff carried as a spirit stat stick option; enchanted with Mighty Spirit. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "mighty-spirit-weapon"
     }
   ],
   "builds": [
@@ -29,10 +210,94 @@
       "id": "hunter-offense",
       "name": "Offense",
       "role": "offense",
-      "faction": "both",
+      "faction": "horde",
       "default": true,
       "slots": {
-        "ranged": { "item": "precisely-calibrated-boomstick", "enchant": null }
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-voracity" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentry-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "greater-stats" },
+        "wrist": { "item": "mindthrust-bracers", "enchant": "greater-intellect-bracer" },
+        "hands": { "item": "scouting-gloves-of-the-falcon", "enchant": "superior-agility" },
+        "waist": { "item": "screecher-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-voracity" },
+        "feet": { "item": "feet-of-the-lynx", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "zircon-band-of-frost-resistance", "enchant": null },
+          { "item": "zircon-band-of-frost-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "massive-battle-axe-of-agility", "enchant": "agility-2h" },
+        "ranged": { "item": "venomstrike", "enchant": "accurate-scope" },
+        "ammo": { "item": "sharp-arrow", "enchant": null },
+        "quiver": { "item": "medium-quiver", "enchant": null }
+      }
+    },
+    {
+      "id": "hunter-midfield",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-voracity" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentry-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "greater-stats" },
+        "wrist": { "item": "wranglers-wristbands-of-the-monkey", "enchant": "greater-intellect-bracer" },
+        "hands": { "item": "scouting-gloves-of-the-monkey", "enchant": "superior-agility" },
+        "waist": { "item": "screecher-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-voracity" },
+        "feet": { "item": "trailblazer-boots", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "legionnaires-band", "enchant": null },
+          { "item": "lavishly-jeweled-ring", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "massive-battle-axe-of-agility", "enchant": "agility-2h" },
+        "ranged": { "item": "venomstrike", "enchant": "accurate-scope" },
+        "ammo": { "item": "sharp-arrow", "enchant": null },
+        "quiver": { "item": "medium-quiver", "enchant": null }
+      }
+    },
+    {
+      "id": "hunter-defense",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "engineers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "greater-stats" },
+        "wrist": { "item": "wranglers-wristbands-of-the-eagle", "enchant": "superior-stamina" },
+        "hands": { "item": "scouting-gloves-of-the-eagle", "enchant": "superior-agility" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "wingblade", "enchant": "steel-weapon-chain" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null },
+        "ranged": { "item": "venomstrike", "enchant": "accurate-scope" },
+        "ammo": { "item": "sharp-arrow", "enchant": null },
+        "quiver": { "item": "medium-quiver", "enchant": null }
       }
     }
   ]

@@ -15,7 +15,8 @@
     "mainhand",
     "offhand",
     "ranged",
-    "ammo"
+    "ammo",
+    "quiver"
   ],
   "notes": "Universal slot picks - a cross-class starting frame drawn from community gearing guides. Treat these as seed examples and verify each item's exact stats, source, faction availability, and current-meta status at authoring time.",
   "shared": [

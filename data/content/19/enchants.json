@@ -240,6 +240,56 @@
       "noLevelReq": true,
       "notes": "Blacksmithing shield spike with no level requirement; retaliation damage on block for shield builds. Verify exact value at authoring.",
       "classes": ["warrior", "paladin", "shaman"]
+    },
+    {
+      "id": "steel-weapon-chain",
+      "name": "Steel Weapon Chain",
+      "slot": "weapon",
+      "effect": "Immune to Disarm.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Blacksmithing weapon chain with no level requirement; prevents disarm on a melee weapon. Verify exact value at authoring.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
+    },
+    {
+      "id": "agility-2h",
+      "name": "Enchant 2H Weapon - Agility",
+      "slot": "2h-weapon",
+      "effect": "+25 Agility.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Two-hand agility enchant with no level requirement; the agility stat stick for 2H weapons. Verify exact value at authoring.",
+      "classes": ["warrior", "hunter", "rogue", "shaman", "druid"]
+    },
+    {
+      "id": "greater-intellect-bracer",
+      "name": "Enchant Bracer - Greater Intellect",
+      "slot": "bracer",
+      "effect": "+7 Intellect.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Intellect bracer enchant; used on hybrid/caster-leaning builds for a larger mana pool. Verify exact value at authoring.",
+      "classes": ["hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "mighty-intellect-weapon",
+      "name": "Enchant Weapon - Mighty Intellect",
+      "slot": "weapon",
+      "effect": "+22 Intellect.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Intellect weapon enchant with no level requirement; a caster stat-stick option on staves. Verify exact value at authoring.",
+      "classes": ["hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "mighty-spirit-weapon",
+      "name": "Enchant Weapon - Mighty Spirit",
+      "slot": "weapon",
+      "effect": "+20 Spirit.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Spirit weapon enchant with no level requirement; a regen-focused stat-stick option on staves. Verify exact value at authoring.",
+      "classes": ["hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     }
   ]
 }
