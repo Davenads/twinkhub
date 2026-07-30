@@ -798,6 +798,17 @@
       "notes": "Chest recurring across Alliance rogue offense and hunter midfield/offense builds; enchanted with Greater Stats. Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
+    },
+    {
+      "id": "lorekeepers-ring",
+      "name": "Lorekeeper's Ring",
+      "slot": "finger",
+      "source": { "type": "quest", "detail": "Quest reward (verify exact source and faction)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Caster ring shared by Alliance mage and priest builds; paired with Seal of Wrynn. Verify source, faction availability, and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
     }
   ]
 }

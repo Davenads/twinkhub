@@ -98,6 +98,91 @@
         "mainhand": { "item": "jagged-star-of-healing", "enchant": "healing-power-weapon" },
         "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
       }
+    },
+    {
+      "id": "priest-offense-alliance",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-rumination" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "resilience-of-the-scourge" },
+        "back": { "item": "engineers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-mana" },
+        "wrist": { "item": "mindthrust-bracers", "enchant": "greater-intellect-bracer" },
+        "hands": { "item": "magefist-gloves", "enchant": "healing-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-rumination" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "zircon-band-of-arcane-resistance", "enchant": null },
+          { "item": "zircon-band-of-arcane-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "twisted-chanters-staff", "enchant": "mighty-intellect-weapon" }
+      }
+    },
+    {
+      "id": "priest-midfield-alliance",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-rumination" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "resilience-of-the-scourge" },
+        "back": { "item": "battle-healers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "mindthrust-bracers", "enchant": "healing-power-bracer" },
+        "hands": { "item": "magefist-gloves", "enchant": "healing-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-rumination" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "zircon-band-of-arcane-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "arena-grand-master", "enchant": null }
+        ],
+        "mainhand": { "item": "twisted-chanters-staff", "enchant": "mighty-intellect-weapon" }
+      }
+    },
+    {
+      "id": "priest-defense-alliance",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "battle-healers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-stamina", "enchant": "superior-stamina" },
+        "hands": { "item": "magefist-gloves", "enchant": "healing-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "lorekeepers-ring", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "arena-grand-master", "enchant": null }
+        ],
+        "mainhand": { "item": "jagged-star-of-healing", "enchant": "healing-power-weapon" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
+      }
     }
   ]
 }
