@@ -242,7 +242,7 @@ test('gear builds load, resolve their picks, and expose one default per class', 
   assert.ok(gearForClass(store, '19', 'Rogue').items.some((i) => i.id === 'shadowfang'));
 
   // A class without authored builds yields an empty list, not an error.
-  assert.deepEqual(buildsForClass(store, '19', 'priest'), []);
+  assert.deepEqual(buildsForClass(store, '19', 'paladin'), []);
   assert.equal(getBuild(store, '19', 'nope-not-a-build'), null);
   assert.deepEqual(buildsForClass(store, '49', 'rogue'), []);
 });

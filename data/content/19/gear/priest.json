@@ -1,0 +1,115 @@
+{
+  "class": "priest",
+  "items": [
+    {
+      "id": "zircon-band-of-arcane-resistance",
+      "name": "Zircon Band of Arcane Resistance",
+      "slot": "finger",
+      "source": { "type": "profession", "detail": "Jewelcrafting/Enchanting resistance band (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Arcane-resistance ring used across the midfield/offense builds; the arcane counterpart to the other Zircon resistance bands. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "staff-of-the-blessed-seer",
+      "name": "Staff of the Blessed Seer",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Two-hand healing staff carried as a situational mainhand option in the midfield/offense builds; enchanted with Healing Power. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "healing-power-weapon"
+    }
+  ],
+  "builds": [
+    {
+      "id": "priest-offense",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "horde",
+      "default": true,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-rumination" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "resilience-of-the-scourge" },
+        "back": { "item": "engineers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-mana" },
+        "wrist": { "item": "mindthrust-bracers", "enchant": "greater-intellect-bracer" },
+        "hands": { "item": "magefist-gloves", "enchant": "healing-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-rumination" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "zircon-band-of-arcane-resistance", "enchant": null },
+          { "item": "zircon-band-of-arcane-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "twisted-chanters-staff", "enchant": "mighty-intellect-weapon" }
+      }
+    },
+    {
+      "id": "priest-midfield",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-rumination" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "resilience-of-the-scourge" },
+        "back": { "item": "battle-healers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "mindthrust-bracers", "enchant": "healing-power-bracer" },
+        "hands": { "item": "magefist-gloves", "enchant": "healing-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-rumination" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "zircon-band-of-arcane-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "arena-grand-master", "enchant": null }
+        ],
+        "mainhand": { "item": "twisted-chanters-staff", "enchant": "mighty-intellect-weapon" }
+      }
+    },
+    {
+      "id": "priest-defense",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "battle-healers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-stamina", "enchant": "superior-stamina" },
+        "hands": { "item": "magefist-gloves", "enchant": "healing-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "arena-grand-master", "enchant": null }
+        ],
+        "mainhand": { "item": "jagged-star-of-healing", "enchant": "healing-power-weapon" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
+      }
+    }
+  ]
+}

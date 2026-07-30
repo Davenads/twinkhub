@@ -370,6 +370,26 @@
       "noLevelReq": true,
       "notes": "Spellpower weapon enchant used on caster one-hand weapons; verify whether the enchant carries a level requirement at authoring (many stat weapon enchants do not).",
       "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
+    },
+    {
+      "id": "major-mana",
+      "name": "Enchant Chest - Major Mana",
+      "slot": "chest",
+      "effect": "+100 Mana.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Mana chest enchant with no level requirement; the caster-DPS counterpart to Major Health for mana-pool builds. Verify exact value at authoring.",
+      "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin", "hunter"]
+    },
+    {
+      "id": "healing-power-bracer",
+      "name": "Enchant Bracer - Healing Power",
+      "slot": "bracer",
+      "effect": "+24 Healing.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Healing-power bracer enchant for restoration/support hybrid builds. Verify exact value at authoring.",
+      "classes": ["priest", "shaman", "druid", "paladin"]
     }
   ]
 }
