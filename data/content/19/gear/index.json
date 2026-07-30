@@ -732,6 +732,50 @@
       "wowheadId": null,
       "priority": "situational",
       "enchant": "healing-power-weapon"
+    },
+    {
+      "id": "defender-spaulders",
+      "name": "Defender Spaulders",
+      "slot": "shoulder",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Mail shoulder recurring across warrior and paladin builds; enchanted with Fortitude of the Scourge (defense/midfield) or Might of the Scourge (offense). Verify stats at authoring.",
+      "wowheadId": 6579,
+      "priority": "core"
+    },
+    {
+      "id": "sentrys-cape-of-strength",
+      "name": "Sentry's Cape of Strength",
+      "slot": "back",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Strength random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Strength cloak for offensive warrior and paladin builds. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "thorbias-gauntlets",
+      "name": "Thorbia's Gauntlets",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Gloves recurring across warrior and paladin builds; enchanted with Superior Agility (defense/midfield) or Greater Strength (offense). Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "cobrahns-grasp",
+      "name": "Cobrahn's Grasp",
+      "slot": "waist",
+      "source": { "type": "drop", "detail": "Wailing Caverns (dungeon drop, Cobrahn)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Mail waist recurring across warrior and paladin midfield/offense builds. Verify stats and required level at authoring.",
+      "wowheadId": 6460,
+      "priority": "core"
     }
   ]
 }

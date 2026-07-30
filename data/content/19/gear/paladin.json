@@ -1,0 +1,183 @@
+{
+  "class": "paladin",
+  "items": [
+    {
+      "id": "beetle-clasps",
+      "name": "Beetle Clasps",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stamina bracers for the flag-carrier build; enchanted with Superior Stamina. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "defender-gauntlets-of-the-eagle",
+      "name": "Defender Gauntlets of the Eagle",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina plate gloves for the flag-carrier and midfield holy-hybrid builds; enchanted with Healing Power. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "grunts-legguards-of-the-eagle",
+      "name": "Grunt's Legguards of the Eagle",
+      "slot": "legs",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina legs for the flag-carrier holy-hybrid build; enchanted with a Lesser Arcanum of Constitution. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "fortified-bracers-of-the-eagle",
+      "name": "Fortified Bracers of the Eagle",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina bracers for the midfield build; enchanted with Superior Stamina. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "chausses-of-westfall",
+      "name": "Chausses of Westfall",
+      "slot": "legs",
+      "source": { "type": "drop", "detail": "The Deadmines / Westfall area (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Leg pick for the midfield and offense builds; enchanted with a Lesser Arcanum (Constitution or Voracity). Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "protectors-band",
+      "name": "Protector's Band",
+      "slot": "finger",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stamina/defensive ring paired with Seal of Wrynn in the midfield build. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "fortified-bracers-of-strength",
+      "name": "Fortified Bracers of Strength",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Strength random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Strength bracers for the offense build; enchanted with Superior Strength. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "defender-boots-of-the-gorilla",
+      "name": "Defender Boots of the Gorilla",
+      "slot": "feet",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Gorilla (+Str/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Strength/stamina boots for the offense build; enchanted with Minor Speed. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "minor-speed-boots"
+    }
+  ],
+  "builds": [
+    {
+      "id": "paladin-flag-carrier",
+      "name": "Flag Carrier",
+      "role": "flag-carrier",
+      "faction": "alliance",
+      "default": true,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "defender-spaulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "firebane-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "major-health" },
+        "wrist": { "item": "beetle-clasps", "enchant": "superior-stamina" },
+        "hands": { "item": "defender-gauntlets-of-the-eagle", "enchant": "healing-power-gloves" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "grunts-legguards-of-the-eagle", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "night-watch-shortsword", "enchant": "mighty-intellect-weapon" },
+        "offhand": { "item": "arctic-buckler", "enchant": "greater-stamina-shield" }
+      }
+    },
+    {
+      "id": "paladin-midfield",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "defender-spaulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "engineers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "greater-stats" },
+        "wrist": { "item": "fortified-bracers-of-the-eagle", "enchant": "superior-stamina" },
+        "hands": { "item": "defender-gauntlets-of-the-eagle", "enchant": "healing-power-gloves" },
+        "waist": { "item": "cobrahns-grasp", "enchant": null },
+        "legs": { "item": "chausses-of-westfall", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "protectors-band", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "lifestealing" },
+        "offhand": { "item": "redbeard-crest", "enchant": "greater-stamina-shield" }
+      }
+    },
+    {
+      "id": "paladin-offense",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-voracity" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "defender-spaulders", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentrys-cape-of-strength", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "greater-stats" },
+        "wrist": { "item": "fortified-bracers-of-strength", "enchant": "superior-strength" },
+        "hands": { "item": "thorbias-gauntlets", "enchant": "greater-strength-gloves" },
+        "waist": { "item": "cobrahns-grasp", "enchant": null },
+        "legs": { "item": "chausses-of-westfall", "enchant": "lesser-arcanum-of-voracity" },
+        "feet": { "item": "defender-boots-of-the-gorilla", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "zircon-band-of-frost-resistance", "enchant": null },
+          { "item": "zircon-band-of-frost-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "shadowfang", "enchant": "fiery-weapon" },
+        "offhand": { "item": "arctic-buckler", "enchant": "frost-resistance-shield" }
+      }
+    }
+  ]
+}

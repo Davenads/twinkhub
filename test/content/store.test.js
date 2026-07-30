@@ -241,8 +241,12 @@ test('gear builds load, resolve their picks, and expose one default per class', 
   // Adding builds is additive: the existing merged item list is unchanged.
   assert.ok(gearForClass(store, '19', 'Rogue').items.some((i) => i.id === 'shadowfang'));
 
-  // A class without authored builds yields an empty list, not an error.
-  assert.deepEqual(buildsForClass(store, '19', 'paladin'), []);
+  // Paladin is authored Alliance-side and likewise exposes exactly one default.
+  const paladinBuilds = buildsForClass(store, '19', 'paladin');
+  assert.equal(paladinBuilds.filter((b) => b.default === true).length, 1, 'exactly one default paladin build');
+  assert.ok(paladinBuilds.every((b) => b.faction === 'alliance'), 'paladin builds are Alliance-side');
+
+  // An unknown bracket/class yields an empty list, not an error.
   assert.equal(getBuild(store, '19', 'nope-not-a-build'), null);
   assert.deepEqual(buildsForClass(store, '49', 'rogue'), []);
 });

@@ -2,28 +2,6 @@
   "class": "warrior",
   "items": [
     {
-      "id": "defender-spaulders",
-      "name": "Defender Spaulders",
-      "slot": "shoulder",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Warrior shoulder across all three role builds; enchanted with Fortitude of the Scourge (defense/midfield) or Might of the Scourge (offense). Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "sentrys-cape-of-strength",
-      "name": "Sentry's Cape of Strength",
-      "slot": "back",
-      "source": { "type": "drop", "detail": "Low-level drop with the of Strength random suffix (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Strength cloak for the offensive build. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "steel-clasped-bracers",
       "name": "Steel-clasped Bracers",
       "slot": "wrist",
@@ -42,28 +20,6 @@
       "faction": "both",
       "reqLevel": null,
       "notes": "Attack-power bracers for the offensive build; enchanted with Superior Strength. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "thorbias-gauntlets",
-      "name": "Thorbia's Gauntlets",
-      "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Warrior gloves across all three builds; enchanted with Superior Agility (defense/midfield) or Greater Strength (offense). Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "cobrahns-grasp",
-      "name": "Cobrahn's Grasp",
-      "slot": "waist",
-      "source": { "type": "drop", "detail": "Wailing Caverns (dungeon drop, Cobrahn)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Waist pick for the midfield/offense builds. Verify stats and required level at authoring.",
       "wowheadId": null,
       "priority": "core"
     },
