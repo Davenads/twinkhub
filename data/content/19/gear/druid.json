@@ -1,0 +1,99 @@
+{
+  "class": "druid",
+  "items": [
+    {
+      "id": "wranglers-wristbands-of-stamina",
+      "name": "Wrangler's Wristbands of Stamina",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Stamina random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stamina bracers for the flag-carrier build; enchanted with Superior Stamina. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "superior-stamina"
+    },
+    {
+      "id": "scouting-trousers-of-the-eagle",
+      "name": "Scouting Trousers of the Eagle",
+      "slot": "legs",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina leather legs for the flag-carrier build; enchanted with Lesser Arcanum of Constitution. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "face-smasher",
+      "name": "Face Smasher",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand mace carried as a caster stat-stick for the flag-carrier build; enchant varies by build (Mighty Intellect, Healing Power, Mighty Spirit). Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "mighty-intellect-weapon"
+    }
+  ],
+  "builds": [
+    {
+      "id": "druid-flag-carrier",
+      "name": "Flag Carrier",
+      "role": "flag-carrier",
+      "faction": "horde",
+      "default": true,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "firebane-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "major-health" },
+        "wrist": { "item": "wranglers-wristbands-of-stamina", "enchant": "superior-stamina" },
+        "hands": { "item": "scouting-gloves-of-the-eagle", "enchant": "healing-power-gloves" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "scouting-trousers-of-the-eagle", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "arena-grand-master", "enchant": null }
+        ],
+        "mainhand": { "item": "face-smasher", "enchant": "mighty-intellect-weapon" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
+      }
+    },
+    {
+      "id": "druid-midfield",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-rumination" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "resilience-of-the-scourge" },
+        "back": { "item": "battle-healers-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "wranglers-wristbands-of-the-eagle", "enchant": "healing-power-bracer" },
+        "hands": { "item": "magefist-gloves", "enchant": "healing-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-rumination" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "advisors-ring", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "twisted-chanters-staff", "enchant": "mighty-intellect-weapon" }
+      }
+    }
+  ]
+}
