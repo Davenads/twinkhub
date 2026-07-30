@@ -390,6 +390,26 @@
       "noLevelReq": true,
       "notes": "Healing-power bracer enchant for restoration/support hybrid builds. Verify exact value at authoring.",
       "classes": ["priest", "shaman", "druid", "paladin"]
+    },
+    {
+      "id": "zandalar-signet-of-mojo",
+      "name": "Zandalar Signet of Mojo",
+      "slot": "shoulder",
+      "effect": "+18 Spell Damage and Healing.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Zandalari shoulder inscription with no level requirement; the highest-spellpower shoulder enchant for caster-damage builds, an alternative to Power of the Scourge. Verify exact value and availability at authoring.",
+      "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
+    },
+    {
+      "id": "shadow-power-gloves",
+      "name": "Enchant Gloves - Shadow Power",
+      "slot": "gloves",
+      "effect": "+20 Shadow spell damage.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Shadow-damage gloves enchant for shadow-spec casters. Verify exact value at authoring.",
+      "classes": ["warlock", "priest"]
     }
   ]
 }

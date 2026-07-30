@@ -1,0 +1,152 @@
+{
+  "class": "warlock",
+  "items": [
+    {
+      "id": "watchers-cape-of-shadow-wrath",
+      "name": "Watcher's Cape of Shadow Wrath",
+      "slot": "back",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Shadow Wrath (+shadow spell damage) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Shadow-spellpower cloak for the midfield/offense builds; enchanted with Greater Resistance. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "greater-resistance"
+    },
+    {
+      "id": "ritual-shroud-of-shadow-wrath",
+      "name": "Ritual Shroud of Shadow Wrath",
+      "slot": "chest",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Shadow Wrath (+shadow spell damage) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Shadow-spellpower cloth chest for the offensive build; enchanted with Major Health. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "major-health"
+    },
+    {
+      "id": "greenweave-bracers-of-shadow-wrath",
+      "name": "Greenweave Bracers of Shadow Wrath",
+      "slot": "wrist",
+      "source": { "type": "profession", "detail": "Leatherworking (crafted) with the of Shadow Wrath (+shadow spell damage) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Shadow-spellpower bracers for the midfield/offense builds; enchanted with Superior Stamina. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "superior-stamina"
+    },
+    {
+      "id": "greenweave-sandals-of-shadow-wrath",
+      "name": "Greenweave Sandals of Shadow Wrath",
+      "slot": "feet",
+      "source": { "type": "profession", "detail": "Leatherworking (crafted) with the of Shadow Wrath (+shadow spell damage) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Shadow-spellpower boots for the offensive build; enchanted with Minor Speed. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "minor-speed-boots"
+    },
+    {
+      "id": "witching-stave",
+      "name": "Witching Stave",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Two-hand caster staff; the midfield/offense mainhand, enchanted with Spell Power. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "spell-power-weapon"
+    }
+  ],
+  "builds": [
+    {
+      "id": "warlock-offense",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "horde",
+      "default": true,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "zandalar-signet-of-mojo" },
+        "back": { "item": "watchers-cape-of-shadow-wrath", "enchant": "greater-resistance" },
+        "chest": { "item": "ritual-shroud-of-shadow-wrath", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-shadow-wrath", "enchant": "superior-stamina" },
+        "hands": { "item": "gnoll-casting-gloves", "enchant": "shadow-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "greenweave-sandals-of-shadow-wrath", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "advisors-ring", "enchant": null },
+          { "item": "zircon-band-of-frost-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "witching-stave", "enchant": "spell-power-weapon" }
+      }
+    },
+    {
+      "id": "warlock-midfield",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "zandalar-signet-of-mojo" },
+        "back": { "item": "watchers-cape-of-shadow-wrath", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-shadow-wrath", "enchant": "superior-stamina" },
+        "hands": { "item": "gnoll-casting-gloves", "enchant": "shadow-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "advisors-ring", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "witching-stave", "enchant": "spell-power-weapon" }
+      }
+    },
+    {
+      "id": "warlock-defense",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "firebane-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-stamina", "enchant": "superior-stamina" },
+        "hands": { "item": "pagan-mitts-of-the-eagle", "enchant": "shadow-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "shimmering-trousers-of-the-eagle", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "night-watch-shortsword", "enchant": "spell-power-weapon" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
+      }
+    }
+  ]
+}
