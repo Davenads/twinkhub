@@ -59,6 +59,28 @@
       "notes": "Wand carried in the ranged slot for the offensive build. Verify item identity, stats, and required level at authoring.",
       "wowheadId": null,
       "priority": "core"
+    },
+    {
+      "id": "pious-legwraps",
+      "name": "Pious Legwraps",
+      "slot": "legs",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Cloth legs for the Alliance defensive build; enchanted with a Lesser Arcanum of Constitution. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "lorekeepers-ring",
+      "name": "Lorekeeper's Ring",
+      "slot": "finger",
+      "source": { "type": "quest", "detail": "Quest reward (verify exact source and faction)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Caster ring for the Alliance midfield/offense builds; paired with Seal of Wrynn. Verify source, faction availability, and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
     }
   ],
   "builds": [
@@ -143,6 +165,93 @@
         ],
         "trinket": [
           { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "arena-grand-master", "enchant": null }
+        ],
+        "mainhand": { "item": "night-watch-shortsword", "enchant": "mighty-intellect-weapon" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
+      }
+    },
+    {
+      "id": "mage-offense-alliance",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-rumination" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "power-of-the-scourge" },
+        "back": { "item": "watchers-cape-of-frozen-wrath", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-frozen-wrath", "enchant": "greater-intellect-bracer" },
+        "hands": { "item": "gnoll-casting-gloves", "enchant": "frost-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-rumination" },
+        "feet": { "item": "greenweave-sandals-of-frozen-wrath", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "lorekeepers-ring", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "hook-dagger-of-frozen-wrath", "enchant": "spell-power-weapon" },
+        "ranged": { "item": "antipodean-rod", "enchant": null }
+      }
+    },
+    {
+      "id": "mage-midfield-alliance",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "engineers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-stamina", "enchant": "superior-stamina" },
+        "hands": { "item": "magefist-gloves", "enchant": "frost-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "lorekeepers-ring", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "night-watch-shortsword", "enchant": "spell-power-weapon" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
+      }
+    },
+    {
+      "id": "mage-defense-alliance",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "firebane-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-stamina", "enchant": "superior-stamina" },
+        "hands": { "item": "pagan-mitts-of-the-eagle", "enchant": "frost-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "pious-legwraps", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
           { "item": "arena-grand-master", "enchant": null }
         ],
         "mainhand": { "item": "night-watch-shortsword", "enchant": "mighty-intellect-weapon" },
