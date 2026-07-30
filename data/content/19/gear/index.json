@@ -403,6 +403,120 @@
       "notes": "From the Gurubashi Arena event this bot also tracks. Contested world PvP objective; verify current stats.",
       "wowheadId": null,
       "priority": "situational"
+    },
+    {
+      "id": "engineers-cloak",
+      "name": "Engineer's Cloak",
+      "slot": "back",
+      "source": { "type": "profession", "detail": "Engineering (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Crafted Engineering cloak recurring across defensive/midfield class builds on the BiS chart. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "tree-bark-jacket",
+      "name": "Tree Bark Jacket",
+      "slot": "chest",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Leather chest recurring across defensive class builds on the BiS chart. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "wranglers-wristbands-of-the-eagle",
+      "name": "Wrangler's Wristbands of the Eagle",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina bracers recurring across caster-hybrid class builds on the BiS chart. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "darkweave-breeches",
+      "name": "Darkweave Breeches",
+      "slot": "legs",
+      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Cloth legs recurring across defensive caster-hybrid builds; carries intellect/spirit and shadow resistance. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "twisted-chanters-staff",
+      "name": "Twisted Chanter's Staff",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Staff carried as an intellect stat-stick option across caster-hybrid class builds; typically enchanted with Mighty Intellect. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "mighty-intellect-weapon"
+    },
+    {
+      "id": "draftsman-boots",
+      "name": "Draftsman Boots",
+      "slot": "feet",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Boots recurring across offensive class builds on the BiS chart; typically enchanted with Minor Speed. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "deadskull-shield",
+      "name": "Deadskull Shield",
+      "slot": "offhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Shield recurring across defensive/midfield shield-using builds; typically enchanted with Greater Stamina. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "arctic-buckler",
+      "name": "Arctic Buckler",
+      "slot": "offhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Shield recurring across offensive shield-using builds; typically enchanted with Frost Resistance. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "redbeard-crest",
+      "name": "Redbeard Crest",
+      "slot": "offhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Alternate shield recurring across shield-using class builds; can carry a Thorium Shield Spike for retaliation damage. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "thorium-shield-spike"
+    },
+    {
+      "id": "assassins-blade",
+      "name": "Assassin's Blade",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand weapon recurring across physical class builds as a no-level-req weapon-enchant carrier. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "fiery-weapon",
+      "alternatives": ["shadowfang"]
     }
   ]
 }

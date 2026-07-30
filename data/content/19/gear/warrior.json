@@ -68,51 +68,6 @@
       "priority": "core"
     },
     {
-      "id": "draftsman-boots",
-      "name": "Draftsman Boots",
-      "slot": "feet",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Boots for the offensive build; enchanted with Minor Speed. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "deadskull-shield",
-      "name": "Deadskull Shield",
-      "slot": "offhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Shield for the defense/midfield builds; enchanted with Greater Stamina. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "arctic-buckler",
-      "name": "Arctic Buckler",
-      "slot": "offhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Shield for the offensive build; enchanted with Frost Resistance. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "redbeard-crest",
-      "name": "Redbeard Crest",
-      "slot": "offhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Alternate shield listed on the warrior chart; carries a Thorium Shield Spike for retaliation damage. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "situational",
-      "enchant": "thorium-shield-spike"
-    },
-    {
       "id": "night-reaver",
       "name": "Night Reaver",
       "slot": "mainhand",

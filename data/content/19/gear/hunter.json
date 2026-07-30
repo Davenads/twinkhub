@@ -47,39 +47,6 @@
       "priority": "core"
     },
     {
-      "id": "engineers-cloak",
-      "name": "Engineer's Cloak",
-      "slot": "back",
-      "source": { "type": "profession", "detail": "Engineering (crafted)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Crafted Engineering cloak for the defensive build. Verify recipe and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "tree-bark-jacket",
-      "name": "Tree Bark Jacket",
-      "slot": "chest",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Leather chest for the defense/offense builds. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "wranglers-wristbands-of-the-eagle",
-      "name": "Wrangler's Wristbands of the Eagle",
-      "slot": "wrist",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Intellect/stamina bracers for the defensive build. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "mindthrust-bracers",
       "name": "Mindthrust Bracers",
       "slot": "wrist",
@@ -120,17 +87,6 @@
       "faction": "both",
       "reqLevel": null,
       "notes": "Waist pick for the defensive build. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "darkweave-breeches",
-      "name": "Darkweave Breeches",
-      "slot": "legs",
-      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Cloth legs for the defensive build; carries intellect/spirit and shadow resistance. Verify recipe and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
     },
@@ -179,18 +135,6 @@
       "notes": "Held-in-off-hand item with an on-use heal, paired with a one-hand weapon in the defensive build. Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "situational"
-    },
-    {
-      "id": "twisted-chanters-staff",
-      "name": "Twisted Chanter's Staff",
-      "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Staff carried as an intellect stat stick option; enchanted with Mighty Intellect. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
-      "priority": "situational",
-      "enchant": "mighty-intellect-weapon"
     },
     {
       "id": "staff-of-the-friar",

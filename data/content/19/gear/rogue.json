@@ -2,19 +2,6 @@
   "class": "rogue",
   "items": [
     {
-      "id": "assassins-blade",
-      "name": "Assassin's Blade",
-      "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Alternate one-hand weapon listed on the rogue BiS chart; carries a no-level-req weapon enchant. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
-      "priority": "situational",
-      "enchant": "fiery-weapon",
-      "alternatives": ["shadowfang"]
-    },
-    {
       "id": "cruel-barb",
       "name": "Cruel Barb",
       "slot": "offhand",
