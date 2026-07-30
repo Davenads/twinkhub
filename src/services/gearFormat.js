@@ -34,6 +34,24 @@ export function itemLine(item) {
 }
 
 /**
+ * One display line for a build's slot pick: item name (with faction / non-core
+ * tags) plus the per-(build, slot) enchant spelled out — unlike `itemLine`, the
+ * enchant here comes from the build, not the item record. Used by `/bis`'s build
+ * view where each slot names an exact loadout choice.
+ *
+ * @param {object} item resolved gear item
+ * @param {string|null} [enchantName] resolved enchant display name for this slot
+ * @returns {string}
+ */
+export function buildItemLine(item, enchantName = null) {
+  let head = `**${item.name}**`;
+  if (item.faction && item.faction !== 'both') head += ` [${item.faction}]`;
+  if (item.priority && item.priority !== 'core') head += ` (${item.priority})`;
+  if (enchantName) head += ` \u2014 _${enchantName}_`;
+  return head;
+}
+
+/**
  * Group items by slot in the gear index's declared order (unknown slots appended
  * alphabetically), core-first within each slot, and return Discord embed field
  * objects — capped at `maxFields`. Shared by `/bis` and `/gear`.

@@ -105,3 +105,111 @@ test('renderBis degrades for a bracket with no gear', () => {
   const e = embeds[0].toJSON();
   assert.ok(e.description.includes('No gear data'));
 });
+
+// --- Multi-build view -------------------------------------------------------
+
+const buildItems = [
+  { id: 'lucky-fishing-hat', name: 'Lucky Fishing Hat', slot: 'head', faction: 'both', priority: 'core', owner: 'shared' },
+  { id: 'speedy-boots', name: 'Speedy Boots', slot: 'feet', faction: 'both', priority: 'core', owner: 'rogue' },
+  { id: 'seal-of-sylvanas', name: 'Seal of Sylvanas', slot: 'finger', faction: 'horde', priority: 'core', owner: 'shared' },
+  { id: 'blood-ring', name: 'Blood Ring', slot: 'finger', faction: 'both', priority: 'core', owner: 'shared' },
+  { id: 'assassins-blade', name: "Assassin's Blade", slot: 'mainhand', faction: 'both', priority: 'core', owner: 'rogue' }
+];
+const rogueBuilds = [
+  {
+    id: 'rogue-offense',
+    name: 'Offense',
+    role: 'offense',
+    faction: 'horde',
+    default: true,
+    owner: 'rogue',
+    slots: {
+      head: { item: 'lucky-fishing-hat', enchant: null },
+      feet: { item: 'speedy-boots', enchant: 'minor-speed-boots' },
+      mainhand: { item: 'assassins-blade', enchant: 'fiery-weapon' },
+      finger: [
+        { item: 'seal-of-sylvanas', enchant: null },
+        { item: 'blood-ring', enchant: null }
+      ]
+    }
+  },
+  {
+    id: 'rogue-midfield',
+    name: 'Midfield',
+    role: 'midfield',
+    faction: 'horde',
+    default: false,
+    owner: 'rogue',
+    slots: {
+      head: { item: 'lucky-fishing-hat', enchant: null },
+      feet: { item: 'speedy-boots', enchant: 'minor-speed-boots' }
+    }
+  }
+];
+const buildStore = {
+  brackets: {
+    19: {
+      meta: { levelCap: 19, battleground: 'Warsong Gulch', gameVersion: { clientPatch: '1.15.x' } },
+      enchants: {
+        enchants: [
+          { id: 'fiery-weapon', name: 'Fiery Weapon' },
+          { id: 'minor-speed-boots', name: 'Minor Speed' }
+        ]
+      },
+      gear: {
+        index: { slots: ['head', 'feet', 'mainhand', 'finger'], notes: 'Seed picks.' },
+        byClass: { rogue: {} },
+        byId: Object.fromEntries(buildItems.map((i) => [i.id, i])),
+        items: buildItems,
+        builds: rogueBuilds,
+        buildsByClass: { rogue: rogueBuilds }
+      }
+    }
+  }
+};
+
+test('renderBis renders the default build when no build is named', () => {
+  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue' });
+  const e = embeds[0].toJSON();
+
+  assert.equal(e.title, 'Best in Slot \u2014 Rogue \u00b7 Offense (Warsong Gulch 19)');
+  assert.deepEqual(
+    e.fields.map((f) => f.name),
+    ['Head', 'Feet', 'Mainhand', 'Finger']
+  );
+  // Per-(build, slot) enchant is spelled out.
+  assert.ok(e.fields.find((f) => f.name === 'Feet').value.includes('_Minor Speed_'));
+  assert.ok(e.fields.find((f) => f.name === 'Mainhand').value.includes('_Fiery Weapon_'));
+  // Dual finger picks render as two lines, faction tag shows.
+  const finger = e.fields.find((f) => f.name === 'Finger').value;
+  assert.equal(finger.split('\n').length, 2);
+  assert.ok(finger.includes('[horde]'));
+  // Description points at the other build.
+  assert.ok(e.description.includes('Other builds: Midfield'));
+  assert.equal(e.footer.text, 'WoW Classic Era 1.15.x');
+});
+
+test('renderBis renders a named build (by id) and drops slots it omits', () => {
+  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', build: 'rogue-midfield' });
+  const e = embeds[0].toJSON();
+  assert.equal(e.title, 'Best in Slot \u2014 Rogue \u00b7 Midfield (Warsong Gulch 19)');
+  assert.deepEqual(
+    e.fields.map((f) => f.name),
+    ['Head', 'Feet']
+  );
+});
+
+test('renderBis narrows a build to a single slot', () => {
+  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', slot: 'Mainhand' });
+  const e = embeds[0].toJSON();
+  assert.equal(e.fields.length, 1);
+  assert.equal(e.fields[0].name, 'Mainhand');
+  assert.ok(e.fields[0].value.includes("Assassin's Blade"));
+});
+
+test('renderBis degrades for an unknown build id', () => {
+  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', build: 'rogue-tank' });
+  const e = embeds[0].toJSON();
+  assert.equal(e.title, 'Best in Slot');
+  assert.ok(e.description.includes('No build **rogue-tank**'));
+});
