@@ -5,11 +5,12 @@
       "id": "steel-clasped-bracers",
       "name": "Steel-clasped Bracers",
       "slot": "wrist",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": { "type": "drop", "detail": "Binds when picked up; item level 29 (verify exact drop source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stamina bracers for the defense/midfield builds; enchanted with Superior Stamina. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "stats": { "stamina": 6, "spirit": 1 },
+      "notes": "Mail wrist (85 Armor, +6 Sta, +1 Spi) confirmed via Wowhead Classic; stamina bracers for the defense/midfield builds, enchanted with Superior Stamina. Required level not shown on tooltip.",
+      "wowheadId": 4534,
       "priority": "core"
     },
     {
