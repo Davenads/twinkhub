@@ -709,6 +709,29 @@
       "wowheadId": null,
       "priority": "core",
       "enchant": "spell-power-weapon"
+    },
+    {
+      "id": "scouting-gloves-of-the-eagle",
+      "name": "Scouting Gloves of the Eagle",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina gloves recurring across hybrid class builds; enchant varies by build (Superior Agility, Healing Power). Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "staff-of-the-blessed-seer",
+      "name": "Staff of the Blessed Seer",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Two-hand healing staff carried as a situational mainhand option across restoration/support class builds; enchanted with Healing Power. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "healing-power-weapon"
     }
   ]
 }

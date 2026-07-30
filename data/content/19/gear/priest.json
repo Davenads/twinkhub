@@ -11,18 +11,6 @@
       "notes": "Arcane-resistance ring used across the midfield/offense builds; the arcane counterpart to the other Zircon resistance bands. Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
-    },
-    {
-      "id": "staff-of-the-blessed-seer",
-      "name": "Staff of the Blessed Seer",
-      "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Two-hand healing staff carried as a situational mainhand option in the midfield/offense builds; enchanted with Healing Power. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
-      "priority": "situational",
-      "enchant": "healing-power-weapon"
     }
   ],
   "builds": [

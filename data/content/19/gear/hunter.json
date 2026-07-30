@@ -47,17 +47,6 @@
       "priority": "core"
     },
     {
-      "id": "scouting-gloves-of-the-eagle",
-      "name": "Scouting Gloves of the Eagle",
-      "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Intellect/stamina gloves for the defensive build; enchanted with Superior Agility. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "scouting-gloves-of-the-falcon",
       "name": "Scouting Gloves of the Falcon",
       "slot": "hands",
