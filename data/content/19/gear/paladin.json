@@ -8,8 +8,8 @@
       "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Intellect/stamina plate gloves for the flag-carrier and midfield holy-hybrid builds; enchanted with Healing Power. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Intellect/stamina plate gloves for the flag-carrier and midfield holy-hybrid builds; enchanted with Healing Power. wowheadId is the base item Defender Gauntlets (item=6577, green mail hands, ilvl 23) confirmed via Wowhead Classic; the of the Eagle bonus is a random suffix. Verify exact suffix stats and required level at authoring.",
+      "wowheadId": 6577,
       "priority": "core"
     },
     {
@@ -19,8 +19,8 @@
       "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Intellect/stamina legs for the flag-carrier holy-hybrid build; enchanted with a Lesser Arcanum of Constitution. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Intellect/stamina legs for the flag-carrier holy-hybrid build; enchanted with a Lesser Arcanum of Constitution. wowheadId is the base item Grunt's Legguards (item=15511, green mail legs, ilvl 24) confirmed via Wowhead Classic; the of the Eagle bonus is a random suffix. Verify exact suffix stats and required level at authoring.",
+      "wowheadId": 15511,
       "priority": "core"
     },
     {
@@ -30,8 +30,8 @@
       "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Intellect/stamina bracers for the midfield build; enchanted with Superior Stamina. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Intellect/stamina bracers for the midfield build; enchanted with Superior Stamina. wowheadId is the base item Fortified Bracers (item=9811) confirmed via Wowhead Classic; the of the Eagle bonus is a random suffix. Verify exact suffix stats and required level at authoring.",
+      "wowheadId": 9811,
       "priority": "core"
     },
     {
@@ -41,8 +41,8 @@
       "source": { "type": "drop", "detail": "Low-level drop with the of Strength random suffix (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Strength bracers for the offense build; enchanted with Superior Strength. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Strength bracers for the offense build; enchanted with Superior Strength. wowheadId is the base item Fortified Bracers (item=9811) confirmed via Wowhead Classic; the of Strength bonus is a random suffix. Verify exact suffix stats and required level at authoring.",
+      "wowheadId": 9811,
       "priority": "core"
     },
     {
@@ -52,8 +52,8 @@
       "source": { "type": "drop", "detail": "Low-level drop with the of the Gorilla (+Str/+Sta) random suffix (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Strength/stamina boots for the offense build; enchanted with Minor Speed. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Strength/stamina boots for the offense build; enchanted with Minor Speed. wowheadId is the base item Defender Boots (item=6573, green mail feet, ilvl 23) confirmed via Wowhead Classic; the of the Gorilla bonus is a random suffix. Verify exact suffix stats and required level at authoring.",
+      "wowheadId": 6573,
       "priority": "core",
       "enchant": "minor-speed-boots"
     }
