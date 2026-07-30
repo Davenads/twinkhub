@@ -59,17 +59,6 @@
       "notes": "Wand carried in the ranged slot for the offensive build. Verify item identity, stats, and required level at authoring.",
       "wowheadId": null,
       "priority": "core"
-    },
-    {
-      "id": "pious-legwraps",
-      "name": "Pious Legwraps",
-      "slot": "legs",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Cloth legs for the Alliance defensive build; enchanted with a Lesser Arcanum of Constitution. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
     }
   ],
   "builds": [

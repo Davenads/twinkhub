@@ -806,7 +806,18 @@
       "source": { "type": "quest", "detail": "Quest reward (verify exact source and faction)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Caster ring shared by Alliance mage and priest builds; paired with Seal of Wrynn. Verify source, faction availability, and stats at authoring.",
+      "notes": "Caster ring shared by Alliance mage, priest, and warlock builds; paired with Seal of Wrynn. Verify source, faction availability, and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "pious-legwraps",
+      "name": "Pious Legwraps",
+      "slot": "legs",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Cloth legs shared by Alliance mage and warlock defensive builds; enchanted with a Lesser Arcanum of Constitution. Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
     }
