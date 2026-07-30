@@ -340,6 +340,36 @@
       "noLevelReq": true,
       "notes": "Spirit shield enchant for regen-leaning shield-using caster-hybrid builds. Verify exact value at authoring.",
       "classes": ["shaman", "paladin"]
+    },
+    {
+      "id": "power-of-the-scourge",
+      "name": "Power of the Scourge",
+      "slot": "shoulder",
+      "effect": "+15 Spell Damage and Healing and +1% spell critical strike.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Caster-damage Scourge shoulder enchant with no level requirement; the spellpower counterpart to Might/Fortitude of the Scourge. Verify exact values and availability at authoring.",
+      "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
+    },
+    {
+      "id": "frost-power-gloves",
+      "name": "Enchant Gloves - Frost Power",
+      "slot": "gloves",
+      "effect": "+20 Frost spell damage.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Frost-damage gloves enchant for frost-spec casters. Verify exact value at authoring.",
+      "classes": ["mage"]
+    },
+    {
+      "id": "spell-power-weapon",
+      "name": "Enchant Weapon - Spell Power",
+      "slot": "weapon",
+      "effect": "+30 Spell Damage and Healing.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Spellpower weapon enchant used on caster one-hand weapons; verify whether the enchant carries a level requirement at authoring (many stat weapon enchants do not).",
+      "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
     }
   ]
 }

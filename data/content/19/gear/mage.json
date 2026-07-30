@@ -1,0 +1,245 @@
+{
+  "class": "mage",
+  "items": [
+    {
+      "id": "reinforced-woolen-shoulders",
+      "name": "Reinforced Woolen Shoulders",
+      "slot": "shoulder",
+      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Crafted cloth shoulders used across all three builds; enchant varies (Fortitude/Power of the Scourge). Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "watchers-cape-of-frozen-wrath",
+      "name": "Watcher's Cape of Frozen Wrath",
+      "slot": "back",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Frozen Wrath (+frost spell damage) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Frost-spellpower cloak for the offensive build; enchanted with Greater Resistance. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "greater-resistance"
+    },
+    {
+      "id": "greenweave-bracers-of-stamina",
+      "name": "Greenweave Bracers of Stamina",
+      "slot": "wrist",
+      "source": { "type": "profession", "detail": "Leatherworking (crafted) with the of Stamina random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stamina bracers for the defensive/midfield builds; enchanted with Superior Stamina. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "superior-stamina"
+    },
+    {
+      "id": "greenweave-bracers-of-frozen-wrath",
+      "name": "Greenweave Bracers of Frozen Wrath",
+      "slot": "wrist",
+      "source": { "type": "profession", "detail": "Leatherworking (crafted) with the of Frozen Wrath (+frost spell damage) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Frost-spellpower bracers for the offensive build; enchanted with Greater Intellect. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "greater-intellect-bracer"
+    },
+    {
+      "id": "pagan-mitts-of-the-eagle",
+      "name": "Pagan Mitts of the Eagle",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina cloth gloves for the defensive build; enchanted with Frost Power. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "frost-power-gloves"
+    },
+    {
+      "id": "gnoll-casting-gloves",
+      "name": "Gnoll Casting Gloves",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Caster cloth gloves for the offensive build; enchanted with Frost Power. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "frost-power-gloves"
+    },
+    {
+      "id": "shimmering-trousers-of-the-eagle",
+      "name": "Shimmering Trousers of the Eagle",
+      "slot": "legs",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina cloth legs for the defensive build. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "greenweave-sandals-of-frozen-wrath",
+      "name": "Greenweave Sandals of Frozen Wrath",
+      "slot": "feet",
+      "source": { "type": "profession", "detail": "Leatherworking (crafted) with the of Frozen Wrath (+frost spell damage) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Frost-spellpower boots for the offensive build; enchanted with Minor Speed. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "minor-speed-boots"
+    },
+    {
+      "id": "advisors-ring",
+      "name": "Advisor's Ring",
+      "slot": "finger",
+      "source": { "type": "quest", "detail": "Quest reward (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stat ring for the midfield/offense builds. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "night-watch-shortsword",
+      "name": "Night Watch Shortsword",
+      "slot": "mainhand",
+      "source": { "type": "quest", "detail": "Duskwood quest reward (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand caster sword; the midfield mainhand (Spell Power) and the defensive intellect stat-stick (Mighty Intellect). Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "spell-power-weapon"
+    },
+    {
+      "id": "hook-dagger-of-frozen-wrath",
+      "name": "Hook Dagger of Frozen Wrath",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Frozen Wrath (+frost spell damage) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Frost-spellpower one-hand dagger; the offensive mainhand, enchanted with Spell Power. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "spell-power-weapon"
+    },
+    {
+      "id": "antipodean-rod",
+      "name": "Antipodean Rod",
+      "slot": "ranged",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Wand carried in the ranged slot for the offensive build. Verify item identity, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "gravestone-scepter",
+      "name": "Gravestone Scepter",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand caster weapon carried as a situational mainhand option across all three builds. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational"
+    }
+  ],
+  "builds": [
+    {
+      "id": "mage-offense",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "horde",
+      "default": true,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-rumination" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "power-of-the-scourge" },
+        "back": { "item": "watchers-cape-of-frozen-wrath", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-frozen-wrath", "enchant": "greater-intellect-bracer" },
+        "hands": { "item": "gnoll-casting-gloves", "enchant": "frost-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-rumination" },
+        "feet": { "item": "greenweave-sandals-of-frozen-wrath", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "lavishly-jeweled-ring", "enchant": null },
+          { "item": "advisors-ring", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "hook-dagger-of-frozen-wrath", "enchant": "spell-power-weapon" },
+        "ranged": { "item": "antipodean-rod", "enchant": null }
+      }
+    },
+    {
+      "id": "mage-midfield",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "engineers-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-stamina", "enchant": "superior-stamina" },
+        "hands": { "item": "magefist-gloves", "enchant": "frost-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "darkweave-breeches", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "advisors-ring", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "night-watch-shortsword", "enchant": "spell-power-weapon" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
+      }
+    },
+    {
+      "id": "mage-defense",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "horde",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "scouts-medallion", "enchant": null },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "firebane-cloak", "enchant": "shadow-resistance" },
+        "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
+        "wrist": { "item": "greenweave-bracers-of-stamina", "enchant": "superior-stamina" },
+        "hands": { "item": "pagan-mitts-of-the-eagle", "enchant": "frost-power-gloves" },
+        "waist": { "item": "kellers-girdle", "enchant": null },
+        "legs": { "item": "shimmering-trousers-of-the-eagle", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-sylvanas", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-horde", "enchant": null },
+          { "item": "arena-grand-master", "enchant": null }
+        ],
+        "mainhand": { "item": "night-watch-shortsword", "enchant": "mighty-intellect-weapon" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null }
+      }
+    }
+  ]
+}
