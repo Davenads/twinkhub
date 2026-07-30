@@ -105,21 +105,21 @@
     "paladin": [
       { "spell": "Judgement of Righteousness", "rank": 1, "coefficient": 0.123, "type": "direct-damage" },
       { "spell": "Judgement of Righteousness", "rank": 2, "coefficient": 0.268, "type": "direct-damage" },
-      { "spell": "Judgement of Righteousness", "rank": 3, "coefficient": 0.396, "type": "direct-damage", "confirmed": false, "notes": "Rank 3 value not confirmed by Wowhead." },
+      { "spell": "Judgement of Righteousness", "rank": 3, "coefficient": 0.396, "type": "direct-damage", "notes": "Instant-cast base (1.5/3.5 = 0.4286) with the rank-3 downranking penalty (learned level 18: 1 - 0.0375*2 = 0.925) = 0.396; reproduces confirmed ranks 1 (L1) and 2 (L10). Rank levels per Wowhead Classic spell=20282; downranking formula per Vanilla WoW Wiki." },
       { "spell": "Seal of Righteousness", "rank": 1, "coefficient": 0.029, "type": "direct-damage" },
       { "spell": "Seal of Righteousness", "rank": 2, "coefficient": 0.063, "type": "direct-damage" },
       { "spell": "Seal of Righteousness", "rank": 3, "coefficient": 0.093, "type": "direct-damage" },
       { "spell": "Holy Light", "rank": 1, "coefficient": 0.205, "type": "direct-heal" },
       { "spell": "Holy Light", "rank": 2, "coefficient": 0.339, "type": "direct-heal" },
-      { "spell": "Holy Light", "rank": 3, "coefficient": 0.554, "type": "direct-heal", "confirmed": false, "notes": "Rank 3 value not confirmed by Wowhead." }
+      { "spell": "Holy Light", "rank": 3, "coefficient": 0.554, "type": "direct-heal", "notes": "Cast-time base (2.5/3.5 = 0.7143) with the rank-3 downranking penalty (learned level 14: 1 - 0.0375*6 = 0.775) = 0.554; reproduces confirmed ranks 1 (L1) and 2 (L6). Downranking formula per Vanilla WoW Wiki / Blizzard forums." }
     ],
     "hunter": [
-      { "spell": "Arcane Shot", "rank": 1, "coefficient": 0.204, "type": "direct-damage", "confirmed": false, "notes": "Scales with ranged attack power, not spell power." },
-      { "spell": "Arcane Shot", "rank": 2, "coefficient": 0.3, "type": "direct-damage", "confirmed": false, "notes": "Scales with ranged attack power, not spell power." },
-      { "spell": "Serpent Sting", "rank": 1, "coefficient": 0.08, "type": "dot", "confirmed": false, "notes": "Per tick; scales with ranged attack power, not spell power." },
-      { "spell": "Serpent Sting", "rank": 2, "coefficient": 0.125, "type": "dot", "confirmed": false, "notes": "Per tick; scales with ranged attack power, not spell power." },
-      { "spell": "Serpent Sting", "rank": 3, "coefficient": 0.185, "type": "dot", "confirmed": false, "notes": "Per tick; scales with ranged attack power, not spell power." },
-      { "spell": "Mend Pet", "rank": 1, "coefficient": 0.14, "type": "hot", "confirmed": false, "notes": "Pet heal; does not scale with the hunter's spell power." }
+      { "spell": "Arcane Shot", "rank": 1, "coefficient": 0, "type": "direct-damage", "notes": "Classic Era: deals flat damage and does not scale with spell power (no spell-power coefficient)." },
+      { "spell": "Arcane Shot", "rank": 2, "coefficient": 0, "type": "direct-damage", "notes": "Classic Era: deals flat damage and does not scale with spell power (no spell-power coefficient)." },
+      { "spell": "Serpent Sting", "rank": 1, "coefficient": 0, "type": "dot", "notes": "Classic Era: flat damage per tick; does not scale with spell power (no spell-power coefficient)." },
+      { "spell": "Serpent Sting", "rank": 2, "coefficient": 0, "type": "dot", "notes": "Classic Era: flat damage per tick; does not scale with spell power (no spell-power coefficient)." },
+      { "spell": "Serpent Sting", "rank": 3, "coefficient": 0, "type": "dot", "notes": "Classic Era: flat damage per tick; does not scale with spell power (no spell-power coefficient)." },
+      { "spell": "Mend Pet", "rank": 1, "coefficient": 0, "type": "hot", "notes": "Classic Era: pet heal; does not scale with the hunter's spell power (no spell-power coefficient)." }
     ]
   }
 }
