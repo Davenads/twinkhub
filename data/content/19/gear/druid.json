@@ -8,8 +8,8 @@
       "source": { "type": "drop", "detail": "Low-level drop with the of Stamina random suffix (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stamina bracers for the flag-carrier build; enchanted with Superior Stamina. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Stamina bracers for the flag-carrier build; enchanted with Superior Stamina. wowheadId is the base item Wrangler's Wristbands (item=15331, green leather wrist, ilvl 23) confirmed via Wowhead Classic; the of Stamina bonus is a random suffix. Verify exact suffix stats and required level at authoring.",
+      "wowheadId": 15331,
       "priority": "core",
       "enchant": "superior-stamina"
     },
@@ -20,19 +20,20 @@
       "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Intellect/stamina leather legs for the flag-carrier build; enchanted with Lesser Arcanum of Constitution. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Intellect/stamina leather legs for the flag-carrier build; enchanted with Lesser Arcanum of Constitution. wowheadId is the base item Scouting Trousers (item=6587, green leather legs, ilvl 24) confirmed via Wowhead Classic; the of the Eagle bonus is a random suffix. Verify exact suffix stats and required level at authoring.",
+      "wowheadId": 6587,
       "priority": "core"
     },
     {
       "id": "face-smasher",
       "name": "Face Smasher",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": { "type": "drop", "detail": "Rare drop from Son of Arugal / trash in Shadowfang Keep (item level 21)" },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "One-hand mace carried as a caster stat-stick for the flag-carrier build; enchant varies by build (Mighty Intellect, Healing Power, Mighty Spirit). Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "reqLevel": 16,
+      "stats": { "strength": 3, "stamina": 3 },
+      "notes": "One-hand mace (25-48 dmg, 2.60 speed, +3 Str +3 Sta, ilvl 21, Requires Level 16) confirmed via Wowhead Classic; carried as a caster stat-stick for the flag-carrier build; enchant varies by build (Mighty Intellect, Healing Power, Mighty Spirit).",
+      "wowheadId": 1483,
       "priority": "core",
       "enchant": "mighty-intellect-weapon"
     }
