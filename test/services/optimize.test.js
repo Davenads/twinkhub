@@ -125,5 +125,5 @@ test('renderOptimize surfaces the rogue anchor and its class consumable on the r
   assert.ok(names.some((n) => n.startsWith('Core slot coverage')), 'rogue has a coverage line');
   // Shadowfang covers mainhand, so it is not reported missing.
   assert.ok(!(field(embeds, 'Core slot coverage') ?? '').includes('mainhand'));
-  assert.ok(field(embeds, 'Consumables to carry').includes('Venomhide Poison'), 'rogue-only poison shows');
+  assert.ok(field(embeds, 'Consumables to carry').includes('Thistle Tea'), 'rogue-only Thistle Tea shows');
 });

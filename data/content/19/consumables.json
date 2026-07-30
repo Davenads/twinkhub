@@ -20,23 +20,23 @@
       "notes": "For mana-using classes. Lesser Mana Potion (item 3385, Requires Level 14) is the highest mana potion usable at 19; Mana Potion requires level 22. Confirmed via Wowhead Classic item data."
     },
     {
-      "id": "green-tea-leaf",
-      "name": "Green Tea Leaf",
+      "id": "heavy-silk-bandage",
+      "name": "Heavy Silk Bandage",
       "type": "food",
-      "effect": "Off-cooldown heal that does NOT share the potion cooldown; stack around a healing potion for extra effective healing.",
+      "effect": "Channeled First Aid heal that does NOT share the potion cooldown; stack around a healing potion for extra effective healing. Breaks on damage taken and applies the 60s Recently Bandaged debuff.",
       "faction": "both",
       "reqLevel": null,
-      "notes": "Verify source/reqLevel at authoring."
+      "notes": "Item 6451, requires First Aid 125 (no character-level requirement); heals 640 over 8 sec. Best bandage usable at 19 \u2014 Mageweave bandages need Expert First Aid (level 20+). Schema has no bandage type; modeled as food (the off-potion-cooldown heal role). Confirmed via Wowhead Classic item data."
     },
     {
-      "id": "venomhide-poison",
-      "name": "Venomhide Poison",
-      "type": "poison",
-      "effect": "Long-duration weapon poison with stacking damage per tick \u2014 a meaningful DPS add.",
+      "id": "thistle-tea",
+      "name": "Thistle Tea",
+      "type": "potion",
+      "effect": "Instantly restores 100 energy on its own 5-minute cooldown (does NOT share the standard potion cooldown). Rogue burst-energy tool for a flag grab or kill.",
       "faction": "both",
       "classes": ["rogue"],
-      "reqLevel": null,
-      "notes": "Verify stack/application specifics at authoring."
+      "reqLevel": 5,
+      "notes": "Item 7676, Rogue-only, Requires Level 5; restores 100 energy, 5-min cooldown. Rogues can carry these at 19 (poisons unlock at level 20, so a 19 rogue uses no weapon poisons). Confirmed via Wowhead Classic item data."
     },
     {
       "id": "heavy-dynamite",
@@ -45,8 +45,8 @@
       "effect": "Thrown AoE fire damage (Engineering) \u2014 burst, finisher, and tag utility.",
       "faction": "both",
       "reqLevel": null,
-      "source": { "type": "profession", "detail": "Engineering (crafted)" },
-      "notes": "Verify rank/damage at authoring."
+      "source": { "type": "profession", "detail": "Engineering 125 (crafted)" },
+      "notes": "Item 4378, inflicts 128\u2013172 Fire damage in a 5-yard radius on a 1-minute cooldown; requires Engineering 125 to craft, no character-level requirement. Confirmed via Wowhead Classic item data."
     }
   ]
 }

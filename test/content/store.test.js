@@ -384,12 +384,12 @@ test('loadContentStore loads consumables with valid class references and filters
   assert.ok(potions.length > 0 && potions.every((c) => c.type === 'potion'));
 
   // Class filter keeps universal consumables plus class-specific ones; rogue sees
-  // the poison, a class without a poison does not.
+  // its Thistle Tea, a class without it does not.
   const rogue = consumablesFor(store, '19', { className: 'Rogue' });
-  assert.ok(rogue.some((c) => c.id === 'venomhide-poison'), 'rogue sees its poison');
+  assert.ok(rogue.some((c) => c.id === 'thistle-tea'), 'rogue sees its Thistle Tea');
   assert.ok(rogue.some((c) => !c.classes), 'rogue also sees universal consumables');
   const priest = consumablesFor(store, '19', { className: 'priest' });
-  assert.ok(!priest.some((c) => c.id === 'venomhide-poison'), 'priest does not see the rogue poison');
+  assert.ok(!priest.some((c) => c.id === 'thistle-tea'), 'priest does not see the rogue Thistle Tea');
 
   assert.equal(bracketConsumables(store, '49'), null);
   assert.deepEqual(consumablesFor(store, '49', { type: 'potion' }), []);
