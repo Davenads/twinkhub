@@ -262,6 +262,16 @@
       "classes": ["warrior", "hunter", "rogue", "shaman", "druid"]
     },
     {
+      "id": "weapon-agility",
+      "name": "Enchant Weapon - Agility",
+      "slot": "weapon",
+      "effect": "+15 Agility.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "One-hand agility weapon enchant with no level requirement; an agility stat stick for 1H weapons. Verify exact value at authoring.",
+      "classes": ["warrior", "hunter", "rogue", "shaman", "druid"]
+    },
+    {
       "id": "greater-intellect-bracer",
       "name": "Enchant Bracer - Greater Intellect",
       "slot": "bracer",

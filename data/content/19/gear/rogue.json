@@ -34,17 +34,6 @@
       "notes": "Gloves for the offensive build; enchanted with Superior Agility. Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
-    },
-    {
-      "id": "tunic-of-westfall",
-      "name": "Tunic of Westfall",
-      "slot": "chest",
-      "source": { "type": "drop", "detail": "The Deadmines / Westfall area (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Chest pick for the Alliance offense build; enchanted with Greater Stats. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
     }
   ],
   "builds": [

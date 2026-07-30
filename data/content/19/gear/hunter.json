@@ -80,6 +80,40 @@
       "wowheadId": null,
       "priority": "core",
       "enchant": "agility-2h"
+    },
+    {
+      "id": "sentinels-blade",
+      "name": "Sentinel's Blade",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand sword for the Alliance defensive build; enchanted with a 1H Agility weapon enchant. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "weapon-agility"
+    },
+    {
+      "id": "quiver-of-the-night-watch",
+      "name": "Quiver of the Night Watch",
+      "slot": "quiver",
+      "source": { "type": "quest", "detail": "Alliance quest: The Night Watch (verify exact source)" },
+      "faction": "alliance",
+      "reqLevel": null,
+      "notes": "Green-or-better quiver from the Alliance Night Watch quest line; the Alliance-side quiver across all three hunter builds. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "wranglers-wristbands-of-the-falcon",
+      "name": "Wrangler's Wristbands of the Falcon",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Falcon (+Int/+crit) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect bracers for the Alliance midfield build; enchanted with Greater Intellect. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
     }
   ],
   "builds": [
@@ -175,6 +209,100 @@
         "ranged": { "item": "venomstrike", "enchant": "accurate-scope" },
         "ammo": { "item": "sharp-arrow", "enchant": null },
         "quiver": { "item": "medium-quiver", "enchant": null }
+      }
+    },
+    {
+      "id": "hunter-offense-alliance",
+      "name": "Offense",
+      "role": "offense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-voracity" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentry-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tunic-of-westfall", "enchant": "greater-stats" },
+        "wrist": { "item": "mindthrust-bracers", "enchant": "greater-intellect-bracer" },
+        "hands": { "item": "scouting-gloves-of-the-falcon", "enchant": "superior-agility" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-voracity" },
+        "feet": { "item": "feet-of-the-lynx", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "zircon-band-of-frost-resistance", "enchant": null },
+          { "item": "zircon-band-of-frost-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "massive-battle-axe-of-agility", "enchant": "agility-2h" },
+        "ranged": { "item": "venomstrike", "enchant": "accurate-scope" },
+        "ammo": { "item": "sharp-arrow", "enchant": null },
+        "quiver": { "item": "quiver-of-the-night-watch", "enchant": null }
+      }
+    },
+    {
+      "id": "hunter-midfield-alliance",
+      "name": "Midfield",
+      "role": "midfield",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-voracity" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "might-of-the-scourge" },
+        "back": { "item": "sentry-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "tunic-of-westfall", "enchant": "greater-stats" },
+        "wrist": { "item": "wranglers-wristbands-of-the-falcon", "enchant": "greater-intellect-bracer" },
+        "hands": { "item": "scouting-gloves-of-the-falcon", "enchant": "superior-agility" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-voracity" },
+        "feet": { "item": "feet-of-the-lynx", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "legionnaires-band", "enchant": null },
+          { "item": "lavishly-jeweled-ring", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "massive-battle-axe-of-agility", "enchant": "agility-2h" },
+        "ranged": { "item": "venomstrike", "enchant": "accurate-scope" },
+        "ammo": { "item": "sharp-arrow", "enchant": null },
+        "quiver": { "item": "quiver-of-the-night-watch", "enchant": null }
+      }
+    },
+    {
+      "id": "hunter-defense-alliance",
+      "name": "Defense",
+      "role": "defense",
+      "faction": "alliance",
+      "default": false,
+      "slots": {
+        "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
+        "neck": { "item": "sentinels-medallion", "enchant": null },
+        "shoulder": { "item": "feral-shoulder-pads", "enchant": "fortitude-of-the-scourge" },
+        "back": { "item": "sentry-cloak", "enchant": "greater-resistance" },
+        "chest": { "item": "blackened-defias-armor", "enchant": "greater-stats" },
+        "wrist": { "item": "wranglers-wristbands-of-the-monkey", "enchant": "superior-stamina" },
+        "hands": { "item": "scouting-gloves-of-the-monkey", "enchant": "superior-agility" },
+        "waist": { "item": "deviate-scale-belt", "enchant": null },
+        "legs": { "item": "leggings-of-the-fang", "enchant": "lesser-arcanum-of-constitution" },
+        "feet": { "item": "nat-pagles-extreme-anglers", "enchant": "minor-speed-boots" },
+        "finger": [
+          { "item": "seal-of-wrynn", "enchant": null },
+          { "item": "zircon-band-of-shadow-resistance", "enchant": null }
+        ],
+        "trinket": [
+          { "item": "insignia-of-the-alliance", "enchant": null },
+          { "item": "minor-recombobulator", "enchant": null }
+        ],
+        "mainhand": { "item": "sentinels-blade", "enchant": "weapon-agility" },
+        "offhand": { "item": "furbolg-medicine-pouch", "enchant": null },
+        "ranged": { "item": "venomstrike", "enchant": "accurate-scope" },
+        "ammo": { "item": "sharp-arrow", "enchant": null },
+        "quiver": { "item": "quiver-of-the-night-watch", "enchant": null }
       }
     }
   ]
