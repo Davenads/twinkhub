@@ -2,17 +2,6 @@
   "class": "mage",
   "items": [
     {
-      "id": "reinforced-woolen-shoulders",
-      "name": "Reinforced Woolen Shoulders",
-      "slot": "shoulder",
-      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Crafted cloth shoulders used across all three builds; enchant varies (Fortitude/Power of the Scourge). Verify recipe and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "watchers-cape-of-frozen-wrath",
       "name": "Watcher's Cape of Frozen Wrath",
       "slot": "back",
@@ -23,18 +12,6 @@
       "wowheadId": null,
       "priority": "core",
       "enchant": "greater-resistance"
-    },
-    {
-      "id": "greenweave-bracers-of-stamina",
-      "name": "Greenweave Bracers of Stamina",
-      "slot": "wrist",
-      "source": { "type": "profession", "detail": "Leatherworking (crafted) with the of Stamina random suffix (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Stamina bracers for the defensive/midfield builds; enchanted with Superior Stamina. Verify recipe and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core",
-      "enchant": "superior-stamina"
     },
     {
       "id": "greenweave-bracers-of-frozen-wrath",
@@ -140,17 +117,6 @@
       "notes": "Wand carried in the ranged slot for the offensive build. Verify item identity, stats, and required level at authoring.",
       "wowheadId": null,
       "priority": "core"
-    },
-    {
-      "id": "gravestone-scepter",
-      "name": "Gravestone Scepter",
-      "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "One-hand caster weapon carried as a situational mainhand option across all three builds. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
-      "priority": "situational"
     }
   ],
   "builds": [

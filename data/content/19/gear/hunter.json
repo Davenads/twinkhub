@@ -47,17 +47,6 @@
       "priority": "core"
     },
     {
-      "id": "mindthrust-bracers",
-      "name": "Mindthrust Bracers",
-      "slot": "wrist",
-      "source": { "type": "drop", "detail": "The Deadmines (dungeon drop)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Intellect bracers for the offensive build; enchanted with Greater Intellect. Verify stats and required level at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "scouting-gloves-of-the-eagle",
       "name": "Scouting Gloves of the Eagle",
       "slot": "hands",

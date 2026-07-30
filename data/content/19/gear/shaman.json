@@ -2,17 +2,6 @@
   "class": "shaman",
   "items": [
     {
-      "id": "battle-healers-cloak",
-      "name": "Battle Healer's Cloak",
-      "slot": "back",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Healing-leaning cloak for the defensive build; enchanted with Greater Resistance. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "sentry-cape-of-the-gorilla",
       "name": "Sentry Cape of the Gorilla",
       "slot": "back",
@@ -33,18 +22,6 @@
       "notes": "Gloves for the midfield/offense builds; enchanted with Superior Agility (midfield) or Greater Strength (offense). Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
-    },
-    {
-      "id": "jagged-star-of-healing",
-      "name": "Jagged Star of Healing",
-      "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop with the of Healing random suffix (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "One-hand mace for the defensive/restoration build; enchanted with Healing Power. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
-      "priority": "core",
-      "enchant": "healing-power-weapon"
     },
     {
       "id": "forester-axe-of-the-whale",

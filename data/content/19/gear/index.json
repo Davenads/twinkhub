@@ -585,6 +585,74 @@
       "wowheadId": null,
       "priority": "situational",
       "enchant": "mighty-intellect-weapon"
+    },
+    {
+      "id": "reinforced-woolen-shoulders",
+      "name": "Reinforced Woolen Shoulders",
+      "slot": "shoulder",
+      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Crafted cloth shoulders recurring across cloth caster class builds; enchant varies by build (Fortitude/Power/Resilience of the Scourge). Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "greenweave-bracers-of-stamina",
+      "name": "Greenweave Bracers of Stamina",
+      "slot": "wrist",
+      "source": { "type": "profession", "detail": "Leatherworking (crafted) with the of Stamina random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stamina bracers recurring across defensive caster class builds; typically enchanted with Superior Stamina. Verify recipe and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "superior-stamina"
+    },
+    {
+      "id": "gravestone-scepter",
+      "name": "Gravestone Scepter",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand caster weapon carried as a situational mainhand option across caster class builds. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational"
+    },
+    {
+      "id": "battle-healers-cloak",
+      "name": "Battle Healer's Cloak",
+      "slot": "back",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Healing-leaning cloak recurring across defensive/support class builds; typically enchanted with Greater Resistance. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "jagged-star-of-healing",
+      "name": "Jagged Star of Healing",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop with the of Healing random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand mace recurring across restoration/support class builds; typically enchanted with Healing Power. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "healing-power-weapon"
+    },
+    {
+      "id": "mindthrust-bracers",
+      "name": "Mindthrust Bracers",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "The Deadmines (dungeon drop)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect bracers recurring across caster class builds; enchant varies by build (Greater Intellect, Healing Power). Verify stats and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core"
     }
   ]
 }
