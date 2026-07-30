@@ -762,8 +762,8 @@
       "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Gloves recurring across warrior and paladin builds; enchanted with Superior Agility (defense/midfield) or Greater Strength (offense). Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Gloves recurring across warrior and paladin builds; enchanted with Superior Agility (defense/midfield) or Greater Strength (offense). Verify stats and required level at authoring.",
+      "wowheadId": 12994,
       "priority": "core"
     },
     {
@@ -828,8 +828,8 @@
       "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stamina bracers shared by paladin flag-carrier and Alliance warrior defense/midfield builds; enchanted with Superior Stamina. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Mail wrist (confirmed via /dump) shared by paladin flag-carrier and Alliance warrior defense/midfield builds; enchanted with Superior Stamina. Verify stats and required level at authoring.",
+      "wowheadId": 7003,
       "priority": "core"
     },
     {
@@ -839,8 +839,8 @@
       "source": { "type": "drop", "detail": "The Deadmines / Westfall area (verify exact source)" },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Leg pick shared by paladin and Alliance warrior midfield/offense builds; enchanted with a Lesser Arcanum (Constitution or Voracity). Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Leg pick shared by paladin and Alliance warrior midfield/offense builds; enchanted with a Lesser Arcanum (Constitution or Voracity). Verify stats and required level at authoring.",
+      "wowheadId": 6087,
       "priority": "core"
     }
   ]
