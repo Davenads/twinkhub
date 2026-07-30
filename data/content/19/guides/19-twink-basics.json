@@ -14,7 +14,7 @@
     },
     {
       "heading": "Enchants win the bracket",
-      "body": "Twinking hinges on **enchants with no level requirement**: they let a level-19 character carry effects far above the bracket's natural power. Head has no enchant at this bracket, which is why Engineering goggles matter. Browse the no-level-req list with `/enchant` and see what your core pieces should carry via `/optimize`."
+      "body": "Twinking hinges on **enchants with no level requirement**: they let a level-19 character carry effects far above the bracket's natural power. Even the head slot takes a Lesser Arcanum (Constitution / Voracity / Rumination), and the same arcanum applies to your legs. Browse the no-level-req list with `/enchant` and see what your core pieces should carry via `/optimize`."
     },
     {
       "heading": "Stats: stamina for WSG",

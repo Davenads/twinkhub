@@ -90,7 +90,7 @@ expansion is pure copy-the-shape-and-fill-data.
   "faction": "both",
   "stats": { "agility": 6, "stamina": 6, "spirit": 6 },
   "reqLevel": 18,
-  "notes": "De-facto BiS head for many specs; head has no enchant at this bracket.",
+  "notes": "Strong Engineering head frame for many specs; takes a Lesser Arcanum head enchant like any head.",
   "wowheadId": null,
   "priority": "core"
 }
@@ -99,9 +99,10 @@ expansion is pure copy-the-shape-and-fill-data.
 `faction` ∈ `alliance | horde | both`.
 `priority` ∈ `core | situational | budget`.
 
-> ⚠️ The `notes` line above ("head has no enchant at this bracket") is **contradicted** by the
-> verified Cowblackout chart, which shows a universal Lesser Arcanum head enchant. Flagged in
-> `09-bis-reference.md`; correct here + in `enchants.json` when head gear is authored.
+> The head slot **does** take an enchant at this bracket: a no-level-req Lesser Arcanum
+> (Constitution / Voracity / Rumination, which also applies to legs), verified on the
+> Cowblackout chart. Corrected here and in `enchants.json`; Green Tinted Goggles remains a
+> strong head *frame* but is not a substitute for the enchant.
 
 ### Gear: builds (multi-loadout model)
 

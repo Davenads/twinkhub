@@ -28,7 +28,7 @@
       "faction": "both",
       "stats": { "agility": 6, "stamina": 6, "spirit": 6 },
       "reqLevel": 18,
-      "notes": "De-facto BiS head for many specs; head has no enchant at this bracket, which is why Engineering goggles matter.",
+      "notes": "Strong Engineering head frame for many specs (competes with Lucky Fishing Hat); takes a Lesser Arcanum head enchant like any head. Verify current stats.",
       "wowheadId": null,
       "priority": "core",
       "alternatives": ["lucky-fishing-hat"]

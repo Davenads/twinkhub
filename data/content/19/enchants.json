@@ -1,5 +1,5 @@
 {
-  "note": "Twinking hinges on enchants with no level requirement (flagged noLevelReq): they let a level-19 character carry effects far above the bracket's natural power. Head has no enchant at this bracket, which is why Engineering goggles matter. Verify exact values against Wowhead at authoring time.",
+  "note": "Twinking hinges on enchants with no level requirement (flagged noLevelReq): they let a level-19 character carry effects far above the bracket's natural power. The head slot takes a Lesser Arcanum (Constitution / Voracity / Rumination), which also applies to legs; Engineering goggles (Green Tinted Goggles) remain a strong head frame that still takes the arcanum on top. Verify exact values against Wowhead at authoring time.",
   "enchants": [
     {
       "id": "fiery-weapon",

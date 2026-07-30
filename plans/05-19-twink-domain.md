@@ -199,8 +199,10 @@ High-value examples (verify exact values at authoring):
   slow) — other chance-on-hit melee options.
 - **+15 Agility** / **+22 Intellect** weapon enchants — flat stat sticks for agi/caster.
 - Standard slot enchants (bracer/gloves/chest/cloak) chosen per class's stat priority.
-- **Head slot has no enchant at this bracket** — which is *why* Engineering goggles matter
-  (below). Record this in `19/meta.json` notes.
+- **Head slot takes a Lesser Arcanum enchant** (Constitution / Voracity / Rumination, no level
+  requirement, also applies to legs) — verified on the Cowblackout chart. Engineering goggles
+  remain a strong head *frame* but are not a substitute for the enchant. Record this in
+  `19/meta.json` notes.
 
 ## Professions
 
