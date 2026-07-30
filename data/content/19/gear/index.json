@@ -93,8 +93,8 @@
         "detail": "World/dungeon drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Leather shoulder recurring across physical class builds on the BiS chart; typically enchanted with Might of the Scourge. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=15313).",
+      "reqLevel": 9,
+      "notes": "White leather shoulder (ilvl 15, Requires Level 9, 3 Armor, NO primary stats) confirmed via Warcraft Wiki. FLAG: item 15313 is a stat-less common world drop; its chart value is purely as a cheap Might of the Scourge enchant carrier, not for its own stats. Verify this is the intended shoulder.",
       "wowheadId": 15313,
       "priority": "core"
     },
@@ -107,8 +107,13 @@
         "detail": "The Deadmines (dungeon drop)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Leather chest recurring across many class builds on the BiS chart. Verify exact required level, stats, and current-meta status at authoring. wowheadId confirmed via Wowhead Classic (item=10399).",
+      "reqLevel": 19,
+      "stats": {
+        "strength": 4,
+        "agility": 3,
+        "stamina": 11
+      },
+      "notes": "Blue leather chest (Classic version: ilvl 24, Requires Level 19, +4 Str, +3 Agi, +11 Sta) confirmed via Warcraft Wiki; drops from Edwin VanCleef in The Deadmines. Recurs across many physical class builds on the BiS chart. NOTE: retail/modern version has different stats.",
       "wowheadId": 10399,
       "priority": "core"
     },
@@ -165,8 +170,13 @@
         "detail": "Wailing Caverns (dungeon drop)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Leather legs from the Fang set in Wailing Caverns; a common melee-twink leg piece recurring across class builds. Verify stats and required level at authoring. wowheadId confirmed via Wowhead Classic (item=10410).",
+      "reqLevel": 18,
+      "stats": {
+        "strength": 5,
+        "agility": 9,
+        "stamina": 4
+      },
+      "notes": "Blue leather legs from the Embrace of the Viper (Fang) set (Classic version: ilvl 23, Requires Level 18, +5 Str, +9 Agi, +4 Sta) confirmed via Warcraft Wiki; drops from Lord Cobrahn in Wailing Caverns. A common melee-twink leg piece across physical class builds.",
       "wowheadId": 10410,
       "priority": "core"
     },
@@ -308,7 +318,11 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Common shoulder pick from the gearing guides. Verify source and stats. wowheadId confirmed via Wowhead Classic (item=10657).",
+      "stats": {
+        "intellect": 6,
+        "stamina": 3
+      },
+      "notes": "Cloth shoulder (ilvl 26, +6 Int, +3 Sta) confirmed via Warcraft Wiki; quest reward (In Nightmares). FLAG: wiki lists Required Level 25 (may be the quest level rather than the item req); if the item genuinely requires level 25 it is UNUSABLE at 19. Verify the item's actual required level before relying on this as a level-19 pick.",
       "wowheadId": 10657,
       "priority": "core"
     },
@@ -321,8 +335,12 @@
         "detail": "World drop (low level)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Stat cloak; swap for a resistance cloak by matchup. Verify source and stats. wowheadId confirmed via Wowhead Classic (item=2059).",
+      "reqLevel": 9,
+      "stats": {
+        "agility": 1,
+        "stamina": 2
+      },
+      "notes": "Stat cloak (ilvl 15, Requires Level 9, +1 Agi, +2 Sta) confirmed via Warcraft Wiki; rare world drop favored by twinks. Swap for a resistance cloak by matchup.",
       "wowheadId": 2059,
       "priority": "core"
     },
@@ -335,8 +353,11 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Resistance-leaning cloak recurring across defensive/flag-carrier builds on the BiS chart; often enchanted for shadow resistance. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=12979).",
+      "reqLevel": 8,
+      "stats": {
+        "stamina": 2
+      },
+      "notes": "Back piece (ilvl 13, Requires Level 8, +2 Sta, +2 Fire Resistance) confirmed via Warcraft Wiki; rare drop in The Barrens. Resistance-leaning cloak for defensive/flag-carrier builds; often enchanted for shadow resistance.",
       "wowheadId": 12979,
       "priority": "situational"
     },
@@ -377,8 +398,11 @@
         "detail": "World drop (BoE)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Movement speed is highly valued in WSG, especially for flag carriers. Verify stats. wowheadId confirmed via Wowhead Classic (item=1121).",
+      "reqLevel": 9,
+      "stats": {
+        "stamina": 2
+      },
+      "notes": "Leather feet (ilvl 15, Requires Level 9, +2 Sta) confirmed via Warcraft Wiki; world drop favored by twink rogues/hunters. FLAG: wiki renders the other stat as '+2 Agility or Intellect' (modern primary-stat rendering); Classic value is +2 Agility per twink usage but the exact split is unconfirmed, so agility is omitted from stats pending a Classic-specific source. Movement speed is highly valued in WSG.",
       "wowheadId": 1121,
       "priority": "core",
       "enchant": "minor-speed-boots",
@@ -541,8 +565,12 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Leather chest recurring across defensive class builds on the BiS chart. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=1486).",
+      "reqLevel": 19,
+      "stats": {
+        "intellect": 10,
+        "stamina": 6
+      },
+      "notes": "Cloth chest (Classic version: ilvl 24, Requires Level 19, +10 Int, +6 Sta) confirmed via Warcraft Wiki; world drop. Recurs across defensive caster class builds. NOTE: retail version is level-squished with different stats.",
       "wowheadId": 1486,
       "priority": "core"
     },
