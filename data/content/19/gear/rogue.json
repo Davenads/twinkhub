@@ -27,17 +27,6 @@
       "enchant": "fiery-weapon"
     },
     {
-      "id": "wranglers-wristbands-of-the-monkey",
-      "name": "Wrangler's Wristbands of the Monkey",
-      "slot": "wrist",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Stamina/agility bracers for the survivability-leaning build. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "wranglers-wristbands-of-power",
       "name": "Wrangler's Wristbands of Power",
       "slot": "wrist",
@@ -49,17 +38,6 @@
       "priority": "core"
     },
     {
-      "id": "scouting-gloves-of-the-monkey",
-      "name": "Scouting Gloves of the Monkey",
-      "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Agility/stamina gloves for the midfield build; enchanted with Superior Agility. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "bristlebark-gloves",
       "name": "Bristlebark Gloves",
       "slot": "hands",
@@ -67,17 +45,6 @@
       "faction": "both",
       "reqLevel": null,
       "notes": "Gloves for the offensive build; enchanted with Superior Agility. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "screecher-belt",
-      "name": "Screecher Belt",
-      "slot": "waist",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Waist pick for the offensive build. Verify source and stats at authoring.",
       "wowheadId": null,
       "priority": "core"
     }

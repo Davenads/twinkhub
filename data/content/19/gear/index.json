@@ -190,6 +190,51 @@
       "priority": "situational"
     },
     {
+      "id": "runic-darkblade",
+      "name": "Runic Darkblade",
+      "slot": "mainhand",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand sword recurring across physical class builds as a weapon-enchant carrier. Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "situational",
+      "enchant": "fiery-weapon"
+    },
+    {
+      "id": "screecher-belt",
+      "name": "Screecher Belt",
+      "slot": "waist",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Waist pick recurring across offensive class builds on the BiS chart. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "wranglers-wristbands-of-the-monkey",
+      "name": "Wrangler's Wristbands of the Monkey",
+      "slot": "wrist",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stamina/agility bracers recurring across survivability-leaning class builds. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "scouting-gloves-of-the-monkey",
+      "name": "Scouting Gloves of the Monkey",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Agility/stamina gloves recurring across class builds; typically enchanted with Superior Agility. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
       "id": "talbar-mantle",
       "name": "Talbar Mantle",
       "slot": "shoulder",
