@@ -30,12 +30,11 @@
       },
       "faction": "both",
       "stats": {
-        "agility": 6,
-        "stamina": 6,
-        "spirit": 6
+        "stamina": 8,
+        "spirit": 7
       },
-      "reqLevel": 18,
-      "notes": "Strong Engineering head frame for many specs (competes with Lucky Fishing Hat); takes a Lesser Arcanum head enchant like any head. Verify current stats. wowheadId confirmed via Wowhead Classic (item=4385).",
+      "reqLevel": null,
+      "notes": "Engineering goggles (+8 Sta, +7 Spi) confirmed via Wowhead Classic item data (item=4385, ilvl 30, no level requirement). Earlier +Agi reading was retail data and is corrected.",
       "wowheadId": 4385,
       "priority": "core",
       "alternatives": [
@@ -54,7 +53,10 @@
       "reqLevel": null,
       "notes": "Alternative head; harder to obtain than the goggles. Verify current stats. wowheadId confirmed via Wowhead Classic (item=19972).",
       "wowheadId": 19972,
-      "priority": "situational"
+      "priority": "situational",
+      "stats": {
+        "stamina": 15
+      }
     },
     {
       "id": "sentinels-medallion",
@@ -65,10 +67,14 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Common neck pick from the gearing guides; the neck slot otherwise lacks a standout at this bracket. wowheadId 20444 is the Classic Era (Requires Level 18) 10-19 bracket version confirmed via Warcraft Wiki; Alliance Warsong Gulch reputation reward (Silverwing Sentinels, from Illiyana Moonblaze in Ashenvale); converts to Scout's Medallion for Horde.",
       "wowheadId": 20444,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 2,
+        "agility": 6
+      }
     },
     {
       "id": "scouts-medallion",
@@ -79,10 +85,14 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Recurring neck pick across many class builds on the BiS chart. wowheadId 20442 is the Classic Era (Requires Level 18) 10-19 bracket version confirmed via Warcraft Wiki; Horde Warsong Gulch reputation reward (Warsong Outriders, from Kelm Hargunth in The Barrens); converts to Sentinel's Medallion for Alliance.",
       "wowheadId": 20442,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 2,
+        "agility": 6
+      }
     },
     {
       "id": "feral-shoulder-pads",
@@ -93,8 +103,8 @@
         "detail": "World/dungeon drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": 9,
-      "notes": "White leather shoulder (ilvl 15, Requires Level 9, 3 Armor, NO primary stats) confirmed via Warcraft Wiki. FLAG: item 15313 is a stat-less common world drop; its chart value is purely as a cheap Might of the Scourge enchant carrier, not for its own stats. Verify this is the intended shoulder.",
+      "reqLevel": 19,
+      "notes": "Stat-less white leather shoulder (item=15313, ilvl 24, Requires Level 19); carried purely as an enchant vessel.",
       "wowheadId": 15313,
       "priority": "core"
     },
@@ -130,7 +140,10 @@
       "notes": "Boots recurring across several class builds on the BiS chart; typically enchanted with Minor Speed. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=19969).",
       "wowheadId": 19969,
       "priority": "core",
-      "enchant": "minor-speed-boots"
+      "enchant": "minor-speed-boots",
+      "stats": {
+        "stamina": 12
+      }
     },
     {
       "id": "zircon-band-of-nature-resistance",
@@ -141,7 +154,7 @@
         "detail": "Low-level drop of the Zircon Band base (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Nature-resistance ring used in resistance-oriented builds on the BiS chart. Verify source and stats at authoring. wowheadId is the base item Zircon Band (item=11967) confirmed via Wowhead Classic; the resistance value is a random suffix.",
       "wowheadId": 11967,
       "priority": "situational"
@@ -155,7 +168,7 @@
         "detail": "Shadowfang Keep (dungeon drop)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 19,
       "notes": "Iconic low-level one-hand sword from Shadowfang Keep and a common melee-twink weapon across physical class builds; much of its value is the no-level-req weapon enchant it carries. Verify the exact required level (~18), stats, and current-meta status at authoring. wowheadId confirmed via Wowhead Classic (item=1482).",
       "wowheadId": 1482,
       "priority": "core",
@@ -208,10 +221,15 @@
         "detail": "Horde PvP reward (verify exact source)"
       },
       "faction": "horde",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Horde faction ring paired with a seal in midfield builds across classes. wowheadId 20429 is the Classic Era (Requires Level 18, ilvl 23) 10-19 bracket version confirmed via Warcraft Wiki; Horde Warsong Gulch reputation reward (Warsong Outriders - Honored).",
       "wowheadId": 20429,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 2,
+        "agility": 4,
+        "strength": 4
+      }
     },
     {
       "id": "keen-throwing-knife",
@@ -222,7 +240,7 @@
         "detail": "Low-level drop with the Keen (+crit) random suffix (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 11,
       "notes": "Thrown weapon occupying the ranged slot; the default ranged pick when not using a bow (no ammo required). Recurs across melee class builds. Verify source and stats at authoring. wowheadId is the base item Throwing Knife (item=3107) confirmed via Wowhead Classic; the Keen bonus is a random suffix.",
       "wowheadId": 3107,
       "priority": "core"
@@ -236,7 +254,7 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Bow alternative for the ranged slot; takes an Accurate Scope and requires ammo. Recurs across melee class builds. wowheadId 20437 is the Level-9/Classic-shared ID for this Warsong Gulch reputation reward (Warsong Outriders) inferred from the identical bracket pattern of its sibling WSG rewards on Warcraft Wiki; the bow lacked an explicit Classic row, so verify the exact 10-19 bracket ID at authoring.",
       "wowheadId": 20437,
       "priority": "situational",
@@ -251,7 +269,7 @@
         "detail": "Ammo vendor"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 10,
       "notes": "Ammunition for a bow/crossbow build; only needed when using a bow rather than a thrown weapon. wowheadId 2515 confirmed via Wowhead Classic (Requires Level 10, 3.5 dps, sold by General Goods/bowyer vendors).",
       "wowheadId": 2515,
       "priority": "situational"
@@ -282,11 +300,11 @@
       "faction": "both",
       "reqLevel": null,
       "stats": {
-        "agility": 6,
-        "intellect": 5,
-        "stamina": 3
+        "stamina": 3,
+        "spirit": 2,
+        "intellect": 5
       },
-      "notes": "Leather waist (ilvl 27, +6 Agi, +5 Int, +3 Sta, +2 Hit) confirmed via Warcraft Wiki; Horde quest reward (Bloodfury Bloodline). FLAG: wiki lists Required Level 26 (the quest level); if the item genuinely requires level 26 it is UNUSABLE at 19. reqLevel left null pending verification of the item's true required level.",
+      "notes": "Caster belt (+3 Sta, +2 Spi, +5 Int) confirmed via Wowhead Classic item data (item=16987, ilvl 27, no level requirement); usable at 19 despite the quest being higher level.",
       "wowheadId": 16987,
       "priority": "core"
     },
@@ -332,7 +350,7 @@
         "intellect": 6,
         "stamina": 3
       },
-      "notes": "Cloth shoulder (ilvl 26, +6 Int, +3 Sta) confirmed via Warcraft Wiki; quest reward (In Nightmares). FLAG: wiki lists Required Level 25 (may be the quest level rather than the item req); if the item genuinely requires level 25 it is UNUSABLE at 19. Verify the item's actual required level before relying on this as a level-19 pick.",
+      "notes": "Intellect/stamina mantle (+6 Int, +3 Sta) confirmed via Wowhead Classic item data (item=10657, ilvl 26, no level requirement); usable at 19.",
       "wowheadId": 10657,
       "priority": "core"
     },
@@ -345,12 +363,12 @@
         "detail": "World drop (low level)"
       },
       "faction": "both",
-      "reqLevel": 9,
+      "reqLevel": 19,
       "stats": {
-        "agility": 1,
-        "stamina": 2
+        "stamina": 5,
+        "agility": 4
       },
-      "notes": "Stat cloak (ilvl 15, Requires Level 9, +1 Agi, +2 Sta) confirmed via Warcraft Wiki; rare world drop favored by twinks. Swap for a resistance cloak by matchup.",
+      "notes": "Agility/stamina cloak (+5 Sta, +4 Agi) confirmed via Wowhead Classic item data (item=2059, ilvl 24, Requires Level 19).",
       "wowheadId": 2059,
       "priority": "core"
     },
@@ -363,11 +381,11 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": 8,
+      "reqLevel": 16,
       "stats": {
-        "stamina": 2
+        "stamina": 5
       },
-      "notes": "Back piece (ilvl 13, Requires Level 8, +2 Sta, +2 Fire Resistance) confirmed via Warcraft Wiki; rare drop in The Barrens. Resistance-leaning cloak for defensive/flag-carrier builds; often enchanted for shadow resistance.",
+      "notes": "Stamina cloak (+5 Sta, plus Shadow resistance) confirmed via Wowhead Classic item data (item=12979, ilvl 21, Requires Level 16).",
       "wowheadId": 12979,
       "priority": "situational"
     },
@@ -380,7 +398,7 @@
         "detail": "Low-level drop of the Zircon Band base (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Frost-resistance ring used in resistance-oriented builds on the BiS chart; situational against mages. Verify source and stats at authoring. wowheadId is the base item Zircon Band (item=11967) confirmed via Wowhead Classic; the resistance value is a random suffix.",
       "wowheadId": 11967,
       "priority": "situational"
@@ -394,7 +412,7 @@
         "detail": "Low-level drop of the Zircon Band base (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Shadow-resistance ring used in resistance-oriented builds on the BiS chart; situational against warlocks and shadow priests. Verify source and stats at authoring. wowheadId is the base item Zircon Band (item=11967) confirmed via Wowhead Classic; the resistance value is a random suffix.",
       "wowheadId": 11967,
       "priority": "situational"
@@ -408,11 +426,12 @@
         "detail": "World drop (BoE)"
       },
       "faction": "both",
-      "reqLevel": 9,
+      "reqLevel": 19,
       "stats": {
-        "stamina": 2
+        "agility": 8,
+        "strength": 3
       },
-      "notes": "Leather feet (ilvl 15, Requires Level 9, +2 Sta) confirmed via Warcraft Wiki; world drop favored by twink rogues/hunters. FLAG: wiki renders the other stat as '+2 Agility or Intellect' (modern primary-stat rendering); Classic value is +2 Agility per twink usage but the exact split is unconfirmed, so agility is omitted from stats pending a Classic-specific source. Movement speed is highly valued in WSG.",
+      "notes": "Agility/strength leather feet (+8 Agi, +3 Str) confirmed via Wowhead Classic item data (item=1121, ilvl 24, Requires Level 19); the earlier \"+2 Agi or Int\" reading was retail-squished data and is corrected here.",
       "wowheadId": 1121,
       "priority": "core",
       "enchant": "minor-speed-boots",
@@ -434,7 +453,7 @@
         "agility": 7,
         "stamina": 3
       },
-      "notes": "Leather feet (ilvl 30, +7 Agi, +3 Sta) confirmed via Warcraft Wiki; Horde quest reward (Horde Presence, Barrens), a favorite for level 10-19 WSG rogues. FLAG: wiki lists Required Level 29 (this is the quest level); the item's true required level must be <=19 for twink use but is unconfirmed here, so reqLevel is left null pending verification.",
+      "notes": "Agility/stamina boots (+7 Agi, +3 Sta) confirmed via Wowhead Classic item data (item=10653, ilvl 30, no level requirement); usable at 19.",
       "wowheadId": 10653,
       "priority": "situational"
     },
@@ -450,7 +469,14 @@
       "reqLevel": null,
       "notes": "Alliance faction ring; pair with a stat ring. wowheadId 2933 confirmed via Wowhead Classic; quest reward An Audience with the King (Deadmines chain), ilvl 31, not a bracketed PvP item.",
       "wowheadId": 2933,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 4,
+        "spirit": 3,
+        "agility": 3,
+        "intellect": 4,
+        "strength": 3
+      }
     },
     {
       "id": "seal-of-sylvanas",
@@ -464,7 +490,11 @@
       "reqLevel": null,
       "notes": "Horde faction ring; pair with a stat ring. wowheadId 6414 confirmed via Wowhead Classic; quest reward Arugal Must Die (Silverpine Forest), ilvl 29, not a bracketed PvP item.",
       "wowheadId": 6414,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 8,
+        "strength": 3
+      }
     },
     {
       "id": "viridian-band",
@@ -475,7 +505,7 @@
         "detail": "Quest reward (verify)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Stat ring to pair with a faction seal (Seal of Wrynn / Seal of Sylvanas). Verify source and stats. wowheadId confirmed via Wowhead Classic (item=11982).",
       "wowheadId": 11982,
       "priority": "core",
@@ -492,13 +522,16 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 19,
       "notes": "Alternative stat ring; also pairs with a faction seal. Verify source and stats. wowheadId confirmed via Wowhead Classic (item=4998).",
       "wowheadId": 4998,
       "priority": "situational",
       "alternatives": [
         "viridian-band"
-      ]
+      ],
+      "stats": {
+        "stamina": 5
+      }
     },
     {
       "id": "insignia-of-the-alliance",
@@ -568,7 +601,11 @@
       "reqLevel": null,
       "notes": "Crafted Engineering cloak recurring across defensive/midfield class builds on the BiS chart. Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=6667).",
       "wowheadId": 6667,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 5,
+        "intellect": 2
+      }
     },
     {
       "id": "tree-bark-jacket",
@@ -630,11 +667,15 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 19,
       "notes": "Staff carried as an intellect stat-stick option across caster-hybrid class builds; typically enchanted with Mighty Intellect. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=890).",
       "wowheadId": 890,
       "priority": "situational",
-      "enchant": "mighty-intellect-weapon"
+      "enchant": "mighty-intellect-weapon",
+      "stats": {
+        "stamina": 6,
+        "intellect": 10
+      }
     },
     {
       "id": "draftsman-boots",
@@ -648,7 +689,11 @@
       "reqLevel": null,
       "notes": "Boots recurring across offensive class builds on the BiS chart; typically enchanted with Minor Speed. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=6668).",
       "wowheadId": 6668,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 5,
+        "strength": 5
+      }
     },
     {
       "id": "deadskull-shield",
@@ -662,7 +707,11 @@
       "reqLevel": null,
       "notes": "Shield recurring across defensive/midfield shield-using builds; typically enchanted with Greater Stamina. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=3761).",
       "wowheadId": 3761,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 7,
+        "strength": 1
+      }
     },
     {
       "id": "arctic-buckler",
@@ -676,7 +725,11 @@
       "reqLevel": null,
       "notes": "Shield recurring across offensive shield-using builds; typically enchanted with Frost Resistance. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=7002).",
       "wowheadId": 7002,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 3,
+        "spirit": 8
+      }
     },
     {
       "id": "redbeard-crest",
@@ -687,11 +740,15 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 19,
       "notes": "Alternate shield recurring across shield-using class builds; can carry a Thorium Shield Spike for retaliation damage. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=12997).",
       "wowheadId": 12997,
       "priority": "situational",
-      "enchant": "thorium-shield-spike"
+      "enchant": "thorium-shield-spike",
+      "stats": {
+        "stamina": 3,
+        "strength": 6
+      }
     },
     {
       "id": "assassins-blade",
@@ -702,14 +759,18 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 19,
       "notes": "One-hand weapon recurring across physical class builds as a no-level-req weapon-enchant carrier. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=1935).",
       "wowheadId": 1935,
       "priority": "core",
       "enchant": "fiery-weapon",
       "alternatives": [
         "shadowfang"
-      ]
+      ],
+      "stats": {
+        "agility": 4,
+        "strength": 3
+      }
     },
     {
       "id": "kellers-girdle",
@@ -720,10 +781,14 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Waist pick recurring across defensive and caster class builds on the BiS chart. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=2911).",
       "wowheadId": 2911,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 3,
+        "intellect": 8
+      }
     },
     {
       "id": "lavishly-jeweled-ring",
@@ -734,10 +799,14 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 17,
       "notes": "Stat ring recurring across class builds, typically paired with a faction ring. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=1156).",
       "wowheadId": 1156,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "agility": 2,
+        "intellect": 6
+      }
     },
     {
       "id": "furbolg-medicine-pouch",
@@ -751,7 +820,10 @@
       "reqLevel": null,
       "notes": "Held-in-off-hand item with an on-use heal, recurring across class builds paired with a one-hand weapon. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=16768).",
       "wowheadId": 16768,
-      "priority": "situational"
+      "priority": "situational",
+      "stats": {
+        "stamina": 10
+      }
     },
     {
       "id": "staff-of-the-friar",
@@ -762,11 +834,16 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 19,
       "notes": "Staff carried as a spirit stat-stick option across caster-hybrid class builds; typically enchanted with Mighty Spirit. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=3415).",
       "wowheadId": 3415,
       "priority": "situational",
-      "enchant": "mighty-spirit-weapon"
+      "enchant": "mighty-spirit-weapon",
+      "stats": {
+        "stamina": 4,
+        "spirit": 11,
+        "intellect": 3
+      }
     },
     {
       "id": "magefist-gloves",
@@ -777,10 +854,15 @@
         "detail": "Tailoring (crafted)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 15,
       "notes": "Crafted cloth gloves recurring across caster class builds; enchant varies by build (Healing Power, Frost Power). Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=12977).",
       "wowheadId": 12977,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 3,
+        "intellect": 5,
+        "spirit": 4
+      }
     },
     {
       "id": "evocators-blade",
@@ -791,11 +873,15 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "One-hand caster weapon carried as an intellect stat-stick option across caster class builds; typically enchanted with Mighty Intellect. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=2567).",
       "wowheadId": 2567,
       "priority": "situational",
-      "enchant": "mighty-intellect-weapon"
+      "enchant": "mighty-intellect-weapon",
+      "stats": {
+        "spirit": 2,
+        "intellect": 4
+      }
     },
     {
       "id": "reinforced-woolen-shoulders",
@@ -806,7 +892,7 @@
         "detail": "Tailoring (crafted)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 19,
       "notes": "Crafted cloth shoulders recurring across cloth caster class builds; enchant varies by build (Fortitude/Power/Resilience of the Scourge). Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=4315).",
       "wowheadId": 4315,
       "priority": "core"
@@ -838,7 +924,10 @@
       "reqLevel": null,
       "notes": "One-hand caster weapon carried as a situational mainhand option across caster class builds. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=7001). NOTE: Wowhead lists this as a wand (ranged), not a one-hand mace/mainhand; verify slot handling at authoring.",
       "wowheadId": 7001,
-      "priority": "situational"
+      "priority": "situational",
+      "stats": {
+        "spirit": 1
+      }
     },
     {
       "id": "battle-healers-cloak",
@@ -849,10 +938,14 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Healing-leaning cloak recurring across defensive/support class builds; typically enchanted with Greater Resistance. wowheadId 20427 is the Classic Era (Requires Level 18, ilvl 23) 10-19 bracket version confirmed via Warcraft Wiki; Warsong Gulch reputation reward (Warsong Outriders - Honored).",
       "wowheadId": 20427,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 4,
+        "spirit": 2
+      }
     },
     {
       "id": "jagged-star-of-healing",
@@ -910,7 +1003,7 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 17,
       "notes": "Caster cloth gloves recurring across offensive caster class builds; enchant varies by build (Frost Power, Shadow Power). Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=892).",
       "wowheadId": 892,
       "priority": "core"
@@ -938,10 +1031,13 @@
         "detail": "Quest reward (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Stat ring recurring across caster class builds. wowheadId 20426 is the Classic Era (ilvl 23) version confirmed via Wowhead Classic; Horde Warsong Gulch reputation reward (Warsong Outriders, caster ring: +Sta/+spell damage/+mp5); the Alliance equivalent is Lorekeeper's Ring.",
       "wowheadId": 20426,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 2
+      }
     },
     {
       "id": "night-watch-shortsword",
@@ -952,11 +1048,14 @@
         "detail": "Duskwood quest reward (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 15,
       "notes": "One-hand caster sword recurring across caster class builds; enchant varies by build (Spell Power, Mighty Intellect). Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=935).",
       "wowheadId": 935,
       "priority": "core",
-      "enchant": "spell-power-weapon"
+      "enchant": "spell-power-weapon",
+      "stats": {
+        "stamina": 4
+      }
     },
     {
       "id": "scouting-gloves-of-the-eagle",
@@ -981,11 +1080,15 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Two-hand healing staff carried as a situational mainhand option across restoration/support class builds; enchanted with Healing Power. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=2271).",
       "wowheadId": 2271,
       "priority": "situational",
-      "enchant": "healing-power-weapon"
+      "enchant": "healing-power-weapon",
+      "stats": {
+        "stamina": 2,
+        "spirit": 3
+      }
     },
     {
       "id": "defender-spaulders",
@@ -996,7 +1099,7 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 19,
       "notes": "Mail shoulder recurring across warrior and paladin builds; enchanted with Fortitude of the Scourge (defense/midfield) or Might of the Scourge (offense). Verify stats at authoring.",
       "wowheadId": 6579,
       "priority": "core"
@@ -1024,10 +1127,14 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Gloves recurring across warrior and paladin builds; enchanted with Superior Agility (defense/midfield) or Greater Strength (offense). Verify stats and required level at authoring.",
       "wowheadId": 12994,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 3,
+        "strength": 8
+      }
     },
     {
       "id": "cobrahns-grasp",
@@ -1038,10 +1145,14 @@
         "detail": "Wailing Caverns (dungeon drop, Cobrahn)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 19,
       "notes": "Mail waist recurring across warrior and paladin midfield/offense builds. Verify stats and required level at authoring.",
       "wowheadId": 6460,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "agility": 3,
+        "strength": 8
+      }
     },
     {
       "id": "protectors-band",
@@ -1052,10 +1163,15 @@
         "detail": "Low-level drop (verify exact source)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Stamina/defensive ring shared by paladin and rogue midfield builds; paired with a faction seal ring. wowheadId 20439 is the Classic Era (Requires Level 18) 10-19 bracket version confirmed via Warcraft Wiki (+4 Str/+4 Agi/+2 Sta); Alliance Warsong Gulch reputation reward (Silverwing Sentinels - Honored).",
       "wowheadId": 20439,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 2,
+        "agility": 4,
+        "strength": 4
+      }
     },
     {
       "id": "tunic-of-westfall",
@@ -1069,7 +1185,11 @@
       "reqLevel": null,
       "notes": "Chest recurring across Alliance rogue offense and hunter midfield/offense builds; enchanted with Greater Stats. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=2041).",
       "wowheadId": 2041,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 5,
+        "agility": 11
+      }
     },
     {
       "id": "lorekeepers-ring",
@@ -1080,10 +1200,13 @@
         "detail": "Quest reward (verify exact source and faction)"
       },
       "faction": "both",
-      "reqLevel": null,
+      "reqLevel": 18,
       "notes": "Caster ring shared by Alliance mage, priest, and warlock builds; paired with Seal of Wrynn. wowheadId 20431 is the Classic Era (ilvl 23) version confirmed via Wowhead Classic; Alliance Warsong Gulch reputation reward (Silverwing Sentinels, +6 Stamina, +12 spell damage/healing, +4 mp5); the Horde equivalent is Advisor's Ring.",
       "wowheadId": 20431,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 2
+      }
     },
     {
       "id": "pious-legwraps",
@@ -1097,7 +1220,11 @@
       "reqLevel": null,
       "notes": "Cloth legs shared by Alliance mage and warlock defensive builds; enchanted with a Lesser Arcanum of Constitution. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=10043).",
       "wowheadId": 10043,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 8,
+        "spirit": 7
+      }
     },
     {
       "id": "beetle-clasps",
@@ -1111,7 +1238,11 @@
       "reqLevel": null,
       "notes": "Mail wrist (confirmed via /dump) shared by paladin flag-carrier and Alliance warrior defense/midfield builds; enchanted with Superior Stamina. Verify stats and required level at authoring.",
       "wowheadId": 7003,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 5,
+        "agility": 2
+      }
     },
     {
       "id": "chausses-of-westfall",
@@ -1125,7 +1256,11 @@
       "reqLevel": null,
       "notes": "Leg pick shared by paladin and Alliance warrior midfield/offense builds; enchanted with a Lesser Arcanum (Constitution or Voracity). Verify stats and required level at authoring.",
       "wowheadId": 6087,
-      "priority": "core"
+      "priority": "core",
+      "stats": {
+        "stamina": 5,
+        "strength": 11
+      }
     }
   ]
 }
