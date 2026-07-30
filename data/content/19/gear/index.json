@@ -24,31 +24,46 @@
       "id": "green-tinted-goggles",
       "name": "Green Tinted Goggles",
       "slot": "head",
-      "source": { "type": "profession", "detail": "Engineering (crafted)" },
+      "source": {
+        "type": "profession",
+        "detail": "Engineering (crafted)"
+      },
       "faction": "both",
-      "stats": { "agility": 6, "stamina": 6, "spirit": 6 },
+      "stats": {
+        "agility": 6,
+        "stamina": 6,
+        "spirit": 6
+      },
       "reqLevel": 18,
-      "notes": "Strong Engineering head frame for many specs (competes with Lucky Fishing Hat); takes a Lesser Arcanum head enchant like any head. Verify current stats.",
-      "wowheadId": null,
+      "notes": "Strong Engineering head frame for many specs (competes with Lucky Fishing Hat); takes a Lesser Arcanum head enchant like any head. Verify current stats. wowheadId confirmed via Wowhead Classic (item=4385).",
+      "wowheadId": 4385,
       "priority": "core",
-      "alternatives": ["lucky-fishing-hat"]
+      "alternatives": [
+        "lucky-fishing-hat"
+      ]
     },
     {
       "id": "lucky-fishing-hat",
       "name": "Lucky Fishing Hat",
       "slot": "head",
-      "source": { "type": "world", "detail": "Fishing (rare catch)" },
+      "source": {
+        "type": "world",
+        "detail": "Fishing (rare catch)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Alternative head; harder to obtain than the goggles. Verify current stats.",
-      "wowheadId": null,
+      "notes": "Alternative head; harder to obtain than the goggles. Verify current stats. wowheadId confirmed via Wowhead Classic (item=19972).",
+      "wowheadId": 19972,
       "priority": "situational"
     },
     {
       "id": "sentinels-medallion",
       "name": "Sentinel's Medallion",
       "slot": "neck",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Common neck pick from the gearing guides; the neck slot otherwise lacks a standout at this bracket. Verify source and stats.",
@@ -59,7 +74,10 @@
       "id": "scouts-medallion",
       "name": "Scout's Medallion",
       "slot": "neck",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Recurring neck pick across many class builds on the BiS chart. Verify source, stats, and faction availability at authoring.",
@@ -70,33 +88,42 @@
       "id": "feral-shoulder-pads",
       "name": "Feral Shoulder Pads",
       "slot": "shoulder",
-      "source": { "type": "drop", "detail": "World/dungeon drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "World/dungeon drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Leather shoulder recurring across physical class builds on the BiS chart; typically enchanted with Might of the Scourge. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Leather shoulder recurring across physical class builds on the BiS chart; typically enchanted with Might of the Scourge. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=15313).",
+      "wowheadId": 15313,
       "priority": "core"
     },
     {
       "id": "blackened-defias-armor",
       "name": "Blackened Defias Armor",
       "slot": "chest",
-      "source": { "type": "drop", "detail": "The Deadmines (dungeon drop)" },
+      "source": {
+        "type": "drop",
+        "detail": "The Deadmines (dungeon drop)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Leather chest recurring across many class builds on the BiS chart. Verify exact required level, stats, and current-meta status at authoring.",
-      "wowheadId": null,
+      "notes": "Leather chest recurring across many class builds on the BiS chart. Verify exact required level, stats, and current-meta status at authoring. wowheadId confirmed via Wowhead Classic (item=10399).",
+      "wowheadId": 10399,
       "priority": "core"
     },
     {
       "id": "nat-pagles-extreme-anglers",
       "name": "Nat Pagle's Extreme Anglers",
       "slot": "feet",
-      "source": { "type": "quest", "detail": "Fishing quest reward (verify exact source)" },
+      "source": {
+        "type": "quest",
+        "detail": "Fishing quest reward (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Boots recurring across several class builds on the BiS chart; typically enchanted with Minor Speed. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Boots recurring across several class builds on the BiS chart; typically enchanted with Minor Speed. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=19969).",
+      "wowheadId": 19969,
       "priority": "core",
       "enchant": "minor-speed-boots"
     },
@@ -104,22 +131,28 @@
       "id": "zircon-band-of-nature-resistance",
       "name": "Zircon Band of Nature Resistance",
       "slot": "finger",
-      "source": { "type": "drop", "detail": "Low-level drop of the Zircon Band base (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop of the Zircon Band base (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Nature-resistance ring used in resistance-oriented builds on the BiS chart. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Nature-resistance ring used in resistance-oriented builds on the BiS chart. Verify source and stats at authoring. wowheadId is the base item Zircon Band (item=11967) confirmed via Wowhead Classic; the resistance value is a random suffix.",
+      "wowheadId": 11967,
       "priority": "situational"
     },
     {
       "id": "shadowfang",
       "name": "Shadowfang",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Shadowfang Keep (dungeon drop)" },
+      "source": {
+        "type": "drop",
+        "detail": "Shadowfang Keep (dungeon drop)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Iconic low-level one-hand sword from Shadowfang Keep and a common melee-twink weapon across physical class builds; much of its value is the no-level-req weapon enchant it carries. Verify the exact required level (~18), stats, and current-meta status at authoring.",
-      "wowheadId": null,
+      "notes": "Iconic low-level one-hand sword from Shadowfang Keep and a common melee-twink weapon across physical class builds; much of its value is the no-level-req weapon enchant it carries. Verify the exact required level (~18), stats, and current-meta status at authoring. wowheadId confirmed via Wowhead Classic (item=1482).",
+      "wowheadId": 1482,
       "priority": "core",
       "enchant": "fiery-weapon"
     },
@@ -127,29 +160,38 @@
       "id": "leggings-of-the-fang",
       "name": "Leggings of the Fang",
       "slot": "legs",
-      "source": { "type": "drop", "detail": "Wailing Caverns (dungeon drop)" },
+      "source": {
+        "type": "drop",
+        "detail": "Wailing Caverns (dungeon drop)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Leather legs from the Fang set in Wailing Caverns; a common melee-twink leg piece recurring across class builds. Verify stats and required level at authoring.",
-      "wowheadId": null,
+      "notes": "Leather legs from the Fang set in Wailing Caverns; a common melee-twink leg piece recurring across class builds. Verify stats and required level at authoring. wowheadId confirmed via Wowhead Classic (item=10410).",
+      "wowheadId": 10410,
       "priority": "core"
     },
     {
       "id": "deviate-scale-belt",
       "name": "Deviate Scale Belt",
       "slot": "waist",
-      "source": { "type": "profession", "detail": "Leatherworking (crafted from Deviate Scales)" },
+      "source": {
+        "type": "profession",
+        "detail": "Leatherworking (crafted from Deviate Scales)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Crafted belt from Wailing Caverns Deviate Scales; the survivability-leaning waist pick recurring across class builds. Verify recipe and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Crafted belt from Wailing Caverns Deviate Scales; the survivability-leaning waist pick recurring across class builds. Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=6468).",
+      "wowheadId": 6468,
       "priority": "core"
     },
     {
       "id": "legionnaires-band",
       "name": "Legionnaire's Band",
       "slot": "finger",
-      "source": { "type": "pvp", "detail": "Horde PvP reward (verify exact source)" },
+      "source": {
+        "type": "pvp",
+        "detail": "Horde PvP reward (verify exact source)"
+      },
       "faction": "horde",
       "reqLevel": null,
       "notes": "Horde faction ring paired with a seal in midfield builds across classes. Verify source and stats at authoring.",
@@ -160,18 +202,24 @@
       "id": "keen-throwing-knife",
       "name": "Keen Throwing Knife",
       "slot": "ranged",
-      "source": { "type": "drop", "detail": "Low-level drop with the Keen (+crit) random suffix (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop with the Keen (+crit) random suffix (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Thrown weapon occupying the ranged slot; the default ranged pick when not using a bow (no ammo required). Recurs across melee class builds. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Thrown weapon occupying the ranged slot; the default ranged pick when not using a bow (no ammo required). Recurs across melee class builds. Verify source and stats at authoring. wowheadId is the base item Throwing Knife (item=3107) confirmed via Wowhead Classic; the Keen bonus is a random suffix.",
+      "wowheadId": 3107,
       "priority": "core"
     },
     {
       "id": "outriders-bow",
       "name": "Outrider's Bow",
       "slot": "ranged",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Bow alternative for the ranged slot; takes an Accurate Scope and requires ammo. Recurs across melee class builds. Verify source and stats at authoring.",
@@ -183,7 +231,10 @@
       "id": "sharp-arrow",
       "name": "Sharp Arrow",
       "slot": "ammo",
-      "source": { "type": "vendor", "detail": "Ammo vendor" },
+      "source": {
+        "type": "vendor",
+        "detail": "Ammo vendor"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Ammunition for a bow/crossbow build; only needed when using a bow rather than a thrown weapon. Verify current best available ammo at authoring.",
@@ -194,11 +245,14 @@
       "id": "runic-darkblade",
       "name": "Runic Darkblade",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "One-hand sword recurring across physical class builds as a weapon-enchant carrier. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "notes": "One-hand sword recurring across physical class builds as a weapon-enchant carrier. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=3822).",
+      "wowheadId": 3822,
       "priority": "situational",
       "enchant": "fiery-weapon"
     },
@@ -206,119 +260,154 @@
       "id": "screecher-belt",
       "name": "Screecher Belt",
       "slot": "waist",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Waist pick recurring across offensive class builds on the BiS chart. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Waist pick recurring across offensive class builds on the BiS chart. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=16987).",
+      "wowheadId": 16987,
       "priority": "core"
     },
     {
       "id": "wranglers-wristbands-of-the-monkey",
       "name": "Wrangler's Wristbands of the Monkey",
       "slot": "wrist",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stamina/agility bracers recurring across survivability-leaning class builds. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Stamina/agility bracers recurring across survivability-leaning class builds. Verify source and stats at authoring. wowheadId is the base item Wrangler's Wristbands (item=15331) confirmed via Wowhead Classic; the of the Monkey bonus is a random suffix.",
+      "wowheadId": 15331,
       "priority": "core"
     },
     {
       "id": "scouting-gloves-of-the-monkey",
       "name": "Scouting Gloves of the Monkey",
       "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Agility/stamina gloves recurring across class builds; typically enchanted with Superior Agility. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Agility/stamina gloves recurring across class builds; typically enchanted with Superior Agility. Verify source and stats at authoring. wowheadId is the base item Scouting Gloves (item=6586) confirmed via Wowhead Classic; the of the Monkey bonus is a random suffix.",
+      "wowheadId": 6586,
       "priority": "core"
     },
     {
       "id": "talbar-mantle",
       "name": "Talbar Mantle",
       "slot": "shoulder",
-      "source": { "type": "quest", "detail": "Quest reward" },
+      "source": {
+        "type": "quest",
+        "detail": "Quest reward"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Common shoulder pick from the gearing guides. Verify source and stats.",
-      "wowheadId": null,
+      "notes": "Common shoulder pick from the gearing guides. Verify source and stats. wowheadId confirmed via Wowhead Classic (item=10657).",
+      "wowheadId": 10657,
       "priority": "core"
     },
     {
       "id": "sentry-cloak",
       "name": "Sentry Cloak",
       "slot": "back",
-      "source": { "type": "drop", "detail": "World drop (low level)" },
+      "source": {
+        "type": "drop",
+        "detail": "World drop (low level)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stat cloak; swap for a resistance cloak by matchup. Verify source and stats.",
-      "wowheadId": null,
+      "notes": "Stat cloak; swap for a resistance cloak by matchup. Verify source and stats. wowheadId confirmed via Wowhead Classic (item=2059).",
+      "wowheadId": 2059,
       "priority": "core"
     },
     {
       "id": "firebane-cloak",
       "name": "Firebane Cloak",
       "slot": "back",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Resistance-leaning cloak recurring across defensive/flag-carrier builds on the BiS chart; often enchanted for shadow resistance. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Resistance-leaning cloak recurring across defensive/flag-carrier builds on the BiS chart; often enchanted for shadow resistance. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=12979).",
+      "wowheadId": 12979,
       "priority": "situational"
     },
     {
       "id": "zircon-band-of-frost-resistance",
       "name": "Zircon Band of Frost Resistance",
       "slot": "finger",
-      "source": { "type": "drop", "detail": "Low-level drop of the Zircon Band base (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop of the Zircon Band base (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Frost-resistance ring used in resistance-oriented builds on the BiS chart; situational against mages. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Frost-resistance ring used in resistance-oriented builds on the BiS chart; situational against mages. Verify source and stats at authoring. wowheadId is the base item Zircon Band (item=11967) confirmed via Wowhead Classic; the resistance value is a random suffix.",
+      "wowheadId": 11967,
       "priority": "situational"
     },
     {
       "id": "zircon-band-of-shadow-resistance",
       "name": "Zircon Band of Shadow Resistance",
       "slot": "finger",
-      "source": { "type": "drop", "detail": "Low-level drop of the Zircon Band base (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop of the Zircon Band base (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Shadow-resistance ring used in resistance-oriented builds on the BiS chart; situational against warlocks and shadow priests. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Shadow-resistance ring used in resistance-oriented builds on the BiS chart; situational against warlocks and shadow priests. Verify source and stats at authoring. wowheadId is the base item Zircon Band (item=11967) confirmed via Wowhead Classic; the resistance value is a random suffix.",
+      "wowheadId": 11967,
       "priority": "situational"
     },
     {
       "id": "feet-of-the-lynx",
       "name": "Feet of the Lynx",
       "slot": "feet",
-      "source": { "type": "world", "detail": "World drop (BoE)" },
+      "source": {
+        "type": "world",
+        "detail": "World drop (BoE)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Movement speed is highly valued in WSG, especially for flag carriers. Verify stats.",
-      "wowheadId": null,
+      "notes": "Movement speed is highly valued in WSG, especially for flag carriers. Verify stats. wowheadId confirmed via Wowhead Classic (item=1121).",
+      "wowheadId": 1121,
       "priority": "core",
       "enchant": "minor-speed-boots",
-      "alternatives": ["trailblazer-boots"]
+      "alternatives": [
+        "trailblazer-boots"
+      ]
     },
     {
       "id": "trailblazer-boots",
       "name": "Trailblazer Boots",
       "slot": "feet",
-      "source": { "type": "quest", "detail": "Quest reward" },
+      "source": {
+        "type": "quest",
+        "detail": "Quest reward"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Alternative boots emphasizing movement. Verify source and stats.",
-      "wowheadId": null,
+      "notes": "Alternative boots emphasizing movement. Verify source and stats. wowheadId confirmed via Wowhead Classic (item=10653).",
+      "wowheadId": 10653,
       "priority": "situational"
     },
     {
       "id": "seal-of-wrynn",
       "name": "Seal of Wrynn",
       "slot": "finger",
-      "source": { "type": "quest", "detail": "Alliance quest reward" },
+      "source": {
+        "type": "quest",
+        "detail": "Alliance quest reward"
+      },
       "faction": "alliance",
       "reqLevel": null,
       "notes": "Alliance faction ring; pair with a stat ring. Verify stats.",
@@ -329,7 +418,10 @@
       "id": "seal-of-sylvanas",
       "name": "Seal of Sylvanas",
       "slot": "finger",
-      "source": { "type": "quest", "detail": "Horde quest reward" },
+      "source": {
+        "type": "quest",
+        "detail": "Horde quest reward"
+      },
       "faction": "horde",
       "reqLevel": null,
       "notes": "Horde faction ring; pair with a stat ring. Verify stats.",
@@ -340,31 +432,44 @@
       "id": "viridian-band",
       "name": "Viridian Band",
       "slot": "finger",
-      "source": { "type": "quest", "detail": "Quest reward (verify)" },
+      "source": {
+        "type": "quest",
+        "detail": "Quest reward (verify)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stat ring to pair with a faction seal (Seal of Wrynn / Seal of Sylvanas). Verify source and stats.",
-      "wowheadId": null,
+      "notes": "Stat ring to pair with a faction seal (Seal of Wrynn / Seal of Sylvanas). Verify source and stats. wowheadId confirmed via Wowhead Classic (item=11982).",
+      "wowheadId": 11982,
       "priority": "core",
-      "alternatives": ["blood-ring"]
+      "alternatives": [
+        "blood-ring"
+      ]
     },
     {
       "id": "blood-ring",
       "name": "Blood Ring",
       "slot": "finger",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Alternative stat ring; also pairs with a faction seal. Verify source and stats.",
-      "wowheadId": null,
+      "notes": "Alternative stat ring; also pairs with a faction seal. Verify source and stats. wowheadId confirmed via Wowhead Classic (item=4998).",
+      "wowheadId": 4998,
       "priority": "situational",
-      "alternatives": ["viridian-band"]
+      "alternatives": [
+        "viridian-band"
+      ]
     },
     {
       "id": "insignia-of-the-alliance",
       "name": "Insignia of the Alliance",
       "slot": "trinket",
-      "source": { "type": "pvp", "detail": "PvP reward (honor + Marks of Honor)" },
+      "source": {
+        "type": "pvp",
+        "detail": "PvP reward (honor + Marks of Honor)"
+      },
       "faction": "alliance",
       "reqLevel": null,
       "notes": "PvP trinket (breaks stun/root effects). Watch its item level requirement.",
@@ -375,7 +480,10 @@
       "id": "insignia-of-the-horde",
       "name": "Insignia of the Horde",
       "slot": "trinket",
-      "source": { "type": "pvp", "detail": "PvP reward (honor + Marks of Honor)" },
+      "source": {
+        "type": "pvp",
+        "detail": "PvP reward (honor + Marks of Honor)"
+      },
       "faction": "horde",
       "reqLevel": null,
       "notes": "PvP trinket (breaks stun/root effects). Watch its item level requirement.",
@@ -386,77 +494,98 @@
       "id": "minor-recombobulator",
       "name": "Minor Recombobulator",
       "slot": "trinket",
-      "source": { "type": "profession", "detail": "Engineering (crafted)" },
+      "source": {
+        "type": "profession",
+        "detail": "Engineering (crafted)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Removes polymorph and some effects; Engineering utility trinket.",
-      "wowheadId": null,
+      "notes": "Removes polymorph and some effects; Engineering utility trinket. wowheadId confirmed via Wowhead Classic (item=4381).",
+      "wowheadId": 4381,
       "priority": "situational"
     },
     {
       "id": "arena-grand-master",
       "name": "Arena Grand Master",
       "slot": "trinket",
-      "source": { "type": "world", "detail": "Gurubashi Arena booty chest (Stranglethorn Vale)" },
+      "source": {
+        "type": "world",
+        "detail": "Gurubashi Arena booty chest (Stranglethorn Vale)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "From the Gurubashi Arena event this bot also tracks. Contested world PvP objective; verify current stats.",
-      "wowheadId": null,
+      "notes": "From the Gurubashi Arena event this bot also tracks. Contested world PvP objective; verify current stats. wowheadId confirmed via Wowhead Classic (item=19024).",
+      "wowheadId": 19024,
       "priority": "situational"
     },
     {
       "id": "engineers-cloak",
       "name": "Engineer's Cloak",
       "slot": "back",
-      "source": { "type": "profession", "detail": "Engineering (crafted)" },
+      "source": {
+        "type": "profession",
+        "detail": "Engineering (crafted)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Crafted Engineering cloak recurring across defensive/midfield class builds on the BiS chart. Verify recipe and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Crafted Engineering cloak recurring across defensive/midfield class builds on the BiS chart. Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=6667).",
+      "wowheadId": 6667,
       "priority": "core"
     },
     {
       "id": "tree-bark-jacket",
       "name": "Tree Bark Jacket",
       "slot": "chest",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Leather chest recurring across defensive class builds on the BiS chart. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Leather chest recurring across defensive class builds on the BiS chart. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=1486).",
+      "wowheadId": 1486,
       "priority": "core"
     },
     {
       "id": "wranglers-wristbands-of-the-eagle",
       "name": "Wrangler's Wristbands of the Eagle",
       "slot": "wrist",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Intellect/stamina bracers recurring across caster-hybrid class builds on the BiS chart. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Intellect/stamina bracers recurring across caster-hybrid class builds on the BiS chart. Verify source and stats at authoring. wowheadId is the base item Wrangler's Wristbands (item=15331) confirmed via Wowhead Classic; the of the Eagle bonus is a random suffix.",
+      "wowheadId": 15331,
       "priority": "core"
     },
     {
       "id": "darkweave-breeches",
       "name": "Darkweave Breeches",
       "slot": "legs",
-      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
+      "source": {
+        "type": "profession",
+        "detail": "Tailoring (crafted)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Cloth legs recurring across defensive caster-hybrid builds; carries intellect/spirit and shadow resistance. Verify recipe and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Cloth legs recurring across defensive caster-hybrid builds; carries intellect/spirit and shadow resistance. Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=12987).",
+      "wowheadId": 12987,
       "priority": "core"
     },
     {
       "id": "twisted-chanters-staff",
       "name": "Twisted Chanter's Staff",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Staff carried as an intellect stat-stick option across caster-hybrid class builds; typically enchanted with Mighty Intellect. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "notes": "Staff carried as an intellect stat-stick option across caster-hybrid class builds; typically enchanted with Mighty Intellect. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=890).",
+      "wowheadId": 890,
       "priority": "situational",
       "enchant": "mighty-intellect-weapon"
     },
@@ -464,44 +593,56 @@
       "id": "draftsman-boots",
       "name": "Draftsman Boots",
       "slot": "feet",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Boots recurring across offensive class builds on the BiS chart; typically enchanted with Minor Speed. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Boots recurring across offensive class builds on the BiS chart; typically enchanted with Minor Speed. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=6668).",
+      "wowheadId": 6668,
       "priority": "core"
     },
     {
       "id": "deadskull-shield",
       "name": "Deadskull Shield",
       "slot": "offhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Shield recurring across defensive/midfield shield-using builds; typically enchanted with Greater Stamina. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Shield recurring across defensive/midfield shield-using builds; typically enchanted with Greater Stamina. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=3761).",
+      "wowheadId": 3761,
       "priority": "core"
     },
     {
       "id": "arctic-buckler",
       "name": "Arctic Buckler",
       "slot": "offhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Shield recurring across offensive shield-using builds; typically enchanted with Frost Resistance. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Shield recurring across offensive shield-using builds; typically enchanted with Frost Resistance. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=7002).",
+      "wowheadId": 7002,
       "priority": "core"
     },
     {
       "id": "redbeard-crest",
       "name": "Redbeard Crest",
       "slot": "offhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Alternate shield recurring across shield-using class builds; can carry a Thorium Shield Spike for retaliation damage. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Alternate shield recurring across shield-using class builds; can carry a Thorium Shield Spike for retaliation damage. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=12997).",
+      "wowheadId": 12997,
       "priority": "situational",
       "enchant": "thorium-shield-spike"
     },
@@ -509,57 +650,74 @@
       "id": "assassins-blade",
       "name": "Assassin's Blade",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "One-hand weapon recurring across physical class builds as a no-level-req weapon-enchant carrier. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "notes": "One-hand weapon recurring across physical class builds as a no-level-req weapon-enchant carrier. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=1935).",
+      "wowheadId": 1935,
       "priority": "core",
       "enchant": "fiery-weapon",
-      "alternatives": ["shadowfang"]
+      "alternatives": [
+        "shadowfang"
+      ]
     },
     {
       "id": "kellers-girdle",
       "name": "Keller's Girdle",
       "slot": "waist",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Waist pick recurring across defensive and caster class builds on the BiS chart. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Waist pick recurring across defensive and caster class builds on the BiS chart. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=2911).",
+      "wowheadId": 2911,
       "priority": "core"
     },
     {
       "id": "lavishly-jeweled-ring",
       "name": "Lavishly Jeweled Ring",
       "slot": "finger",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stat ring recurring across class builds, typically paired with a faction ring. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Stat ring recurring across class builds, typically paired with a faction ring. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=1156).",
+      "wowheadId": 1156,
       "priority": "core"
     },
     {
       "id": "furbolg-medicine-pouch",
       "name": "Furbolg Medicine Pouch",
       "slot": "offhand",
-      "source": { "type": "quest", "detail": "Quest reward (verify exact source)" },
+      "source": {
+        "type": "quest",
+        "detail": "Quest reward (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Held-in-off-hand item with an on-use heal, recurring across class builds paired with a one-hand weapon. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Held-in-off-hand item with an on-use heal, recurring across class builds paired with a one-hand weapon. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=16768).",
+      "wowheadId": 16768,
       "priority": "situational"
     },
     {
       "id": "staff-of-the-friar",
       "name": "Staff of the Friar",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Staff carried as a spirit stat-stick option across caster-hybrid class builds; typically enchanted with Mighty Spirit. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "notes": "Staff carried as a spirit stat-stick option across caster-hybrid class builds; typically enchanted with Mighty Spirit. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=3415).",
+      "wowheadId": 3415,
       "priority": "situational",
       "enchant": "mighty-spirit-weapon"
     },
@@ -567,22 +725,28 @@
       "id": "magefist-gloves",
       "name": "Magefist Gloves",
       "slot": "hands",
-      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
+      "source": {
+        "type": "profession",
+        "detail": "Tailoring (crafted)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Crafted cloth gloves recurring across caster class builds; enchant varies by build (Healing Power, Frost Power). Verify recipe and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Crafted cloth gloves recurring across caster class builds; enchant varies by build (Healing Power, Frost Power). Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=12977).",
+      "wowheadId": 12977,
       "priority": "core"
     },
     {
       "id": "evocators-blade",
       "name": "Evocator's Blade",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "One-hand caster weapon carried as an intellect stat-stick option across caster class builds; typically enchanted with Mighty Intellect. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "notes": "One-hand caster weapon carried as an intellect stat-stick option across caster class builds; typically enchanted with Mighty Intellect. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=2567).",
+      "wowheadId": 2567,
       "priority": "situational",
       "enchant": "mighty-intellect-weapon"
     },
@@ -590,22 +754,28 @@
       "id": "reinforced-woolen-shoulders",
       "name": "Reinforced Woolen Shoulders",
       "slot": "shoulder",
-      "source": { "type": "profession", "detail": "Tailoring (crafted)" },
+      "source": {
+        "type": "profession",
+        "detail": "Tailoring (crafted)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Crafted cloth shoulders recurring across cloth caster class builds; enchant varies by build (Fortitude/Power/Resilience of the Scourge). Verify recipe and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Crafted cloth shoulders recurring across cloth caster class builds; enchant varies by build (Fortitude/Power/Resilience of the Scourge). Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=4315).",
+      "wowheadId": 4315,
       "priority": "core"
     },
     {
       "id": "greenweave-bracers-of-stamina",
       "name": "Greenweave Bracers of Stamina",
       "slot": "wrist",
-      "source": { "type": "profession", "detail": "Leatherworking (crafted) with the of Stamina random suffix (verify exact source)" },
+      "source": {
+        "type": "profession",
+        "detail": "Leatherworking (crafted) with the of Stamina random suffix (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Stamina bracers recurring across defensive caster class builds; typically enchanted with Superior Stamina. Verify recipe and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Stamina bracers recurring across defensive caster class builds; typically enchanted with Superior Stamina. Verify recipe and stats at authoring. wowheadId is the base item Greenweave Bracers (item=9768) confirmed via Wowhead Classic; the of Stamina bonus is a random suffix.",
+      "wowheadId": 9768,
       "priority": "core",
       "enchant": "superior-stamina"
     },
@@ -613,18 +783,24 @@
       "id": "gravestone-scepter",
       "name": "Gravestone Scepter",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "One-hand caster weapon carried as a situational mainhand option across caster class builds. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "notes": "One-hand caster weapon carried as a situational mainhand option across caster class builds. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=7001). NOTE: Wowhead lists this as a wand (ranged), not a one-hand mace/mainhand; verify slot handling at authoring.",
+      "wowheadId": 7001,
       "priority": "situational"
     },
     {
       "id": "battle-healers-cloak",
       "name": "Battle Healer's Cloak",
       "slot": "back",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Healing-leaning cloak recurring across defensive/support class builds; typically enchanted with Greater Resistance. Verify source and stats at authoring.",
@@ -635,11 +811,14 @@
       "id": "jagged-star-of-healing",
       "name": "Jagged Star of Healing",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop with the of Healing random suffix (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop with the of Healing random suffix (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "One-hand mace recurring across restoration/support class builds; typically enchanted with Healing Power. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "notes": "One-hand mace recurring across restoration/support class builds; typically enchanted with Healing Power. Verify source, stats, and required level at authoring. wowheadId is the base item Jagged Star (item=15223) confirmed via Wowhead Classic; the of Healing bonus is a random suffix.",
+      "wowheadId": 15223,
       "priority": "core",
       "enchant": "healing-power-weapon"
     },
@@ -647,51 +826,66 @@
       "id": "mindthrust-bracers",
       "name": "Mindthrust Bracers",
       "slot": "wrist",
-      "source": { "type": "drop", "detail": "The Deadmines (dungeon drop)" },
+      "source": {
+        "type": "drop",
+        "detail": "The Deadmines (dungeon drop)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Intellect bracers recurring across caster class builds; enchant varies by build (Greater Intellect, Healing Power). Verify stats and required level at authoring.",
-      "wowheadId": null,
+      "notes": "Intellect bracers recurring across caster class builds; enchant varies by build (Greater Intellect, Healing Power). Verify stats and required level at authoring. wowheadId confirmed via Wowhead Classic (item=1974).",
+      "wowheadId": 1974,
       "priority": "core"
     },
     {
       "id": "pagan-mitts-of-the-eagle",
       "name": "Pagan Mitts of the Eagle",
       "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Intellect/stamina cloth gloves recurring across defensive caster class builds; enchant varies by build (Frost Power, Shadow Power). Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Intellect/stamina cloth gloves recurring across defensive caster class builds; enchant varies by build (Frost Power, Shadow Power). Verify source and stats at authoring. wowheadId is the base item Pagan Mitts (item=14162) confirmed via Wowhead Classic; the of the Eagle bonus is a random suffix.",
+      "wowheadId": 14162,
       "priority": "core"
     },
     {
       "id": "gnoll-casting-gloves",
       "name": "Gnoll Casting Gloves",
       "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Caster cloth gloves recurring across offensive caster class builds; enchant varies by build (Frost Power, Shadow Power). Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Caster cloth gloves recurring across offensive caster class builds; enchant varies by build (Frost Power, Shadow Power). Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=892).",
+      "wowheadId": 892,
       "priority": "core"
     },
     {
       "id": "shimmering-trousers-of-the-eagle",
       "name": "Shimmering Trousers of the Eagle",
       "slot": "legs",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Intellect/stamina cloth legs recurring across defensive caster class builds. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Intellect/stamina cloth legs recurring across defensive caster class builds. Verify source and stats at authoring. wowheadId is the base item Shimmering Trousers (item=6568) confirmed via Wowhead Classic; the of the Eagle bonus is a random suffix.",
+      "wowheadId": 6568,
       "priority": "core"
     },
     {
       "id": "advisors-ring",
       "name": "Advisor's Ring",
       "slot": "finger",
-      "source": { "type": "quest", "detail": "Quest reward (verify exact source)" },
+      "source": {
+        "type": "quest",
+        "detail": "Quest reward (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Stat ring recurring across caster class builds. Verify source and stats at authoring.",
@@ -702,11 +896,14 @@
       "id": "night-watch-shortsword",
       "name": "Night Watch Shortsword",
       "slot": "mainhand",
-      "source": { "type": "quest", "detail": "Duskwood quest reward (verify exact source)" },
+      "source": {
+        "type": "quest",
+        "detail": "Duskwood quest reward (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "One-hand caster sword recurring across caster class builds; enchant varies by build (Spell Power, Mighty Intellect). Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "notes": "One-hand caster sword recurring across caster class builds; enchant varies by build (Spell Power, Mighty Intellect). Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=935).",
+      "wowheadId": 935,
       "priority": "core",
       "enchant": "spell-power-weapon"
     },
@@ -714,22 +911,28 @@
       "id": "scouting-gloves-of-the-eagle",
       "name": "Scouting Gloves of the Eagle",
       "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Intellect/stamina gloves recurring across hybrid class builds; enchant varies by build (Superior Agility, Healing Power). Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Intellect/stamina gloves recurring across hybrid class builds; enchant varies by build (Superior Agility, Healing Power). Verify source and stats at authoring. wowheadId is the base item Scouting Gloves (item=6586) confirmed via Wowhead Classic; the of the Eagle bonus is a random suffix.",
+      "wowheadId": 6586,
       "priority": "core"
     },
     {
       "id": "staff-of-the-blessed-seer",
       "name": "Staff of the Blessed Seer",
       "slot": "mainhand",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Two-hand healing staff carried as a situational mainhand option across restoration/support class builds; enchanted with Healing Power. Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
+      "notes": "Two-hand healing staff carried as a situational mainhand option across restoration/support class builds; enchanted with Healing Power. Verify source, stats, and required level at authoring. wowheadId confirmed via Wowhead Classic (item=2271).",
+      "wowheadId": 2271,
       "priority": "situational",
       "enchant": "healing-power-weapon"
     },
@@ -737,7 +940,10 @@
       "id": "defender-spaulders",
       "name": "Defender Spaulders",
       "slot": "shoulder",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Mail shoulder recurring across warrior and paladin builds; enchanted with Fortitude of the Scourge (defense/midfield) or Might of the Scourge (offense). Verify stats at authoring.",
@@ -748,7 +954,10 @@
       "id": "sentrys-cape-of-strength",
       "name": "Sentry's Cape of Strength",
       "slot": "back",
-      "source": { "type": "drop", "detail": "Base item Sentry's Cape (item=15526); the of Strength random suffix (+4-5 Strength) confirmed via Wowhead Classic" },
+      "source": {
+        "type": "drop",
+        "detail": "Base item Sentry's Cape (item=15526); the of Strength random suffix (+4-5 Strength) confirmed via Wowhead Classic"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Strength cloak for offensive warrior and paladin builds. wowheadId is the base item; the +4-5 Str of Strength suffix is a random enchantment.",
@@ -759,7 +968,10 @@
       "id": "thorbias-gauntlets",
       "name": "Thorbia's Gauntlets",
       "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Gloves recurring across warrior and paladin builds; enchanted with Superior Agility (defense/midfield) or Greater Strength (offense). Verify stats and required level at authoring.",
@@ -770,7 +982,10 @@
       "id": "cobrahns-grasp",
       "name": "Cobrahn's Grasp",
       "slot": "waist",
-      "source": { "type": "drop", "detail": "Wailing Caverns (dungeon drop, Cobrahn)" },
+      "source": {
+        "type": "drop",
+        "detail": "Wailing Caverns (dungeon drop, Cobrahn)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Mail waist recurring across warrior and paladin midfield/offense builds. Verify stats and required level at authoring.",
@@ -781,7 +996,10 @@
       "id": "protectors-band",
       "name": "Protector's Band",
       "slot": "finger",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Stamina/defensive ring shared by paladin and rogue midfield builds; paired with a faction seal ring. Verify source and stats at authoring.",
@@ -792,18 +1010,24 @@
       "id": "tunic-of-westfall",
       "name": "Tunic of Westfall",
       "slot": "chest",
-      "source": { "type": "drop", "detail": "The Deadmines / Westfall area (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "The Deadmines / Westfall area (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Chest recurring across Alliance rogue offense and hunter midfield/offense builds; enchanted with Greater Stats. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Chest recurring across Alliance rogue offense and hunter midfield/offense builds; enchanted with Greater Stats. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=2041).",
+      "wowheadId": 2041,
       "priority": "core"
     },
     {
       "id": "lorekeepers-ring",
       "name": "Lorekeeper's Ring",
       "slot": "finger",
-      "source": { "type": "quest", "detail": "Quest reward (verify exact source and faction)" },
+      "source": {
+        "type": "quest",
+        "detail": "Quest reward (verify exact source and faction)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Caster ring shared by Alliance mage, priest, and warlock builds; paired with Seal of Wrynn. Verify source, faction availability, and stats at authoring.",
@@ -814,18 +1038,24 @@
       "id": "pious-legwraps",
       "name": "Pious Legwraps",
       "slot": "legs",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Cloth legs shared by Alliance mage and warlock defensive builds; enchanted with a Lesser Arcanum of Constitution. Verify source and stats at authoring.",
-      "wowheadId": null,
+      "notes": "Cloth legs shared by Alliance mage and warlock defensive builds; enchanted with a Lesser Arcanum of Constitution. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=10043).",
+      "wowheadId": 10043,
       "priority": "core"
     },
     {
       "id": "beetle-clasps",
       "name": "Beetle Clasps",
       "slot": "wrist",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "Low-level drop (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Mail wrist (confirmed via /dump) shared by paladin flag-carrier and Alliance warrior defense/midfield builds; enchanted with Superior Stamina. Verify stats and required level at authoring.",
@@ -836,7 +1066,10 @@
       "id": "chausses-of-westfall",
       "name": "Chausses of Westfall",
       "slot": "legs",
-      "source": { "type": "drop", "detail": "The Deadmines / Westfall area (verify exact source)" },
+      "source": {
+        "type": "drop",
+        "detail": "The Deadmines / Westfall area (verify exact source)"
+      },
       "faction": "both",
       "reqLevel": null,
       "notes": "Leg pick shared by paladin and Alliance warrior midfield/offense builds; enchanted with a Lesser Arcanum (Constitution or Voracity). Verify stats and required level at authoring.",
