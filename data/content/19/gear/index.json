@@ -189,8 +189,13 @@
         "detail": "Leatherworking (crafted from Deviate Scales)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Crafted belt from Wailing Caverns Deviate Scales; the survivability-leaning waist pick recurring across class builds. Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=6468).",
+      "reqLevel": 18,
+      "stats": {
+        "stamina": 6,
+        "agility": 5,
+        "spirit": 3
+      },
+      "notes": "Crafted leather belt from Wailing Caverns Deviate Scales (Classic: ilvl 23, Requires Level 18, +6 Sta, +5 Agi, +3 Spi) confirmed via Classic item DB; the survivability-leaning waist pick recurring across physical class builds.",
       "wowheadId": 6468,
       "priority": "core"
     },
@@ -276,7 +281,12 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Waist pick recurring across offensive class builds on the BiS chart. Verify source and stats at authoring. wowheadId confirmed via Wowhead Classic (item=16987).",
+      "stats": {
+        "agility": 6,
+        "intellect": 5,
+        "stamina": 3
+      },
+      "notes": "Leather waist (ilvl 27, +6 Agi, +5 Int, +3 Sta, +2 Hit) confirmed via Warcraft Wiki; Horde quest reward (Bloodfury Bloodline). FLAG: wiki lists Required Level 26 (the quest level); if the item genuinely requires level 26 it is UNUSABLE at 19. reqLevel left null pending verification of the item's true required level.",
       "wowheadId": 16987,
       "priority": "core"
     },
@@ -420,7 +430,11 @@
       },
       "faction": "both",
       "reqLevel": null,
-      "notes": "Alternative boots emphasizing movement. Verify source and stats. wowheadId confirmed via Wowhead Classic (item=10653).",
+      "stats": {
+        "agility": 7,
+        "stamina": 3
+      },
+      "notes": "Leather feet (ilvl 30, +7 Agi, +3 Sta) confirmed via Warcraft Wiki; Horde quest reward (Horde Presence, Barrens), a favorite for level 10-19 WSG rogues. FLAG: wiki lists Required Level 29 (this is the quest level); the item's true required level must be <=19 for twink use but is unconfirmed here, so reqLevel is left null pending verification.",
       "wowheadId": 10653,
       "priority": "situational"
     },
@@ -597,8 +611,13 @@
         "detail": "Tailoring (crafted)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Cloth legs recurring across defensive caster-hybrid builds; carries intellect/spirit and shadow resistance. Verify recipe and stats at authoring. wowheadId confirmed via Wowhead Classic (item=12987).",
+      "reqLevel": 17,
+      "stats": {
+        "intellect": 7,
+        "spirit": 6,
+        "stamina": 4
+      },
+      "notes": "Cloth legs (Classic: ilvl 22, Requires Level 17, +7 Int, +6 Spi, +4 Sta) confirmed via Classic item DB. CORRECTION: Classic DB lists this as a world drop with NO shadow resistance, contradicting the earlier 'Tailoring crafted / shadow resistance' description; verify source type.",
       "wowheadId": 12987,
       "priority": "core"
     },
@@ -859,8 +878,12 @@
         "detail": "The Deadmines (dungeon drop)"
       },
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Intellect bracers recurring across caster class builds; enchant varies by build (Greater Intellect, Healing Power). Verify stats and required level at authoring. wowheadId confirmed via Wowhead Classic (item=1974).",
+      "reqLevel": 17,
+      "stats": {
+        "intellect": 9,
+        "stamina": -5
+      },
+      "notes": "Cloth bracers (Classic: ilvl 22, Requires Level 17, +9 Int, -5 Sta penalty) confirmed via Warcraft Wiki; drops in The Deadmines. The Classic version carries a -5 Stamina penalty (removed in later expansions). Enchant varies by build (Greater Intellect, Healing Power).",
       "wowheadId": 1974,
       "priority": "core"
     },
