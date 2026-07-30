@@ -653,6 +653,62 @@
       "notes": "Intellect bracers recurring across caster class builds; enchant varies by build (Greater Intellect, Healing Power). Verify stats and required level at authoring.",
       "wowheadId": null,
       "priority": "core"
+    },
+    {
+      "id": "pagan-mitts-of-the-eagle",
+      "name": "Pagan Mitts of the Eagle",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina cloth gloves recurring across defensive caster class builds; enchant varies by build (Frost Power, Shadow Power). Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "gnoll-casting-gloves",
+      "name": "Gnoll Casting Gloves",
+      "slot": "hands",
+      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Caster cloth gloves recurring across offensive caster class builds; enchant varies by build (Frost Power, Shadow Power). Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "shimmering-trousers-of-the-eagle",
+      "name": "Shimmering Trousers of the Eagle",
+      "slot": "legs",
+      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Intellect/stamina cloth legs recurring across defensive caster class builds. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "advisors-ring",
+      "name": "Advisor's Ring",
+      "slot": "finger",
+      "source": { "type": "quest", "detail": "Quest reward (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Stat ring recurring across caster class builds. Verify source and stats at authoring.",
+      "wowheadId": null,
+      "priority": "core"
+    },
+    {
+      "id": "night-watch-shortsword",
+      "name": "Night Watch Shortsword",
+      "slot": "mainhand",
+      "source": { "type": "quest", "detail": "Duskwood quest reward (verify exact source)" },
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "One-hand caster sword recurring across caster class builds; enchant varies by build (Spell Power, Mighty Intellect). Verify source, stats, and required level at authoring.",
+      "wowheadId": null,
+      "priority": "core",
+      "enchant": "spell-power-weapon"
     }
   ]
 }

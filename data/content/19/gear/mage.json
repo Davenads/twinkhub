@@ -26,41 +26,6 @@
       "enchant": "greater-intellect-bracer"
     },
     {
-      "id": "pagan-mitts-of-the-eagle",
-      "name": "Pagan Mitts of the Eagle",
-      "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Intellect/stamina cloth gloves for the defensive build; enchanted with Frost Power. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core",
-      "enchant": "frost-power-gloves"
-    },
-    {
-      "id": "gnoll-casting-gloves",
-      "name": "Gnoll Casting Gloves",
-      "slot": "hands",
-      "source": { "type": "drop", "detail": "Low-level drop (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Caster cloth gloves for the offensive build; enchanted with Frost Power. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core",
-      "enchant": "frost-power-gloves"
-    },
-    {
-      "id": "shimmering-trousers-of-the-eagle",
-      "name": "Shimmering Trousers of the Eagle",
-      "slot": "legs",
-      "source": { "type": "drop", "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Intellect/stamina cloth legs for the defensive build. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
       "id": "greenweave-sandals-of-frozen-wrath",
       "name": "Greenweave Sandals of Frozen Wrath",
       "slot": "feet",
@@ -71,29 +36,6 @@
       "wowheadId": null,
       "priority": "core",
       "enchant": "minor-speed-boots"
-    },
-    {
-      "id": "advisors-ring",
-      "name": "Advisor's Ring",
-      "slot": "finger",
-      "source": { "type": "quest", "detail": "Quest reward (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Stat ring for the midfield/offense builds. Verify source and stats at authoring.",
-      "wowheadId": null,
-      "priority": "core"
-    },
-    {
-      "id": "night-watch-shortsword",
-      "name": "Night Watch Shortsword",
-      "slot": "mainhand",
-      "source": { "type": "quest", "detail": "Duskwood quest reward (verify exact source)" },
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "One-hand caster sword; the midfield mainhand (Spell Power) and the defensive intellect stat-stick (Mighty Intellect). Verify source, stats, and required level at authoring.",
-      "wowheadId": null,
-      "priority": "core",
-      "enchant": "spell-power-weapon"
     },
     {
       "id": "hook-dagger-of-frozen-wrath",
