@@ -7,17 +7,17 @@
       "type": "potion",
       "effect": "Instant health restore; shares the potion cooldown. Keep the highest rank usable at level 19 on cooldown.",
       "faction": "both",
-      "reqLevel": null,
-      "notes": "Verify exact rank/reqLevel at authoring."
+      "reqLevel": 12,
+      "notes": "Healing Potion (item 929, Requires Level 12) is the highest healing potion usable at 19; Greater Healing Potion requires level 21. Confirmed via Wowhead Classic item data."
     },
     {
       "id": "mana-potion",
-      "name": "Mana Potion",
+      "name": "Lesser Mana Potion",
       "type": "potion",
       "effect": "Instant mana restore; shares the potion cooldown. Mana-using classes keep one on cooldown.",
       "faction": "both",
-      "reqLevel": null,
-      "notes": "For mana-using classes. Verify exact rank/reqLevel at authoring."
+      "reqLevel": 14,
+      "notes": "For mana-using classes. Lesser Mana Potion (item 3385, Requires Level 14) is the highest mana potion usable at 19; Mana Potion requires level 22. Confirmed via Wowhead Classic item data."
     },
     {
       "id": "green-tea-leaf",
