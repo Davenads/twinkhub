@@ -57,7 +57,7 @@
       { "spell": "Renew", "rank": 2, "coefficient": 0.155, "type": "hot" },
       { "spell": "Power Word: Shield", "rank": 1, "coefficient": 0.0475, "type": "shield" },
       { "spell": "Power Word: Shield", "rank": 2, "coefficient": 0.07, "type": "shield" },
-      { "spell": "Power Word: Shield", "rank": 3, "coefficient": 0.0925, "type": "shield", "confirmed": false, "notes": "Rank 3 value not confirmed by Wowhead." }
+      { "spell": "Power Word: Shield", "rank": 3, "coefficient": 0.0925, "type": "shield", "notes": "Derived from the vanilla shield coefficient (0.1 base) with the rank-3 downranking penalty (learned level 18: 1 - 0.0375*2 = 0.925), matching the 0.1-base progression of ranks 1 and 2." }
     ],
     "shaman": [
       { "spell": "Lightning Bolt", "rank": 1, "coefficient": 0.123, "type": "direct-damage" },
@@ -99,7 +99,7 @@
       { "spell": "Regrowth", "rank": 1, "coefficient": 0.05, "type": "hot" },
       { "spell": "Regrowth", "rank": 2, "coefficient": 0.066, "type": "hot" },
       { "spell": "Rejuvenation", "rank": 1, "coefficient": 0.08, "type": "hot" },
-      { "spell": "Rejuvenation", "rank": 2, "coefficient": 0.0125, "type": "hot", "confirmed": false, "notes": "Anomalous coefficient reported by source; verify against Wowhead." },
+      { "spell": "Rejuvenation", "rank": 2, "coefficient": 0.125, "type": "hot", "notes": "Level-19-effective per-tick value derived from the vanilla HoT formula (12s / 15 over 4 ticks = 0.2 base) with the rank-2 downranking penalty (learned level 10: 1 - 0.0375*10 = 0.625), matching ranks 1 and 3. Prior 0.0125 was a decimal-point typo." },
       { "spell": "Rejuvenation", "rank": 3, "coefficient": 0.17, "type": "hot" }
     ],
     "paladin": [
