@@ -5,26 +5,26 @@
       "family": "boar",
       "exampleName": "Great Goretusk",
       "keyAbility": "Charge",
-      "tameLevel": null,
-      "zone": null,
-      "notes": "Charge utility (snare/stun on the pull). Verify tame level/zone at authoring."
+      "tameLevel": 17,
+      "zone": "Westfall",
+      "notes": "Charge utility (snare/stun on the pull). NPC 547, level 16-17 Boar in Westfall (Alliance-side). Confirmed via Wowhead Classic."
     },
     {
       "family": "cat",
       "exampleName": "The Rake",
       "keyAbility": null,
       "attackSpeed": 1.2,
-      "tameLevel": null,
-      "zone": null,
-      "notes": "Fastest 1.2 attack speed; pushes back casters. Verify tame level/zone at authoring."
+      "tameLevel": 10,
+      "zone": "The Barrens",
+      "notes": "Fast attack speed; pushes back casters. NPC 5807, level 10 Rare cat in The Barrens (Horde-side rare spawn). Confirmed via Wowhead Classic."
     },
     {
-      "family": "wind-serpent",
-      "exampleName": "Deviate Stinglash",
-      "keyAbility": null,
-      "tameLevel": null,
-      "zone": null,
-      "notes": "Ranged nature damage; strong vs plate and casters. Verify tame level/zone and ability name at authoring."
+      "family": "carrion-bird",
+      "exampleName": "Mountain Buzzard",
+      "keyAbility": "Screech",
+      "tameLevel": 16,
+      "zone": "Loch Modan",
+      "notes": "Screech reduces the melee attack power of nearby enemies (AoE) \u2014 strong WSG teamfight utility. NPC 1194, level 15-16 Carrion Bird in Loch Modan. Replaces the seed's wind-serpent (Deviate Stinglash): wind serpents are untameable at 19 \u2014 the lowest tameable is ~level 25, and Deviate Stinglash is an Elite instance mob (elites/level-25 pets are out of reach). Owls (e.g. Strigid Screecher, Teldrassil) also carry Screech. Confirmed via Wowhead Classic and Petopia Classic."
     }
   ],
   "xpNote": "Pets need only ~25% of the XP a player needs, so a 19 can level a full pet stable within budget. Pets gain NO XP from quest turn-ins \u2014 only the player does. Sync pets to your level BEFORE turning in gear quests or you'll out-level them.",

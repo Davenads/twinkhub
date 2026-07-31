@@ -36,5 +36,5 @@ test('pets autocomplete suggests the seeded families and returns the family key'
   const boar = responded.find((c) => c.value === 'boar');
   assert.ok(boar, 'suggests the boar family');
   assert.equal(boar.name, 'Boar');
-  assert.ok(responded.some((c) => c.value === 'wind-serpent' && c.name === 'Wind Serpent'));
+  assert.ok(responded.some((c) => c.value === 'carrion-bird' && c.name === 'Carrion Bird'));
 });
