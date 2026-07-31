@@ -73,7 +73,7 @@
       "slots": {
         "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
         "neck": { "item": "scouts-medallion", "enchant": null },
-        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "zandalar-signet-of-mojo" },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "power-of-the-scourge" },
         "back": { "item": "watchers-cape-of-shadow-wrath", "enchant": "greater-resistance" },
         "chest": { "item": "ritual-shroud-of-shadow-wrath", "enchant": "major-health" },
         "wrist": { "item": "greenweave-bracers-of-shadow-wrath", "enchant": "superior-stamina" },
@@ -101,7 +101,7 @@
       "slots": {
         "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
         "neck": { "item": "scouts-medallion", "enchant": null },
-        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "zandalar-signet-of-mojo" },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "power-of-the-scourge" },
         "back": { "item": "watchers-cape-of-shadow-wrath", "enchant": "greater-resistance" },
         "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
         "wrist": { "item": "greenweave-bracers-of-shadow-wrath", "enchant": "superior-stamina" },
@@ -158,7 +158,7 @@
       "slots": {
         "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
         "neck": { "item": "sentinels-medallion", "enchant": null },
-        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "zandalar-signet-of-mojo" },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "power-of-the-scourge" },
         "back": { "item": "watchers-cape-of-shadow-wrath", "enchant": "greater-resistance" },
         "chest": { "item": "ritual-shroud-of-shadow-wrath", "enchant": "major-health" },
         "wrist": { "item": "greenweave-bracers-of-shadow-wrath", "enchant": "superior-stamina" },
@@ -186,7 +186,7 @@
       "slots": {
         "head": { "item": "lucky-fishing-hat", "enchant": "lesser-arcanum-of-constitution" },
         "neck": { "item": "sentinels-medallion", "enchant": null },
-        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "zandalar-signet-of-mojo" },
+        "shoulder": { "item": "reinforced-woolen-shoulders", "enchant": "power-of-the-scourge" },
         "back": { "item": "watchers-cape-of-shadow-wrath", "enchant": "greater-resistance" },
         "chest": { "item": "tree-bark-jacket", "enchant": "major-health" },
         "wrist": { "item": "greenweave-bracers-of-shadow-wrath", "enchant": "superior-stamina" },

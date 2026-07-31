@@ -1,5 +1,5 @@
 {
-  "note": "Twinking hinges on enchants with no level requirement (flagged noLevelReq): they let a level-19 character carry effects far above the bracket's natural power. THE centerpiece is the shoulder slot \u2014  19 gearsets are built around a Requires Level 19 BoE white (common) shoulder carrying a Naxxramas 'of the Scourge' inscription (Might / Power / Fortitude / Resilience of the Scourge, all dropped by Sapphiron in Naxxramas), or a Zandalar Signet inscription from Zul'Gurub reputation. These shoulder inscriptions do NOT soulbind the item they enhance (they behave like leg armor kits / spellthread), so a level-60 applies the enchant to a BoE req-19 white shoulder and mails the finished piece to the twink. The head slot takes a Lesser Arcanum (Constitution / Voracity / Rumination), which also applies to legs; Engineering goggles (Green Tinted Goggles) remain a strong head frame that still takes the arcanum on top. Scourge/Zandalar shoulder values confirmed via Wowhead Classic; other entries still marked 'Verify exact value at authoring' pending per-item confirmation.",
+  "note": "Twinking hinges on enchants with no level requirement (flagged noLevelReq): they let a level-19 character carry effects far above the bracket's natural power. THE centerpiece is the shoulder slot \u2014  19 gearsets are built around a Requires Level 19 BoE white (common) shoulder carrying a Naxxramas 'of the Scourge' inscription (Might / Power / Fortitude / Resilience of the Scourge, all dropped by Sapphiron in Naxxramas). Only these Naxxramas inscriptions work for 19 BiS: they do NOT soulbind the item they enhance (they behave like leg armor kits / spellthread), so a level-60 applies the enchant to a BoE req-19 white shoulder and mails the finished piece to the twink. The Zul'Gurub Zandalar Signet inscriptions are NOT usable for the 19 bracket and are excluded. The head slot takes a Lesser Arcanum (Constitution / Voracity / Rumination), which also applies to legs; Engineering goggles (Green Tinted Goggles) remain a strong head frame that still takes the arcanum on top. Scourge shoulder values confirmed via Wowhead Classic; other entries still marked 'Verify exact value at authoring' pending per-item confirmation.",
   "enchants": [
     {
       "id": "fiery-weapon",
@@ -400,16 +400,6 @@
       "noLevelReq": true,
       "notes": "Healing-power bracer enchant for restoration/support hybrid builds. Verify exact value at authoring.",
       "classes": ["priest", "shaman", "druid", "paladin"]
-    },
-    {
-      "id": "zandalar-signet-of-mojo",
-      "name": "Zandalar Signet of Mojo",
-      "slot": "shoulder",
-      "effect": "+18 Spell Damage and Healing.",
-      "reqLevel": null,
-      "noLevelReq": true,
-      "notes": "Zandalari shoulder inscription; the highest raw-spellpower shoulder enchant, an alternative to Power of the Scourge (more spell damage, but no spell crit). Quest reward from Signets of the Zandalar (Zul'Gurub reputation, quest 8246); does not soulbind the shoulder, so it's applied to a BoE Requires Level 19 white shoulder and mailed to the twink. Confirmed via Wowhead Classic (item 20076: +18 spell damage and healing).",
-      "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
     },
     {
       "id": "shadow-power-gloves",
