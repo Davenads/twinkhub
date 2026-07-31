@@ -1,15 +1,33 @@
 {
-  "note": "Seeded minimally from the verified domain notes. Only quests whose name is confirmed are authored; the Horde SFK-ring/Screecher-Belt turn-ins and Talbar Mantle shoulder quest are described in the domain doc by reward only, so they await name/zone verification before authoring.",
+  "note": "Confirmed gear-reward quests worth doing before the cap. Reward stats/equip levels verified via Wowhead Classic item data (equip level <=19). xpWarning marks turn-ins that grant enough XP to risk pushing a near-cap character to 20 \u2014 do these before syncing to 19.",
   "quests": [
     {
       "id": "the-night-watch",
       "name": "The Night Watch",
-      "zone": null,
+      "zone": "Duskwood",
       "faction": "alliance",
-      "reward": { "desc": "Quiver/Bandolier of the Night Watch (ammo bag)" },
+      "reward": { "desc": "Choice of ammo bag \u2014 Quiver of the Night Watch (arrows) or Bandolier of the Night Watch (bullets), or Gunnysack of the Night Watch (10-slot general bag). Ammo bags have no equip requirement." },
       "xpWarning": true,
       "classes": ["hunter"],
-      "notes": "Alliance hunter ammo-bag quest. Verify zone and exact reward name at authoring."
+      "notes": "End of the Commander Althea Ebonlocke chain in Darkshire (Duskwood). The quiver/bandolier benefit ranged users (hunter especially; also warrior/rogue with a ranged weapon). Duskwood quests grant significant XP. Confirmed via Wowhead Classic."
+    },
+    {
+      "id": "in-nightmares",
+      "name": "In Nightmares",
+      "zone": "The Barrens / Mulgore",
+      "faction": "horde",
+      "reward": { "desc": "Talbar Mantle \u2014 cloth shoulders, Requires Level 10: +6 Intellect, +3 Stamina (30 armor). A caster shoulder pick." },
+      "xpWarning": true,
+      "notes": "Quest 3369; end of a Barrens chain turned in to Hamuul Runetotem on Elder Rise (Thunder Bluff). Level-25 quest \u2014 large XP turn-in. Talbar Mantle is one reward choice and is equippable at 19 (req 10). Confirmed via Wowhead Classic (item 10657)."
+    },
+    {
+      "id": "bloodfury-bloodline",
+      "name": "Bloodfury Bloodline",
+      "zone": "Stonetalon Mountains",
+      "faction": "horde",
+      "reward": { "desc": "Screecher Belt \u2014 leather waist, Requires Level 18: +5 Intellect, +2 Spirit, +3 Stamina, +12 Attack Power (50 armor). Hybrid AP/int belt." },
+      "xpWarning": true,
+      "notes": "Quest 6283; from Maggran at Sun Rock Retreat (Stonetalon Mountains). Level-26 quest \u2014 substantial XP turn-in. Screecher Belt is Horde-only and equippable at 19 (req 18). Confirmed via Wowhead Classic (item 16987)."
     }
   ]
 }
