@@ -28,6 +28,15 @@
       "reward": { "desc": "Screecher Belt \u2014 leather waist, Requires Level 18: +5 Intellect, +2 Spirit, +3 Stamina, +12 Attack Power (50 armor). Hybrid AP/int belt." },
       "xpWarning": true,
       "notes": "Quest 6283; from Maggran at Sun Rock Retreat (Stonetalon Mountains). Level-26 quest \u2014 substantial XP turn-in. Screecher Belt is Horde-only and equippable at 19 (req 18). Confirmed via Wowhead Classic (item 16987)."
+    },
+    {
+      "id": "arugal-must-die",
+      "name": "Arugal Must Die",
+      "zone": "Silverpine Forest / Shadowfang Keep",
+      "faction": "horde",
+      "reward": { "desc": "Seal of Sylvanas \u2014 blue ring, Requires Level 18: +8 Stamina, +3 Strength. Excellent 19 twink ring." },
+      "xpWarning": true,
+      "notes": "Quest 1014; kill Arugal (final boss of Shadowfang Keep) and turn in his head to Dalar Dawnweaver at the Sepulcher (Silverpine Forest). Level-27 dungeon quest \u2014 large XP turn-in. Seal of Sylvanas is Horde-only and equippable at 19 (req 18). Confirmed via Wowhead Classic (item 6414)."
     }
   ]
 }
