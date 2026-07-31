@@ -80,12 +80,14 @@ export function renderOptimize({ store, bracket, className, faction = null }) {
       : 'No enchant recommendations on your core items yet.'
   });
 
-  // 3) Consumables to carry (class-specific plus universal).
+  // 3) Consumables to carry (class-specific plus universal). Surface class-specific
+  // ones first so a player's unique picks aren't dropped by the display cap.
   const cons = consumablesFor(store, bracket, { className: classKey });
+  const orderedCons = [...cons].sort((a, b) => Number(!!b.classes) - Number(!!a.classes));
   embed.addFields({
     name: 'Consumables to carry',
-    value: cons.length
-      ? cons.slice(0, MAX_LIST).map((c) => `${c.name} (${c.type})`).join('\n')
+    value: orderedCons.length
+      ? orderedCons.slice(0, MAX_LIST).map((c) => `${c.name} (${c.type})`).join('\n')
       : 'No consumables authored for this bracket yet.'
   });
 
