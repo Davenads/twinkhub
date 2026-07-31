@@ -20,6 +20,25 @@
       "notes": "For mana-using classes. Lesser Mana Potion (item 3385, Requires Level 14) is the highest mana potion usable at 19; Mana Potion requires level 22. Confirmed via Wowhead Classic item data."
     },
     {
+      "id": "swiftness-potion",
+      "name": "Swiftness Potion",
+      "type": "potion",
+      "effect": "Increases run speed by 50% for 15 sec; shares the potion cooldown. Flag-running and gap-closing tool in WSG.",
+      "faction": "both",
+      "reqLevel": 5,
+      "notes": "Item 2459, Requires Level 5. Shares the standard potion cooldown (trade-off vs a Healing Potion). Note: Free Action Potion (stun/root immunity) is NOT usable at 19 \u2014 it requires level 20. Confirmed via Wowhead Classic item data."
+    },
+    {
+      "id": "rage-potion",
+      "name": "Rage Potion",
+      "type": "potion",
+      "effect": "Instantly generates 20\u201340 rage; shares the potion cooldown. Opener burst for a rage-starved start.",
+      "faction": "both",
+      "classes": ["warrior", "druid"],
+      "reqLevel": 4,
+      "notes": "Item 5631, Requires Level 4. Useful to rage users (warrior, and druid in bear form). Shares the standard potion cooldown. Confirmed via Wowhead Classic item data."
+    },
+    {
       "id": "heavy-silk-bandage",
       "name": "Heavy Silk Bandage",
       "type": "food",
@@ -27,6 +46,15 @@
       "faction": "both",
       "reqLevel": null,
       "notes": "Item 6451, requires First Aid 125 (no character-level requirement); heals 640 over 8 sec. Best bandage usable at 19 \u2014 Mageweave bandages need Expert First Aid (level 20+). Schema has no bandage type; modeled as food (the off-potion-cooldown heal role). Confirmed via Wowhead Classic item data."
+    },
+    {
+      "id": "rumsey-rum-black-label",
+      "name": "Rumsey Rum Black Label",
+      "type": "food",
+      "effect": "Persistent Well Fed-style buff: +15 Stamina for 15 min (does NOT share the potion cooldown). Pre-buff before a match for ~150 extra HP.",
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Item 21151, no character-level requirement; grants +15 Stamina for 15 min (also applies mild drunkenness). Persists through the potion cooldown; strong 19 pre-buff. Obtained via AH/vendor. Confirmed via Wowhead Classic item data."
     },
     {
       "id": "thistle-tea",
