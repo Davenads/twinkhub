@@ -1,5 +1,5 @@
 {
-  "note": "Twinking hinges on enchants with no level requirement (flagged noLevelReq): they let a level-19 character carry effects far above the bracket's natural power. The head slot takes a Lesser Arcanum (Constitution / Voracity / Rumination), which also applies to legs; Engineering goggles (Green Tinted Goggles) remain a strong head frame that still takes the arcanum on top. Verify exact values against Wowhead at authoring time.",
+  "note": "Twinking hinges on enchants with no level requirement (flagged noLevelReq): they let a level-19 character carry effects far above the bracket's natural power. THE centerpiece is the shoulder slot \u2014  19 gearsets are built around a Requires Level 19 BoE white (common) shoulder carrying a Naxxramas 'of the Scourge' inscription (Might / Power / Fortitude / Resilience of the Scourge, all dropped by Sapphiron in Naxxramas), or a Zandalar Signet inscription from Zul'Gurub reputation. These shoulder inscriptions do NOT soulbind the item they enhance (they behave like leg armor kits / spellthread), so a level-60 applies the enchant to a BoE req-19 white shoulder and mails the finished piece to the twink. The head slot takes a Lesser Arcanum (Constitution / Voracity / Rumination), which also applies to legs; Engineering goggles (Green Tinted Goggles) remain a strong head frame that still takes the arcanum on top. Scourge/Zandalar shoulder values confirmed via Wowhead Classic; other entries still marked 'Verify exact value at authoring' pending per-item confirmation.",
   "enchants": [
     {
       "id": "fiery-weapon",
@@ -88,7 +88,7 @@
       "effect": "+26 Attack Power and +1% critical strike chance.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Shoulder enchant with no level requirement; a strong melee/physical shoulder pick. Verify exact values and availability at authoring.",
+      "notes": "The melee/physical shoulder pick and the centerpiece of most 19 melee sets. Dropped by Sapphiron in Naxxramas (item 23548); the inscription does not soulbind the shoulder, so a level-60 applies it to a BoE Requires Level 19 white shoulder and mails the piece to the twink. Confirmed via Wowhead Classic (item 23548: +26 attack power, +1% critical strike).",
       "classes": ["warrior", "rogue", "hunter", "shaman", "druid"]
     },
     {
@@ -188,7 +188,7 @@
       "effect": "+16 Stamina and +100 Armor.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Defensive Scourge shoulder enchant with no level requirement; the survivability counterpart to Might of the Scourge. Verify exact values and availability at authoring.",
+      "notes": "Defensive Scourge shoulder enchant; the survivability counterpart to Might of the Scourge. Dropped by Sapphiron in Naxxramas (item 23549); does not soulbind the shoulder, so it's applied to a BoE Requires Level 19 white shoulder and mailed to the twink. Confirmed via Wowhead Classic (item 23549: +16 Stamina, +100 armor).",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
     },
     {
@@ -318,7 +318,7 @@
       "effect": "+31 Healing and +5 Mana per 5 sec.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Healing-oriented Scourge shoulder enchant with no level requirement; the restoration counterpart to Might/Fortitude of the Scourge. Verify exact values and availability at authoring.",
+      "notes": "Healing-oriented Scourge shoulder enchant; the restoration counterpart to Might/Fortitude of the Scourge. Dropped by Sapphiron in Naxxramas (item 23547); does not soulbind the shoulder, so it's applied to a BoE Requires Level 19 white shoulder and mailed to the twink. Confirmed via Wowhead Classic (item 23547: +31 healing, +5 mana per 5 sec).",
       "classes": ["shaman", "druid", "paladin", "priest"]
     },
     {
@@ -358,7 +358,7 @@
       "effect": "+15 Spell Damage and Healing and +1% spell critical strike.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Caster-damage Scourge shoulder enchant with no level requirement; the spellpower counterpart to Might/Fortitude of the Scourge. Verify exact values and availability at authoring.",
+      "notes": "Caster-damage Scourge shoulder enchant; the spellpower counterpart to Might/Fortitude of the Scourge. Dropped by Sapphiron in Naxxramas (item 23545); does not soulbind the shoulder, so it's applied to a BoE Requires Level 19 white shoulder and mailed to the twink. Confirmed via Wowhead Classic (item 23545: +15 spell damage and healing, +1% spell critical strike).",
       "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
     },
     {
@@ -408,7 +408,7 @@
       "effect": "+18 Spell Damage and Healing.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Zandalari shoulder inscription with no level requirement; the highest-spellpower shoulder enchant for caster-damage builds, an alternative to Power of the Scourge. Verify exact value and availability at authoring.",
+      "notes": "Zandalari shoulder inscription; the highest raw-spellpower shoulder enchant, an alternative to Power of the Scourge (more spell damage, but no spell crit). Quest reward from Signets of the Zandalar (Zul'Gurub reputation, quest 8246); does not soulbind the shoulder, so it's applied to a BoE Requires Level 19 white shoulder and mailed to the twink. Confirmed via Wowhead Classic (item 20076: +18 spell damage and healing).",
       "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
     },
     {
