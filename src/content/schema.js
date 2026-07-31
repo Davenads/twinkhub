@@ -27,8 +27,10 @@ const BUILD_ROLES = ['flag-carrier', 'defense', 'midfield', 'offense'];
 // the coefficient is per tick/hit/orb rather than per cast.
 const SPELL_TYPES = ['direct-damage', 'dot', 'direct-heal', 'hot', 'shield', 'proc'];
 
-// Controlled consumable types (03-data-model.md) — the same five `/consumable type:` exposes.
-const CONSUMABLE_TYPES = ['potion', 'poison', 'food', 'explosive', 'worldbuff'];
+// Controlled consumable types (03-data-model.md) — the set `/consumable type:` exposes.
+// elixir/scroll are persistent stat buffs (no shared potion cooldown); weapon-buff
+// covers temporary weapon enhancements (sharpening/weightstones, wizard/mana oils).
+const CONSUMABLE_TYPES = ['potion', 'poison', 'elixir', 'scroll', 'food', 'weapon-buff', 'explosive', 'worldbuff'];
 
 /** Record `msg` when `cond` is false; returns `cond` for control flow. */
 function require_(errors, cond, msg) {
@@ -543,8 +545,9 @@ export function validateSpellCoefficients(obj, label = 'spellcoefficients.json')
 }
 
 /**
- * `<bracket>/consumables.json`: potions, poisons, food, explosives, and world
- * buffs backing `/consumable`. Structural checks only — the referential guard
+ * `<bracket>/consumables.json`: potions, poisons, elixirs, scrolls, food, weapon
+ * buffs, explosives, and world buffs backing `/consumable`. Structural checks only
+ * — the referential guard
  * (every `classes[]` entry is a real roster class) lives in the store. `faction`,
  * `reqLevel`, `source`, `classes`, and `notes` are optional so an item can be
  * authored before every detail is verified; a missing `classes` means the

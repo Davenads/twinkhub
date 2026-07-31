@@ -9,7 +9,7 @@ import { capitalize } from '../../lib/text.js';
 // can't filter to a class with no data. All copy lives in consumables.json.
 export const data = new SlashCommandBuilder()
   .setName('consumable')
-  .setDescription('Recommended consumables for a bracket: potions, poisons, food, explosives.')
+  .setDescription('Recommended consumables for a bracket: potions, elixirs, scrolls, food, explosives.')
   .addStringOption((o) =>
     o
       .setName('type')
@@ -18,7 +18,10 @@ export const data = new SlashCommandBuilder()
       .addChoices(
         { name: 'Potion', value: 'potion' },
         { name: 'Poison', value: 'poison' },
+        { name: 'Elixir', value: 'elixir' },
+        { name: 'Scroll', value: 'scroll' },
         { name: 'Food', value: 'food' },
+        { name: 'Weapon buff', value: 'weapon-buff' },
         { name: 'Explosive', value: 'explosive' },
         { name: 'World buff', value: 'worldbuff' }
       )

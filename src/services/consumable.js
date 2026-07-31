@@ -7,11 +7,14 @@ const EMBED_COLOR = 0xc8aa6e;
 const MAX_FIELDS = 25;
 
 // Display order + labels for each consumable type.
-const TYPE_ORDER = ['potion', 'poison', 'food', 'explosive', 'worldbuff'];
+const TYPE_ORDER = ['potion', 'poison', 'elixir', 'scroll', 'food', 'weapon-buff', 'explosive', 'worldbuff'];
 const TYPE_LABEL = {
   potion: 'Potion',
   poison: 'Poison',
+  elixir: 'Elixir',
+  scroll: 'Scroll',
   food: 'Food',
+  'weapon-buff': 'Weapon buff',
   explosive: 'Explosive',
   worldbuff: 'World buff'
 };

@@ -423,7 +423,7 @@ test('validateConsumables accepts a well-formed file with optional fields', () =
 test('validateConsumables requires a non-empty consumables array with valid core fields', () => {
   assert.equal(validateConsumables({ consumables: [] }).ok, false);
   const badType = validConsumables();
-  badType.consumables[0].type = 'elixir';
+  badType.consumables[0].type = 'flask';
   assert.ok(validateConsumables(badType).errors.some((e) => e.includes('type')));
   const badEffect = validConsumables();
   delete badEffect.consumables[0].effect;
