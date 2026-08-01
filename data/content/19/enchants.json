@@ -1,5 +1,5 @@
 {
-  "note": "Twinking hinges on enchants with no level requirement (flagged noLevelReq): they let a level-19 character carry effects far above the bracket's natural power. THE centerpiece is the shoulder slot \u2014  19 gearsets are built around a Requires Level 19 BoE white (common) shoulder carrying a Naxxramas 'of the Scourge' inscription (Might / Power / Fortitude / Resilience of the Scourge, all dropped by Sapphiron in Naxxramas). Only these Naxxramas inscriptions work for 19 BiS: they do NOT soulbind the item they enhance (they behave like leg armor kits / spellthread), so a level-60 applies the enchant to a BoE req-19 white shoulder and mails the finished piece to the twink. The Zul'Gurub Zandalar Signet inscriptions are NOT usable for the 19 bracket and are excluded. The head slot takes a Lesser Arcanum (Constitution / Voracity / Rumination), which also applies to legs; Engineering goggles (Green Tinted Goggles) remain a strong head frame that still takes the arcanum on top. Scourge shoulder values confirmed via Wowhead Classic; other entries still marked 'Verify exact value at authoring' pending per-item confirmation.",
+  "note": "Twinking hinges on enchants with no level requirement (flagged noLevelReq): they let a level-19 character carry effects far above the bracket's natural power. THE centerpiece is the shoulder slot \u2014  19 gearsets are built around a Requires Level 19 BoE white (common) shoulder carrying a Naxxramas 'of the Scourge' inscription (Might / Power / Fortitude / Resilience of the Scourge, all dropped by Sapphiron in Naxxramas). Only these Naxxramas inscriptions work for 19 BiS: they do NOT soulbind the item they enhance (they behave like leg armor kits / spellthread), so a level-60 applies the enchant to a BoE req-19 white shoulder and mails the finished piece to the twink. The Zul'Gurub Zandalar Signet inscriptions are NOT usable for the 19 bracket and are excluded. The head slot takes a Lesser Arcanum (Constitution / Voracity / Rumination), which also applies to legs; Engineering goggles (Green Tinted Goggles) remain a strong head frame that still takes the arcanum on top. All enchant values in this file are confirmed via Wowhead Classic.",
   "enchants": [
     {
       "id": "fiery-weapon",
@@ -32,26 +32,6 @@
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
     },
     {
-      "id": "greater-agility-2h",
-      "name": "Enchant 2H Weapon - Greater Agility",
-      "slot": "2h-weapon",
-      "effect": "+15 Agility.",
-      "reqLevel": null,
-      "noLevelReq": true,
-      "notes": "Flat agility stat stick for two-handers; verify current 1H alternatives per spec.",
-      "classes": ["hunter", "rogue", "warrior", "druid", "shaman"]
-    },
-    {
-      "id": "greater-intellect-weapon",
-      "name": "Enchant Weapon - Greater Intellect",
-      "slot": "weapon",
-      "effect": "+22 Intellect.",
-      "reqLevel": null,
-      "noLevelReq": true,
-      "notes": "Caster stat stick for larger mana pool and crit; verify exact enchant per weapon type.",
-      "classes": ["mage", "warlock", "priest", "paladin", "shaman", "druid"]
-    },
-    {
       "id": "minor-speed-boots",
       "name": "Enchant Boots - Minor Speed",
       "slot": "boots",
@@ -68,7 +48,7 @@
       "effect": "+100 Health (applies to head or legs).",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Zul'Gurub-style head/leg arcanum with no level requirement; the defensive head/leg enchant for survivability builds. Verify exact value at authoring.",
+      "notes": "Dire Maul libram head/leg arcanum with no level requirement; the defensive head/leg enchant for survivability builds. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -78,7 +58,7 @@
       "effect": "+8 Agility (applies to head or legs).",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Offensive head/leg arcanum with no level requirement; the agility head/leg enchant for damage builds. Verify exact value at authoring.",
+      "notes": "Offensive head/leg arcanum with no level requirement; the agility head/leg enchant for damage builds. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "shaman", "druid"]
     },
     {
@@ -98,7 +78,7 @@
       "effect": "+5 to all resistances.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "All-resistance cloak enchant; a balanced defensive back pick. Verify exact value at authoring.",
+      "notes": "All-resistance cloak enchant; a balanced defensive back pick. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -108,7 +88,7 @@
       "effect": "+15 Nature Resistance.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Nature-resistance cloak enchant; situational against nature-heavy matchups (e.g. shaman, druid, hunter). Verify exact value at authoring.",
+      "notes": "Nature-resistance cloak enchant; situational against nature-heavy matchups (e.g. shaman, druid, hunter). Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -118,7 +98,7 @@
       "effect": "+100 Health.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Flat health chest enchant for survivability builds. Verify exact value at authoring.",
+      "notes": "Flat health chest enchant for survivability builds. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -128,7 +108,7 @@
       "effect": "+4 to all stats.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "All-stats chest enchant for balanced/offensive builds. Verify exact value at authoring.",
+      "notes": "All-stats chest enchant for balanced/offensive builds. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -138,7 +118,7 @@
       "effect": "+9 Stamina.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Stamina bracer enchant for survivability builds. Verify exact value at authoring.",
+      "notes": "Stamina bracer enchant for survivability builds. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -148,7 +128,7 @@
       "effect": "+9 Strength.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Strength bracer enchant for melee damage builds. Verify exact value at authoring.",
+      "notes": "Strength bracer enchant for melee damage builds. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
     },
     {
@@ -158,7 +138,7 @@
       "effect": "+15 Agility.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Agility gloves enchant; a strong pick for physical damage classes. Verify exact value at authoring.",
+      "notes": "Agility gloves enchant; a strong pick for physical damage classes. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "shaman", "druid"]
     },
     {
@@ -168,7 +148,7 @@
       "effect": "Chance on hit: deal Shadow damage and heal the attacker for the amount dealt.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Sustain weapon enchant with no level requirement; favored on midfield/duelist builds for self-healing. Verify exact value at authoring.",
+      "notes": "Sustain weapon enchant with no level requirement; favored on midfield/duelist builds for self-healing. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
     },
     {
@@ -178,7 +158,7 @@
       "effect": "+3 weapon damage (applies to a bow, crossbow, or gun).",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Engineering ranged-weapon scope with no level requirement; flat damage on a bow/crossbow/gun. Verify exact value at authoring.",
+      "notes": "Engineering ranged-weapon scope with no level requirement; flat damage on a bow/crossbow/gun. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter"]
     },
     {
@@ -193,12 +173,12 @@
     },
     {
       "id": "shadow-resistance",
-      "name": "Enchant Cloak - Shadow Resistance",
+      "name": "Enchant Cloak - Lesser Shadow Resistance",
       "slot": "cloak",
       "effect": "+10 Shadow Resistance.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Shadow-resistance cloak enchant; situational against warlocks, shadow priests, and rogue poisons. Verify exact value at authoring.",
+      "notes": "Shadow-resistance cloak enchant; situational against warlocks, shadow priests, and rogue poisons. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -208,7 +188,7 @@
       "effect": "+7 Strength.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Strength gloves enchant for melee damage builds; an alternative to Superior Agility on strength-scaling classes. Verify exact value at authoring.",
+      "notes": "Strength gloves enchant for melee damage builds; an alternative to Superior Agility on strength-scaling classes. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
     },
     {
@@ -218,7 +198,7 @@
       "effect": "+7 Stamina.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Stamina shield enchant for shield-using builds. Verify exact value at authoring.",
+      "notes": "Stamina shield enchant for shield-using builds. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "paladin", "shaman"]
     },
     {
@@ -228,7 +208,7 @@
       "effect": "+8 Frost Resistance.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Frost-resistance shield enchant; situational against mages and frost effects. Verify exact value at authoring.",
+      "notes": "Frost-resistance shield enchant; situational against mages and frost effects. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "paladin", "shaman"]
     },
     {
@@ -238,7 +218,7 @@
       "effect": "Chance on block to deal Physical damage to the attacker.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Blacksmithing shield spike with no level requirement; retaliation damage on block for shield builds. Verify exact value at authoring.",
+      "notes": "Blacksmithing shield spike with no level requirement; retaliation damage on block for shield builds. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "paladin", "shaman"]
     },
     {
@@ -248,7 +228,7 @@
       "effect": "Immune to Disarm.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Blacksmithing weapon chain with no level requirement; prevents disarm on a melee weapon. Verify exact value at authoring.",
+      "notes": "Blacksmithing weapon chain with no level requirement; prevents disarm on a melee weapon. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
     },
     {
@@ -258,7 +238,7 @@
       "effect": "+25 Agility.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Two-hand agility enchant with no level requirement; the agility stat stick for 2H weapons. Verify exact value at authoring.",
+      "notes": "Two-hand agility enchant with no level requirement; the agility stat stick for 2H weapons. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "hunter", "rogue", "shaman", "druid"]
     },
     {
@@ -268,7 +248,7 @@
       "effect": "+15 Agility.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "One-hand agility weapon enchant with no level requirement; an agility stat stick for 1H weapons. Verify exact value at authoring.",
+      "notes": "One-hand agility weapon enchant with no level requirement; an agility stat stick for 1H weapons. Confirmed via Wowhead Classic.",
       "classes": ["warrior", "hunter", "rogue", "shaman", "druid"]
     },
     {
@@ -278,7 +258,7 @@
       "effect": "+7 Intellect.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Intellect bracer enchant; used on hybrid/caster-leaning builds for a larger mana pool. Verify exact value at authoring.",
+      "notes": "Intellect bracer enchant; used on hybrid/caster-leaning builds for a larger mana pool. Confirmed via Wowhead Classic.",
       "classes": ["hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -288,7 +268,7 @@
       "effect": "+22 Intellect.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Intellect weapon enchant with no level requirement; a caster stat-stick option on staves. Verify exact value at authoring.",
+      "notes": "Intellect weapon enchant with no level requirement; a caster stat-stick option on staves. Confirmed via Wowhead Classic.",
       "classes": ["hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -298,7 +278,7 @@
       "effect": "+20 Spirit.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Spirit weapon enchant with no level requirement; a regen-focused stat-stick option on staves. Verify exact value at authoring.",
+      "notes": "Spirit weapon enchant with no level requirement; a regen-focused stat-stick option on staves. Confirmed via Wowhead Classic.",
       "classes": ["hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
     },
     {
@@ -308,7 +288,7 @@
       "effect": "+150 Mana (applies to head or legs).",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Zul'Gurub-style head/leg arcanum with no level requirement; the mana head/leg enchant for caster-hybrid damage builds. Verify exact value at authoring.",
+      "notes": "Dire Maul libram head/leg arcanum with no level requirement; the mana head/leg enchant for caster-hybrid damage builds. Confirmed via Wowhead Classic.",
       "classes": ["shaman", "druid", "paladin", "mage", "warlock", "priest", "hunter"]
     },
     {
@@ -328,7 +308,7 @@
       "effect": "+30 Healing.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Healing-power gloves enchant for restoration/support hybrid builds. Verify exact value at authoring.",
+      "notes": "Healing-power gloves enchant for restoration/support hybrid builds. Confirmed via Wowhead Classic.",
       "classes": ["shaman", "druid", "paladin", "priest"]
     },
     {
@@ -338,7 +318,7 @@
       "effect": "+55 Healing.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Healing-power weapon enchant with no level requirement; a restoration stat-stick option on a one-hand caster weapon. Verify exact value at authoring.",
+      "notes": "Healing-power weapon enchant with no level requirement; a restoration stat-stick option on a one-hand caster weapon. Confirmed via Wowhead Classic.",
       "classes": ["shaman", "druid", "paladin", "priest"]
     },
     {
@@ -348,7 +328,7 @@
       "effect": "+9 Spirit.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Spirit shield enchant for regen-leaning shield-using caster-hybrid builds. Verify exact value at authoring.",
+      "notes": "Spirit shield enchant for regen-leaning shield-using caster-hybrid builds. Confirmed via Wowhead Classic.",
       "classes": ["shaman", "paladin"]
     },
     {
@@ -368,7 +348,7 @@
       "effect": "+20 Frost spell damage.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Frost-damage gloves enchant for frost-spec casters. Verify exact value at authoring.",
+      "notes": "Frost-damage gloves enchant for frost-spec casters. Confirmed via Wowhead Classic.",
       "classes": ["mage"]
     },
     {
@@ -378,7 +358,7 @@
       "effect": "+30 Spell Damage and Healing.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Spellpower weapon enchant used on caster one-hand weapons; verify whether the enchant carries a level requirement at authoring (many stat weapon enchants do not).",
+      "notes": "Spellpower weapon enchant used on caster one-hand weapons; no level requirement. Confirmed via Wowhead Classic (spell 22749: +30 spell damage and healing).",
       "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
     },
     {
@@ -388,7 +368,7 @@
       "effect": "+100 Mana.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Mana chest enchant with no level requirement; the caster-DPS counterpart to Major Health for mana-pool builds. Verify exact value at authoring.",
+      "notes": "Mana chest enchant with no level requirement; the caster-DPS counterpart to Major Health for mana-pool builds. Confirmed via Wowhead Classic.",
       "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin", "hunter"]
     },
     {
@@ -398,7 +378,7 @@
       "effect": "+24 Healing.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Healing-power bracer enchant for restoration/support hybrid builds. Verify exact value at authoring.",
+      "notes": "Healing-power bracer enchant for restoration/support hybrid builds. Confirmed via Wowhead Classic.",
       "classes": ["priest", "shaman", "druid", "paladin"]
     },
     {
@@ -408,7 +388,7 @@
       "effect": "+20 Shadow spell damage.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Shadow-damage gloves enchant for shadow-spec casters. Verify exact value at authoring.",
+      "notes": "Shadow-damage gloves enchant for shadow-spec casters. Confirmed via Wowhead Classic.",
       "classes": ["warlock", "priest"]
     }
   ]
