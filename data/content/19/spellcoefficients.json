@@ -6,6 +6,8 @@
   "byClass": {
     "mage": [
       { "spell": "Arcane Explosion", "rank": 1, "coefficient": 0.111, "type": "direct-damage" },
+      { "spell": "Arcane Missiles", "rank": 1, "coefficient": 0.157, "type": "direct-damage", "notes": "Per missile (channeled). Base per-missile coefficient 0.2857 (channel = duration/3.5, one missile per second) with the level-8 downranking penalty (1 - 0.0375*12 = 0.55) = 0.157. Ranks 1 (L8) and 2 (L16) are usable at 19; Rank 3 is learned at level 24." },
+      { "spell": "Arcane Missiles", "rank": 2, "coefficient": 0.243, "type": "direct-damage", "notes": "Per missile (channeled). Base per-missile coefficient 0.2857 with the level-16 downranking penalty (1 - 0.0375*4 = 0.85) = 0.243. A community whisper cited 0.204 for this rank, but the file's standard channel formula (corroborated by the vanilla '142% total for the 5-missile version' figure = 5 x 0.2857) yields 0.243, so 0.243 is used." },
       { "spell": "Fireball", "rank": 1, "coefficient": 0.123, "type": "direct-damage" },
       { "spell": "Fireball", "rank": 2, "coefficient": 0.271, "type": "direct-damage" },
       { "spell": "Fireball", "rank": 3, "coefficient": 0.5, "type": "direct-damage" },
