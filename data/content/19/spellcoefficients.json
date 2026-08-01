@@ -70,6 +70,8 @@
       { "spell": "Flame Shock", "rank": 2, "coefficient": 0.198, "type": "direct-damage" },
       { "spell": "Flame Shock", "rank": 1, "coefficient": 0.063, "type": "dot" },
       { "spell": "Flame Shock", "rank": 2, "coefficient": 0.093, "type": "dot" },
+      { "spell": "Searing Totem", "rank": 1, "coefficient": 0.057, "type": "direct-damage", "notes": "Per totem hit. Totems benefit from the shaman's spell power in Classic Era. Only Rank 1 is usable at level 19 (Rank 2 is learned at level 20). Level-19-effective coefficient (~5.67%) is community-derived and approximate; not confirmed via a primary source." },
+      { "spell": "Fire Nova Totem", "rank": 1, "coefficient": 0.105, "type": "direct-damage", "notes": "AoE burst on totem expiry. Totems benefit from the shaman's spell power in Classic Era. Level-19-effective value derived from the standard vanilla base (0.15) with the level-12 downranking penalty (1 - 0.0375*8 = 0.70) = 0.105. Approximate; not confirmed via a primary source." },
       { "spell": "Lightning Shield", "rank": 1, "coefficient": 0.147, "type": "direct-damage", "notes": "Per orb." },
       { "spell": "Lightning Shield", "rank": 2, "coefficient": 0.227, "type": "direct-damage", "notes": "Per orb." },
       { "spell": "Flametongue Weapon", "rank": 1, "coefficient": 0.0625, "type": "direct-damage", "notes": "DPS-normalized 10% base with the rank-1 downranking penalty (learned level 10: 1 - 0.0375*10 = 0.625) = 0.0625. The per-hit fire bonus is weapon-speed-dependent (slower weapons hit harder per swing) but normalizes to this value over time." },
