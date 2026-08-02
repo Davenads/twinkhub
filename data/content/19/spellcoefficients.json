@@ -1,7 +1,9 @@
 {
   "penalty": {
     "perLevelBelow20": 0.0375,
-    "note": "A spell learned at level X<20 benefits 3.75%*(20-X) less from spell power. The coefficients below are already level-19-effective (source: XPOff level-19 coefficient list). Base rule: direct = castTime/3.5 (1.5s floor); dot/hot = duration/15 per tick."
+    "note": "A spell learned at level X<20 benefits 3.75%*(20-X) less from spell power. The coefficients below are already level-19-effective (source: XPOff level-19 coefficient list). Base rule: direct = castTime/3.5 (1.5s floor); dot/hot = duration/15 per tick.",
+    "additionalEffectFactor": 0.95,
+    "additionalEffectNote": "A spell that also applies a secondary effect (slow, snare, root, etc.) takes an extra 5% coefficient penalty (coefficient x 0.95), applied on top of the level-19 downranking penalty. Source: XPOff author clarification. Already folded into the affected coefficients below."
   },
   "byClass": {
     "mage": [
@@ -17,10 +19,10 @@
       { "spell": "Fire Blast", "rank": 2, "coefficient": 0.332, "type": "direct-damage" },
       { "spell": "Flamestrike", "rank": 1, "coefficient": 0.134, "type": "direct-damage" },
       { "spell": "Flamestrike", "rank": 1, "coefficient": 0.017, "type": "dot" },
-      { "spell": "Frost Nova", "rank": 1, "coefficient": 0.018, "type": "direct-damage" },
-      { "spell": "Frostbolt", "rank": 1, "coefficient": 0.163, "type": "direct-damage" },
-      { "spell": "Frostbolt", "rank": 2, "coefficient": 0.269, "type": "direct-damage" },
-      { "spell": "Frostbolt", "rank": 3, "coefficient": 0.463, "type": "direct-damage" }
+      { "spell": "Frost Nova", "rank": 1, "coefficient": 0.017, "type": "direct-damage", "notes": "Includes the -5% additional-effect penalty (roots the target): base 0.018 x 0.95 = 0.017." },
+      { "spell": "Frostbolt", "rank": 1, "coefficient": 0.155, "type": "direct-damage", "notes": "Includes the -5% additional-effect penalty (applies a slow): base 0.163 x 0.95 = 0.155." },
+      { "spell": "Frostbolt", "rank": 2, "coefficient": 0.256, "type": "direct-damage", "notes": "Includes the -5% additional-effect penalty (applies a slow): base 0.269 x 0.95 = 0.256." },
+      { "spell": "Frostbolt", "rank": 3, "coefficient": 0.440, "type": "direct-damage", "notes": "Includes the -5% additional-effect penalty (applies a slow): base 0.463 x 0.95 = 0.440." }
     ],
     "warlock": [
       { "spell": "Shadow Bolt", "rank": 1, "coefficient": 0.14, "type": "direct-damage" },
@@ -93,8 +95,8 @@
       { "spell": "Moonfire", "rank": 1, "coefficient": 0.052, "type": "dot" },
       { "spell": "Moonfire", "rank": 2, "coefficient": 0.081, "type": "dot" },
       { "spell": "Moonfire", "rank": 3, "coefficient": 0.111, "type": "dot" },
-      { "spell": "Entangling Roots", "rank": 1, "coefficient": 0.033, "type": "dot" },
-      { "spell": "Entangling Roots", "rank": 2, "coefficient": 0.056, "type": "dot" },
+      { "spell": "Entangling Roots", "rank": 1, "coefficient": 0.031, "type": "dot", "notes": "Includes the -5% additional-effect penalty (roots the target): base 0.033 x 0.95 = 0.031." },
+      { "spell": "Entangling Roots", "rank": 2, "coefficient": 0.053, "type": "dot", "notes": "Includes the -5% additional-effect penalty (roots the target): base 0.056 x 0.95 = 0.053." },
       { "spell": "Healing Touch", "rank": 1, "coefficient": 0.123, "type": "direct-heal" },
       { "spell": "Healing Touch", "rank": 2, "coefficient": 0.314, "type": "direct-heal" },
       { "spell": "Healing Touch", "rank": 3, "coefficient": 0.554, "type": "direct-heal" },
