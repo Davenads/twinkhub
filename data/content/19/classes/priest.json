@@ -7,5 +7,5 @@
     { "name": "Holy (throughput healer)", "statPriority": ["intellect", "stamina", "spirit"] }
   ],
   "summary": "Premier healer: dispels and Power Word: Shield make the priest the backbone of a Warsong Gulch premade. Intellect fuels the mana pool for a long flag game while stamina keeps the healer alive under focus.",
-  "factionNotes": "Racials swing priest value: Dwarf priests (Alliance) bring Fear Ward, a strong counter to the bracket's fear effects, while Undead (Horde) get Will of the Forsaken against fear, charm, and sleep. Verify current racial and spell-rank specifics against the Wowhead Priest guide at authoring."
+  "factionNotes": "Racials swing priest value at 19. Undead priests (Horde) get Will of the Forsaken, a strong on-demand break against fear, charm, and sleep (available from level 1). Dwarf priests (Alliance) do NOT yet have Fear Ward in this bracket \u2014 it is trained at level 20 (Fear Ward, spell 6346, requires level 20), so it is unavailable to a level-19 twink. Confirmed via Wowhead Classic."
 }
