@@ -80,6 +80,12 @@ Phased build plan. Each phase is shippable on its own. Nothing here is built yet
 - Optional integration surface for `WSG-Queue-Tracker` live queue data as a command.
 - Web dashboard / content-authoring UI over the JSON store.
 - Image/embed polish (item icons via Wowhead).
+- **Hosting:** currently **pm2** (local Windows, single fork instance, boot-persisted via
+  `pm2-windows-startup`; see `ecosystem.config.cjs` and `CLAUDE.md`). Possible future move
+  to a **Heroku basic dyno with GitHub autodeploy** off `main` — needs a `Procfile`
+  (`worker: node src/index.js`), token/guild ids as Heroku config vars, and a **durable
+  store** for `data/` (Heroku's filesystem is ephemeral, so per-guild config + timer
+  latches would not survive dyno cycling). Never run pm2 and a dyno against the same token.
 
 ## Cross-cutting, from the start
 - Keep handlers thin, data fat (no game knowledge in code).
