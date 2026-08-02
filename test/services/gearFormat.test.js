@@ -6,7 +6,9 @@ import {
   slotFields,
   wowheadItemUrl,
   itemNameMarkup,
-  buildItemLine
+  buildItemLine,
+  enchantWowheadUrl,
+  enchantNameMarkup
 } from '../../src/services/gearFormat.js';
 
 test('statLine formats stat entries with capitalized keys, empty for none', () => {
@@ -132,8 +134,38 @@ test('itemLine (/bis flat view + /gear) links the item name when linkable', () =
 test('buildItemLine (/bis build view) links the name and keeps the enchant suffix', () => {
   const line = buildItemLine(
     { name: 'Green Tinted Goggles', faction: 'both', priority: 'core', wowheadId: 10399 },
-    'Lesser Arcanum of Voracity'
+    { name: 'Lesser Arcanum of Voracity', wowhead: { type: 'item', id: 11647 } }
   );
   assert.ok(line.includes('](https://www.wowhead.com/classic/item=10399)'), 'links the name');
-  assert.ok(line.includes('_Lesser Arcanum of Voracity_'), 'preserves the per-slot enchant');
+  assert.ok(
+    line.includes('_[Lesser Arcanum of Voracity](https://www.wowhead.com/classic/item=11647)_'),
+    'links the per-slot enchant as italic masked link'
+  );
+});
+
+test('enchantWowheadUrl builds spell= and item= Classic URLs, null without a ref', () => {
+  assert.equal(
+    enchantWowheadUrl({ name: 'Crusader', wowhead: { type: 'spell', id: 20034 } }),
+    'https://www.wowhead.com/classic/spell=20034'
+  );
+  assert.equal(
+    enchantWowheadUrl({ name: 'Might of the Scourge', wowhead: { type: 'item', id: 23548 } }),
+    'https://www.wowhead.com/classic/item=23548'
+  );
+  assert.equal(enchantWowheadUrl({ name: 'Unreferenced' }), null);
+  assert.equal(enchantWowheadUrl(null), null);
+});
+
+test('enchantNameMarkup wraps the name in an italic masked link when referenced', () => {
+  assert.equal(
+    enchantNameMarkup({ name: 'Enchant Weapon - Crusader', wowhead: { type: 'spell', id: 20034 } }),
+    '_[Enchant Weapon - Crusader](https://www.wowhead.com/classic/spell=20034)_'
+  );
+});
+
+test('enchantNameMarkup degrades to plain italic (no link) when unreferenced, empty for none', () => {
+  const markup = enchantNameMarkup({ name: 'Mystery Enchant' });
+  assert.equal(markup, '_Mystery Enchant_');
+  assert.ok(!markup.includes(']('), 'must not emit a broken masked link');
+  assert.equal(enchantNameMarkup(null), '');
 });

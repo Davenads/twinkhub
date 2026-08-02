@@ -145,6 +145,26 @@ test('validateEnchants flags a duplicated id and a bad reqLevel', () => {
   assert.ok(res.errors.some((e) => e.includes('reqLevel')));
 });
 
+test('validateEnchants accepts an optional wowhead { type, id } reference', () => {
+  const spellRef = validEnchants();
+  spellRef.enchants[0].wowhead = { type: 'spell', id: 13898 };
+  assert.equal(validateEnchants(spellRef).ok, true);
+
+  const itemRef = validEnchants();
+  itemRef.enchants[0].wowhead = { type: 'item', id: 23548 };
+  assert.equal(validateEnchants(itemRef).ok, true);
+});
+
+test('validateEnchants rejects a bad wowhead type or non-positive id', () => {
+  const badType = validEnchants();
+  badType.enchants[0].wowhead = { type: 'quest', id: 1 };
+  assert.ok(validateEnchants(badType).errors.some((e) => e.includes('wowhead.type')));
+
+  const badId = validEnchants();
+  badId.enchants[0].wowhead = { type: 'spell', id: 0 };
+  assert.ok(validateEnchants(badId).errors.some((e) => e.includes('wowhead.id')));
+});
+
 const validItem = () => ({
   id: 'green-tinted-goggles',
   name: 'Green Tinted Goggles',

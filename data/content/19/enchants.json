@@ -3,6 +3,7 @@
   "enchants": [
     {
       "id": "fiery-weapon",
+      "wowhead": { "type": "spell", "id": 13898 },
       "name": "Enchant Weapon - Fiery Weapon",
       "slot": "weapon",
       "effect": "Chance on hit: +40 Fire damage.",
@@ -13,6 +14,7 @@
     },
     {
       "id": "crusader",
+      "wowhead": { "type": "spell", "id": 20034 },
       "name": "Enchant Weapon - Crusader",
       "slot": "weapon",
       "effect": "Chance on hit: +100 Strength for 15s and a small heal.",
@@ -23,6 +25,7 @@
     },
     {
       "id": "icy-chill",
+      "wowhead": { "type": "spell", "id": 20029 },
       "name": "Enchant Weapon - Icy Chill",
       "slot": "weapon",
       "effect": "Chance on hit: frost damage and a movement/attack-speed slow.",
@@ -33,6 +36,7 @@
     },
     {
       "id": "minor-speed-boots",
+      "wowhead": { "type": "spell", "id": 13890 },
       "name": "Enchant Boots - Minor Speed",
       "slot": "boots",
       "effect": "+8% movement speed.",
@@ -43,6 +47,7 @@
     },
     {
       "id": "lesser-arcanum-of-constitution",
+      "wowhead": { "type": "item", "id": 11642 },
       "name": "Lesser Arcanum of Constitution",
       "slot": "head-legs",
       "effect": "+100 Health (applies to head or legs).",
@@ -53,6 +58,7 @@
     },
     {
       "id": "lesser-arcanum-of-voracity",
+      "wowhead": { "type": "item", "id": 11647 },
       "name": "Lesser Arcanum of Voracity",
       "slot": "head-legs",
       "effect": "+8 Agility (applies to head or legs).",
@@ -63,6 +69,7 @@
     },
     {
       "id": "might-of-the-scourge",
+      "wowhead": { "type": "item", "id": 23548 },
       "name": "Might of the Scourge",
       "slot": "shoulder",
       "effect": "+26 Attack Power and +1% critical strike chance.",
@@ -73,6 +80,7 @@
     },
     {
       "id": "greater-resistance",
+      "wowhead": { "type": "spell", "id": 20014 },
       "name": "Enchant Cloak - Greater Resistance",
       "slot": "cloak",
       "effect": "+5 to all resistances.",
@@ -83,6 +91,7 @@
     },
     {
       "id": "greater-nature-resistance",
+      "wowhead": { "type": "spell", "id": 25082 },
       "name": "Enchant Cloak - Greater Nature Resistance",
       "slot": "cloak",
       "effect": "+15 Nature Resistance.",
@@ -93,6 +102,7 @@
     },
     {
       "id": "major-health",
+      "wowhead": { "type": "spell", "id": 20026 },
       "name": "Enchant Chest - Major Health",
       "slot": "chest",
       "effect": "+100 Health.",
@@ -103,6 +113,7 @@
     },
     {
       "id": "greater-stats",
+      "wowhead": { "type": "spell", "id": 20025 },
       "name": "Enchant Chest - Greater Stats",
       "slot": "chest",
       "effect": "+4 to all stats.",
@@ -113,6 +124,7 @@
     },
     {
       "id": "superior-stamina",
+      "wowhead": { "type": "spell", "id": 20011 },
       "name": "Enchant Bracer - Superior Stamina",
       "slot": "bracer",
       "effect": "+9 Stamina.",
@@ -123,6 +135,7 @@
     },
     {
       "id": "superior-strength",
+      "wowhead": { "type": "spell", "id": 20010 },
       "name": "Enchant Bracer - Superior Strength",
       "slot": "bracer",
       "effect": "+9 Strength.",
@@ -133,6 +146,7 @@
     },
     {
       "id": "superior-agility",
+      "wowhead": { "type": "spell", "id": 25080 },
       "name": "Enchant Gloves - Superior Agility",
       "slot": "gloves",
       "effect": "+15 Agility.",
@@ -143,6 +157,7 @@
     },
     {
       "id": "lifestealing",
+      "wowhead": { "type": "spell", "id": 20032 },
       "name": "Enchant Weapon - Lifestealing",
       "slot": "weapon",
       "effect": "Chance on hit: deal Shadow damage and heal the attacker for the amount dealt.",
@@ -153,6 +168,7 @@
     },
     {
       "id": "accurate-scope",
+      "wowhead": { "type": "item", "id": 4407 },
       "name": "Accurate Scope",
       "slot": "scope",
       "effect": "+3 weapon damage (applies to a bow, crossbow, or gun).",
@@ -163,6 +179,7 @@
     },
     {
       "id": "fortitude-of-the-scourge",
+      "wowhead": { "type": "item", "id": 23549 },
       "name": "Fortitude of the Scourge",
       "slot": "shoulder",
       "effect": "+16 Stamina and +100 Armor.",
@@ -173,6 +190,7 @@
     },
     {
       "id": "shadow-resistance",
+      "wowhead": { "type": "spell", "id": 13522 },
       "name": "Enchant Cloak - Lesser Shadow Resistance",
       "slot": "cloak",
       "effect": "+10 Shadow Resistance.",
@@ -183,6 +201,7 @@
     },
     {
       "id": "greater-strength-gloves",
+      "wowhead": { "type": "spell", "id": 20013 },
       "name": "Enchant Gloves - Greater Strength",
       "slot": "gloves",
       "effect": "+7 Strength.",
@@ -193,6 +212,7 @@
     },
     {
       "id": "greater-stamina-shield",
+      "wowhead": { "type": "spell", "id": 20017 },
       "name": "Enchant Shield - Greater Stamina",
       "slot": "shield",
       "effect": "+7 Stamina.",
@@ -203,6 +223,7 @@
     },
     {
       "id": "frost-resistance-shield",
+      "wowhead": { "type": "spell", "id": 13933 },
       "name": "Enchant Shield - Frost Resistance",
       "slot": "shield",
       "effect": "+8 Frost Resistance.",
@@ -213,6 +234,7 @@
     },
     {
       "id": "thorium-shield-spike",
+      "wowhead": { "type": "item", "id": 12645 },
       "name": "Thorium Shield Spike",
       "slot": "shield",
       "effect": "Chance on block to deal Physical damage to the attacker.",
@@ -223,6 +245,7 @@
     },
     {
       "id": "steel-weapon-chain",
+      "wowhead": { "type": "item", "id": 6041 },
       "name": "Steel Weapon Chain",
       "slot": "weapon",
       "effect": "Immune to Disarm.",
@@ -233,6 +256,7 @@
     },
     {
       "id": "agility-2h",
+      "wowhead": { "type": "spell", "id": 27837 },
       "name": "Enchant 2H Weapon - Agility",
       "slot": "2h-weapon",
       "effect": "+25 Agility.",
@@ -243,6 +267,7 @@
     },
     {
       "id": "weapon-agility",
+      "wowhead": { "type": "spell", "id": 23800 },
       "name": "Enchant Weapon - Agility",
       "slot": "weapon",
       "effect": "+15 Agility.",
@@ -253,6 +278,7 @@
     },
     {
       "id": "greater-intellect-bracer",
+      "wowhead": { "type": "spell", "id": 20008 },
       "name": "Enchant Bracer - Greater Intellect",
       "slot": "bracer",
       "effect": "+7 Intellect.",
@@ -263,6 +289,7 @@
     },
     {
       "id": "mighty-intellect-weapon",
+      "wowhead": { "type": "spell", "id": 23804 },
       "name": "Enchant Weapon - Mighty Intellect",
       "slot": "weapon",
       "effect": "+22 Intellect.",
@@ -273,6 +300,7 @@
     },
     {
       "id": "mighty-spirit-weapon",
+      "wowhead": { "type": "spell", "id": 23803 },
       "name": "Enchant Weapon - Mighty Spirit",
       "slot": "weapon",
       "effect": "+20 Spirit.",
@@ -283,6 +311,7 @@
     },
     {
       "id": "lesser-arcanum-of-rumination",
+      "wowhead": { "type": "item", "id": 11622 },
       "name": "Lesser Arcanum of Rumination",
       "slot": "head-legs",
       "effect": "+150 Mana (applies to head or legs).",
@@ -293,6 +322,7 @@
     },
     {
       "id": "resilience-of-the-scourge",
+      "wowhead": { "type": "item", "id": 23547 },
       "name": "Resilience of the Scourge",
       "slot": "shoulder",
       "effect": "+31 Healing and +5 Mana per 5 sec.",
@@ -303,6 +333,7 @@
     },
     {
       "id": "healing-power-gloves",
+      "wowhead": { "type": "spell", "id": 25079 },
       "name": "Enchant Gloves - Healing Power",
       "slot": "gloves",
       "effect": "+30 Healing.",
@@ -313,6 +344,7 @@
     },
     {
       "id": "healing-power-weapon",
+      "wowhead": { "type": "spell", "id": 22750 },
       "name": "Enchant Weapon - Healing Power",
       "slot": "weapon",
       "effect": "+55 Healing.",
@@ -323,6 +355,7 @@
     },
     {
       "id": "superior-spirit-shield",
+      "wowhead": { "type": "spell", "id": 20016 },
       "name": "Enchant Shield - Superior Spirit",
       "slot": "shield",
       "effect": "+9 Spirit.",
@@ -333,6 +366,7 @@
     },
     {
       "id": "power-of-the-scourge",
+      "wowhead": { "type": "item", "id": 23545 },
       "name": "Power of the Scourge",
       "slot": "shoulder",
       "effect": "+15 Spell Damage and Healing and +1% spell critical strike.",
@@ -343,6 +377,7 @@
     },
     {
       "id": "frost-power-gloves",
+      "wowhead": { "type": "spell", "id": 25074 },
       "name": "Enchant Gloves - Frost Power",
       "slot": "gloves",
       "effect": "+20 Frost spell damage.",
@@ -353,6 +388,7 @@
     },
     {
       "id": "spell-power-weapon",
+      "wowhead": { "type": "spell", "id": 22749 },
       "name": "Enchant Weapon - Spell Power",
       "slot": "weapon",
       "effect": "+30 Spell Damage and Healing.",
@@ -363,6 +399,7 @@
     },
     {
       "id": "major-mana",
+      "wowhead": { "type": "spell", "id": 20028 },
       "name": "Enchant Chest - Major Mana",
       "slot": "chest",
       "effect": "+100 Mana.",
@@ -373,6 +410,7 @@
     },
     {
       "id": "healing-power-bracer",
+      "wowhead": { "type": "spell", "id": 23802 },
       "name": "Enchant Bracer - Healing Power",
       "slot": "bracer",
       "effect": "+24 Healing.",
@@ -383,6 +421,7 @@
     },
     {
       "id": "shadow-power-gloves",
+      "wowhead": { "type": "spell", "id": 25073 },
       "name": "Enchant Gloves - Shadow Power",
       "slot": "gloves",
       "effect": "+20 Shadow spell damage.",

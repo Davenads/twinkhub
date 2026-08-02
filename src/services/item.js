@@ -1,7 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { getGearItem, getEnchant } from '../content/store.js';
-import { wowheadItemUrl } from './gearFormat.js';
+import { wowheadItemUrl, enchantWowheadUrl } from './gearFormat.js';
 
 const EMBED_COLOR = 0xc8aa6e;
 
@@ -57,7 +57,9 @@ export function renderItem({ store, bracket, id }) {
   if (item.enchant) {
     const ench = getEnchant(store, bracket, item.enchant);
     if (ench) {
-      let value = `**${ench.name}** \u2014 ${ench.effect}`;
+      const url = enchantWowheadUrl(ench);
+      const name = url ? `**[${ench.name}](${url})**` : `**${ench.name}**`;
+      let value = `${name} \u2014 ${ench.effect}`;
       if (ench.noLevelReq) value += '\nNo level requirement.';
       fields.push({ name: 'Recommended enchant', value });
     } else {

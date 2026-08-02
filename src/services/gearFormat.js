@@ -20,6 +20,30 @@ export function itemNameMarkup(item) {
     : `**${item.name}**`;
 }
 
+/**
+ * An enchant's Wowhead Classic page URL, or `null` when it carries no reference.
+ * Unlike items, enchants span two namespaces — profession enchants are `spell=`
+ * pages, while applied items (Naxx inscriptions, Dire Maul arcanums, scopes,
+ * spikes, chains) are `item=` pages — so each enchant records a
+ * `wowhead: { type, id }` discriminator rather than a bare id.
+ */
+export function enchantWowheadUrl(ench) {
+  const ref = ench?.wowhead;
+  return ref?.type && ref?.id != null ? `https://www.wowhead.com/classic/${ref.type}=${ref.id}` : null;
+}
+
+/**
+ * An enchant's display name as italic markup, wrapped in a masked link to its
+ * Wowhead page when the enchant carries a resolvable `wowhead` reference. Italic
+ * matches how `/bis` renders the per-slot enchant; enchants without a reference
+ * degrade to plain italic — never a broken link. Empty string for no enchant.
+ */
+export function enchantNameMarkup(ench) {
+  if (!ench) return '';
+  const url = enchantWowheadUrl(ench);
+  return url ? `_[${ench.name}](${url})_` : `_${ench.name}_`;
+}
+
 /** "+6 Agility, +6 Stamina" from a stats object, or "" when absent. */
 export function statLine(stats) {
   if (!stats) return '';
@@ -57,14 +81,15 @@ export function itemLine(item) {
  * view where each slot names an exact loadout choice.
  *
  * @param {object} item resolved gear item
- * @param {string|null} [enchantName] resolved enchant display name for this slot
+ * @param {object|null} [ench] resolved enchant record for this slot (name + optional wowhead ref)
  * @returns {string}
  */
-export function buildItemLine(item, enchantName = null) {
+export function buildItemLine(item, ench = null) {
   let head = itemNameMarkup(item);
   if (item.faction && item.faction !== 'both') head += ` [${item.faction}]`;
   if (item.priority && item.priority !== 'core') head += ` (${item.priority})`;
-  if (enchantName) head += ` \u2014 _${enchantName}_`;
+  const em = enchantNameMarkup(ench);
+  if (em) head += ` \u2014 ${em}`;
   return head;
 }
 

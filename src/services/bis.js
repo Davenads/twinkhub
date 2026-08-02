@@ -109,7 +109,7 @@ function renderBuildView({ store, bracket, meta, key, builds, buildId, slot, deg
         const item = getGearItem(store, bracket, p.item);
         if (!item) return null;
         const ench = p.enchant ? getEnchant(store, bracket, p.enchant) : null;
-        return buildItemLine(item, ench?.name ?? null);
+        return buildItemLine(item, ench);
       })
       .filter(Boolean);
     if (lines.length) fields.push({ name: capitalize(s), value: lines.join('\n') });

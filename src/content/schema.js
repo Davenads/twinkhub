@@ -187,6 +187,23 @@ export function validateEnchants(obj, label = 'enchants.json') {
         `${at}.reqLevel must be an integer or null`
       );
       require_(errors, isStringArray(entry?.classes), `${at}.classes must be a non-empty string array`);
+      // Optional Wowhead reference. Enchants span two namespaces, so unlike gear
+      // (a bare wowheadId) each records a { type, id } discriminator: profession
+      // enchants are "spell" pages, applied items (inscriptions/arcanums/scopes/
+      // spikes/chains) are "item" pages. Optional so an enchant can be authored
+      // before its id is verified — the render layer degrades to plain text.
+      if (entry?.wowhead !== undefined && require_(errors, isObject(entry.wowhead), `${at}.wowhead must be an object when present`)) {
+        require_(
+          errors,
+          entry.wowhead.type === 'spell' || entry.wowhead.type === 'item',
+          `${at}.wowhead.type must be "spell" or "item"`
+        );
+        require_(
+          errors,
+          isInteger(entry.wowhead.id) && entry.wowhead.id > 0,
+          `${at}.wowhead.id must be a positive integer`
+        );
+      }
       if (isNonEmptyString(entry?.id)) {
         require_(errors, !seen.has(entry.id), `${at}.id "${entry.id}" is duplicated`);
         seen.add(entry.id);
