@@ -1,7 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-
-// Muted gold — matches the timer embeds so the bot reads as one identity.
-const EMBED_COLOR = 0xc8aa6e;
+import { EMBED_COLOR, field, metaFooter, degradeEmbed } from '../lib/embed.js';
 
 /**
  * Render a bracket's XP-management rules entirely from `meta.json` data — no
@@ -16,14 +14,7 @@ const EMBED_COLOR = 0xc8aa6e;
 export function renderXpRules({ store, bracket }) {
   const entry = store?.brackets?.[bracket];
   if (!entry) {
-    return {
-      embeds: [
-        new EmbedBuilder()
-          .setColor(EMBED_COLOR)
-          .setTitle('XP Rules')
-          .setDescription(`No content is loaded for bracket **${bracket}**.`)
-      ]
-    };
+    return { embeds: [degradeEmbed('XP Rules', `No content is loaded for bracket **${bracket}**.`)] };
   }
 
   const { meta } = entry;
@@ -34,14 +25,10 @@ export function renderXpRules({ store, bracket }) {
     .setColor(EMBED_COLOR)
     .setTitle(`XP Rules \u2014 ${meta.battleground} ${minLevel}\u2013${cap}`)
     .setDescription(`**Level cap:** ${cap}. A character that dings ${cap + 1} leaves the bracket.`)
-    .addFields({
-      name: meta.xpLock.available ? 'XP toggle' : 'No XP-off toggle',
-      value: meta.xpLock.note
-    });
+    .addFields(field(meta.xpLock.available ? 'XP toggle' : 'No XP-off toggle', meta.xpLock.note));
 
-  if (meta.gameVersion?.clientPatch) {
-    embed.setFooter({ text: `WoW Classic Era ${meta.gameVersion.clientPatch}` });
-  }
+  const footerText = metaFooter(meta);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }

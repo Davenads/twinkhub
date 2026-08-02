@@ -1,14 +1,12 @@
 import { EmbedBuilder } from 'discord.js';
 import { bracketGuides, guidesFor } from '../content/store.js';
+import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
 
-const EMBED_COLOR = 0xc8aa6e;
 // One embed page groups this many sections. Discord allows 25 fields, but a
 // smaller page keeps a long guide readable; the same render function backs both
 // the slash command's `page` option and (later, P4) the panel's page buttons.
 const SECTIONS_PER_PAGE = 5;
 const MAX_FIELDS = 25;
-
-const truncate = (s, max) => (s.length > max ? `${s.slice(0, max - 1)}\u2026` : s);
 
 /**
  * Render one guide as a paginated embed. Pagination is stateless: the caller
@@ -24,10 +22,9 @@ export function renderGuide({ store, bracket, slug, page = 1 }) {
   const meta = store?.brackets?.[bracket]?.meta;
   const guides = bracketGuides(store, bracket);
   const slugKey = String(slug ?? '').toLowerCase();
-  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle('Guide');
 
   if (!guides) {
-    return { embeds: [embed.setDescription(`No guides are loaded for bracket **${bracket}**.`)] };
+    return { embeds: [degradeEmbed('Guide', `No guides are loaded for bracket **${bracket}**.`)] };
   }
 
   const body = guides.bySlug[slugKey];
@@ -35,7 +32,8 @@ export function renderGuide({ store, bracket, slug, page = 1 }) {
     const listed = guides.list.some((g) => String(g.slug).toLowerCase() === slugKey);
     return {
       embeds: [
-        embed.setDescription(
+        degradeEmbed(
+          'Guide',
           listed
             ? `The guide **${slugKey}** is catalogued but not authored yet.`
             : `No guide with slug **${slugKey}** in bracket **${bracket}**. Run \`/guide\` with no slug to browse.`
@@ -49,10 +47,10 @@ export function renderGuide({ store, bracket, slug, page = 1 }) {
   const current = Math.min(Math.max(1, Math.trunc(Number(page)) || 1), totalPages);
   const start = (current - 1) * SECTIONS_PER_PAGE;
 
-  embed.setTitle(truncate(body.title, 256));
-  if (current === 1 && body.summary) embed.setDescription(truncate(body.summary, 4096));
+  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(truncate(body.title, LIMITS.title));
+  if (current === 1 && body.summary) embed.setDescription(truncate(body.summary, LIMITS.description));
   for (const s of sections.slice(start, start + SECTIONS_PER_PAGE)) {
-    embed.addFields({ name: truncate(s.heading, 256), value: truncate(s.body, 1024) });
+    embed.addFields(field(s.heading, s.body));
   }
 
   const footer = [];
@@ -61,8 +59,8 @@ export function renderGuide({ store, bracket, slug, page = 1 }) {
     if (current < totalPages) t += ` \u2014 next: /guide slug:${body.slug} page:${current + 1}`;
     footer.push(t);
   }
-  if (meta?.gameVersion?.clientPatch) footer.push(`WoW Classic Era ${meta.gameVersion.clientPatch}`);
-  if (footer.length) embed.setFooter({ text: footer.join(' \u00b7 ') });
+  const footerText = metaFooter(meta, footer);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }
@@ -79,38 +77,32 @@ export function renderGuide({ store, bracket, slug, page = 1 }) {
 export function renderGuideIndex({ store, bracket, className = null, tag = null }) {
   const meta = store?.brackets?.[bracket]?.meta;
   const guides = bracketGuides(store, bracket);
-  const embed = new EmbedBuilder()
-    .setColor(EMBED_COLOR)
-    .setTitle(meta ? `Guides \u2014 ${meta.battleground} ${meta.levelCap}` : 'Guides');
 
   if (!guides) {
-    return { embeds: [embed.setDescription(`No guides are loaded for bracket **${bracket}**.`)] };
+    return { embeds: [degradeEmbed('Guides', `No guides are loaded for bracket **${bracket}**.`)] };
   }
 
   const matches = guidesFor(store, bracket, { className, tag });
   if (!matches.length) {
-    return { embeds: [embed.setDescription('No guides match those filters.')] };
+    return { embeds: [degradeEmbed(metaTitle('Guides', meta), 'No guides match those filters.')] };
   }
+
+  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(metaTitle('Guides', meta));
 
   const desc = [];
   if (guides.note) desc.push(guides.note);
   desc.push('Open one with `/guide slug:<slug>`.');
-  embed.setDescription(truncate(desc.join('\n\n'), 4096));
+  embed.setDescription(truncate(desc.join('\n\n'), LIMITS.description));
 
   for (const g of matches.slice(0, MAX_FIELDS)) {
     const authored = Boolean(guides.bySlug[String(g.slug).toLowerCase()]);
     const tags = (g.tags ?? []).length ? ` \u2014 _${g.tags.join(', ')}_` : '';
-    embed.addFields({
-      name: truncate(g.title, 256),
-      value: truncate(`\`${g.slug}\`${authored ? '' : ' (coming soon)'} \u2014 ${g.summary}${tags}`, 1024)
-    });
+    embed.addFields(field(g.title, `\`${g.slug}\`${authored ? '' : ' (coming soon)'} \u2014 ${g.summary}${tags}`));
   }
 
-  if (matches.length > MAX_FIELDS) {
-    embed.setFooter({ text: `Showing ${MAX_FIELDS} of ${matches.length}. Filter with class or tag.` });
-  } else if (meta?.gameVersion?.clientPatch) {
-    embed.setFooter({ text: `WoW Classic Era ${meta.gameVersion.clientPatch}` });
-  }
+  const extra = matches.length > MAX_FIELDS ? [`Showing ${MAX_FIELDS} of ${matches.length}. Filter with class or tag.`] : [];
+  const footerText = metaFooter(meta, extra);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }

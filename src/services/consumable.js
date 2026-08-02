@@ -1,8 +1,8 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketConsumables, consumablesFor } from '../content/store.js';
+import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
 
-const EMBED_COLOR = 0xc8aa6e;
 // Discord caps embeds at 25 fields; one consumable per field.
 const MAX_FIELDS = 25;
 
@@ -42,11 +42,10 @@ function consumableLine(c) {
 export function renderConsumable({ store, bracket, type = null, className = null }) {
   const data = bracketConsumables(store, bracket);
   const meta = store?.brackets?.[bracket]?.meta;
-  const title = meta ? `Consumables \u2014 ${meta.battleground} ${meta.levelCap}` : 'Consumables';
-  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
+  const title = metaTitle('Consumables', meta);
 
   if (!data) {
-    return { embeds: [embed.setDescription(`No consumable data is loaded for bracket **${bracket}**.`)] };
+    return { embeds: [degradeEmbed(title, `No consumable data is loaded for bracket **${bracket}**.`)] };
   }
 
   const typeKey = type ? String(type).toLowerCase() : null;
@@ -61,7 +60,8 @@ export function renderConsumable({ store, bracket, type = null, className = null
   if (!matches.length) {
     return {
       embeds: [
-        embed.setDescription(
+        degradeEmbed(
+          title,
           scope.length
             ? `No consumables match ${scope.join(' and ')} in bracket **${bracket}**.`
             : `No consumables are authored for bracket **${bracket}**.`
@@ -70,10 +70,12 @@ export function renderConsumable({ store, bracket, type = null, className = null
     };
   }
 
+  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
+
   const descParts = [];
   if (scope.length) descParts.push(`Filtered to ${scope.join(' and ')}.`);
   if (data.note) descParts.push(data.note);
-  if (descParts.length) embed.setDescription(descParts.join('\n\n'));
+  if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
 
   // Group by type in a stable order so the list reads predictably.
   const ordered = [...matches].sort((a, b) => {
@@ -83,18 +85,16 @@ export function renderConsumable({ store, bracket, type = null, className = null
   });
 
   for (const c of ordered.slice(0, MAX_FIELDS)) {
-    embed.addFields({ name: c.name, value: consumableLine(c) });
+    embed.addFields(field(c.name, consumableLine(c)));
   }
   if (ordered.length > MAX_FIELDS) {
-    embed.addFields({
-      name: '\u2026',
-      value: `${ordered.length - MAX_FIELDS} more not shown \u2014 narrow with a type or class filter.`
-    });
+    embed.addFields(
+      field('\u2026', `${ordered.length - MAX_FIELDS} more not shown \u2014 narrow with a type or class filter.`)
+    );
   }
 
-  if (meta?.gameVersion?.clientPatch) {
-    embed.setFooter({ text: `WoW Classic Era ${meta.gameVersion.clientPatch}` });
-  }
+  const footerText = metaFooter(meta);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }

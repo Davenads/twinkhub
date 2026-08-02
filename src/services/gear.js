@@ -2,8 +2,7 @@ import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketGear, gearForClass, gearSlots } from '../content/store.js';
 import { slotFields } from './gearFormat.js';
-
-const EMBED_COLOR = 0xc8aa6e;
+import { EMBED_COLOR, truncate, field, metaTitle, metaFooter, degradeEmbed, LIMITS } from '../lib/embed.js';
 
 /**
  * A faction filter shows what that faction can actually use: its own items plus
@@ -30,9 +29,7 @@ export function renderGear({ store, bracket, className, slot = null, faction = n
   const meta = store?.brackets?.[bracket]?.meta;
   const forClass = gearForClass(store, bracket, className);
 
-  const degrade = (msg) => ({
-    embeds: [new EmbedBuilder().setColor(EMBED_COLOR).setTitle('Gear').setDescription(msg)]
-  });
+  const degrade = (msg) => ({ embeds: [degradeEmbed('Gear', msg)] });
 
   if (!gear) return degrade(`No gear data is loaded for bracket **${bracket}**.`);
   if (!forClass) {
@@ -58,26 +55,27 @@ export function renderGear({ store, bracket, className, slot = null, faction = n
     priorityKey ? `priority **${priorityKey}**` : null
   ].filter(Boolean);
 
-  const title = `Gear \u2014 ${capitalize(forClass.className)}${
-    meta ? ` (${meta.battleground} ${meta.levelCap})` : ''
-  }`;
-  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
+  const title = metaTitle(`Gear \u2014 ${capitalize(forClass.className)}`, meta);
 
   if (!items.length) {
-    embed.setDescription(
-      scope.length
-        ? `No gear matches ${scope.join(' and ')} for ${capitalize(forClass.className)}.`
-        : `No gear listed for ${capitalize(forClass.className)}.`
-    );
-    return { embeds: [embed] };
+    return {
+      embeds: [
+        degradeEmbed(
+          title,
+          scope.length
+            ? `No gear matches ${scope.join(' and ')} for ${capitalize(forClass.className)}.`
+            : `No gear listed for ${capitalize(forClass.className)}.`
+        )
+      ]
+    };
   }
 
-  if (scope.length) embed.setDescription(`Filtered to ${scope.join(' and ')}.`);
-  embed.addFields(slotFields(items, gearSlots(store, bracket)));
+  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
+  if (scope.length) embed.setDescription(truncate(`Filtered to ${scope.join(' and ')}.`, LIMITS.description));
+  embed.addFields(slotFields(items, gearSlots(store, bracket)).map((f) => field(f.name, f.value)));
 
-  if (meta?.gameVersion?.clientPatch) {
-    embed.setFooter({ text: `WoW Classic Era ${meta.gameVersion.clientPatch}` });
-  }
+  const footerText = metaFooter(meta);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }

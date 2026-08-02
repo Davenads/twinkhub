@@ -30,7 +30,7 @@ test('renderTierlist groups classes by tier, high to low', () => {
   const { embeds } = renderTierlist({ store, bracket: '19' });
   const e = embeds[0].toJSON();
 
-  assert.equal(e.title, 'Class Tier List \u2014 Warsong Gulch 19');
+  assert.equal(e.title, 'Class Tier List (Warsong Gulch 19)');
   assert.equal(e.description, 'Tiers are composition-dependent.');
 
   assert.deepEqual(

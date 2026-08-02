@@ -1,8 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketScaling, statweightsForClass } from '../content/store.js';
-
-const EMBED_COLOR = 0xc8aa6e;
+import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
 
 /**
  * Render a class's stat weights from `scaling.json`: its priority order and
@@ -16,9 +15,7 @@ const EMBED_COLOR = 0xc8aa6e;
 export function renderStatweights({ store, bracket, className }) {
   const scaling = bracketScaling(store, bracket);
   const meta = store?.brackets?.[bracket]?.meta;
-  const degrade = (msg) => ({
-    embeds: [new EmbedBuilder().setColor(EMBED_COLOR).setTitle('Stat Weights').setDescription(msg)]
-  });
+  const degrade = (msg) => ({ embeds: [degradeEmbed('Stat Weights', msg)] });
 
   if (!scaling) return degrade(`No stat-scaling data is loaded for bracket **${bracket}**.`);
 
@@ -30,45 +27,36 @@ export function renderStatweights({ store, bracket, className }) {
   }
 
   const { entry } = forClass;
-  const title = `Stat Weights \u2014 ${capitalize(forClass.className)}${
-    meta ? ` (${meta.battleground} ${meta.levelCap})` : ''
-  }`;
+  const title = metaTitle(`Stat Weights \u2014 ${capitalize(forClass.className)}`, meta);
   const priorityLine = entry.priority.map((s) => scaling.stats[s]?.label ?? capitalize(s)).join(' > ');
 
   const embed = new EmbedBuilder()
     .setColor(EMBED_COLOR)
     .setTitle(title)
-    .setDescription(`**Priority:** ${priorityLine}`);
+    .setDescription(truncate(`**Priority:** ${priorityLine}`, LIMITS.description));
 
   for (const statKey of entry.priority) {
     const stat = scaling.stats[statKey];
     if (!stat) continue;
-    embed.addFields({
-      name: stat.label,
-      value: [stat.summary, ...stat.conversions.map((c) => `\u2022 ${c}`)].join('\n')
-    });
+    embed.addFields(field(stat.label, [stat.summary, ...stat.conversions.map((c) => `\u2022 ${c}`)].join('\n')));
   }
 
-  embed.addFields({ name: 'Class notes', value: entry.notes.map((n) => `\u2022 ${n}`).join('\n') });
+  embed.addFields(field('Class notes', entry.notes.map((n) => `\u2022 ${n}`).join('\n')));
 
   if (scaling.derived?.length) {
-    embed.addFields({
-      name: 'Derived formulas',
-      value: scaling.derived
-        .map((d) => `**${d.name}:** ${d.formula}${d.notes ? ` (${d.notes})` : ''}`)
-        .join('\n')
-    });
+    embed.addFields(
+      field(
+        'Derived formulas',
+        scaling.derived.map((d) => `**${d.name}:** ${d.formula}${d.notes ? ` (${d.notes})` : ''}`).join('\n')
+      )
+    );
   }
   if (scaling.hitCaps?.length) {
-    embed.addFields({
-      name: 'PvP hit caps',
-      value: scaling.hitCaps.map((h) => `${capitalize(h.type)}: ${h.value}`).join('\n')
-    });
+    embed.addFields(field('PvP hit caps', scaling.hitCaps.map((h) => `${capitalize(h.type)}: ${h.value}`).join('\n')));
   }
 
-  if (meta?.gameVersion?.clientPatch) {
-    embed.setFooter({ text: `WoW Classic Era ${meta.gameVersion.clientPatch}` });
-  }
+  const footerText = metaFooter(meta);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }

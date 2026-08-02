@@ -1,8 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketSpellcoef, spellcoefForClass, listClassNames } from '../content/store.js';
-
-const EMBED_COLOR = 0xc8aa6e;
+import { EMBED_COLOR, LIMITS, truncate, fieldsFromLines, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
 
 // Display order + labels for each effect type. dot/hot are per-tick and proc is
 // per-hit, so the coefficient unit differs from the per-cast direct spells.
@@ -45,9 +44,7 @@ function spellLine(s) {
 export function renderSpellcoef({ store, bracket, className }) {
   const data = bracketSpellcoef(store, bracket);
   const meta = store?.brackets?.[bracket]?.meta;
-  const degrade = (msg) => ({
-    embeds: [new EmbedBuilder().setColor(EMBED_COLOR).setTitle('Spell Coefficients').setDescription(msg)]
-  });
+  const degrade = (msg) => ({ embeds: [degradeEmbed('Spell Coefficients', msg)] });
 
   if (!data) return degrade(`No spell-coefficient data is loaded for bracket **${bracket}**.`);
 
@@ -63,21 +60,22 @@ export function renderSpellcoef({ store, bracket, className }) {
     return degrade(`No spell-coefficient data is authored for **${capitalize(key || String(className))}** in bracket **${bracket}**.`);
   }
 
-  const title = `Spell Coefficients \u2014 ${capitalize(key)}${meta ? ` (${meta.battleground} ${meta.levelCap})` : ''}`;
+  const title = metaTitle(`Spell Coefficients \u2014 ${capitalize(key)}`, meta);
   const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
-  if (data.penalty?.note) embed.setDescription(data.penalty.note);
+  if (data.penalty?.note) embed.setDescription(truncate(data.penalty.note, LIMITS.description));
 
   for (const type of TYPE_ORDER) {
     const group = spells.filter((s) => s.type === type);
     if (!group.length) continue;
-    embed.addFields({ name: TYPE_LABEL[type], value: group.map(spellLine).join('\n') });
+    // A single effect-type list can overrun the 1024-char field cap (mage's
+    // direct-damage ranks do); split across fields instead of dropping ranks.
+    for (const f of fieldsFromLines(TYPE_LABEL[type], group.map(spellLine))) embed.addFields(f);
   }
 
   const unverified = spells.filter((s) => s.confirmed === false).length;
-  const footerBits = [];
-  if (meta?.gameVersion?.clientPatch) footerBits.push(`WoW Classic Era ${meta.gameVersion.clientPatch}`);
-  if (unverified) footerBits.push(`${unverified} value${unverified === 1 ? '' : 's'} unverified`);
-  if (footerBits.length) embed.setFooter({ text: footerBits.join(' \u00b7 ') });
+  const extra = unverified ? [`${unverified} value${unverified === 1 ? '' : 's'} unverified`] : [];
+  const footerText = metaFooter(meta, extra);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }

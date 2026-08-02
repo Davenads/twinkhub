@@ -9,8 +9,7 @@ import {
   getEnchant
 } from '../content/store.js';
 import { slotFields, buildItemLine } from './gearFormat.js';
-
-const EMBED_COLOR = 0xc8aa6e;
+import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
 
 /**
  * Render a class's best-in-slot gear. When the class has authored role builds
@@ -29,9 +28,7 @@ export function renderBis({ store, bracket, className, build: buildId = null, sl
   const meta = store?.brackets?.[bracket]?.meta;
   const key = String(className ?? '').toLowerCase();
 
-  const degrade = (msg) => ({
-    embeds: [new EmbedBuilder().setColor(EMBED_COLOR).setTitle('Best in Slot').setDescription(msg)]
-  });
+  const degrade = (msg) => ({ embeds: [degradeEmbed('Best in Slot', msg)] });
 
   if (!gear) return degrade(`No gear data is loaded for bracket **${bracket}**.`);
 
@@ -52,26 +49,27 @@ export function renderBis({ store, bracket, className, build: buildId = null, sl
   const slotKey = slot ? String(slot).toLowerCase() : null;
   const items = forClass.items.filter((i) => !slotKey || i.slot.toLowerCase() === slotKey);
 
-  const title = `Best in Slot \u2014 ${capitalize(forClass.className)}${
-    meta ? ` (${meta.battleground} ${meta.levelCap})` : ''
-  }`;
-  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
+  const title = metaTitle(`Best in Slot \u2014 ${capitalize(forClass.className)}`, meta);
 
   if (!items.length) {
-    embed.setDescription(
-      slotKey
-        ? `No **${slotKey}** items listed for ${capitalize(forClass.className)}.`
-        : `No items listed for ${capitalize(forClass.className)}.`
-    );
-    return { embeds: [embed] };
+    return {
+      embeds: [
+        degradeEmbed(
+          title,
+          slotKey
+            ? `No **${slotKey}** items listed for ${capitalize(forClass.className)}.`
+            : `No items listed for ${capitalize(forClass.className)}.`
+        )
+      ]
+    };
   }
 
-  if (gear.index?.notes) embed.setDescription(gear.index.notes);
-  embed.addFields(slotFields(items, gearSlots(store, bracket)));
+  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
+  if (gear.index?.notes) embed.setDescription(truncate(gear.index.notes, LIMITS.description));
+  embed.addFields(slotFields(items, gearSlots(store, bracket)).map((f) => field(f.name, f.value)));
 
-  if (meta?.gameVersion?.clientPatch) {
-    embed.setFooter({ text: `WoW Classic Era ${meta.gameVersion.clientPatch}` });
-  }
+  const footerText = metaFooter(meta);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }
@@ -112,34 +110,50 @@ function renderBuildView({ store, bracket, meta, key, builds, buildId, slot, deg
         return buildItemLine(item, ench);
       })
       .filter(Boolean);
-    if (lines.length) fields.push({ name: capitalize(s), value: lines.join('\n') });
+    if (lines.length) fields.push(field(capitalize(s), lines.join('\n')));
   }
 
-  const metaSuffix = meta ? ` (${meta.battleground} ${meta.levelCap})` : '';
-  const title = `Best in Slot \u2014 ${capitalize(key)} \u00b7 ${chosen.name}${metaSuffix}`;
-  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
+  const title = metaTitle(`Best in Slot \u2014 ${capitalize(key)} \u00b7 ${chosen.name}`, meta);
 
   if (!fields.length) {
-    embed.setDescription(
-      slotKey
-        ? `No **${slotKey}** pick in the ${chosen.name} build for ${capitalize(key)}.`
-        : `No slots listed in the ${chosen.name} build for ${capitalize(key)}.`
-    );
-    return { embeds: [embed] };
+    return {
+      embeds: [
+        degradeEmbed(
+          title,
+          slotKey
+            ? `No **${slotKey}** pick in the ${chosen.name} build for ${capitalize(key)}.`
+            : `No slots listed in the ${chosen.name} build for ${capitalize(key)}.`
+        )
+      ]
+    };
   }
+
+  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
 
   const header = [`${capitalize(chosen.role)} loadout`];
   if (chosen.faction && chosen.faction !== 'both') header.push(`(${chosen.faction})`);
   let desc = `${header.join(' ')}.`;
-  const others = builds.filter((b) => b.id !== chosen.id).map((b) => b.name);
+  // Only list *other* builds for the same faction as the chosen one, deduped by
+  // name — classes with per-faction build pairs otherwise repeat names.
+  const chosenFaction = chosen.faction ?? 'both';
+  const others = [
+    ...new Set(
+      builds
+        .filter((b) => b.id !== chosen.id)
+        .filter((b) => {
+          const f = b.faction ?? 'both';
+          return f === chosenFaction || f === 'both' || chosenFaction === 'both';
+        })
+        .map((b) => b.name)
+    )
+  ];
   if (others.length) desc += ` Other builds: ${others.join(', ')} \u2014 add \`build:\` to switch.`;
-  embed.setDescription(desc);
+  embed.setDescription(truncate(desc, LIMITS.description));
 
-  embed.addFields(fields.slice(0, 25));
+  embed.addFields(fields.slice(0, LIMITS.fields));
 
-  if (meta?.gameVersion?.clientPatch) {
-    embed.setFooter({ text: `WoW Classic Era ${meta.gameVersion.clientPatch}` });
-  }
+  const footerText = metaFooter(meta);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }

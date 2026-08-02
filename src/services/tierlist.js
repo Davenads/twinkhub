@@ -1,7 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
+import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
 
-const EMBED_COLOR = 0xc8aa6e;
 // Conventional high-to-low order; any tier not listed is appended alphabetically.
 const TIER_ORDER = ['S', 'A', 'B', 'C', 'D', 'F'];
 
@@ -22,23 +22,14 @@ export function renderTierlist({ store, bracket }) {
   const bracketData = store?.brackets?.[bracket];
   const roster = bracketData?.classes?.index?.classes;
   if (!roster?.length) {
-    return {
-      embeds: [
-        new EmbedBuilder()
-          .setColor(EMBED_COLOR)
-          .setTitle('Class Tier List')
-          .setDescription(`No class data is loaded for bracket **${bracket}**.`)
-      ]
-    };
+    return { embeds: [degradeEmbed('Class Tier List', `No class data is loaded for bracket **${bracket}**.`)] };
   }
 
   const meta = bracketData.meta;
-  const embed = new EmbedBuilder()
-    .setColor(EMBED_COLOR)
-    .setTitle(`Class Tier List \u2014 ${meta.battleground} ${meta.levelCap}`);
+  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(metaTitle('Class Tier List', meta));
 
   if (bracketData.classes.index.tierNote) {
-    embed.setDescription(bracketData.classes.index.tierNote);
+    embed.setDescription(truncate(bracketData.classes.index.tierNote, LIMITS.description));
   }
 
   const tiers = [...new Set(roster.map((e) => e.tier))].sort(
@@ -47,15 +38,11 @@ export function renderTierlist({ store, bracket }) {
 
   for (const tier of tiers) {
     const members = roster.filter((e) => e.tier === tier);
-    embed.addFields({
-      name: `Tier ${tier}`,
-      value: members.map((e) => `**${capitalize(e.class)}** \u2014 ${e.summary}`).join('\n')
-    });
+    embed.addFields(field(`Tier ${tier}`, members.map((e) => `**${capitalize(e.class)}** \u2014 ${e.summary}`).join('\n')));
   }
 
-  if (meta.gameVersion?.clientPatch) {
-    embed.setFooter({ text: `WoW Classic Era ${meta.gameVersion.clientPatch}` });
-  }
+  const footerText = metaFooter(meta);
+  if (footerText) embed.setFooter({ text: footerText });
 
   return { embeds: [embed] };
 }

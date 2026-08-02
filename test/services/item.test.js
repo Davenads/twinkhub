@@ -109,7 +109,9 @@ test('renderItem shows full detail and a Wowhead link when wowheadId is set', ()
   assert.equal(field(embeds, 'Stats'), '+6 Agility, +6 Stamina');
   assert.ok(field(embeds, 'Source').includes('Engineering'));
   assert.equal(field(embeds, 'Required level'), '18');
-  assert.ok(field(embeds, 'Wowhead').includes('item=10504'));
+  // The Wowhead link is now the clickable embed title (setURL), not a raw-URL field.
+  assert.equal(field(embeds, 'Wowhead'), undefined);
+  assert.ok(e.url.includes('item=10504'));
   assert.equal(e.footer.text, 'WoW Classic Era 1.15.x');
 });
 
