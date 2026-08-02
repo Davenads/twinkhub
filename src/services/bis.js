@@ -20,10 +20,10 @@ import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmb
  * Optionally narrowed to one slot. All copy is content data. Shared by `/bis`
  * and, later, the gear panel.
  *
- * @param {{ store: object, bracket: string, className: string, build?: string|null, slot?: string|null }} args
+ * @param {{ store: object, bracket: string, className: string, build?: string|null, slot?: string|null, faction?: string|null }} args
  * @returns {{ embeds: EmbedBuilder[] }}
  */
-export function renderBis({ store, bracket, className, build: buildId = null, slot = null }) {
+export function renderBis({ store, bracket, className, build: buildId = null, slot = null, faction = null }) {
   const gear = bracketGear(store, bracket);
   const meta = store?.brackets?.[bracket]?.meta;
   const key = String(className ?? '').toLowerCase();
@@ -35,7 +35,7 @@ export function renderBis({ store, bracket, className, build: buildId = null, sl
   // Prefer the multi-build view when the class has authored builds.
   const builds = Array.isArray(gear.builds) ? buildsForClass(store, bracket, key) : [];
   if (builds.length) {
-    return renderBuildView({ store, bracket, meta, key, builds, buildId, slot, degrade });
+    return renderBuildView({ store, bracket, meta, key, builds, buildId, slot, faction, degrade });
   }
 
   // Legacy flat-list fallback: a class with items but no builds authored yet.
@@ -74,20 +74,49 @@ export function renderBis({ store, bracket, className, build: buildId = null, sl
   return { embeds: [embed] };
 }
 
+/** Normalize a faction arg to `'horde' | 'alliance'`, else null. */
+function normFaction(f) {
+  const s = String(f ?? '').toLowerCase();
+  return s === 'horde' || s === 'alliance' ? s : null;
+}
+
+const buildFaction = (b) => b.faction ?? 'both';
+
 /**
  * Render one role build's loadout: the named build (matched by id or name),
- * else the class default. One embed field per declared slot the build fills,
- * dual picks (finger/trinket) shown as separate lines, each with its enchant.
+ * else the faction default. `faction` picks which side's builds to consider
+ * (the store defaults to Horde since only Horde builds carry `default: true`);
+ * an explicit `build` id/name still wins. One embed field per declared slot the
+ * build fills, dual picks (finger/trinket) shown as separate lines with enchants.
  */
-function renderBuildView({ store, bracket, meta, key, builds, buildId, slot, degrade }) {
+function renderBuildView({ store, bracket, meta, key, builds, buildId, slot, faction, degrade }) {
+  const fac = normFaction(faction);
   let chosen;
+  let factionNote = null;
+
   if (buildId) {
     const q = String(buildId).toLowerCase();
-    chosen = builds.find((b) => b.id.toLowerCase() === q || b.name.toLowerCase() === q);
+    // An explicit id encodes faction, so match it first; fall back to a name
+    // match (preferring the requested faction so a bare name can reach either side).
+    chosen = builds.find((b) => b.id.toLowerCase() === q);
+    if (!chosen) {
+      const pool = fac ? builds.filter((b) => buildFaction(b) === fac) : builds;
+      chosen = pool.find((b) => b.name.toLowerCase() === q) ?? builds.find((b) => b.name.toLowerCase() === q);
+    }
     if (!chosen) {
       return degrade(
         `No build **${buildId}** is authored for **${capitalize(key)}** in bracket **${bracket}**.`
       );
+    }
+  } else if (fac) {
+    const pool = builds.filter((b) => buildFaction(b) === fac || buildFaction(b) === 'both');
+    if (pool.length) {
+      chosen = pool.find((b) => b.default === true) ?? pool[0];
+    } else {
+      // Single-faction class asked for the other side: fall back with a note
+      // instead of an empty reply (e.g. faction:horde on Alliance-only Paladin).
+      chosen = builds.find((b) => b.default === true) ?? builds[0];
+      factionNote = `**${capitalize(key)}** has no ${capitalize(fac)} builds \u2014 showing ${capitalize(buildFaction(chosen))}.`;
     }
   } else {
     chosen = builds.find((b) => b.default === true) ?? builds[0];
@@ -132,7 +161,7 @@ function renderBuildView({ store, bracket, meta, key, builds, buildId, slot, deg
 
   const header = [`${capitalize(chosen.role)} loadout`];
   if (chosen.faction && chosen.faction !== 'both') header.push(`(${chosen.faction})`);
-  let desc = `${header.join(' ')}.`;
+  let desc = factionNote ? `${factionNote}\n${header.join(' ')}.` : `${header.join(' ')}.`;
   // Only list *other* builds for the same faction as the chosen one, deduped by
   // name — classes with per-faction build pairs otherwise repeat names.
   const chosenFaction = chosen.faction ?? 'both';

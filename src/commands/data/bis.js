@@ -16,6 +16,13 @@ export const data = new SlashCommandBuilder()
   )
   .addStringOption((o) =>
     o
+      .setName('faction')
+      .setDescription('Which faction (defaults to Horde)')
+      .setRequired(false)
+      .addChoices({ name: 'Alliance', value: 'alliance' }, { name: 'Horde', value: 'horde' })
+  )
+  .addStringOption((o) =>
+    o
       .setName('build')
       .setDescription('Which role build (defaults to the class default)')
       .setRequired(false)
@@ -28,10 +35,11 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction) {
   const bracket = await resolveBracket(interaction);
   const className = interaction.options.getString('class');
+  const faction = interaction.options.getString('faction');
   const build = interaction.options.getString('build');
   const slot = interaction.options.getString('slot');
   const store = await getContentStore();
-  const payload = renderBis({ store, bracket, className, build, slot });
+  const payload = renderBis({ store, bracket, className, build, slot, faction });
 
   await interaction.reply({ ...payload, allowedMentions: { parse: [] } });
 }
@@ -46,11 +54,21 @@ export async function autocomplete(interaction) {
   // name); it needs the sibling `class` option to know which builds to offer.
   if (focused.name === 'build') {
     const className = interaction.options.getString('class');
-    const builds = className ? buildsForClass(store, bracket, className) : [];
+    const faction = String(interaction.options.getString('faction') ?? '').toLowerCase();
+    let builds = className ? buildsForClass(store, bracket, className) : [];
+    // When a faction is already chosen, only offer that side's builds so the
+    // otherwise-identical build names (Offense/Midfield/Defense) aren't ambiguous.
+    if (faction === 'horde' || faction === 'alliance') {
+      builds = builds.filter((b) => (b.faction ?? 'both') === faction || (b.faction ?? 'both') === 'both');
+    }
     const choices = builds
       .filter((b) => b.name.toLowerCase().includes(typed) || b.id.toLowerCase().includes(typed))
       .slice(0, 25)
-      .map((b) => ({ name: b.default ? `${b.name} (default)` : b.name, value: b.id }));
+      .map((b) => ({
+        // Label with faction so the duplicate role names are distinguishable.
+        name: `${b.name} \u00b7 ${capitalize(b.faction ?? 'both')}${b.default ? ' (default)' : ''}`,
+        value: b.id
+      }));
     await interaction.respond(choices);
     return;
   }

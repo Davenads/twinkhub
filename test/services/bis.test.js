@@ -144,8 +144,38 @@ const rogueBuilds = [
       head: { item: 'lucky-fishing-hat', enchant: null },
       feet: { item: 'speedy-boots', enchant: 'minor-speed-boots' }
     }
+  },
+  {
+    id: 'rogue-offense-alliance',
+    name: 'Offense',
+    role: 'offense',
+    faction: 'alliance',
+    default: false,
+    owner: 'rogue',
+    slots: {
+      head: { item: 'lucky-fishing-hat', enchant: null },
+      feet: { item: 'speedy-boots', enchant: 'minor-speed-boots' },
+      mainhand: { item: 'assassins-blade', enchant: 'fiery-weapon' },
+      finger: [
+        { item: 'blood-ring', enchant: null },
+        { item: 'blood-ring', enchant: null }
+      ]
+    }
   }
 ];
+// A single-faction class (Alliance-only, like Paladin) for the fallback path.
+const paladinBuilds = [
+  {
+    id: 'paladin-offense',
+    name: 'Offense',
+    role: 'offense',
+    faction: 'alliance',
+    default: true,
+    owner: 'paladin',
+    slots: { head: { item: 'lucky-fishing-hat', enchant: null } }
+  }
+];
+const allBuilds = [...rogueBuilds, ...paladinBuilds];
 const buildStore = {
   brackets: {
     19: {
@@ -158,11 +188,11 @@ const buildStore = {
       },
       gear: {
         index: { slots: ['head', 'feet', 'mainhand', 'finger'], notes: 'Seed picks.' },
-        byClass: { rogue: {} },
+        byClass: { rogue: {}, paladin: {} },
         byId: Object.fromEntries(buildItems.map((i) => [i.id, i])),
         items: buildItems,
-        builds: rogueBuilds,
-        buildsByClass: { rogue: rogueBuilds }
+        builds: allBuilds,
+        buildsByClass: { rogue: rogueBuilds, paladin: paladinBuilds }
       }
     }
   }
@@ -212,4 +242,33 @@ test('renderBis degrades for an unknown build id', () => {
   const e = embeds[0].toJSON();
   assert.equal(e.title, 'Best in Slot');
   assert.ok(e.description.includes('No build **rogue-tank**'));
+});
+
+test('renderBis defaults to the Horde build when no faction is given', () => {
+  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue' });
+  const e = embeds[0].toJSON();
+  assert.ok(e.description.includes('(horde)'), 'no-faction default is Horde');
+});
+
+test('renderBis selects the Alliance build when faction:alliance', () => {
+  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', faction: 'alliance' });
+  const e = embeds[0].toJSON();
+  assert.equal(e.title, 'Best in Slot \u2014 Rogue \u00b7 Offense (Warsong Gulch 19)');
+  assert.ok(e.description.includes('(alliance)'), 'chosen build is the Alliance one');
+  // Alliance build uses Blood Ring (both), never the Horde-only Seal of Sylvanas.
+  const finger = e.fields.find((f) => f.name === 'Finger').value;
+  assert.ok(!finger.includes('Seal of Sylvanas'));
+});
+
+test('renderBis honors an explicit Alliance build id even without the faction arg', () => {
+  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', build: 'rogue-offense-alliance' });
+  const e = embeds[0].toJSON();
+  assert.ok(e.description.includes('(alliance)'));
+});
+
+test('renderBis falls back with a note when a single-faction class is asked for the other side', () => {
+  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'paladin', faction: 'horde' });
+  const e = embeds[0].toJSON();
+  assert.ok(e.description.includes('no Horde builds'), 'explains the fallback');
+  assert.ok(e.description.includes('showing Alliance'));
 });
