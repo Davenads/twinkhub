@@ -22,6 +22,12 @@ const store = {
       },
       spellcoef: {
         penalty: { perLevelBelow20: 0.0375, note: 'Sub-20 penalty applies; values are level-19-effective.' },
+        credit: {
+          author: 'Lebs',
+          discordId: '276172101654806529',
+          source: 'XPOff coefficient list',
+          url: 'https://xpoff.com/threads/spell-power-coefficient-list-for-all-level-19-spells.93250/'
+        },
         byClass: {
           mage: [
             { spell: 'Frostbolt', rank: 3, coefficient: 0.463, type: 'direct-damage', confirmed: false },
@@ -52,6 +58,17 @@ test('renderSpellcoef groups spells by type and leads with the penalty note', ()
   assert.ok(direct.includes('Frostbolt') && direct.includes('0.463 per cast'));
   const dot = field(embeds, 'Damage over time');
   assert.ok(dot.includes('Fireball') && dot.includes('per tick'));
+});
+
+test('renderSpellcoef credits the source author with a masked link and a display-only mention', () => {
+  const { embeds } = renderSpellcoef({ store, bracket: '19', className: 'mage' });
+  const e = embeds[0].toJSON();
+  assert.ok(
+    e.description.includes('[XPOff coefficient list](https://xpoff.com/threads/spell-power-coefficient-list-for-all-level-19-spells.93250/)'),
+    'source is a masked link'
+  );
+  assert.ok(e.description.includes('Lebs'), 'author name is shown');
+  assert.ok(e.description.includes('<@276172101654806529>'), 'author is mentioned');
 });
 
 test('renderSpellcoef marks unverified values and notes the count in the footer', () => {

@@ -32,6 +32,22 @@ function spellLine(s) {
 }
 
 /**
+ * A one-line source credit for the coefficient data. Masked links and user
+ * mentions both render in an embed **description** (never a footer), so the
+ * credit lives there. The `<@id>` mention is display-only — the command replies
+ * with `allowedMentions: { parse: [] }`, so it never pings.
+ */
+function creditLine(credit) {
+  if (!credit) return null;
+  const label = credit.source ?? credit.url ?? 'source';
+  const linked = credit.url ? `[${label}](${credit.url})` : label;
+  const who = credit.discordId
+    ? `${credit.author ? `${credit.author} ` : ''}(<@${credit.discordId}>)`.trim()
+    : (credit.author ?? null);
+  return who ? `Source: **${linked}** \u2014 credit to ${who}` : `Source: **${linked}**`;
+}
+
+/**
  * Render a caster/hybrid class's level-19-effective spell power coefficients from
  * `spellcoefficients.json`, grouped by effect type, with the sub-level-20 penalty
  * note leading. Values flagged `confirmed: false` are marked _unverified_ so they
@@ -62,7 +78,11 @@ export function renderSpellcoef({ store, bracket, className }) {
 
   const title = metaTitle(`Spell Coefficients \u2014 ${capitalize(key)}`, meta);
   const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title);
-  if (data.penalty?.note) embed.setDescription(truncate(data.penalty.note, LIMITS.description));
+  const descParts = [];
+  if (data.penalty?.note) descParts.push(data.penalty.note);
+  const credit = creditLine(data.credit);
+  if (credit) descParts.push(credit);
+  if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
 
   for (const type of TYPE_ORDER) {
     const group = spells.filter((s) => s.type === type);

@@ -5,6 +5,12 @@
     "additionalEffectFactor": 0.95,
     "additionalEffectNote": "A spell that also applies a secondary effect (slow, snare, root, etc.) takes an extra 5% coefficient penalty (coefficient x 0.95), applied on top of the level-19 downranking penalty. Source: XPOff author clarification. Already folded into the affected coefficients below."
   },
+  "credit": {
+    "author": "Lebs",
+    "discordId": "276172101654806529",
+    "source": "XPOff \u2014 Spell power coefficient list for all level 19 spells",
+    "url": "https://xpoff.com/threads/spell-power-coefficient-list-for-all-level-19-spells.93250/"
+  },
   "byClass": {
     "mage": [
       { "spell": "Arcane Explosion", "rank": 1, "coefficient": 0.111, "type": "direct-damage" },

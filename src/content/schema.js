@@ -523,6 +523,15 @@ export function validateSpellCoefficients(obj, label = 'spellcoefficients.json')
     }
   }
 
+  // Optional attribution for the coefficient source (rendered as a credit line).
+  if (obj.credit !== undefined && require_(errors, isObject(obj.credit), `${label}: credit must be an object when present`)) {
+    for (const k of ['author', 'discordId', 'source', 'url']) {
+      if (obj.credit[k] !== undefined) {
+        require_(errors, isNonEmptyString(obj.credit[k]), `${label}: credit.${k} must be a non-empty string when present`);
+      }
+    }
+  }
+
   if (require_(errors, isObject(obj.byClass), `${label}: byClass must be an object`)) {
     const keys = Object.keys(obj.byClass);
     require_(errors, keys.length > 0, `${label}: byClass must have at least one class`);
