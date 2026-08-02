@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits, Events, MessageFlags } from 'discord.js';
 import { env } from './config/env.js';
 import { logger } from './lib/logger.js';
 import { loadCommands } from './commands/index.js';
+import { handleComponent } from './components/panels.js';
 import { runTimerEngine } from './timers/engine.js';
 import { createDispatch } from './timers/dispatch.js';
 import { createBoardUpdater } from './timers/board.js';
@@ -60,6 +61,27 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await command.autocomplete(interaction);
       } catch (err) {
         logger.error({ err, command: interaction.commandName }, 'autocomplete failed');
+      }
+    }
+    return;
+  }
+
+  // Persistent enduser panels (P4): buttons/selects fire as their own interaction
+  // types. Route them to the component handler, which replies to the clicker
+  // ephemerally via the same render services the slash commands use.
+  if (interaction.isButton() || interaction.isAnySelectMenu()) {
+    try {
+      await handleComponent(interaction);
+    } catch (err) {
+      logger.error({ err, customId: interaction.customId }, 'component failed');
+      const payload = {
+        content: 'Something went wrong with that panel control.',
+        flags: MessageFlags.Ephemeral
+      };
+      if (interaction.deferred || interaction.replied) {
+        await interaction.followUp(payload).catch(() => {});
+      } else {
+        await interaction.reply(payload).catch(() => {});
       }
     }
     return;

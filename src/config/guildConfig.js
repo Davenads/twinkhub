@@ -13,7 +13,9 @@ export const DEFAULT_CONFIG = {
   activeBrackets: ['19'],
   timers: { bg: true, agm: true, dmf: true, stv: true },
   // Persistent auto-updating dashboard message; null until /timerboard is run.
-  timerBoard: null // { channelId, messageId }
+  timerBoard: null, // { channelId, messageId }
+  // Persistent interactive enduser panels; null until /panels post is run.
+  panels: null // { channelId, messageIds: { <panelKey>: messageId } }
 };
 
 function fileFor(guildId) {
@@ -63,4 +65,9 @@ export async function setEventEnabled(guildId, event, enabled) {
 /** Point (or clear with null) the persistent timer-board message for a guild. */
 export async function setTimerBoard(guildId, board) {
   return saveGuildConfig(guildId, { timerBoard: board ?? null });
+}
+
+/** Point (or clear with null) the persistent enduser-panels record for a guild. */
+export async function setPanels(guildId, panels) {
+  return saveGuildConfig(guildId, { panels: panels ?? null });
 }
