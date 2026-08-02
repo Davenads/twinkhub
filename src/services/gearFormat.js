@@ -3,6 +3,23 @@ import { capitalize } from '../lib/text.js';
 // Best picks first within a slot.
 export const PRIORITY_RANK = { core: 0, situational: 1, budget: 2 };
 
+/** The item's Wowhead Classic page URL. Single source of truth, shared with `/item`. */
+export function wowheadItemUrl(id) {
+  return `https://www.wowhead.com/classic/item=${id}`;
+}
+
+/**
+ * The item's display name as bold markup, wrapped in a masked link to its Wowhead
+ * page when the item carries a `wowheadId`. Discord renders `[text](url)` links in
+ * embed field values (where every gear name lives), so `/bis` and `/gear` names are
+ * clickable. Items without an id degrade to plain bold — never a broken link.
+ */
+export function itemNameMarkup(item) {
+  return item.wowheadId != null
+    ? `**[${item.name}](${wowheadItemUrl(item.wowheadId)})**`
+    : `**${item.name}**`;
+}
+
 /** "+6 Agility, +6 Stamina" from a stats object, or "" when absent. */
 export function statLine(stats) {
   if (!stats) return '';
@@ -18,7 +35,7 @@ export function statLine(stats) {
  * that `/item` spells out, so `/bis` and `/gear` point the way without bloating.
  */
 export function itemLine(item) {
-  let head = `**${item.name}**`;
+  let head = itemNameMarkup(item);
   if (item.faction && item.faction !== 'both') head += ` [${item.faction}]`;
   if (item.priority && item.priority !== 'core') head += ` (${item.priority})`;
   const bits = [];
@@ -44,7 +61,7 @@ export function itemLine(item) {
  * @returns {string}
  */
 export function buildItemLine(item, enchantName = null) {
-  let head = `**${item.name}**`;
+  let head = itemNameMarkup(item);
   if (item.faction && item.faction !== 'both') head += ` [${item.faction}]`;
   if (item.priority && item.priority !== 'core') head += ` (${item.priority})`;
   if (enchantName) head += ` \u2014 _${enchantName}_`;

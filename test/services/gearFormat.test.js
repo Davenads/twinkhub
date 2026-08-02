@@ -1,6 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { statLine, itemLine, slotFields } from '../../src/services/gearFormat.js';
+import {
+  statLine,
+  itemLine,
+  slotFields,
+  wowheadItemUrl,
+  itemNameMarkup,
+  buildItemLine
+} from '../../src/services/gearFormat.js';
 
 test('statLine formats stat entries with capitalized keys, empty for none', () => {
   assert.equal(statLine({ agility: 6, stamina: 6 }), '+6 Agility, +6 Stamina');
@@ -98,4 +105,35 @@ test('slotFields caps the number of returned fields', () => {
   const items = ['a', 'b', 'c'].map((s) => ({ name: s, slot: s, priority: 'core' }));
   const fields = slotFields(items, ['a', 'b', 'c'], 2);
   assert.equal(fields.length, 2);
+});
+
+test('wowheadItemUrl builds the Classic item page URL', () => {
+  assert.equal(wowheadItemUrl(10399), 'https://www.wowhead.com/classic/item=10399');
+});
+
+test('itemNameMarkup wraps the name in a masked Wowhead link when wowheadId is present', () => {
+  assert.equal(
+    itemNameMarkup({ name: 'Green Tinted Goggles', wowheadId: 10399 }),
+    '**[Green Tinted Goggles](https://www.wowhead.com/classic/item=10399)**'
+  );
+});
+
+test('itemNameMarkup degrades to plain bold (no link) when wowheadId is absent', () => {
+  const markup = itemNameMarkup({ name: 'Mystery Trinket' });
+  assert.equal(markup, '**Mystery Trinket**');
+  assert.ok(!markup.includes(']('), 'must not emit a broken masked link');
+});
+
+test('itemLine (/bis flat view + /gear) links the item name when linkable', () => {
+  const line = itemLine({ name: 'Green Tinted Goggles', faction: 'both', priority: 'core', wowheadId: 10399 });
+  assert.ok(line.includes('](https://www.wowhead.com/classic/item=10399)'), 'links the name');
+});
+
+test('buildItemLine (/bis build view) links the name and keeps the enchant suffix', () => {
+  const line = buildItemLine(
+    { name: 'Green Tinted Goggles', faction: 'both', priority: 'core', wowheadId: 10399 },
+    'Lesser Arcanum of Voracity'
+  );
+  assert.ok(line.includes('](https://www.wowhead.com/classic/item=10399)'), 'links the name');
+  assert.ok(line.includes('_Lesser Arcanum of Voracity_'), 'preserves the per-slot enchant');
 });

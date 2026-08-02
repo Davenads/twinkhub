@@ -1,6 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { getGearItem, getEnchant } from '../content/store.js';
+import { wowheadItemUrl } from './gearFormat.js';
 
 const EMBED_COLOR = 0xc8aa6e;
 
@@ -71,7 +72,7 @@ export function renderItem({ store, bracket, id }) {
     fields.push({ name: 'Alternatives', value: lines.join('\n') });
   }
   if (item.wowheadId != null) {
-    fields.push({ name: 'Wowhead', value: `https://www.wowhead.com/classic/item=${item.wowheadId}` });
+    fields.push({ name: 'Wowhead', value: wowheadItemUrl(item.wowheadId) });
   }
 
   embed.addFields(fields);
