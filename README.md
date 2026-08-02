@@ -107,9 +107,9 @@ cp .env.example .env
 DISCORD_TOKEN=          # Bot token
 DISCORD_APP_ID=         # Application (client) ID
 
-# Optional: register slash commands to a single guild for instant dev iteration.
-# Leave blank to register globally (slower propagation, up to ~1h).
-DISCORD_DEV_GUILD_ID=
+# Guilds to register slash commands to (comma-separated, e.g. test,prod).
+# Per-guild registration is instant; global registration is not supported.
+DISCORD_GUILD_IDS=
 
 # Log level: trace | debug | info | warn | error
 LOG_LEVEL=info
@@ -125,9 +125,9 @@ front rather than deep inside the client.
 npm run deploy
 ```
 
-- With `DISCORD_DEV_GUILD_ID` set → commands register to that guild **instantly** (best for
-  development).
-- Blank → commands register **globally** (may take up to ~1 h to propagate).
+- Commands register to every guild in `DISCORD_GUILD_IDS` **instantly**.
+- Global registration is intentionally disabled; if `DISCORD_GUILD_IDS` is blank the deploy
+  aborts with an error rather than registering globally.
 
 Re-run this **only when a command's signature changes** — the bot does **not** re-register on
 every boot (this deliberately avoids the "This command is outdated" cache thrash the

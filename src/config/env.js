@@ -9,6 +9,21 @@ function required(name) {
 }
 
 /**
+ * Parse the target guilds for slash-command registration. `DISCORD_GUILD_IDS`
+ * (comma-separated) is preferred; falls back to the legacy single
+ * `DISCORD_DEV_GUILD_ID`. Commands are always registered per-guild (instant) —
+ * global registration is intentionally not supported.
+ */
+function parseGuildIds() {
+  const raw =
+    process.env.DISCORD_GUILD_IDS?.trim() || process.env.DISCORD_DEV_GUILD_ID?.trim() || '';
+  return raw
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+/**
  * Validated environment. Importing this module throws fast if a required
  * secret is missing, so `npm start` / `npm run deploy` fail with a clear message
  * rather than deep inside the Discord client.
@@ -16,6 +31,6 @@ function required(name) {
 export const env = {
   token: required('DISCORD_TOKEN'),
   appId: required('DISCORD_APP_ID'),
-  devGuildId: process.env.DISCORD_DEV_GUILD_ID?.trim() || null,
+  guildIds: parseGuildIds(),
   logLevel: process.env.LOG_LEVEL?.trim() || 'info'
 };
