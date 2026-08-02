@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadCommands } from '../../src/commands/index.js';
 
-test('/guide is registered with autocompleted slug/class and page/tag/bracket options', async () => {
+test('/guide is registered with autocompleted slug/class and page/tag options', async () => {
   const cmds = await loadCommands();
   const cmd = cmds.get('guide');
   assert.ok(cmd, 'guide command should be registered');
@@ -18,7 +18,6 @@ test('/guide is registered with autocompleted slug/class and page/tag/bracket op
   assert.ok(page && !page.required, 'page: optional');
   assert.equal(page.type, 4, 'page is an integer option');
   assert.equal(page.min_value, 1, 'page is clamped to >= 1');
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 test('guide autocomplete routes the slug option to guide slugs', async () => {

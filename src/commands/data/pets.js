@@ -11,9 +11,6 @@ export const data = new SlashCommandBuilder()
   .setDescription('Hunter pet recommendations: families, abilities, and pet-XP management.')
   .addStringOption((o) =>
     o.setName('family').setDescription('Filter to one pet family').setAutocomplete(true)
-  )
-  .addStringOption((o) =>
-    o.setName('bracket').setDescription('Content bracket (defaults to this server\u2019s primary)')
   );
 
 export async function execute(interaction) {

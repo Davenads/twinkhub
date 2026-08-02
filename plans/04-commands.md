@@ -7,27 +7,29 @@ here for the full picture.
 Design rules:
 - Heavy use of **autocomplete** (item names, class names, guide slugs, enchant names).
 - Responses are **embeds**, chunked to Discord limits; long guides paginate via buttons.
-- Every content command respects the guild's `activeBrackets`; a `bracket` option defaults
-  to the guild's primary bracket (19 initially) and only offers brackets that guild enabled.
+- Every content command resolves to the guild's **primary** bracket (19 initially) via
+  `resolveBracket(interaction)`. There is **no user-facing `bracket` option** — the bot is
+  focused on the 19 bracket. The store stays bracket-namespaced internally, so a picker can
+  be re-introduced additively when 29/49 ship.
 
 ## Enduser — data / knowledge
 
 | Command | Options | Returns |
 |---|---|---|
-| `/bis` | `class` (req), `slot?`, `bracket?` | Best-in-slot list for a class (all slots, or one). The flagship command. |
-| `/gear` | `class`, `slot?`, `faction?`, `priority?`, `bracket?` | Filterable gear entries (core/situational/budget). |
-| `/item` | `name` (autocomplete), `bracket?` | A single item's stats, source, faction, notes, Wowhead link. |
-| `/enchant` | `slot?`, `class?`, `bracket?` | Enchants for a slot/class; **flags no-level-requirement** ones. |
-| `/consumable` | `type?` (potion/poison/food/explosive/worldbuff), `class?`, `bracket?` | Recommended consumables. |
-| `/class` | `class` (req), `bracket?` | Class overview: tier, role(s), stat priority, spec notes, faction notes. |
-| `/tierlist` | `bracket?` | The bracket's class tier ranking with one-line rationales. |
-| `/quest` | `class?`, `faction?`, `bracket?` | Gear-reward quests worth doing pre-cap; **flags XP-risk turn-ins**. |
-| `/guide` | `slug` (autocomplete) or `class?`/`tag?` to browse | Curated long-form guide, paginated. |
-| `/optimize` | `class` (req), `faction?`, `bracket?` | A checklist: are you missing a core slot / enchant / consumable / profession? A "did you forget X" pass. |
-| `/xprules` | `bracket?` | Explains XP management for the bracket (e.g. **19: no XP-off toggle in Classic Era**, how to avoid dinging 20). Enduser FAQ. |
-| `/statweights` | `class` (req), `bracket?` | Stat conversions/priority for a class (from `scaling.json`) — e.g. STR→AP, AGI→crit/dodge/armor, STA→HP, hit caps — so players understand *why* an item wins. |
-| `/spellcoef` | `class` (req), `bracket?` | Level-19 spell power coefficients for a caster/hybrid's spells (grouped by damage/heal/DoT), plus the sub-level-20 penalty note (from `spellcoefficients.json`) — the caster counterpart to `/statweights`. Melee classes get a clean "no spell scaling at 19" reply. |
-| `/pets` | `family?`, `bracket?` | Hunter pet recommendations: optimal families/abilities, tame levels/zones, and the pet-XP management note. |
+| `/bis` | `class` (req), `build?`, `slot?` | Best-in-slot list for a class (all slots, or one). The flagship command. |
+| `/gear` | `class`, `slot?`, `faction?`, `priority?` | Filterable gear entries (core/situational/budget). |
+| `/item` | `name` (autocomplete) | A single item's stats, source, faction, notes, Wowhead link. |
+| `/enchant` | `slot?`, `class?` | Enchants for a slot/class; **flags no-level-requirement** ones. |
+| `/consumable` | `type?` (potion/poison/food/explosive/worldbuff), `class?` | Recommended consumables. |
+| `/class` | `class` (req) | Class overview: tier, role(s), stat priority, spec notes, faction notes. |
+| `/tierlist` | — | The bracket's class tier ranking with one-line rationales. |
+| `/quest` | `class?`, `faction?` | Gear-reward quests worth doing pre-cap; **flags XP-risk turn-ins**. |
+| `/guide` | `slug` (autocomplete) or `class?`/`tag?`/`page?` to browse | Curated long-form guide, paginated. |
+| `/optimize` | `class` (req), `faction?` | A checklist: are you missing a core slot / enchant / consumable / profession? A "did you forget X" pass. |
+| `/xprules` | — | Explains XP management for the bracket (e.g. **19: no XP-off toggle in Classic Era**, how to avoid dinging 20). Enduser FAQ. |
+| `/statweights` | `class` (req) | Stat conversions/priority for a class (from `scaling.json`) — e.g. STR→AP, AGI→crit/dodge/armor, STA→HP, hit caps — so players understand *why* an item wins. |
+| `/spellcoef` | `class` (req) | Level-19 spell power coefficients for a caster/hybrid's spells (grouped by damage/heal/DoT), plus the sub-level-20 penalty note (from `spellcoefficients.json`) — the caster counterpart to `/statweights`. Melee classes get a clean "no spell scaling at 19" reply. |
+| `/pets` | `family?` | Hunter pet recommendations: optimal families/abilities, tame levels/zones, and the pet-XP management note. |
 
 ### `/optimize` note
 `/optimize` is the differentiator: it cross-references the class's `core` gear/enchant list

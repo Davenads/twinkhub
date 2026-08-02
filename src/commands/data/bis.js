@@ -23,12 +23,6 @@ export const data = new SlashCommandBuilder()
   )
   .addStringOption((o) =>
     o.setName('slot').setDescription('Filter to one gear slot').setRequired(false).setAutocomplete(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName('bracket')
-      .setDescription('Which bracket (defaults to this server\u2019s primary)')
-      .setRequired(false)
   );
 
 export async function execute(interaction) {

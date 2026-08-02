@@ -20,12 +20,6 @@ export const data = new SlashCommandBuilder()
   .addStringOption((o) => o.setName('tag').setDescription('Browse guides with a tag').setRequired(false))
   .addIntegerOption((o) =>
     o.setName('page').setDescription('Page of a long guide (default 1)').setRequired(false).setMinValue(1)
-  )
-  .addStringOption((o) =>
-    o
-      .setName('bracket')
-      .setDescription('Which bracket (defaults to this server\u2019s primary)')
-      .setRequired(false)
   );
 
 export async function execute(interaction) {

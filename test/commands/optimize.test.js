@@ -15,7 +15,6 @@ test('/optimize is registered with a required autocompleted class and a choice f
   const faction = opt('faction');
   assert.ok(faction && !faction.required, 'faction: optional');
   assert.deepEqual((faction.choices ?? []).map((c) => c.value), ['alliance', 'horde']);
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 test('optimize autocomplete suggests roster classes and returns the class key', async () => {

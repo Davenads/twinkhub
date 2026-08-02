@@ -8,13 +8,7 @@ import { renderXpRules } from '../../services/xprules.js';
 // all copy live in the service + content store, never here.
 export const data = new SlashCommandBuilder()
   .setName('xprules')
-  .setDescription('How to manage XP and stay in your twink bracket.')
-  .addStringOption((o) =>
-    o
-      .setName('bracket')
-      .setDescription('Which bracket (defaults to this server\u2019s primary)')
-      .setRequired(false)
-  );
+  .setDescription('How to manage XP and stay in your twink bracket.');
 
 export async function execute(interaction) {
   const bracket = await resolveBracket(interaction);

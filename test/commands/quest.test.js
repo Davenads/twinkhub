@@ -15,7 +15,6 @@ test('/quest is registered with an autocompleted class and a choice faction opti
   const faction = opt('faction');
   assert.ok(faction && !faction.required, 'faction: optional');
   assert.deepEqual((faction.choices ?? []).map((c) => c.value), ['alliance', 'horde']);
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 test('quest autocomplete suggests roster classes and returns the class key', async () => {

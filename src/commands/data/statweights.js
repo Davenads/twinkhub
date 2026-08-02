@@ -9,12 +9,6 @@ export const data = new SlashCommandBuilder()
   .setDescription('Why a class prioritizes certain stats: conversions, formulas, and hit caps.')
   .addStringOption((o) =>
     o.setName('class').setDescription('Which class').setRequired(true).setAutocomplete(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName('bracket')
-      .setDescription('Which bracket (defaults to this server\u2019s primary)')
-      .setRequired(false)
   );
 
 export async function execute(interaction) {

@@ -19,7 +19,6 @@ test('/consumable is registered with a choice type option and autocompleted clas
   );
 
   assert.ok(opt('class') && !opt('class').required && opt('class').autocomplete, 'class: optional + autocompleted');
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 test('consumable autocomplete suggests roster classes and returns the class key', async () => {

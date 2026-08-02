@@ -21,12 +21,6 @@ export const data = new SlashCommandBuilder()
       .setDescription('Scope faction-specific picks')
       .setRequired(false)
       .addChoices({ name: 'Alliance', value: 'alliance' }, { name: 'Horde', value: 'horde' })
-  )
-  .addStringOption((o) =>
-    o
-      .setName('bracket')
-      .setDescription('Which bracket (defaults to this server\u2019s primary)')
-      .setRequired(false)
   );
 
 export async function execute(interaction) {

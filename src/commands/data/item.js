@@ -11,12 +11,6 @@ export const data = new SlashCommandBuilder()
   .setDescription('Look up a single gear item: stats, source, faction, notes.')
   .addStringOption((o) =>
     o.setName('name').setDescription('Item name').setRequired(true).setAutocomplete(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName('bracket')
-      .setDescription('Which bracket (defaults to this server\u2019s primary)')
-      .setRequired(false)
   );
 
 export async function execute(interaction) {

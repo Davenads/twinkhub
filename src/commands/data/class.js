@@ -16,12 +16,6 @@ export const data = new SlashCommandBuilder()
       .setDescription('Which class')
       .setRequired(true)
       .setAutocomplete(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName('bracket')
-      .setDescription('Which bracket (defaults to this server\u2019s primary)')
-      .setRequired(false)
   );
 
 export async function execute(interaction) {

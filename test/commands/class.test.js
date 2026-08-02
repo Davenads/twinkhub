@@ -13,9 +13,6 @@ test('/class is registered with a required autocompleted class option', async ()
   assert.ok(classOpt, 'has a class option');
   assert.ok(classOpt.required, 'class option is required');
   assert.ok(classOpt.autocomplete, 'class option is autocompleted');
-
-  const bracket = (json.options ?? []).find((o) => o.name === 'bracket');
-  assert.ok(bracket && !bracket.required, 'bracket option is optional');
 });
 
 test('class autocomplete suggests roster classes matching the typed prefix', async () => {

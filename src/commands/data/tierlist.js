@@ -7,13 +7,7 @@ import { renderTierlist } from '../../services/tierlist.js';
 // bracket; all copy lives in the content store, rendered by the service.
 export const data = new SlashCommandBuilder()
   .setName('tierlist')
-  .setDescription('Class tier list for a twink bracket.')
-  .addStringOption((o) =>
-    o
-      .setName('bracket')
-      .setDescription('Which bracket (defaults to this server\u2019s primary)')
-      .setRequired(false)
-  );
+  .setDescription('Class tier list for a twink bracket.');
 
 export async function execute(interaction) {
   const bracket = await resolveBracket(interaction);

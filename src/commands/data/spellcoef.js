@@ -9,12 +9,6 @@ export const data = new SlashCommandBuilder()
   .setDescription('Level-19 spell power coefficients: how much spell power a caster spell gains.')
   .addStringOption((o) =>
     o.setName('class').setDescription('Which caster/hybrid class').setRequired(true).setAutocomplete(true)
-  )
-  .addStringOption((o) =>
-    o
-      .setName('bracket')
-      .setDescription('Which bracket (defaults to this server\u2019s primary)')
-      .setRequired(false)
   );
 
 export async function execute(interaction) {

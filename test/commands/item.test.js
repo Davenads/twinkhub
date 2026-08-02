@@ -11,7 +11,6 @@ test('/item is registered with a required autocompleted name option', async () =
   const json = cmd.data.toJSON();
   const opt = (name) => (json.options ?? []).find((o) => o.name === name);
   assert.ok(opt('name').required && opt('name').autocomplete, 'name: required + autocompleted');
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 test('item autocomplete matches on name and returns the item id as the value', async () => {

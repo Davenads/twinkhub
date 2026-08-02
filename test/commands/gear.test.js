@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadCommands } from '../../src/commands/index.js';
 
-test('/gear is registered with required class, optional slot/faction/priority/bracket', async () => {
+test('/gear is registered with required class, optional slot/faction/priority', async () => {
   const cmds = await loadCommands();
   const cmd = cmds.get('gear');
   assert.ok(cmd, 'gear command should be registered');
@@ -21,8 +21,6 @@ test('/gear is registered with required class, optional slot/faction/priority/br
   assert.ok(opt('priority') && !opt('priority').required, 'priority: optional');
   assert.ok(!opt('priority').autocomplete, 'priority: not autocompleted');
   assert.ok(opt('priority').choices?.some((c) => c.value === 'core'));
-
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 function fakeAutocomplete(name, value) {

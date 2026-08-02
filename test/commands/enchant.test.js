@@ -13,7 +13,6 @@ test('/enchant is registered with optional autocompleted slot and class filters'
 
   assert.ok(opt('slot').autocomplete && !opt('slot').required, 'slot: optional + autocompleted');
   assert.ok(opt('class').autocomplete && !opt('class').required, 'class: optional + autocompleted');
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 // Builds a fake autocomplete interaction whose focused option is `name` with the

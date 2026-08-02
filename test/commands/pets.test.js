@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadCommands } from '../../src/commands/index.js';
 
-test('/pets is registered with optional autocompleted family and bracket options', async () => {
+test('/pets is registered with an optional autocompleted family option', async () => {
   const cmds = await loadCommands();
   const cmd = cmds.get('pets');
   assert.ok(cmd, 'pets command should be registered');
@@ -11,7 +11,6 @@ test('/pets is registered with optional autocompleted family and bracket options
   const json = cmd.data.toJSON();
   const opt = (name) => (json.options ?? []).find((o) => o.name === name);
   assert.ok(opt('family') && !opt('family').required && opt('family').autocomplete, 'family: optional + autocompleted');
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 test('pets autocomplete suggests the seeded families and returns the family key', async () => {

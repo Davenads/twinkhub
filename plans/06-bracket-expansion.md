@@ -39,12 +39,14 @@ point of the namespacing.
 
 ## Command behavior across brackets
 
-- Every data command takes an optional `bracket` and defaults to the guild's **primary**
-  bracket (first in `activeBrackets`, initially 19).
-- Autocomplete and results are **scoped to enabled brackets** so a WSG-19 guild never sees
-  49 data unless they opt in.
-- `/brackets` (dev) toggles which namespaces a guild exposes. A guild can run multiple
-  brackets at once (e.g. a community that twinks 19 and 29).
+- There is **no user-facing `bracket` option** on data commands — the bot is focused on the
+  19 bracket. Every command resolves to the guild's **primary** bracket (first in
+  `activeBrackets`, initially 19) via `resolveBracket(interaction)`. The content store stays
+  bracket-namespaced internally, so re-introducing a picker later is additive.
+- Autocomplete and results are **scoped to the primary bracket** so a WSG-19 guild never sees
+  49 data.
+- `/brackets` (dev, planned) toggles which namespaces a guild exposes and re-orders the
+  primary. A guild can run multiple brackets at once (e.g. a community that twinks 19 and 29).
 
 ## Guardrails so expansion stays clean
 

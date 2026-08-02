@@ -14,7 +14,6 @@ test('/bis is registered with a required class and optional slot, both autocompl
   assert.ok(opt('class').required && opt('class').autocomplete, 'class: required + autocompleted');
   assert.ok(!opt('build').required && opt('build').autocomplete, 'build: optional + autocompleted');
   assert.ok(!opt('slot').required && opt('slot').autocomplete, 'slot: optional + autocompleted');
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 function fakeAutocomplete(name, value, strings = {}) {

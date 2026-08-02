@@ -11,7 +11,6 @@ test('/spellcoef is registered with a required autocompleted class option', asyn
   const json = cmd.data.toJSON();
   const opt = (name) => (json.options ?? []).find((o) => o.name === name);
   assert.ok(opt('class').required && opt('class').autocomplete, 'class: required + autocompleted');
-  assert.ok(opt('bracket') && !opt('bracket').required, 'bracket: optional');
 });
 
 test('spellcoef autocomplete suggests caster classes and returns the class key', async () => {
