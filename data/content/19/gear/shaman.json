@@ -16,6 +16,7 @@
       "id": "jutebraid-gloves",
       "name": "Jutebraid Gloves",
       "slot": "hands",
+      "armorType": "leather",
       "source": { "type": "quest", "detail": "Horde quest reward (Horde Presence, Mor'shan Rampart, The Barrens); green cloth hands, item level 31" },
       "faction": "both",
       "reqLevel": null,

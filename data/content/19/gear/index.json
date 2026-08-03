@@ -19,11 +19,18 @@
     "quiver"
   ],
   "notes": "Universal slot picks - a cross-class starting frame drawn from community gearing guides. Treat these as seed examples and verify each item's exact stats, source, faction availability, and current-meta status at authoring time.",
+  "armorProficiency": {
+    "cloth": ["druid", "hunter", "mage", "paladin", "priest", "rogue", "shaman", "warlock", "warrior"],
+    "leather": ["druid", "hunter", "paladin", "rogue", "shaman", "warrior"],
+    "mail": ["paladin", "warrior"],
+    "plate": []
+  },
   "shared": [
     {
       "id": "green-tinted-goggles",
       "name": "Green Tinted Goggles",
       "slot": "head",
+      "armorType": "cloth",
       "source": {
         "type": "profession",
         "detail": "Engineering (crafted)"
@@ -45,6 +52,7 @@
       "id": "lucky-fishing-hat",
       "name": "Lucky Fishing Hat",
       "slot": "head",
+      "armorType": "misc",
       "source": {
         "type": "world",
         "detail": "Fishing (rare catch)"
@@ -98,6 +106,7 @@
       "id": "feral-shoulder-pads",
       "name": "Feral Shoulder Pads",
       "slot": "shoulder",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "World/dungeon drop (verify exact source)"
@@ -112,6 +121,7 @@
       "id": "blackened-defias-armor",
       "name": "Blackened Defias Armor",
       "slot": "chest",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "The Deadmines (dungeon drop)"
@@ -131,6 +141,7 @@
       "id": "nat-pagles-extreme-anglers",
       "name": "Nat Pagle's Extreme Anglers",
       "slot": "feet",
+      "armorType": "misc",
       "source": {
         "type": "quest",
         "detail": "Fishing quest reward (verify exact source)"
@@ -178,6 +189,7 @@
       "id": "leggings-of-the-fang",
       "name": "Leggings of the Fang",
       "slot": "legs",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "Wailing Caverns (dungeon drop)"
@@ -197,6 +209,7 @@
       "id": "deviate-scale-belt",
       "name": "Deviate Scale Belt",
       "slot": "waist",
+      "armorType": "leather",
       "source": {
         "type": "profession",
         "detail": "Leatherworking (crafted from Deviate Scales)"
@@ -293,6 +306,7 @@
       "id": "screecher-belt",
       "name": "Screecher Belt",
       "slot": "waist",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "Low-level drop (verify exact source)"
@@ -312,6 +326,7 @@
       "id": "wranglers-wristbands-of-the-monkey",
       "name": "Wrangler's Wristbands of the Monkey",
       "slot": "wrist",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)"
@@ -326,6 +341,7 @@
       "id": "scouting-gloves-of-the-monkey",
       "name": "Scouting Gloves of the Monkey",
       "slot": "hands",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "Low-level drop with the of the Monkey (+Agi/+Sta) random suffix (verify exact source)"
@@ -340,6 +356,7 @@
       "id": "talbar-mantle",
       "name": "Talbar Mantle",
       "slot": "shoulder",
+      "armorType": "cloth",
       "source": {
         "type": "quest",
         "detail": "Quest reward"
@@ -421,6 +438,7 @@
       "id": "feet-of-the-lynx",
       "name": "Feet of the Lynx",
       "slot": "feet",
+      "armorType": "leather",
       "source": {
         "type": "world",
         "detail": "World drop (BoE)"
@@ -443,6 +461,7 @@
       "id": "trailblazer-boots",
       "name": "Trailblazer Boots",
       "slot": "feet",
+      "armorType": "leather",
       "source": {
         "type": "quest",
         "detail": "Quest reward"
@@ -611,6 +630,7 @@
       "id": "tree-bark-jacket",
       "name": "Tree Bark Jacket",
       "slot": "chest",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "Low-level drop (verify exact source)"
@@ -629,6 +649,7 @@
       "id": "wranglers-wristbands-of-the-eagle",
       "name": "Wrangler's Wristbands of the Eagle",
       "slot": "wrist",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)"
@@ -643,6 +664,7 @@
       "id": "darkweave-breeches",
       "name": "Darkweave Breeches",
       "slot": "legs",
+      "armorType": "cloth",
       "source": {
         "type": "profession",
         "detail": "Tailoring (crafted)"
@@ -681,6 +703,7 @@
       "id": "draftsman-boots",
       "name": "Draftsman Boots",
       "slot": "feet",
+      "armorType": "cloth",
       "source": {
         "type": "drop",
         "detail": "Low-level drop (verify exact source)"
@@ -776,6 +799,7 @@
       "id": "kellers-girdle",
       "name": "Keller's Girdle",
       "slot": "waist",
+      "armorType": "cloth",
       "source": {
         "type": "drop",
         "detail": "Low-level drop (verify exact source)"
@@ -849,6 +873,7 @@
       "id": "magefist-gloves",
       "name": "Magefist Gloves",
       "slot": "hands",
+      "armorType": "cloth",
       "source": {
         "type": "profession",
         "detail": "Tailoring (crafted)"
@@ -887,6 +912,7 @@
       "id": "reinforced-woolen-shoulders",
       "name": "Reinforced Woolen Shoulders",
       "slot": "shoulder",
+      "armorType": "cloth",
       "source": {
         "type": "profession",
         "detail": "Tailoring (crafted)"
@@ -901,6 +927,7 @@
       "id": "greenweave-bracers-of-stamina",
       "name": "Greenweave Bracers of Stamina",
       "slot": "wrist",
+      "armorType": "cloth",
       "source": {
         "type": "profession",
         "detail": "Leatherworking (crafted) with the of Stamina random suffix (verify exact source)"
@@ -966,6 +993,7 @@
       "id": "mindthrust-bracers",
       "name": "Mindthrust Bracers",
       "slot": "wrist",
+      "armorType": "cloth",
       "source": {
         "type": "drop",
         "detail": "The Deadmines (dungeon drop)"
@@ -984,6 +1012,7 @@
       "id": "pagan-mitts-of-the-eagle",
       "name": "Pagan Mitts of the Eagle",
       "slot": "hands",
+      "armorType": "cloth",
       "source": {
         "type": "drop",
         "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)"
@@ -998,6 +1027,7 @@
       "id": "gnoll-casting-gloves",
       "name": "Gnoll Casting Gloves",
       "slot": "hands",
+      "armorType": "cloth",
       "source": {
         "type": "drop",
         "detail": "Low-level drop (verify exact source)"
@@ -1012,6 +1042,7 @@
       "id": "shimmering-trousers-of-the-eagle",
       "name": "Shimmering Trousers of the Eagle",
       "slot": "legs",
+      "armorType": "cloth",
       "source": {
         "type": "drop",
         "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)"
@@ -1061,6 +1092,7 @@
       "id": "scouting-gloves-of-the-eagle",
       "name": "Scouting Gloves of the Eagle",
       "slot": "hands",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "Low-level drop with the of the Eagle (+Int/+Sta) random suffix (verify exact source)"
@@ -1094,6 +1126,7 @@
       "id": "defender-spaulders",
       "name": "Defender Spaulders",
       "slot": "shoulder",
+      "armorType": "mail",
       "source": {
         "type": "drop",
         "detail": "Low-level drop (verify exact source)"
@@ -1122,6 +1155,7 @@
       "id": "thorbias-gauntlets",
       "name": "Thorbia's Gauntlets",
       "slot": "hands",
+      "armorType": "mail",
       "source": {
         "type": "drop",
         "detail": "Low-level drop (verify exact source)"
@@ -1140,6 +1174,7 @@
       "id": "cobrahns-grasp",
       "name": "Cobrahn's Grasp",
       "slot": "waist",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "Wailing Caverns (dungeon drop, Cobrahn)"
@@ -1177,6 +1212,7 @@
       "id": "tunic-of-westfall",
       "name": "Tunic of Westfall",
       "slot": "chest",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "The Deadmines / Westfall area (verify exact source)"
@@ -1212,6 +1248,7 @@
       "id": "pious-legwraps",
       "name": "Pious Legwraps",
       "slot": "legs",
+      "armorType": "cloth",
       "source": {
         "type": "drop",
         "detail": "Low-level drop (verify exact source)"
@@ -1230,6 +1267,7 @@
       "id": "beetle-clasps",
       "name": "Beetle Clasps",
       "slot": "wrist",
+      "armorType": "mail",
       "source": {
         "type": "drop",
         "detail": "Low-level drop (verify exact source)"
@@ -1248,6 +1286,7 @@
       "id": "chausses-of-westfall",
       "name": "Chausses of Westfall",
       "slot": "legs",
+      "armorType": "leather",
       "source": {
         "type": "drop",
         "detail": "The Deadmines / Westfall area (verify exact source)"

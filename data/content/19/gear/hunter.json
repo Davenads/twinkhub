@@ -2,17 +2,6 @@
   "class": "hunter",
   "items": [
     {
-      "id": "precisely-calibrated-boomstick",
-      "name": "Precisely Calibrated Boomstick",
-      "slot": "ranged",
-      "source": { "type": "drop", "detail": "Drops from Skeletal Flayer per Wowhead Classic (NOT Engineering-crafted); epic gun, item level 48" },
-      "faction": "both",
-      "reqLevel": 43,
-      "notes": "WARNING: Wowhead Classic item=2100 is an epic gun with Requires Level 43 (38-45 dmg, 1.50 speed, ilvl 48) -- UNUSABLE at level 19. The exact name matches but the required level makes it invalid for this bracket; the chart entry likely refers to a different/misnamed item. Verify the intended ranged before relying on this ID.",
-      "wowheadId": 2100,
-      "priority": "core"
-    },
-    {
       "id": "bandolier-of-the-night-watch",
       "name": "Bandolier of the Night Watch",
       "slot": "ammo",
@@ -50,6 +39,7 @@
       "id": "scouting-gloves-of-the-falcon",
       "name": "Scouting Gloves of the Falcon",
       "slot": "hands",
+      "armorType": "leather",
       "source": { "type": "drop", "detail": "Drops from Flesh Eater with the of the Falcon (+Agi/+crit) random suffix; base item level 23" },
       "faction": "both",
       "reqLevel": null,
@@ -108,6 +98,7 @@
       "id": "wranglers-wristbands-of-the-falcon",
       "name": "Wrangler's Wristbands of the Falcon",
       "slot": "wrist",
+      "armorType": "leather",
       "source": { "type": "drop", "detail": "Low-level drop with the of the Falcon (+Int/+crit) random suffix; base item level 23" },
       "faction": "both",
       "reqLevel": null,
