@@ -19,7 +19,7 @@ test('AGM warning + spawn copy matches production', () => {
 test('DMF open copy matches production', () => {
   assert.equal(
     renderMessage('dmf', 'occurrence'),
-    '\uD83C\uDFAA **Darkmoon Faire** is now open! Head to Elwynn Forest, Mulgore, or Terokkar Forest.'
+    '\uD83C\uDFAA **Darkmoon Faire** is now open! Head to Elwynn Forest (Alliance) or Mulgore (Horde).'
   );
 });
 

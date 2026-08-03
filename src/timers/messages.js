@@ -10,7 +10,7 @@ const AGM_WARNING =
 const AGM_SPAWN =
   '\u2694\uFE0F **Arena Grand Master** chest has spawned! Grab it fast \u2014 you have 5 minutes!';
 const DMF_OPEN =
-  '\uD83C\uDFAA **Darkmoon Faire** is now open! Head to Elwynn Forest, Mulgore, or Terokkar Forest.';
+  '\uD83C\uDFAA **Darkmoon Faire** is now open! Head to Elwynn Forest (Alliance) or Mulgore (Horde).';
 const STV_WARNING =
   '\uD83C\uDFA3 **STV Fishing Extravaganza** starts in 30 minutes! Bring your rods to Stranglethorn Vale!';
 const STV_START =

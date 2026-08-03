@@ -28,9 +28,9 @@ test('latchStore round-trips through a real file and seeds on missing', async ()
 });
 
 test('engine walks a real AGM window: exactly one warning + one occurrence', async () => {
-  // 2026-07-28 (Tue, MDT = UTC-6). AGM 12:00 MT = 18:00 UTC.
-  // Warning window 11:50-12:00 MT; occurrence window 12:00-12:05 MT.
-  // Walk one tick/min from 17:45 UTC (11:45 MT) to 18:10 UTC (12:10 MT).
+  // 2026-07-28 (Tue, MDT = UTC-6). AGM spawns 01:00/04:00/…/13:00 MT; use the
+  // 13:00 MT spawn = 19:00 UTC. Warning window 12:50-13:00 MT; occurrence window
+  // 13:00-13:05 MT. Walk one tick/min from 18:45 UTC (12:45 MT) to 19:10 UTC.
   const store = memStore();
   const dispatched = [];
   const dispatch = async (fire) => {
@@ -39,12 +39,12 @@ test('engine walks a real AGM window: exactly one warning + one occurrence', asy
 
   const fired = [];
   for (let m = 45; m <= 70; m++) {
-    const now = DateTime.utc(2026, 7, 28, 17, 0).plus({ minutes: m });
+    const now = DateTime.utc(2026, 7, 28, 18, 0).plus({ minutes: m });
     const { fires } = await runTimerEngine({ now, dispatch, store });
     for (const f of fires) fired.push({ min: m, ...f });
   }
 
-  // 11:50 MT (m=50) warning, 12:00 MT (m=60) occurrence — and nothing else.
+  // 12:50 MT (m=50) warning, 13:00 MT (m=60) occurrence — and nothing else.
   assert.deepEqual(fired, [
     { min: 50, event: 'agm', kind: 'warning' },
     { min: 60, event: 'agm', kind: 'occurrence' }
@@ -58,11 +58,11 @@ test('engine walks a real AGM window: exactly one warning + one occurrence', asy
 });
 
 test('engine cold-start mid-window seeds without firing (no retro-spam)', async () => {
-  // Start fresh at 12:02 MT (18:02 UTC), already inside the AGM occurrence.
+  // Start fresh at 13:02 MT (19:02 UTC), already inside the AGM occurrence.
   const store = memStore();
   const seen = [];
   await runTimerEngine({
-    now: DateTime.utc(2026, 7, 28, 18, 2),
+    now: DateTime.utc(2026, 7, 28, 19, 2),
     dispatch: async (f) => seen.push(f),
     store
   });

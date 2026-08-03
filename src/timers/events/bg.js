@@ -3,21 +3,24 @@ import { MT_ZONE, asDateTime, mod } from '../../lib/time.js';
 
 /**
  * BG Weekend rotation. Port of `get_rotation_info` / `_bg_week_start` from
- * wow-timers/shared.py.
+ * wow-timers/shared.py, corrected for Classic Era.
  *
- * Rotation: AV -> EOTS -> WSG -> AB, advancing each Tuesday 2:00 AM Mountain.
- * The weekend itself runs Thursday 2am MT -> the following Tuesday 2am MT.
+ * Classic Era has only three Call to Arms battlegrounds — AV, WSG, AB (Eye of
+ * the Storm is a TBC BG and never rotates in Era). The cycle advances each
+ * Tuesday 2:00 AM Mountain: AV -> WSG -> AB -> AV. The weekend itself runs
+ * Thursday 2am MT -> the following Tuesday 2am MT.
  */
 export const BATTLEGROUNDS = [
   { name: 'Alterac Valley', shortName: 'AV' },
-  { name: 'Eye of the Storm', shortName: 'EOTS' },
   { name: 'Warsong Gulch', shortName: 'WSG' },
   { name: 'Arathi Basin', shortName: 'AB' }
 ];
 
-/** Anchor: Tuesday 2026-03-24 02:00 MDT = 08:00 UTC — a confirmed AV week.
- *  Rotation index derives from whole weeks elapsed since this instant. */
-export const BG_ANCHOR = DateTime.utc(2026, 3, 24, 8, 0, 0);
+/** Anchor: Tuesday 2026-07-28 02:00 MDT = 08:00 UTC — the confirmed AB week
+ *  whose weekend fell on Aug 1–2 2026. ANCHOR_INDEX pins that week to AB (2);
+ *  the rotation index derives from whole weeks elapsed since this instant. */
+export const BG_ANCHOR = DateTime.utc(2026, 7, 28, 8, 0, 0);
+const ANCHOR_INDEX = 2; // BATTLEGROUNDS[2] === AB
 
 const WEEK_MS = 7 * 24 * 3600 * 1000;
 
@@ -51,7 +54,7 @@ export function getState(now) {
   const weekEnd = weekStart.plus({ days: 7 });
 
   const weeks = Math.round((weekStart.toMillis() - BG_ANCHOR.toMillis()) / WEEK_MS);
-  const bgIdx = mod(weeks, BATTLEGROUNDS.length);
+  const bgIdx = mod(weeks + ANCHOR_INDEX, BATTLEGROUNDS.length);
   const nextIdx = mod(bgIdx + 1, BATTLEGROUNDS.length);
 
   const nowMs = now.toMillis();

@@ -38,14 +38,14 @@ test('rankedEvents orders active-soonest then idle-soonest', () => {
 });
 
 test('renderEventLine — BG shows current + next, active vs idle', () => {
-  const meta = { currentBG: { shortName: 'AV' }, nextBG: { shortName: 'EOTS' } };
+  const meta = { currentBG: { shortName: 'AV' }, nextBG: { shortName: 'WSG' } };
   assert.equal(
     renderEventLine('bg', st(true, 2 * DAY + 3 * HOUR, { meta })),
-    '**AV** live \u00b7 ends in 2d 3h 0m\nNext: EOTS'
+    '**AV** live \u00b7 ends in 2d 3h 0m\nNext: WSG'
   );
   assert.equal(
     renderEventLine('bg', st(false, 2 * HOUR, { meta })),
-    'Next: **AV** in 2h 0m\nThen: EOTS'
+    'Next: **AV** in 2h 0m\nThen: WSG'
   );
 });
 
@@ -65,7 +65,7 @@ test('eventTitle returns the display name', () => {
 
 test('renderEventsSummary builds a ranked embed with a live updated cue', () => {
   const states = {
-    bg: st(false, 2 * HOUR, { meta: { currentBG: { shortName: 'AV' }, nextBG: { shortName: 'EOTS' } } }),
+    bg: st(false, 2 * HOUR, { meta: { currentBG: { shortName: 'AV' }, nextBG: { shortName: 'WSG' } } }),
     agm: st(true, 3 * MIN),
     dmf: st(false, 10 * DAY),
     stv: st(true, 1 * HOUR)

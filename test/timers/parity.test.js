@@ -4,121 +4,159 @@ import { DateTime } from 'luxon';
 import { EVENTS } from '../../src/timers/events/index.js';
 
 /**
- * Golden values captured by running the wow-timers Python source of truth
- * (`python-bots/shared.py`: get_rotation_info / get_agm_state / get_dmf_state /
- * get_stv_state) over each timestamp and normalizing to TwinkHub's shape. If the
- * JS port ever drifts from the Python schedule math, these fail.
+ * Golden values frozen from the corrected Classic-Era schedule and cross-checked
+ * by hand against known ground truth (the weekend of Aug 1–2 2026 was AB; the
+ * Era Call-to-Arms cycle is AV→WSG→AB; the Gurubashi chest spawns at 01:00 MT;
+ * the Darkmoon Faire opens the Sunday after the first Friday, per NWB
+ * `Modules/DMF.lua`). If the schedule math ever drifts, these fail.
  *
- * Coverage: rotation index advance (AV→EOTS→WSG→AB), weekend active/idle edges,
- * AGM in-window / just-after / at-3h-boundary, DMF first-full-week start + before
- * + between-months, STV Sunday window start/mid/end→next/before/weekday, and a
+ * Coverage: 3-BG rotation advance across four consecutive weeks (AB→AV→WSG→AB),
+ * weekend open/close edges (Thu 2am / Tue 2am MT), AGM in-window / just-after /
+ * boundary / 10-min-warning edge on the corrected 01:00 phase, DMF Sunday open +
+ * mid-week + before + between-months, STV Sunday window mid/before, and a
  * DST-crossing instant (2026-11-15, after the Nov 1 fall-back).
  *
  * Per event, keys: active, startsInMs, endsInMs. Additionally bg carries
  * label + nextLabel; agm carries msUntilNext + msWindowLeft.
  */
 const GOLDEN = {
-  '2026-03-24T08:00:00Z': {
-    bg: { active: false, startsInMs: 172800000, endsInMs: 604800000, label: 'AV', nextLabel: 'EOTS' },
+  '2026-07-28T09:00:00Z': {
+    bg: { active: false, startsInMs: 169200000, endsInMs: 601200000, label: 'AB', nextLabel: 'AV' },
     agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
-    dmf: { active: false, startsInMs: 1116060000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 475200000, endsInMs: 0 }
+    dmf: { active: false, startsInMs: 1033200000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 471600000, endsInMs: 0 }
   },
-  '2026-03-27T00:00:00Z': {
-    bg: { active: true, startsInMs: 0, endsInMs: 374400000, label: 'AV', nextLabel: 'EOTS' },
-    agm: { active: true, startsInMs: 0, endsInMs: 300000, msUntilNext: 10800000, msWindowLeft: 300000 },
-    dmf: { active: false, startsInMs: 885660000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 244800000, endsInMs: 0 }
-  },
-  '2026-03-31T08:00:00Z': {
-    bg: { active: false, startsInMs: 172800000, endsInMs: 604800000, label: 'EOTS', nextLabel: 'WSG' },
+  '2026-08-01T12:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 244800000, label: 'AB', nextLabel: 'AV' },
     agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
-    dmf: { active: false, startsInMs: 511260000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 475200000, endsInMs: 0 }
+    dmf: { active: false, startsInMs: 676800000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 115200000, endsInMs: 0 }
   },
-  '2026-04-07T08:00:00Z': {
-    bg: { active: false, startsInMs: 172800000, endsInMs: 604800000, label: 'WSG', nextLabel: 'AB' },
+  '2026-08-04T09:00:00Z': {
+    bg: { active: false, startsInMs: 169200000, endsInMs: 601200000, label: 'AV', nextLabel: 'WSG' },
     agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
-    dmf: { active: true, startsInMs: 0, endsInMs: 511260000 },
-    stv: { active: false, startsInMs: 475200000, endsInMs: 0 }
+    dmf: { active: false, startsInMs: 428400000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 471600000, endsInMs: 0 }
   },
-  '2026-11-15T12:00:00Z': {
-    bg: { active: true, startsInMs: 0, endsInMs: 162000000, label: 'EOTS', nextLabel: 'WSG' },
+  '2026-08-08T12:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 244800000, label: 'AV', nextLabel: 'WSG' },
     agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
-    dmf: { active: false, startsInMs: 1882860000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 32400000, endsInMs: 0 }
+    dmf: { active: false, startsInMs: 72000000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 115200000, endsInMs: 0 }
   },
-  '2026-04-01T06:00:00Z': {
-    bg: { active: false, startsInMs: 93600000, endsInMs: 525600000, label: 'EOTS', nextLabel: 'WSG' },
-    agm: { active: true, startsInMs: 0, endsInMs: 300000, msUntilNext: 10800000, msWindowLeft: 300000 },
+  '2026-08-11T09:00:00Z': {
+    bg: { active: false, startsInMs: 169200000, endsInMs: 601200000, label: 'WSG', nextLabel: 'AB' },
+    agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
+    dmf: { active: true, startsInMs: 0, endsInMs: 428400000 },
+    stv: { active: false, startsInMs: 471600000, endsInMs: 0 }
+  },
+  '2026-08-15T12:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 244800000, label: 'WSG', nextLabel: 'AB' },
+    agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
+    dmf: { active: true, startsInMs: 0, endsInMs: 72000000 },
+    stv: { active: false, startsInMs: 115200000, endsInMs: 0 }
+  },
+  '2026-08-18T09:00:00Z': {
+    bg: { active: false, startsInMs: 169200000, endsInMs: 601200000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 1638000000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 471600000, endsInMs: 0 }
+  },
+  '2026-07-30T07:59:00Z': {
+    bg: { active: false, startsInMs: 60000, endsInMs: 432060000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 7260000, endsInMs: 0, msUntilNext: 7260000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 864060000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 302460000, endsInMs: 0 }
+  },
+  '2026-07-30T08:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 432000000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 7200000, endsInMs: 0, msUntilNext: 7200000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 864000000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 302400000, endsInMs: 0 }
+  },
+  '2026-08-04T07:59:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 60000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 7260000, endsInMs: 0, msUntilNext: 7260000, msWindowLeft: 0 },
     dmf: { active: false, startsInMs: 432060000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 396000000, endsInMs: 0 }
+    stv: { active: false, startsInMs: 475260000, endsInMs: 0 }
   },
-  '2026-04-01T06:04:00Z': {
-    bg: { active: false, startsInMs: 93360000, endsInMs: 525360000, label: 'EOTS', nextLabel: 'WSG' },
+  '2026-08-03T06:59:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 90060000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 60000, endsInMs: 0, msUntilNext: 60000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 522060000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 565260000, endsInMs: 0 }
+  },
+  '2026-08-03T07:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 90000000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: true, startsInMs: 0, endsInMs: 300000, msUntilNext: 10800000, msWindowLeft: 300000 },
+    dmf: { active: false, startsInMs: 522000000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 565200000, endsInMs: 0 }
+  },
+  '2026-08-03T07:04:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 89760000, label: 'AB', nextLabel: 'AV' },
     agm: { active: true, startsInMs: 0, endsInMs: 60000, msUntilNext: 10560000, msWindowLeft: 60000 },
-    dmf: { active: false, startsInMs: 431820000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 395760000, endsInMs: 0 }
+    dmf: { active: false, startsInMs: 521760000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 564960000, endsInMs: 0 }
   },
-  '2026-04-01T06:06:00Z': {
-    bg: { active: false, startsInMs: 93240000, endsInMs: 525240000, label: 'EOTS', nextLabel: 'WSG' },
+  '2026-08-03T07:06:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 89640000, label: 'AB', nextLabel: 'AV' },
     agm: { active: false, startsInMs: 10440000, endsInMs: 0, msUntilNext: 10440000, msWindowLeft: 0 },
-    dmf: { active: false, startsInMs: 431700000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 395640000, endsInMs: 0 }
+    dmf: { active: false, startsInMs: 521640000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 564840000, endsInMs: 0 }
   },
-  '2026-04-01T08:00:00Z': {
-    bg: { active: false, startsInMs: 86400000, endsInMs: 518400000, label: 'EOTS', nextLabel: 'WSG' },
-    agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
-    dmf: { active: false, startsInMs: 424860000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 388800000, endsInMs: 0 }
+  '2026-08-03T06:50:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 90600000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 600000, endsInMs: 0, msUntilNext: 600000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 522600000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 565800000, endsInMs: 0 }
   },
-  '2026-04-06T06:01:00Z': {
-    bg: { active: true, startsInMs: 0, endsInMs: 93540000, label: 'EOTS', nextLabel: 'WSG' },
-    agm: { active: true, startsInMs: 0, endsInMs: 240000, msUntilNext: 10740000, msWindowLeft: 240000 },
-    dmf: { active: true, startsInMs: 0, endsInMs: 604800000 },
-    stv: { active: false, startsInMs: 568740000, endsInMs: 0 }
-  },
-  '2026-04-01T12:00:00Z': {
-    bg: { active: false, startsInMs: 72000000, endsInMs: 504000000, label: 'EOTS', nextLabel: 'WSG' },
-    agm: { active: true, startsInMs: 0, endsInMs: 300000, msUntilNext: 10800000, msWindowLeft: 300000 },
-    dmf: { active: false, startsInMs: 410460000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 374400000, endsInMs: 0 }
-  },
-  '2026-04-20T12:00:00Z': {
+  '2026-08-03T12:00:00Z': {
     bg: { active: true, startsInMs: 0, endsInMs: 72000000, label: 'AB', nextLabel: 'AV' },
-    agm: { active: true, startsInMs: 0, endsInMs: 300000, msUntilNext: 10800000, msWindowLeft: 300000 },
-    dmf: { active: false, startsInMs: 1188060000, endsInMs: 0 },
+    agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 504000000, endsInMs: 0 },
     stv: { active: false, startsInMs: 547200000, endsInMs: 0 }
   },
-  '2026-04-05T20:00:00Z': {
-    bg: { active: true, startsInMs: 0, endsInMs: 129600000, label: 'EOTS', nextLabel: 'WSG' },
+  '2026-08-09T09:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 169200000, label: 'AV', nextLabel: 'WSG' },
     agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
-    dmf: { active: false, startsInMs: 36060000, endsInMs: 0 },
-    stv: { active: true, startsInMs: 0, endsInMs: 7200000 }
+    dmf: { active: true, startsInMs: 0, endsInMs: 601200000 },
+    stv: { active: false, startsInMs: 39600000, endsInMs: 0 }
   },
-  '2026-04-05T21:00:00Z': {
-    bg: { active: true, startsInMs: 0, endsInMs: 126000000, label: 'EOTS', nextLabel: 'WSG' },
-    agm: { active: true, startsInMs: 0, endsInMs: 300000, msUntilNext: 10800000, msWindowLeft: 300000 },
-    dmf: { active: false, startsInMs: 32460000, endsInMs: 0 },
-    stv: { active: true, startsInMs: 0, endsInMs: 3600000 }
-  },
-  '2026-04-05T22:00:00Z': {
-    bg: { active: true, startsInMs: 0, endsInMs: 122400000, label: 'EOTS', nextLabel: 'WSG' },
-    agm: { active: false, startsInMs: 7200000, endsInMs: 0, msUntilNext: 7200000, msWindowLeft: 0 },
-    dmf: { active: false, startsInMs: 28860000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 597600000, endsInMs: 0 }
-  },
-  '2026-04-05T12:00:00Z': {
-    bg: { active: true, startsInMs: 0, endsInMs: 158400000, label: 'EOTS', nextLabel: 'WSG' },
-    agm: { active: true, startsInMs: 0, endsInMs: 300000, msUntilNext: 10800000, msWindowLeft: 300000 },
-    dmf: { active: false, startsInMs: 64860000, endsInMs: 0 },
-    stv: { active: false, startsInMs: 28800000, endsInMs: 0 }
-  },
-  '2026-04-08T12:00:00Z': {
+  '2026-08-12T12:00:00Z': {
     bg: { active: false, startsInMs: 72000000, endsInMs: 504000000, label: 'WSG', nextLabel: 'AB' },
-    agm: { active: true, startsInMs: 0, endsInMs: 300000, msUntilNext: 10800000, msWindowLeft: 300000 },
-    dmf: { active: true, startsInMs: 0, endsInMs: 410460000 },
+    agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
+    dmf: { active: true, startsInMs: 0, endsInMs: 331200000 },
     stv: { active: false, startsInMs: 374400000, endsInMs: 0 }
+  },
+  '2026-08-20T12:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 417600000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 1454400000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 288000000, endsInMs: 0 }
+  },
+  '2026-07-06T12:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 72000000, label: 'WSG', nextLabel: 'AB' },
+    agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
+    dmf: { active: true, startsInMs: 0, endsInMs: 504000000 },
+    stv: { active: false, startsInMs: 547200000, endsInMs: 0 }
+  },
+  '2026-08-02T20:30:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 127800000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 5400000, endsInMs: 0, msUntilNext: 5400000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 559800000, endsInMs: 0 },
+    stv: { active: true, startsInMs: 0, endsInMs: 5400000 }
+  },
+  '2026-08-02T18:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 136800000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 568800000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 7200000, endsInMs: 0 }
+  },
+  '2026-11-15T12:00:00Z': {
+    bg: { active: true, startsInMs: 0, endsInMs: 162000000, label: 'AB', nextLabel: 'AV' },
+    agm: { active: false, startsInMs: 7200000, endsInMs: 0, msUntilNext: 7200000, msWindowLeft: 0 },
+    dmf: { active: false, startsInMs: 1803600000, endsInMs: 0 },
+    stv: { active: false, startsInMs: 32400000, endsInMs: 0 }
   }
 };
 

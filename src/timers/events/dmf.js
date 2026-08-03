@@ -2,23 +2,30 @@ import { DateTime } from 'luxon';
 import { MT_ZONE, asDateTime, mod } from '../../lib/time.js';
 
 /**
- * Darkmoon Faire. Port of `get_dmf_state` / `_dmf_start` from
- * wow-timers/shared.py.
+ * Darkmoon Faire — Classic Era schedule (per NovaWorldBuffs `Modules/DMF.lua`).
  *
- * Runs the first full week of each month: opens the first Monday on or after the
- * 1st at 00:01 Mountain, and lasts 7 days.
+ * Construction begins the first Friday of the month; the faire itself *opens*
+ * `dayOffset` days later at the regional weekly reset. US realms use
+ * `dayOffset = 2` → it opens the following **Sunday** and runs 7 full days.
+ * (The prior port opened the first Monday, which is wrong for Era.) Open time
+ * is taken as 02:00 Mountain, within the real US reset band (~1–5am MT across
+ * east/west realms and DST) and unambiguously on the Sunday.
  */
+const OPEN_HOUR_MT = 2; // ~US weekly reset, Mountain
+const US_DAY_OFFSET = 2; // first Friday -> Sunday
 
-/** First Monday on or after the 1st of the month at 00:01 Mountain (MT DateTime). */
+/** First-Friday + 2 days (Sunday) at 02:00 Mountain (MT DateTime). */
 function dmfStart(year, month) {
   const firstOfMonth = DateTime.fromObject(
     { year, month, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 },
     { zone: MT_ZONE }
   );
-  // luxon weekday Mon=1..Sun=7; Python used Mon=0. days-until-Monday, 0 if the
-  // 1st is already Monday.
-  const daysUntilMon = mod(8 - firstOfMonth.weekday, 7);
-  return firstOfMonth.plus({ days: daysUntilMon }).set({ hour: 0, minute: 1, second: 0, millisecond: 0 });
+  // luxon weekday Mon=1..Sun=7, so Friday=5. days-until-Friday, 0 if the 1st is
+  // already Friday.
+  const daysUntilFri = mod(5 - firstOfMonth.weekday, 7);
+  return firstOfMonth
+    .plus({ days: daysUntilFri + US_DAY_OFFSET })
+    .set({ hour: OPEN_HOUR_MT, minute: 0, second: 0, millisecond: 0 });
 }
 
 export function getState(now) {
