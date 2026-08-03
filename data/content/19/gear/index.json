@@ -109,11 +109,11 @@
       "armorType": "leather",
       "source": {
         "type": "drop",
-        "detail": "World/dungeon drop (verify exact source)"
+        "detail": "Blackfathom Deeps (dungeon drop, Fallenroot Shadowstalker); BoE white world drop so it can also appear off other low-level mobs"
       },
       "faction": "both",
       "reqLevel": 19,
-      "notes": "Stat-less white leather shoulder (item=15313, ilvl 24, Requires Level 19); carried purely as an enchant vessel.",
+      "notes": "Stat-less white leather shoulder (item=15313, ilvl 24, Requires Level 19, BoE, 60 armor); carried purely as an enchant vessel for a Scourge shoulder inscription. Confirmed via Wowhead Classic.",
       "wowheadId": 15313,
       "priority": "core"
     },
