@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import os from 'node:os';
+import nodePath from 'node:path';
 import {
   loadContentStore,
   getContentStore,
@@ -188,6 +191,34 @@ test('gearForClass merges shared + class items; null when class has no BiS', asy
   // A roster class without an authored gear file yields null (clean degrade).
   const withoutGear = listClassNames(store, '19').find((c) => !listGearClasses(store, '19').includes(c));
   if (withoutGear) assert.equal(gearForClass(store, '19', withoutGear), null);
+});
+
+test('gearForClass filters the browse pool by armor proficiency', async () => {
+  const store = await loadContentStore();
+
+  const warrior = gearForClass(store, '19', 'Warrior');
+  const hunter = gearForClass(store, '19', 'Hunter');
+  const has = (g, id) => g.items.some((i) => i.id === id);
+
+  // Mail is warrior/paladin only at 19: the warrior sees the shared mail
+  // shoulders; the hunter (leather) never does — the exact bug this fixes.
+  assert.ok(has(warrior, 'defender-spaulders'), 'warrior can equip shared mail');
+  assert.ok(!has(hunter, 'defender-spaulders'), 'hunter cannot equip mail');
+
+  // Leather is shown to the hunter; the misc fishing hat is shown to everyone.
+  assert.ok(has(hunter, 'leggings-of-the-fang'), 'hunter can equip shared leather');
+  assert.ok(has(hunter, 'lucky-fishing-hat') && has(warrior, 'lucky-fishing-hat'), 'misc shown to all');
+
+  // Nothing a class cannot equip leaks through: every gated item in the merged
+  // list is one the class's proficiency actually allows.
+  const prof = store.brackets['19'].gear.index.armorProficiency;
+  for (const g of [warrior, hunter]) {
+    for (const it of g.items) {
+      if (it.armorType && it.armorType !== 'misc') {
+        assert.ok(prof[it.armorType].includes(g.className), `${g.className} may wear ${it.id} (${it.armorType})`);
+      }
+    }
+  }
 });
 
 test('rogue is authored end-to-end: tier-A detail and a merged BiS list', async () => {
@@ -481,4 +512,98 @@ test('reloadContentStore fails cleanly and keeps the last-good store on a bad lo
   assert.equal(result.ok, false);
   assert.ok(result.error instanceof Error);
   assert.equal(await getContentStore(), before, 'last-good store is still served');
+});
+
+// --- Armor-proficiency loader guards (WSG-19 vetting) -----------------------
+// A throwaway on-disk bracket lets us prove the strict loader fails loud on the
+// exact classes of bad gear data the vetting exposed. Each fixture writes a
+// minimal but schema-valid tree, then mutates one thing to trip a store guard.
+
+const fixtureMeta = () => ({
+  bracket: '19',
+  gameVersion: { flavor: 'classic-era', contentState: 'all-pre-tbc-unlocked', clientPatch: '1.15.x' },
+  levelRange: [10, 19],
+  levelCap: 19,
+  battleground: 'Warsong Gulch',
+  xpLock: { available: false, note: 'Manage XP manually.' }
+});
+
+const fixtureRoster = () => ({
+  classes: [
+    { class: 'mage', tier: 'A', roles: ['caster'], summary: 'Cloth caster.' },
+    { class: 'warrior', tier: 'A', roles: ['melee'], summary: 'Mail-capable melee.' }
+  ]
+});
+
+/** Write a throwaway content tree and return its dir (caller removes it). */
+function writeGearFixture(gearIndex) {
+  const dir = mkdtempSync(nodePath.join(os.tmpdir(), 'twinkhub-gear-'));
+  const b = nodePath.join(dir, '19');
+  mkdirSync(nodePath.join(b, 'classes'), { recursive: true });
+  mkdirSync(nodePath.join(b, 'gear'), { recursive: true });
+  writeFileSync(nodePath.join(dir, 'index.json'), JSON.stringify({ schemaVersion: 1, brackets: ['19'] }));
+  writeFileSync(nodePath.join(b, 'meta.json'), JSON.stringify(fixtureMeta()));
+  writeFileSync(nodePath.join(b, 'classes', 'index.json'), JSON.stringify(fixtureRoster()));
+  writeFileSync(nodePath.join(b, 'gear', 'index.json'), JSON.stringify(gearIndex));
+  return dir;
+}
+
+async function loadFixtureStrict(gearIndex) {
+  const dir = writeGearFixture(gearIndex);
+  try {
+    await loadContentStore({ dir, strict: true });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+test('a well-formed gear fixture loads under a strict load', async () => {
+  await assert.doesNotReject(
+    loadFixtureStrict({
+      slots: ['head', 'ranged'],
+      armorProficiency: { cloth: ['mage', 'warrior'], leather: ['warrior'], mail: ['warrior'], plate: [] },
+      shared: [
+        { id: 'a-cloth-hat', name: 'Cloth Hat', slot: 'head', armorType: 'cloth', source: { type: 'drop', detail: 'x' }, faction: 'both', priority: 'core' }
+      ]
+    })
+  );
+});
+
+test('strict load rejects an item whose reqLevel exceeds the bracket cap', async () => {
+  await assert.rejects(
+    loadFixtureStrict({
+      slots: ['head', 'ranged'],
+      armorProficiency: { cloth: ['mage', 'warrior'], leather: ['warrior'], mail: ['warrior'], plate: [] },
+      shared: [
+        { id: 'over-cap-gun', name: 'Over-Cap Gun', slot: 'ranged', source: { type: 'drop', detail: 'x' }, faction: 'both', priority: 'core', reqLevel: 43 }
+      ]
+    }),
+    /reqLevel 43 exceeds bracket levelCap 19/
+  );
+});
+
+test('strict load rejects a gating armorType not mapped in armorProficiency', async () => {
+  await assert.rejects(
+    loadFixtureStrict({
+      slots: ['head'],
+      armorProficiency: { cloth: ['mage', 'warrior'] },
+      shared: [
+        { id: 'orphan-mail', name: 'Orphan Mail', slot: 'head', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', priority: 'core' }
+      ]
+    }),
+    /armorType "mail" is not mapped in armorProficiency/
+  );
+});
+
+test('strict load rejects an armorProficiency class outside the roster', async () => {
+  await assert.rejects(
+    loadFixtureStrict({
+      slots: ['head'],
+      armorProficiency: { cloth: ['mage', 'ghost'] },
+      shared: [
+        { id: 'a-cloth-hat', name: 'Cloth Hat', slot: 'head', armorType: 'cloth', source: { type: 'drop', detail: 'x' }, faction: 'both', priority: 'core' }
+      ]
+    }),
+    /armorProficiency\.cloth references unknown class "ghost"/
+  );
 });

@@ -19,6 +19,19 @@ const SOURCE_TYPES = ['drop', 'quest', 'vendor', 'profession', 'pvp', 'world', '
 const FACTIONS = ['alliance', 'horde', 'both'];
 const PRIORITIES = ['core', 'situational', 'budget'];
 
+// Armor-proficiency gate (WSG-19 vetting). The eight armor slots each carry a
+// required armorType; other slots (weapons, rings, trinkets, cloaks) wear no
+// class-restricted armor and so declare none. `misc` marks an armor-slot piece
+// that is proficiency-agnostic (e.g. a fishing hat) — worn by any class and
+// never gated. The four material types are gated per class through the gear
+// index's `armorProficiency` map; `misc` is the escape hatch and is never a key
+// in that map.
+export const ARMOR_SLOTS = ['head', 'shoulder', 'chest', 'wrist', 'hands', 'waist', 'legs', 'feet'];
+export const ARMOR_TYPES = ['cloth', 'leather', 'mail', 'plate', 'misc'];
+// The material types that actually gate by proficiency (i.e. valid keys of the
+// gear index's `armorProficiency` map) — `misc` is excluded on purpose.
+export const ARMOR_PROFICIENCY_TYPES = ARMOR_TYPES.filter((t) => t !== 'misc');
+
 // Controlled role vocabulary for gear builds (multi-loadout model, 09-bis-reference.md):
 // the chart's class-role columns.
 const BUILD_ROLES = ['flag-carrier', 'defense', 'midfield', 'offense'];
@@ -224,6 +237,23 @@ function validateItem(obj, at, errors) {
   require_(errors, isNonEmptyString(obj.id), `${at}.id must be a non-empty string`);
   require_(errors, isNonEmptyString(obj.name), `${at}.name must be a non-empty string`);
   require_(errors, isNonEmptyString(obj.slot), `${at}.slot must be a non-empty string`);
+  // Armor-proficiency gate: an armor-slot item MUST declare a valid armorType so
+  // the store can hide pieces a class can't equip (e.g. mail on a priest); any
+  // other slot MUST NOT carry one. This is the guard that stops bad shared/class
+  // data (like mail shoulders showing for a cloth class) from ever loading.
+  if (isNonEmptyString(obj.slot) && ARMOR_SLOTS.includes(obj.slot.toLowerCase())) {
+    require_(
+      errors,
+      ARMOR_TYPES.includes(obj.armorType),
+      `${at}.armorType must be one of ${ARMOR_TYPES.join('|')} for armor slot "${obj.slot}"`
+    );
+  } else if (obj.armorType !== undefined) {
+    require_(
+      errors,
+      false,
+      `${at}.armorType is only allowed on armor slots (${ARMOR_SLOTS.join('|')})`
+    );
+  }
   require_(errors, FACTIONS.includes(obj.faction), `${at}.faction must be one of ${FACTIONS.join('|')}`);
   require_(errors, PRIORITIES.includes(obj.priority), `${at}.priority must be one of ${PRIORITIES.join('|')}`);
   if (require_(errors, isObject(obj.source), `${at}.source must be an object`)) {
@@ -272,6 +302,25 @@ export function validateGearIndex(obj, label = 'gear/index.json') {
   require_(errors, isStringArray(obj.slots), `${label}: slots must be a non-empty string array`);
   if (obj.notes !== undefined) {
     require_(errors, isNonEmptyString(obj.notes), `${label}: notes must be a non-empty string when present`);
+  }
+  // Armor-proficiency map: each key is a gating material type and its value is the
+  // set of classes that can wear it (possibly empty, e.g. plate at level 19). The
+  // referential guard that those class names are real roster classes lives in the
+  // store, which holds the class index (03-data-model.md). `misc` is never a key.
+  if (obj.armorProficiency !== undefined && require_(errors, isObject(obj.armorProficiency), `${label}: armorProficiency must be an object when present`)) {
+    for (const [type, classes] of Object.entries(obj.armorProficiency)) {
+      const at = `${label}: armorProficiency.${type}`;
+      require_(
+        errors,
+        ARMOR_PROFICIENCY_TYPES.includes(type),
+        `${at} key must be one of ${ARMOR_PROFICIENCY_TYPES.join('|')}`
+      );
+      require_(
+        errors,
+        Array.isArray(classes) && classes.every(isNonEmptyString),
+        `${at} must be an array of class-name strings (may be empty)`
+      );
+    }
   }
   if (obj.shared !== undefined && require_(errors, Array.isArray(obj.shared), `${label}: shared must be an array`)) {
     const seen = new Set();

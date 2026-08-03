@@ -252,6 +252,37 @@ async function loadBracket(dir, key, strict) {
     }
   }
 
+  // Armor-proficiency guards (WSG-19 vetting) — the cross-file half of the check
+  // the per-item schema can't see. The schema proves each armor-slot item has a
+  // valid armorType; here we prove the index's `armorProficiency` map only names
+  // real roster classes, every item's gating armorType is actually mapped (else
+  // the /gear proficiency filter would silently hide it from *every* class), and
+  // no item requires a level above the bracket cap (the bug that let a reqLevel-43
+  // gun sit in a level-19 list). Fails loud in dev so bad new data can't ship.
+  if (bracket.gear?.index) {
+    const roster = new Set((bracket.classes.index?.classes ?? []).map((e) => e.class));
+    const prof = bracket.gear.index.armorProficiency ?? {};
+    const mappedTypes = new Set(Object.keys(prof));
+    if (roster.size) {
+      for (const [type, classes] of Object.entries(prof)) {
+        for (const cls of classes) {
+          if (!roster.has(cls)) {
+            fail(strict, `content ${key}/gear/index.json armorProficiency.${type} references unknown class "${cls}"`);
+          }
+        }
+      }
+    }
+    const levelCap = bracket.meta?.levelCap;
+    for (const item of bracket.gear.items ?? []) {
+      if (item.reqLevel != null && Number.isInteger(levelCap) && item.reqLevel > levelCap) {
+        fail(strict, `content ${key}/gear: item "${item.id}" reqLevel ${item.reqLevel} exceeds bracket levelCap ${levelCap}`);
+      }
+      if (item.armorType && item.armorType !== 'misc' && mappedTypes.size && !mappedTypes.has(item.armorType)) {
+        fail(strict, `content ${key}/gear: item "${item.id}" armorType "${item.armorType}" is not mapped in armorProficiency`);
+      }
+    }
+  }
+
   // Referential guards for gear builds (multi-loadout model, 03/09 docs): every
   // build slot pick resolves to a shared or same-class item whose declared slot
   // matches the key, every non-null enchant resolves to a real enchant, every
@@ -566,17 +597,35 @@ export function getGearItem(store, bracket, id) {
 }
 
 /**
+ * Can class `key` equip `item`? Non-armor slots and armor pieces marked `misc`
+ * (proficiency-agnostic, e.g. a fishing hat) are worn by everyone; a gating
+ * material type (cloth/leather/mail/plate) is only wearable by the classes the
+ * gear index's `armorProficiency` map lists for it. This is what stops the
+ * shared/browse pool from showing mail to a cloth class (WSG-19 vetting).
+ */
+function classCanEquip(prof, key, item) {
+  if (!item.armorType || item.armorType === 'misc') return true;
+  return (prof[item.armorType] ?? []).includes(key);
+}
+
+/**
  * A class's best-in-slot picks: the shared cross-class items merged with the
  * class's own list, or null if that class has no authored BiS. Shared items come
  * first so faction trinkets/rings sit alongside class-specific gear per slot.
+ *
+ * Items the class can't equip by armor proficiency are filtered out, so the
+ * browse pool (`/gear`, `/bis`) never surfaces mail/leather/plate a class can't
+ * wear. Explicit build picks bypass this — a strict load already proves every
+ * pick is equippable — so role loadouts render exactly as authored.
  */
 export function gearForClass(store, bracket, className) {
   const gear = bracketGear(store, bracket);
   if (!gear) return null;
   const key = String(className ?? '').toLowerCase();
   if (!gear.byClass[key]) return null;
-  const shared = gear.items.filter((i) => i.owner === 'shared');
-  const own = gear.items.filter((i) => i.owner === key);
+  const prof = gear.index?.armorProficiency ?? {};
+  const shared = gear.items.filter((i) => i.owner === 'shared' && classCanEquip(prof, key, i));
+  const own = gear.items.filter((i) => i.owner === key && classCanEquip(prof, key, i));
   return { className: key, items: [...shared, ...own] };
 }
 

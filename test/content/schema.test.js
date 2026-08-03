@@ -169,6 +169,7 @@ const validItem = () => ({
   id: 'green-tinted-goggles',
   name: 'Green Tinted Goggles',
   slot: 'head',
+  armorType: 'cloth',
   source: { type: 'profession', detail: 'Engineering (crafted)' },
   faction: 'both',
   stats: { agility: 6, stamina: 6 },
@@ -222,6 +223,54 @@ test('validateGearIndex rejects a blank enchant and a non-string-array alternati
 
   const nonStringAlts = { slots: ['head'], shared: [{ ...validItem(), alternatives: [7] }] };
   assert.ok(validateGearIndex(nonStringAlts).errors.some((e) => e.includes('alternatives')));
+});
+
+test('validateItem requires a valid armorType on armor slots', () => {
+  const missing = { slots: ['head'], shared: [{ ...validItem(), armorType: undefined }] };
+  assert.ok(validateGearIndex(missing).errors.some((e) => e.includes('armorType')));
+
+  const bad = { slots: ['head'], shared: [{ ...validItem(), armorType: 'dragonscale' }] };
+  assert.ok(validateGearIndex(bad).errors.some((e) => e.includes('armorType')));
+
+  const misc = { slots: ['head'], shared: [{ ...validItem(), armorType: 'misc' }] };
+  assert.equal(validateGearIndex(misc).ok, true);
+});
+
+test('validateItem forbids armorType on non-armor slots', () => {
+  const nonArmor = {
+    slots: ['trinket'],
+    shared: [{ ...validItem(), slot: 'trinket', armorType: 'cloth' }]
+  };
+  assert.ok(validateGearIndex(nonArmor).errors.some((e) => e.includes('armorType is only allowed')));
+
+  const okNonArmor = {
+    slots: ['trinket'],
+    shared: [{ ...validItem(), slot: 'trinket', armorType: undefined }]
+  };
+  assert.equal(validateGearIndex(okNonArmor).ok, true);
+});
+
+test('validateGearIndex accepts and validates an optional armorProficiency map', () => {
+  const ok = {
+    slots: ['head'],
+    armorProficiency: { cloth: ['mage', 'priest'], plate: [] },
+    shared: [validItem()]
+  };
+  assert.equal(validateGearIndex(ok).ok, true);
+
+  const badKey = {
+    slots: ['head'],
+    armorProficiency: { misc: ['mage'] },
+    shared: [validItem()]
+  };
+  assert.ok(validateGearIndex(badKey).errors.some((e) => e.includes('armorProficiency.misc')));
+
+  const badValue = {
+    slots: ['head'],
+    armorProficiency: { cloth: 'mage' },
+    shared: [validItem()]
+  };
+  assert.ok(validateGearIndex(badValue).errors.some((e) => e.includes('armorProficiency.cloth')));
 });
 
 test('validateGearClass accepts a class with a non-empty item list', () => {
