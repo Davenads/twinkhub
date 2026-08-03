@@ -273,6 +273,43 @@ test('validateGearIndex accepts and validates an optional armorProficiency map',
   assert.ok(validateGearIndex(badValue).errors.some((e) => e.includes('armorProficiency.cloth')));
 });
 
+test('validateGearIndex accepts and validates an optional shoulderStrategy block', () => {
+  const ok = {
+    slots: ['head'],
+    shoulderStrategy: { note: 'Vessel meta.', vesselByArmorType: { mail: 'defender-spaulders', cloth: 'woolen' } },
+    shared: [validItem()]
+  };
+  assert.equal(validateGearIndex(ok).ok, true);
+
+  // vesselByArmorType is required when the block is present.
+  const noMap = { slots: ['head'], shoulderStrategy: { note: 'x' }, shared: [validItem()] };
+  assert.ok(validateGearIndex(noMap).errors.some((e) => e.includes('vesselByArmorType must be an object')));
+
+  // Keys must be proficiency armor types (misc is not one).
+  const badKey = {
+    slots: ['head'],
+    shoulderStrategy: { vesselByArmorType: { misc: 'x' } },
+    shared: [validItem()]
+  };
+  assert.ok(validateGearIndex(badKey).errors.some((e) => e.includes('vesselByArmorType.misc')));
+
+  // Values must be item-id strings.
+  const badValue = {
+    slots: ['head'],
+    shoulderStrategy: { vesselByArmorType: { mail: 7 } },
+    shared: [validItem()]
+  };
+  assert.ok(validateGearIndex(badValue).errors.some((e) => e.includes('vesselByArmorType.mail')));
+
+  // A blank note is rejected.
+  const badNote = {
+    slots: ['head'],
+    shoulderStrategy: { note: '', vesselByArmorType: { mail: 'x' } },
+    shared: [validItem()]
+  };
+  assert.ok(validateGearIndex(badNote).errors.some((e) => e.includes('shoulderStrategy.note')));
+});
+
 test('validateGearClass accepts a class with a non-empty item list', () => {
   const ok = { class: 'hunter', items: [validItem()] };
   assert.deepEqual(validateGearClass(ok), { ok: true, errors: [] });

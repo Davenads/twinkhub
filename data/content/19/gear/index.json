@@ -25,6 +25,14 @@
     "mail": ["paladin", "warrior"],
     "plate": []
   },
+  "shoulderStrategy": {
+    "note": "At 19 nearly every build runs the same shoulder plan: take the highest-armor BoE shoulder your class can wear (a stat-less vessel), have a level-60 apply a Scourge shoulder inscription to it, then mail it to the twink. The inscription (a Naxxramas shoulder enchant) carries the stats and has no level requirement; the vessel just needs to be BoE so it can be mailed after enchanting. The right vessel is the best armor type you can equip; the right inscription depends on the build's role (melee/caster/healer/tank).",
+    "vesselByArmorType": {
+      "mail": "defender-spaulders",
+      "leather": "feral-shoulder-pads",
+      "cloth": "reinforced-woolen-shoulders"
+    }
+  },
   "shared": [
     {
       "id": "green-tinted-goggles",
@@ -1129,11 +1137,11 @@
       "armorType": "mail",
       "source": {
         "type": "drop",
-        "detail": "Low-level drop (verify exact source)"
+        "detail": "World drop (primarily Flesh Eater in Duskwood; also Stockades); BoE white mail so it can be mailed after enchanting"
       },
       "faction": "both",
       "reqLevel": 19,
-      "notes": "Mail shoulder recurring across warrior and paladin builds; enchanted with Fortitude of the Scourge (defense/midfield) or Might of the Scourge (offense). Verify stats at authoring.",
+      "notes": "Stat-less white mail shoulder (item=6579, ilvl 24, Requires Level 19, BoE, 128 armor); the best-armor vessel for mail classes (warrior, paladin), carried purely to hold a Scourge shoulder inscription. Confirmed via Wowhead Classic.",
       "wowheadId": 6579,
       "priority": "core"
     },

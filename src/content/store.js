@@ -281,6 +281,26 @@ async function loadBracket(dir, key, strict) {
         fail(strict, `content ${key}/gear: item "${item.id}" armorType "${item.armorType}" is not mapped in armorProficiency`);
       }
     }
+
+    // Shoulder-vessel guard: every mapped vessel must resolve to a real
+    // shoulder-slot item whose armorType matches its key, so the /gear shoulder
+    // view and the build guard below can never point at a wrong or missing item.
+    const strat = bracket.gear.index.shoulderStrategy;
+    if (strat?.vesselByArmorType) {
+      for (const [type, itemId] of Object.entries(strat.vesselByArmorType)) {
+        const vessel = bracket.gear.byId[itemId];
+        if (!vessel) {
+          fail(strict, `content ${key}/gear/index.json shoulderStrategy.vesselByArmorType.${type} references unknown item "${itemId}"`);
+        } else {
+          if (vessel.slot !== 'shoulder') {
+            fail(strict, `content ${key}/gear/index.json shoulderStrategy vessel "${itemId}" is slot "${vessel.slot}", not shoulder`);
+          }
+          if (vessel.armorType !== type) {
+            fail(strict, `content ${key}/gear/index.json shoulderStrategy vessel "${itemId}" armorType "${vessel.armorType}" != mapped type "${type}"`);
+          }
+        }
+      }
+    }
   }
 
   // Referential guards for gear builds (multi-loadout model, 03/09 docs): every
@@ -326,6 +346,33 @@ async function loadBracket(dir, key, strict) {
       const defaults = builds.filter((b) => b.default === true);
       if (defaults.length !== 1) {
         fail(strict, `content ${key}/gear: class "${cls}" must have exactly one default build (has ${defaults.length})`);
+      }
+    }
+
+    // Shoulder-vessel build guard: when a strategy is authored, every build that
+    // picks a shoulder must pick its class's best-armor vessel and apply a
+    // shoulder-slot enchant (the Scourge inscription) — the invariant the /gear
+    // shoulder view relies on. Runs after the generic build guard, so item/enchant
+    // ids are already proven to resolve.
+    const strat = bracket.gear.index?.shoulderStrategy;
+    if (strat) {
+      const prof = bracket.gear.index?.armorProficiency ?? {};
+      const enchById = new Map((bracket.enchants?.enchants ?? []).map((e) => [e.id, e]));
+      for (const build of bracket.gear.builds) {
+        const val = build.slots?.shoulder;
+        if (val == null) continue;
+        const pick = Array.isArray(val) ? val[0] : val;
+        const armorType = ARMOR_WEIGHT.find((t) => (prof[t] ?? []).includes(build.owner)) ?? null;
+        const vesselId = armorType ? strat.vesselByArmorType?.[armorType] : null;
+        if (vesselId && pick.item !== vesselId) {
+          fail(strict, `content ${key}/gear: build "${build.id}" shoulder picks "${pick.item}" but the ${armorType} vessel is "${vesselId}"`);
+        }
+        const ench = pick.enchant != null ? enchById.get(pick.enchant) : null;
+        if (!ench) {
+          fail(strict, `content ${key}/gear: build "${build.id}" shoulder pick has no shoulder enchant (a Scourge inscription is expected)`);
+        } else if (ench.slot !== 'shoulder') {
+          fail(strict, `content ${key}/gear: build "${build.id}" shoulder enchant "${pick.enchant}" is slot "${ench.slot}", not shoulder`);
+        }
       }
     }
   }
@@ -646,6 +693,54 @@ export function getBuild(store, bracket, buildId) {
   const gear = bracketGear(store, bracket);
   if (!gear) return null;
   return gear.builds.find((b) => b.id === String(buildId ?? '')) ?? null;
+}
+
+/** Armor types heaviest-first, so the first a class is proficient in is its best. */
+const ARMOR_WEIGHT = ['plate', 'mail', 'leather', 'cloth'];
+
+/**
+ * The level-19 shoulder plan for a class: the best-armor BoE vessel it can wear
+ * plus the Scourge shoulder inscriptions its builds actually apply, derived from
+ * the gear index's `shoulderStrategy` block and the class's authored builds.
+ *
+ * The vessel is the item mapped for the heaviest armor type the class is
+ * proficient in (`vesselByArmorType`). Inscriptions aren't stored statically —
+ * they're gathered from each build's `shoulder` pick and grouped by enchant, so
+ * the view reflects the real loadouts (a caster spec and a melee spec on the same
+ * vessel show their own inscriptions). Returns null when no strategy is authored
+ * or the class maps to no vessel.
+ *
+ * @returns {{ className: string, armorType: string, vessel: object|null,
+ *   inscriptions: { enchant: object|null, enchantId: string,
+ *     builds: { id: string, name: string, role: string }[] }[],
+ *   note: string|null } | null}
+ */
+export function shoulderStrategyFor(store, bracket, className) {
+  const gear = bracketGear(store, bracket);
+  const strat = gear?.index?.shoulderStrategy;
+  if (!strat) return null;
+  const key = String(className ?? '').toLowerCase();
+  const prof = gear.index.armorProficiency ?? {};
+  const armorType = ARMOR_WEIGHT.find((t) => (prof[t] ?? []).includes(key)) ?? null;
+  if (!armorType) return null;
+  const vesselId = strat.vesselByArmorType?.[armorType] ?? null;
+  const vessel = vesselId ? getGearItem(store, bracket, vesselId) : null;
+
+  const inscriptions = [];
+  const byEnchant = new Map();
+  for (const b of buildsForClass(store, bracket, key)) {
+    const pick = b.slots?.shoulder;
+    const enchId = Array.isArray(pick) ? pick[0]?.enchant : pick?.enchant;
+    if (!enchId) continue;
+    if (!byEnchant.has(enchId)) {
+      const entry = { enchant: getEnchant(store, bracket, enchId), enchantId: enchId, builds: [] };
+      byEnchant.set(enchId, entry);
+      inscriptions.push(entry);
+    }
+    byEnchant.get(enchId).builds.push({ id: b.id, name: b.name, role: b.role });
+  }
+
+  return { className: key, armorType, vessel, inscriptions, note: strat.note ?? null };
 }
 
 /** The scaling bundle (stats/derived/hitCaps/classes) for a bracket, or null. */

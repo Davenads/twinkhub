@@ -21,6 +21,7 @@ import {
   gearForClass,
   buildsForClass,
   getBuild,
+  shoulderStrategyFor,
   bracketScaling,
   listStatweightClasses,
   statweightsForClass,
@@ -280,6 +281,37 @@ test('gear builds load, resolve their picks, and expose one default per class', 
   // An unknown bracket/class yields an empty list, not an error.
   assert.equal(getBuild(store, '19', 'nope-not-a-build'), null);
   assert.deepEqual(buildsForClass(store, '49', 'rogue'), []);
+});
+
+test('shoulderStrategyFor picks the best-armor vessel and derives Scourge inscriptions', async () => {
+  const store = await loadContentStore();
+
+  // Best-armor vessel per class: warrior→mail, hunter→leather, mage→cloth. A
+  // strict load reaching here already proved each vessel resolves to a real
+  // shoulder-slot item of the mapped armorType.
+  const warrior = shoulderStrategyFor(store, '19', 'Warrior');
+  assert.equal(warrior.armorType, 'mail');
+  assert.equal(warrior.vessel.id, 'defender-spaulders');
+
+  const hunter = shoulderStrategyFor(store, '19', 'Hunter');
+  assert.equal(hunter.armorType, 'leather');
+  assert.equal(hunter.vessel.id, 'feral-shoulder-pads');
+
+  const mage = shoulderStrategyFor(store, '19', 'mage');
+  assert.equal(mage.armorType, 'cloth');
+  assert.equal(mage.vessel.id, 'reinforced-woolen-shoulders');
+
+  // Inscriptions aren't stored — they're derived from the class's builds. Each
+  // resolves to a real shoulder-slot enchant and lists the builds that apply it.
+  assert.ok(warrior.inscriptions.length > 0, 'derives at least one inscription');
+  for (const ins of warrior.inscriptions) {
+    assert.ok(ins.enchant, 'inscription resolves to a real enchant');
+    assert.equal(ins.enchant.slot, 'shoulder', 'a Scourge inscription is a shoulder enchant');
+    assert.ok(ins.builds.length > 0, 'each inscription names the builds using it');
+  }
+
+  // No strategy authored for an unknown bracket → null (clean degrade).
+  assert.equal(shoulderStrategyFor(store, '49', 'warrior'), null);
 });
 
 test('loadContentStore loads scaling with valid per-class priority references', async () => {
@@ -605,5 +637,130 @@ test('strict load rejects an armorProficiency class outside the roster', async (
       ]
     }),
     /armorProficiency\.cloth references unknown class "ghost"/
+  );
+});
+
+// --- Shoulder-vessel loader guards -----------------------------------------
+
+const fixtureProf = () => ({ cloth: ['mage', 'warrior'], leather: ['warrior'], mail: ['warrior'], plate: [] });
+
+test('a shoulder strategy with a valid mail vessel loads under a strict load', async () => {
+  await assert.doesNotReject(
+    loadFixtureStrict({
+      slots: ['head', 'shoulder'],
+      armorProficiency: fixtureProf(),
+      shoulderStrategy: { note: 'Vessel meta.', vesselByArmorType: { mail: 'a-mail-shoulder' } },
+      shared: [
+        { id: 'a-mail-shoulder', name: 'Mail Shoulder', slot: 'shoulder', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+      ]
+    })
+  );
+});
+
+test('strict load rejects a shoulder vessel that references an unknown item', async () => {
+  await assert.rejects(
+    loadFixtureStrict({
+      slots: ['head', 'shoulder'],
+      armorProficiency: fixtureProf(),
+      shoulderStrategy: { vesselByArmorType: { mail: 'ghost-vessel' } },
+      shared: [
+        { id: 'a-mail-shoulder', name: 'Mail Shoulder', slot: 'shoulder', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+      ]
+    }),
+    /vesselByArmorType\.mail references unknown item "ghost-vessel"/
+  );
+});
+
+test('strict load rejects a shoulder vessel whose armorType mismatches its key', async () => {
+  await assert.rejects(
+    loadFixtureStrict({
+      slots: ['head', 'shoulder'],
+      armorProficiency: fixtureProf(),
+      shoulderStrategy: { vesselByArmorType: { mail: 'a-leather-shoulder' } },
+      shared: [
+        { id: 'a-leather-shoulder', name: 'Leather Shoulder', slot: 'shoulder', armorType: 'leather', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+      ]
+    }),
+    /armorType "leather" != mapped type "mail"/
+  );
+});
+
+// A richer fixture with an enchants file and a class build file exercises the
+// build shoulder-pick guard, which the index-only fixture above can't reach.
+function writeBuildFixture(shoulderPick) {
+  const dir = mkdtempSync(nodePath.join(os.tmpdir(), 'twinkhub-shoulder-'));
+  const b = nodePath.join(dir, '19');
+  mkdirSync(nodePath.join(b, 'classes'), { recursive: true });
+  mkdirSync(nodePath.join(b, 'gear'), { recursive: true });
+  writeFileSync(nodePath.join(dir, 'index.json'), JSON.stringify({ schemaVersion: 1, brackets: ['19'] }));
+  writeFileSync(nodePath.join(b, 'meta.json'), JSON.stringify(fixtureMeta()));
+  writeFileSync(nodePath.join(b, 'classes', 'index.json'), JSON.stringify(fixtureRoster()));
+  writeFileSync(
+    nodePath.join(b, 'gear', 'index.json'),
+    JSON.stringify({
+      slots: ['head', 'shoulder'],
+      armorProficiency: fixtureProf(),
+      shoulderStrategy: { note: 'Vessel meta.', vesselByArmorType: { mail: 'mail-vessel' } },
+      shared: [
+        { id: 'mail-vessel', name: 'Mail Vessel', slot: 'shoulder', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' },
+        { id: 'leather-shoulder', name: 'Leather Shoulder', slot: 'shoulder', armorType: 'leather', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+      ]
+    })
+  );
+  writeFileSync(
+    nodePath.join(b, 'enchants.json'),
+    JSON.stringify({
+      enchants: [
+        { id: 'scourge-shoulder', name: 'Scourge Inscription', slot: 'shoulder', effect: '+stuff', noLevelReq: true, reqLevel: null, classes: ['mage', 'warrior'] },
+        { id: 'weapon-ench', name: 'Weapon Enchant', slot: 'weapon', effect: '+stuff', noLevelReq: true, reqLevel: null, classes: ['warrior'] }
+      ]
+    })
+  );
+  writeFileSync(
+    nodePath.join(b, 'gear', 'warrior.json'),
+    JSON.stringify({
+      class: 'warrior',
+      items: [
+        { id: 'filler-head', name: 'Filler Head', slot: 'head', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+      ],
+      builds: [
+        { id: 'w-off', name: 'Offense', role: 'offense', faction: 'both', default: true, slots: { shoulder: shoulderPick } }
+      ]
+    })
+  );
+  return dir;
+}
+
+async function loadBuildFixtureStrict(shoulderPick) {
+  const dir = writeBuildFixture(shoulderPick);
+  try {
+    await loadContentStore({ dir, strict: true });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+test('a build whose shoulder is the class vessel + a Scourge inscription loads', async () => {
+  await assert.doesNotReject(loadBuildFixtureStrict({ item: 'mail-vessel', enchant: 'scourge-shoulder' }));
+});
+
+test('strict load rejects a build whose shoulder is not the class armor-type vessel', async () => {
+  await assert.rejects(
+    loadBuildFixtureStrict({ item: 'leather-shoulder', enchant: 'scourge-shoulder' }),
+    /shoulder picks "leather-shoulder" but the mail vessel is "mail-vessel"/
+  );
+});
+
+test('strict load rejects a build whose shoulder pick has no inscription', async () => {
+  await assert.rejects(
+    loadBuildFixtureStrict({ item: 'mail-vessel' }),
+    /shoulder pick has no shoulder enchant/
+  );
+});
+
+test('strict load rejects a build whose shoulder enchant is not a shoulder-slot enchant', async () => {
+  await assert.rejects(
+    loadBuildFixtureStrict({ item: 'mail-vessel', enchant: 'weapon-ench' }),
+    /shoulder enchant "weapon-ench" is slot "weapon", not shoulder/
   );
 });

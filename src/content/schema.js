@@ -322,6 +322,29 @@ export function validateGearIndex(obj, label = 'gear/index.json') {
       );
     }
   }
+  // Shoulder-vessel strategy (level-19 vessel meta): an optional explainer `note`
+  // plus `vesselByArmorType`, mapping a gating material type to the item id used
+  // as that type's stat-less enchant vessel. Keys are proficiency armor types; the
+  // referential guard that each value resolves to a real shoulder-slot item lives
+  // in the store (03-data-model.md), which holds the full item map.
+  if (
+    obj.shoulderStrategy !== undefined &&
+    require_(errors, isObject(obj.shoulderStrategy), `${label}: shoulderStrategy must be an object when present`)
+  ) {
+    const s = obj.shoulderStrategy;
+    if (s.note !== undefined) {
+      require_(errors, isNonEmptyString(s.note), `${label}: shoulderStrategy.note must be a non-empty string when present`);
+    }
+    if (
+      require_(errors, isObject(s.vesselByArmorType), `${label}: shoulderStrategy.vesselByArmorType must be an object`)
+    ) {
+      for (const [type, itemId] of Object.entries(s.vesselByArmorType)) {
+        const at = `${label}: shoulderStrategy.vesselByArmorType.${type}`;
+        require_(errors, ARMOR_PROFICIENCY_TYPES.includes(type), `${at} key must be one of ${ARMOR_PROFICIENCY_TYPES.join('|')}`);
+        require_(errors, isNonEmptyString(itemId), `${at} must be an item-id string`);
+      }
+    }
+  }
   if (obj.shared !== undefined && require_(errors, Array.isArray(obj.shared), `${label}: shared must be an array`)) {
     const seen = new Set();
     obj.shared.forEach((it, i) => {

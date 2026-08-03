@@ -208,6 +208,65 @@ test('renderGear paginates a broad result and every page fits under 6000', () =>
   assert.equal(parsed.args.at(-1), '1');
 });
 
+// --- Shoulder slot: the level-19 vessel-meta strategy view -----------------
+
+const shoulderItems = [
+  { id: 'feral-shoulder-pads', name: 'Feral Shoulder Pads', slot: 'shoulder', armorType: 'leather', source: { type: 'drop', detail: 'Blackfathom Deeps' }, faction: 'both', priority: 'core', owner: 'shared', wowheadId: 15313 },
+  { id: 'woolen-shoulders', name: 'Reinforced Woolen Shoulders', slot: 'shoulder', armorType: 'cloth', source: { type: 'profession', detail: 'Tailoring' }, faction: 'both', priority: 'core', owner: 'shared', wowheadId: 4315 },
+  { id: 'talbar-mantle', name: 'Talbar Mantle', slot: 'shoulder', armorType: 'cloth', source: { type: 'quest', detail: 'Quest reward' }, faction: 'both', priority: 'core', owner: 'shared', wowheadId: 10657 }
+];
+
+const rogueBuild = {
+  id: 'rogue-offense', name: 'Offense', role: 'offense', faction: 'both', default: true, owner: 'rogue',
+  slots: { shoulder: { item: 'feral-shoulder-pads', enchant: 'might-scourge' } }
+};
+
+const shoulderStore = {
+  brackets: {
+    19: {
+      meta: { levelCap: 19, battleground: 'Warsong Gulch', gameVersion: { clientPatch: '1.15.x' } },
+      enchants: { enchants: [{ id: 'might-scourge', name: 'Might of the Scourge', slot: 'shoulder', wowhead: { type: 'item', id: 23548 } }] },
+      gear: {
+        index: {
+          slots: ['head', 'shoulder'],
+          armorProficiency: { cloth: ['rogue'], leather: ['rogue'], mail: [], plate: [] },
+          shoulderStrategy: {
+            note: 'Take the best BoE vessel and a Scourge inscription.',
+            vesselByArmorType: { leather: 'feral-shoulder-pads', cloth: 'woolen-shoulders' }
+          }
+        },
+        byClass: { rogue: {} },
+        items: shoulderItems,
+        byId: Object.fromEntries(shoulderItems.map((i) => [i.id, i])),
+        builds: [rogueBuild],
+        buildsByClass: { rogue: [rogueBuild] }
+      }
+    }
+  }
+};
+
+test('renderGear shoulder slot renders the vessel-meta strategy view', () => {
+  const { embeds } = renderGear({ store: shoulderStore, bracket: '19', className: 'rogue', slot: 'shoulder' });
+  const e = embeds[0].toJSON();
+  assert.equal(e.title, 'Gear \u2014 Rogue shoulder (Warsong Gulch 19)');
+  assert.ok(e.description.includes('Scourge inscription'));
+
+  // The vessel is the best armor type the class wears (leather over cloth here).
+  const vessel = e.fields.find((f) => f.name.startsWith('Vessel'));
+  assert.equal(vessel.name, 'Vessel \u2014 Leather');
+  assert.ok(vessel.value.includes('Feral Shoulder Pads'));
+
+  // The inscription is derived from the build and names the build using it.
+  const insc = e.fields.find((f) => f.name === 'Scourge inscription by build');
+  assert.ok(insc.value.includes('Might of the Scourge'));
+  assert.ok(insc.value.includes('Offense'));
+
+  // Off-type shoulders the class could wear are demoted, not hidden.
+  const others = e.fields.find((f) => f.name === 'Other shoulders (not recommended)');
+  assert.ok(others.value.includes('Talbar Mantle'));
+  assert.ok(others.value.includes('Reinforced Woolen Shoulders'));
+});
+
 test('renderGearPage returns the requested page, clamped, each under 6000', () => {
   const p0 = renderGear({ store: bigStore, bracket: '19', className: 'hunter' });
   const pageCount = Number(p0.embeds[0].toJSON().footer.text.match(/Page 1\/(\d+)/)[1]);
