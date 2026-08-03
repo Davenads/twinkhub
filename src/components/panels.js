@@ -11,6 +11,7 @@ import { renderPets } from '../services/pets.js';
 import { renderXpRules } from '../services/xprules.js';
 import { renderTierlist } from '../services/tierlist.js';
 import { renderGuide } from '../services/guide.js';
+import { renderGearPage } from '../services/gear.js';
 
 // Component router for the persistent enduser panels (P4). Buttons/selects fire
 // interactionCreate carrying a customId; this parses the `p1|action|arg` contract
@@ -29,6 +30,21 @@ async function outOfDate(interaction) {
     content: 'This panel is out of date \u2014 ask an admin to run `/panels refresh`.',
     flags: MessageFlags.Ephemeral
   });
+}
+
+/** Nav a paged `/gear` result: edit the public message in place to show page N. */
+async function updateGearPage(interaction, ctx, [cls, slot, faction, priority, page]) {
+  const un = (v) => (v && v !== '-' ? v : null);
+  const payload = renderGearPage({
+    ...ctx,
+    className: un(cls),
+    slot: un(slot),
+    faction: un(faction),
+    priority: un(priority),
+    page: Number(page) || 0
+  });
+  // `components: []` clears stale nav if the (re-derived) result collapsed to one page.
+  await interaction.update({ components: [], ...payload, allowedMentions: { parse: [] } });
 }
 
 /** BiS result + the class-carrying follow-up buttons (enchants, consumables, ...). */
@@ -55,7 +71,9 @@ const HANDLERS = {
   pets: (i, ctx) => reply(i, renderPets({ ...ctx })),
   xprules: (i, ctx) => reply(i, renderXpRules({ ...ctx })),
   tierlist: (i, ctx) => reply(i, renderTierlist({ ...ctx })),
-  guide: (i, ctx) => reply(i, renderGuide({ ...ctx, slug: i.values?.[0] }))
+  guide: (i, ctx) => reply(i, renderGuide({ ...ctx, slug: i.values?.[0] })),
+  // Paged /gear nav — edits the public result in place rather than replying.
+  gearpage: (i, ctx, args) => updateGearPage(i, ctx, args)
 };
 
 /**

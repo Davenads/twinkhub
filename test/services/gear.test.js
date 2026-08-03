@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { renderGear } from '../../src/services/gear.js';
+import { renderGear, renderGearPage } from '../../src/services/gear.js';
+import { LIMITS } from '../../src/lib/embed.js';
+import { parseCustomId } from '../../src/services/panels.js';
 
 const store = {
   brackets: {
@@ -143,4 +145,82 @@ test('renderGear degrades for a bracket with no gear', () => {
   const { embeds } = renderGear({ store, bracket: '49', className: 'hunter' });
   const e = embeds[0].toJSON();
   assert.ok(e.description.includes('No gear data'));
+});
+
+test('renderGear small result stays single-page with no nav controls', () => {
+  const payload = renderGear({ store, bracket: '19', className: 'hunter' });
+  assert.equal(payload.embeds.length, 1);
+  assert.equal(payload.components, undefined); // no Prev/Next on a one-page result
+  assert.equal(payload.embeds[0].toJSON().footer.text, 'WoW Classic Era 1.15.x'); // no page counter
+});
+
+// --- Pagination: a broad result that would overrun Discord's 6000-char cap ---
+
+/** Combined embed length exactly as Discord counts it against the 6000 cap. */
+function embedLen(embed) {
+  const d = embed.toJSON();
+  let n = (d.title ?? '').length + (d.description ?? '').length + (d.footer?.text ?? '').length;
+  for (const f of d.fields ?? []) n += f.name.length + f.value.length;
+  return n;
+}
+
+// 16 slots, 6 verbose items each — well past 6000 chars total, like a real
+// unfiltered class list once Wowhead links inflate every line.
+const bigStore = (() => {
+  const slots = Array.from({ length: 16 }, (_, i) => `slot${i}`);
+  const items = [];
+  for (const slot of slots) {
+    for (let n = 0; n < 6; n++) {
+      items.push({
+        id: `${slot}-${n}`,
+        name: `Very Long Item Name For ${slot} Number ${n} Of The Test`,
+        slot,
+        source: { type: 'drop', detail: 'Some fairly wordy source description to pad the line out nicely' },
+        faction: 'both',
+        stats: { agility: 6, stamina: 6, intellect: 4 },
+        priority: 'core',
+        owner: 'hunter',
+        wowheadId: 10000 + items.length
+      });
+    }
+  }
+  return {
+    brackets: {
+      19: {
+        meta: { levelCap: 19, battleground: 'Warsong Gulch', gameVersion: { clientPatch: '1.15.x' } },
+        gear: { index: { slots }, byClass: { hunter: {} }, byId: {}, items }
+      }
+    }
+  };
+})();
+
+test('renderGear paginates a broad result and every page fits under 6000', () => {
+  const payload = renderGear({ store: bigStore, bracket: '19', className: 'hunter' });
+  assert.ok(payload.components, 'multi-page result must carry nav controls');
+  assert.ok(embedLen(payload.embeds[0]) <= LIMITS.total);
+  assert.match(payload.embeds[0].toJSON().footer.text, /Page 1\/\d+$/);
+
+  // The Next button encodes page 1 (the second page) under the gearpage action.
+  const nextId = payload.components[0].toJSON().components[1].custom_id;
+  const parsed = parseCustomId(nextId);
+  assert.equal(parsed.action, 'gearpage');
+  assert.equal(parsed.args[0], 'hunter');
+  assert.equal(parsed.args.at(-1), '1');
+});
+
+test('renderGearPage returns the requested page, clamped, each under 6000', () => {
+  const p0 = renderGear({ store: bigStore, bracket: '19', className: 'hunter' });
+  const pageCount = Number(p0.embeds[0].toJSON().footer.text.match(/Page 1\/(\d+)/)[1]);
+  assert.ok(pageCount > 1);
+
+  const p1 = renderGearPage({ store: bigStore, bracket: '19', className: 'hunter', page: 1 });
+  assert.match(p1.embeds[0].toJSON().footer.text, new RegExp(`Page 2/${pageCount}$`));
+  assert.ok(embedLen(p1.embeds[0]) <= LIMITS.total);
+  // Prev is now enabled (not the first page).
+  assert.equal(p1.components[0].toJSON().components[0].disabled, false);
+
+  // Page far past the end clamps to the last page.
+  const last = renderGearPage({ store: bigStore, bracket: '19', className: 'hunter', page: 999 });
+  assert.match(last.embeds[0].toJSON().footer.text, new RegExp(`Page ${pageCount}/${pageCount}$`));
+  assert.equal(last.components[0].toJSON().components[1].disabled, true); // Next disabled at end
 });
