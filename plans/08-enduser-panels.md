@@ -157,3 +157,104 @@ panels stay at the top and the surface reads like a menu.
 
 Depends on the **service layer** and the **P2 (and some P3) data commands** existing. Slated
 as its own roadmap phase **after P3** — see `07-roadmap.md` "P4 — Interactive enduser panels".
+
+## Argument collection: modal vs. component chaining (design decision)
+
+This is the crux of the panel UX. A slash command collects args through native option
+prompts + autocomplete (`/bis class:hunter bracket:29`), but a **button has no native
+prompt**. When a control needs a parameter, we must gather it somehow. Two families exist;
+the bot **deliberately uses the second** for every panel today, and reserves the first for
+one narrow future case.
+
+### The two approaches
+
+**A. Modal popup on click.** The button responds with `interaction.showModal(modal)`; the
+user fills text fields; a separate `interaction.isModalSubmit()` event fires; the handler
+reads `interaction.fields.getTextInputValue(id)` and renders.
+
+**B. Component chaining (follow-up embed + selects/buttons).** The control's value *is* the
+arg (a select's `values[0]`, or one button per value), and multi-arg flows chain: each
+ephemeral result carries follow-up controls whose `customId` threads the already-chosen args
+(`p1|ench|hunter`). No typing, stateless. **<- implemented (see `components/panels.js`).**
+
+### The deciding constraints (why this isn't a coin-flip)
+
+1. **Modals accept free-text `TextInput`s only.** String selects inside modals are not a
+   stable, relied-upon capability in discord.js v14 — a modal effectively forces the user to
+   **type** the class/slot/bracket. For a fixed vocabulary this is strictly worse: typos,
+   casing, no discoverability, and it forces fuzzy-matching + "did you mean" error paths that
+   a select makes impossible by construction.
+2. **Every panel arg today is bounded and enumerable.** Class list, enchant slots, consumable
+   types, guide slugs, brackets, factions, roles — all come straight from the content store
+   (<=25, so it fits one select) and are already generated on `/panels refresh`. A select
+   shows the *exact* valid set; a modal cannot.
+3. **Modals can only open as the direct response to a button/select — never as a follow-up,
+   and never after `deferReply`.** You also can't chain modal->modal directly (a modal submit
+   replies with a message; only *that* message's button can open the next modal). Multi-arg
+   collection via modals is therefore clumsy; component chaining threads N args naturally
+   through short slug customIds.
+4. **The stateless customId contract already carries context** (`p1|action|arg|arg`, <=100
+   chars). Chaining reuses it for free; a modal would still need its own action-encoding
+   customId *plus* the field values — more moving parts for no gain on enumerable args.
+5. **Mobile & speed.** Tapping a select/button beats typing into a modal on phones, and a
+   one-tap select is faster than open-modal -> type -> submit for a value the user was going
+   to pick from a list anyway.
+
+The single axis that decides it: **bounded vs. unbounded argument domain.**
+
+| Arg domain | Example | Right tool |
+| --- | --- | --- |
+| Enumerable (store lists it, <=25) | class, slot, guide, bracket, faction, role | **Select / buttons (chaining)** |
+| Small fixed enum (<=5) | consumable categories | **One button per value** |
+| Unbounded free text | `/item name:<anything>`, arbitrary search | **Modal (one `TextInput`)** |
+
+### Recommendation
+
+1. **Component chaining (B) for everything the content store can enumerate — i.e. every
+   current panel.** It is already the implemented design and it is the correct one: no typos,
+   content-generated options, statelessness, mobile-friendly, and it composes multi-arg flows
+   without ever opening a modal. Do not migrate these to modals.
+2. **Reserve a modal (A) for the one case selects can't serve: free-text search** (e.g. a
+   future "look up any item by name" panel mirroring `/item name:`). Even there, finish with a
+   select: modal `TextInput` -> fuzzy match -> if >1 hit, offer the top matches as a
+   disambiguation select. This is the *only* justified modal in the surface, which is exactly
+   why the plan keeps `/item name:` and other parametric queries slash-only today and does not
+   put free text behind a public button.
+3. **Never** use a modal to collect an enumerable arg.
+
+### The arg-flow grammar (patterns to build against)
+
+- **0 args** -> button -> render. (`XP Rules`, `Tier List`, `Pets`.)
+- **1 enumerable arg** -> select whose `values[0]` *is* the arg (`eslot`, `guide`, class
+  picker), or one button per value when <=5 (`cons`).
+- **N enumerable args** -> chain: first pick, then follow-up controls on the ephemeral result
+  whose customId carries the prior picks (`bisFollowups` -> `p1|ench|hunter`). Keep N small;
+  if it grows, prefer faction/role **toggle buttons** or a multi-value select on the result
+  over deep chains.
+- **1 unbounded arg** -> modal with a single `TextInput` -> fuzzy match -> optional
+  disambiguation select. (Future-only.)
+
+### If/when a modal is added (slotting it into the existing architecture)
+
+Not needed now — no free-text arg is exposed on a panel — but to keep the plan actionable:
+
+- **Router:** add an `interaction.isModalSubmit()` branch in `index.js` beside the existing
+  button/select branch; parse the modal's `customId` with the **same** `p1|action|...`
+  contract and version check.
+- **customId vs. field:** the modal's customId encodes the action + any pre-chosen context;
+  the typed value comes from `interaction.fields.getTextInputValue()`, **not** the id — so the
+  id stays short and slug-only.
+- **Shared-service rule holds:** the modal handler calls the same `renderItem({...})` service
+  `/item` uses. No render logic in the component/modal layer.
+- **Stale handling identical:** a `p1` version bump invalidates old modal-opening buttons the
+  same way it does any control.
+
+### Operational note (this server)
+
+Host the panels in **#twink-hub** (`1534094419739934841`, from the channel tree in the
+image), made **read-only for @everyone** — only the bot posts; players interact solely
+through the controls, so the channel reads like a menu. Place them with
+`/panels post channel:#twink-hub`; re-render after content changes with `/panels refresh`.
+Current status: Approach B is fully implemented (the `/panels` admin command, the component
+router in `components/panels.js`, and the panel/service layer in `services/panels.js`) — this
+section records the arg-collection decision behind it and the single reserved modal case.
