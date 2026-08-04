@@ -16,6 +16,7 @@
       "type": "potion",
       "effect": "Instant mana restore; shares the potion cooldown. Mana-using classes keep one on cooldown.",
       "faction": "both",
+      "classes": ["hunter", "priest", "druid", "paladin", "shaman", "mage", "warlock"],
       "reqLevel": 14,
       "notes": "For mana-using classes. Lesser Mana Potion (item 3385, Requires Level 14) is the highest mana potion usable at 19; Mana Potion requires level 22. Confirmed via Wowhead Classic item data."
     },
@@ -200,6 +201,7 @@
       "type": "elixir",
       "effect": "+4 Strength for 1 hour. Persistent buff; does NOT share the potion cooldown.",
       "faction": "both",
+      "classes": ["rogue", "warrior", "druid", "paladin", "shaman"],
       "reqLevel": null,
       "notes": "Item 2454, no character-level requirement. Stacks with Scroll of Strength and other elixirs in Classic Era. Confirmed via Wowhead Classic item data."
     },
@@ -236,6 +238,7 @@
       "type": "scroll",
       "effect": "+5 Strength for 30 min. Stacks with elixirs (separate buff aura).",
       "faction": "both",
+      "classes": ["rogue", "warrior", "druid", "paladin", "shaman"],
       "reqLevel": 10,
       "notes": "Item 954 (rank I), Requires Level 10. Best usable at 19 \u2014 Scroll of Strength II requires level 25. Confirmed via Wowhead Classic item data."
     },
@@ -254,6 +257,7 @@
       "type": "scroll",
       "effect": "+4 Intellect for 30 min. Stacks with elixirs (separate buff aura).",
       "faction": "both",
+      "classes": ["hunter", "priest", "druid", "paladin", "shaman", "mage", "warlock"],
       "reqLevel": 5,
       "notes": "Item 955 (rank I), Requires Level 5. For mana users. Best usable at 19 \u2014 rank II requires level 25. Confirmed via Wowhead Classic item data."
     },
@@ -263,6 +267,7 @@
       "type": "scroll",
       "effect": "+3 Spirit for 30 min. Stacks with elixirs (separate buff aura).",
       "faction": "both",
+      "classes": ["hunter", "priest", "druid", "paladin", "shaman", "mage", "warlock"],
       "reqLevel": null,
       "notes": "Item 1181 (rank I), no character-level requirement. For mana-regen classes. Confirmed via Wowhead Classic item data."
     },
@@ -281,6 +286,7 @@
       "type": "weapon-buff",
       "effect": "+4 damage to an edged weapon (sword/dagger/axe/polearm) for 30 min. Temporary weapon enhancement.",
       "faction": "both",
+      "classes": ["rogue", "warrior", "druid", "paladin", "shaman"],
       "reqLevel": 15,
       "notes": "Item 2871, Requires Level 15. Best sharpening stone usable at 19 \u2014 Solid Sharpening Stone requires level 35. Confirmed via Wowhead Classic item data."
     },
@@ -290,6 +296,7 @@
       "type": "weapon-buff",
       "effect": "+4 damage to a blunt weapon (mace/staff) for 30 min. Temporary weapon enhancement.",
       "faction": "both",
+      "classes": ["rogue", "warrior", "druid", "paladin", "shaman"],
       "reqLevel": 15,
       "notes": "Item 3241, Requires Level 15. Blunt-weapon counterpart to the Heavy Sharpening Stone; Solid Weightstone requires level 35. Confirmed via Wowhead Classic item data."
     },
@@ -299,6 +306,7 @@
       "type": "weapon-buff",
       "effect": "+8 spell damage while applied to the weapon, for 30 min. For spell-damage casters.",
       "faction": "both",
+      "classes": ["priest", "druid", "shaman", "mage", "warlock"],
       "reqLevel": 5,
       "notes": "Item 20744, Requires Level 5. Spell-damage weapon enhancement (ZG-era, patch 1.11). Minor Mana Oil is NOT usable at 19 \u2014 it requires level 20. Confirmed via Wowhead Classic item data."
     },
