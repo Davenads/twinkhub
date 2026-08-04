@@ -1,6 +1,6 @@
 {
-  "note": "Point allocations follow the community 19 Class Talents doc. Wowhead links open the doc's own calculator embed and may render a different split than the listed build.",
-  "credit": { "source": "19 Class Talents (community doc)" },
+  "note": "Wowhead links open the source calculator embed and may render a different split than the listed build.",
+  "credit": { "author": "Penster", "discordId": "561674310486458368", "source": "19 Class Talents" },
   "byClass": {
     "druid": [
       {
