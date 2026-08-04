@@ -79,8 +79,8 @@
       "name": "Sentinel's Medallion",
       "slot": "neck",
       "source": {
-        "type": "drop",
-        "detail": "Low-level drop (verify exact source)"
+        "type": "vendor",
+        "detail": "Silverwing Sentinels reputation quartermaster (Illiyana Moonblaze, Warsong Gulch entrance in Ashenvale); bought for gold at the required reputation"
       },
       "faction": "both",
       "reqLevel": 18,
@@ -97,8 +97,8 @@
       "name": "Scout's Medallion",
       "slot": "neck",
       "source": {
-        "type": "drop",
-        "detail": "Low-level drop (verify exact source)"
+        "type": "vendor",
+        "detail": "Warsong Outriders reputation quartermaster (Kelm Hargunth, Warsong Gulch entrance in the Barrens); bought for gold at the required reputation"
       },
       "faction": "both",
       "reqLevel": 18,
@@ -238,8 +238,8 @@
       "name": "Legionnaire's Band",
       "slot": "finger",
       "source": {
-        "type": "pvp",
-        "detail": "Horde PvP reward (verify exact source)"
+        "type": "vendor",
+        "detail": "Warsong Outriders reputation quartermaster (Kelm Hargunth, Warsong Gulch entrance in the Barrens); bought for gold at Honored"
       },
       "faction": "horde",
       "reqLevel": 18,
@@ -271,8 +271,8 @@
       "name": "Outrider's Bow",
       "slot": "ranged",
       "source": {
-        "type": "drop",
-        "detail": "Low-level drop (verify exact source)"
+        "type": "vendor",
+        "detail": "Warsong Outriders reputation quartermaster (Kelm Hargunth, Warsong Gulch entrance in the Barrens); bought for gold at the required reputation"
       },
       "faction": "both",
       "reqLevel": 18,
@@ -969,8 +969,8 @@
       "name": "Battle Healer's Cloak",
       "slot": "back",
       "source": {
-        "type": "drop",
-        "detail": "Low-level drop (verify exact source)"
+        "type": "vendor",
+        "detail": "Warsong Outriders reputation quartermaster (Kelm Hargunth, Warsong Gulch entrance in the Barrens); bought for gold at Honored"
       },
       "faction": "both",
       "reqLevel": 18,
@@ -1066,8 +1066,8 @@
       "name": "Advisor's Ring",
       "slot": "finger",
       "source": {
-        "type": "quest",
-        "detail": "Quest reward (verify exact source)"
+        "type": "vendor",
+        "detail": "Warsong Outriders reputation quartermaster (Kelm Hargunth, Warsong Gulch entrance in the Barrens); bought for gold at the required reputation. Alliance equivalent is Lorekeeper's Ring"
       },
       "faction": "both",
       "reqLevel": 18,
@@ -1202,8 +1202,8 @@
       "name": "Protector's Band",
       "slot": "finger",
       "source": {
-        "type": "drop",
-        "detail": "Low-level drop (verify exact source)"
+        "type": "vendor",
+        "detail": "Silverwing Sentinels reputation quartermaster (Illiyana Moonblaze, Warsong Gulch entrance in Ashenvale); bought for gold at Honored"
       },
       "faction": "both",
       "reqLevel": 18,
@@ -1240,8 +1240,8 @@
       "name": "Lorekeeper's Ring",
       "slot": "finger",
       "source": {
-        "type": "quest",
-        "detail": "Quest reward (verify exact source and faction)"
+        "type": "vendor",
+        "detail": "Silverwing Sentinels reputation quartermaster (Illiyana Moonblaze, Warsong Gulch entrance in Ashenvale); bought for gold at the required reputation. Horde equivalent is Advisor's Ring"
       },
       "faction": "both",
       "reqLevel": 18,
