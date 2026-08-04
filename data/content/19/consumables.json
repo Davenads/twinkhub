@@ -192,6 +192,36 @@
       "reqLevel": null,
       "source": { "type": "profession", "detail": "Engineering 125 (crafted)" },
       "notes": "Item 4378, inflicts 128\u2013172 Fire damage in a 5-yard radius on a 1-minute cooldown; requires Engineering 125 to craft, no character-level requirement. Confirmed via Wowhead Classic item data."
+    },
+    {
+      "id": "big-bronze-bomb",
+      "name": "Big Bronze Bomb",
+      "type": "explosive",
+      "effect": "Thrown AoE that damages and stuns everything in the blast (Engineering) \u2014 a 2-second stun to peel, set up a kill, or lock down a flag carrier.",
+      "faction": "both",
+      "reqLevel": null,
+      "source": { "type": "profession", "detail": "Engineering 140 (crafted)" },
+      "notes": "Item 4380, inflicts 85\u2013115 Fire damage and stuns targets in a 5-yard radius for 2 sec (any damage breaks the stun; unreliable vs level 44+). Requires Engineering 140 to craft, no character-level requirement \u2014 any 19 engineer can carry it (Journeyman caps at 150). Confirmed via Wowhead Classic item data."
+    },
+    {
+      "id": "explosive-sheep",
+      "name": "Explosive Sheep",
+      "type": "explosive",
+      "effect": "Summons a sheep that charges the nearest enemy and detonates for AoE fire damage (Engineering) \u2014 a deployable burst/tag tool that soaks a stealth opener or zones a chokepoint.",
+      "faction": "both",
+      "reqLevel": null,
+      "source": { "type": "profession", "detail": "Engineering 150 (crafted)" },
+      "notes": "Item 4384, summons an Explosive Sheep that charges a nearby enemy and explodes for 135\u2013165 damage; lasts 3 min or until it detonates, 1-minute cooldown. Requires Engineering 150 to craft, no character-level requirement \u2014 sits right at the 19 Journeyman skill cap of 150. Confirmed via Wowhead Classic item data."
+    },
+    {
+      "id": "portable-bronze-mortar",
+      "name": "Portable Bronze Mortar",
+      "type": "explosive",
+      "effect": "Thrown AoE that damages and incapacitates everything in the blast (Engineering) \u2014 gnome-only at 19: a second stun-bomb only Gnome engineers can craft in-bracket.",
+      "faction": "both",
+      "reqLevel": null,
+      "source": { "type": "profession", "detail": "Engineering 165 (crafted, gnome-only at 19)" },
+      "notes": "Item 4403, inflicts 100 Fire damage and incapacitates targets in a 5-yard radius for 2 sec (any damage breaks it; unreliable vs level 44+). Requires Engineering 165 to craft (schematic is a world drop) \u2014 at level 19 non-gnomes cap at 150 (Expert 151+ needs level 20), but the Gnome +15 Engineering Specialization racial reaches 165, so only Gnome engineers can make this in the bracket. Confirmed via Wowhead Classic item data."
     }
   ]
 }
