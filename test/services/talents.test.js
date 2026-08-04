@@ -64,9 +64,36 @@ test('renderTalents lists all builds with the class icon in the description', ()
 test('renderTalents narrows to a single build with a per-node breakdown', () => {
   const { embeds } = renderTalents({ store, bracket: '19', className: 'druid', build: 'druid-grasp-shifter' });
   const fields = fieldsOf(embeds);
-  assert.ok(fields.some((f) => f.name === 'Points'), 'points field present');
+  assert.ok(!fields.some((f) => f.name === 'Points'), 'points folded into the nodes breakdown');
+  assert.ok(fields.some((f) => f.name === 'Summary'), 'summary field present');
   assert.ok(fields.some((f) => f.name === 'Nodes'), 'nodes field present');
   assert.ok(fields.some((f) => f.name === 'Talent calculator'));
+});
+
+test('renderTalents puts a plain (unlinked) credit in the footer, rules between builds', () => {
+  const s = structuredClone(store);
+  s.brackets['19'].talents.credit = { source: 'Community doc' }; // no url/author
+  s.brackets['19'].talents.byClass.druid.push({
+    id: 'druid-second',
+    name: 'Second Build',
+    summary: 'Alt line.',
+    points: '5/5 Furor',
+    url: 'https://example.com/2',
+    nodes: [{ talent: 'Furor', rank: 5, max: 5, emoji: 'Furor' }]
+  });
+  const { embeds } = renderTalents({ store: s, bracket: '19', className: 'druid' });
+  const e = embeds[0].toJSON();
+  assert.ok(!e.description.includes('Community doc'), 'plain credit leaves the description');
+  assert.ok(e.footer.text.includes('Source: Community doc'), 'plain credit renders in the footer');
+  assert.ok(e.fields[0].value.includes('\u2500'), 'a rule separates non-final builds');
+  assert.ok(!e.fields[1].value.includes('\u2500'), 'no trailing rule after the last build');
+});
+
+test('renderTalents keeps a linked credit in the description, not the footer', () => {
+  const { embeds } = renderTalents({ store, bracket: '19', className: 'druid' });
+  const e = embeds[0].toJSON();
+  assert.ok(e.description.includes('Community doc'), 'linked credit stays in the description');
+  assert.ok(!(e.footer?.text ?? '').includes('Community doc'), 'linked credit not duplicated in footer');
 });
 
 test('renderTalents degrades for an unknown build id', () => {

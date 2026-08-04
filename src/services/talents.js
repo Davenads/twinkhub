@@ -43,14 +43,19 @@ function creditLine(credit) {
   return who ? `Source: **${linked}** \u2014 credit to ${who}` : `Source: **${linked}**`;
 }
 
-/** The value block for a build in the all-builds view: node chips, summary,
- * points, an optional note, then the masked Wowhead link. */
+// A thin rule appended between builds in the all-builds view so consecutive
+// builds read as distinct blocks instead of one running wall of text.
+const BUILD_DIVIDER = '\u2500'.repeat(18);
+
+/** The value block for a build in the all-builds view: node chips (which already
+ * carry each node's rank/max and talent name), summary, an optional note, then
+ * the masked Wowhead link. The point allocation is intentionally NOT repeated as
+ * a separate line — the chips are its single source. */
 function buildValue(store, b) {
   const parts = [];
   const chips = b.nodes.map((n) => nodeChip(store, n)).join(' \u00b7 ');
   if (chips) parts.push(chips);
   if (b.summary) parts.push(b.summary);
-  if (b.points) parts.push(`_${b.points}_`);
   if (b.note) parts.push(`\u26a0\ufe0f ${b.note}`);
   if (b.url) parts.push(`[Open in Wowhead](${b.url})`);
   return parts.join('\n');
@@ -98,8 +103,12 @@ export function renderTalents({ store, bracket, className, build = null }) {
 
   const descParts = [];
   if (data.note) descParts.push(data.note);
-  const credit = creditLine(data.credit);
-  if (credit) descParts.push(credit);
+  // A credit carrying a link or mention must render in the description (footers
+  // can't show masked links or mentions); a plain source credit goes in the
+  // footer instead, keeping the pre-build description short.
+  const credit = data.credit;
+  const creditInDesc = Boolean(credit && (credit.url || credit.author || credit.discordId));
+  if (creditInDesc) descParts.push(creditLine(credit));
 
   // Narrow to a single build when requested (the panel deep-dive / switcher).
   const one = build ? builds.find((b) => b.id === String(build)) : null;
@@ -112,8 +121,8 @@ export function renderTalents({ store, bracket, className, build = null }) {
     descParts.unshift(header);
     if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
     if (one.summary) embed.addFields(field('Summary', one.summary));
-    embed.addFields(field('Points', one.points));
-    // One node per line so the per-node ranks read cleanly for a deep-dive.
+    // One node per line so the per-node ranks read cleanly for a deep-dive; the
+    // chips already carry each rank/max, so there's no separate Points field.
     const nodeLines = one.nodes.map((n) => nodeChip(store, n)).join('\n');
     embed.addFields(field('Nodes', nodeLines));
     if (one.note) embed.addFields(field('Note', `\u26a0\ufe0f ${one.note}`));
@@ -123,12 +132,21 @@ export function renderTalents({ store, bracket, className, build = null }) {
     // titles). Then one field per build.
     if (icon) descParts.unshift(`${icon} **${capitalize(key)}** \u2014 ${builds.length} build${builds.length === 1 ? '' : 's'}`);
     if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
-    const fields = builds.map((b) => field(buildName(b), buildValue(store, b)));
+    // Append a rule after every build but the last so builds read as distinct blocks.
+    const last = builds.length - 1;
+    const fields = builds.map((b, i) => {
+      const val = i < last ? `${buildValue(store, b)}\n${BUILD_DIVIDER}` : buildValue(store, b);
+      return field(buildName(b), val);
+    });
     addFieldsWithinLimits(embed, fields, (dropped) => field('\u2026', `${dropped} more build${dropped === 1 ? '' : 's'} not shown`));
   }
 
-  const footerText = metaFooter(meta);
-  if (footerText) embed.setFooter({ text: footerText });
+  // Footer: bracket meta, plus a plain source credit when it wasn't shown above.
+  const footerBits = [];
+  const metaFoot = metaFooter(meta);
+  if (metaFoot) footerBits.push(metaFoot);
+  if (credit && !creditInDesc) footerBits.push(`Source: ${credit.source ?? credit.url ?? 'source'}`);
+  if (footerBits.length) embed.setFooter({ text: footerBits.join(' \u00b7 ') });
 
   return { embeds: [embed] };
 }

@@ -1,5 +1,5 @@
 {
-  "note": "Level-19 WSG PvP talent builds transcribed verbatim from the community 19 Class Talents doc (point allocations, effect notes, and Wowhead embed links are the doc's own). The doc's builds and links target the source community talent calculator; opening a link on Wowhead's retail Classic Era calculator can render a different allocation because Wowhead only models the retail tree. Node emoji slugs are decorative and degrade to text when an id is unfilled.",
+  "note": "Point allocations follow the community 19 Class Talents doc. Wowhead links open the doc's own calculator embed and may render a different split than the listed build.",
   "credit": { "source": "19 Class Talents (community doc)" },
   "byClass": {
     "druid": [
