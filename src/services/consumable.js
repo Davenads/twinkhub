@@ -13,13 +13,14 @@ import {
 } from '../lib/embed.js';
 
 // Display order + labels for each consumable type.
-const TYPE_ORDER = ['potion', 'poison', 'elixir', 'scroll', 'food', 'weapon-buff', 'explosive', 'worldbuff'];
+const TYPE_ORDER = ['potion', 'poison', 'elixir', 'scroll', 'food', 'bandage', 'weapon-buff', 'explosive', 'worldbuff'];
 const TYPE_LABEL = {
   potion: 'Potion',
   poison: 'Poison',
   elixir: 'Elixir',
   scroll: 'Scroll',
   food: 'Food',
+  bandage: 'Bandage',
   'weapon-buff': 'Weapon buff',
   explosive: 'Explosive',
   worldbuff: 'World buff'

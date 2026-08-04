@@ -39,6 +39,7 @@ const CONSUMABLE_LABELS = {
   elixir: 'Elixirs',
   scroll: 'Scrolls',
   food: 'Food',
+  bandage: 'Bandages',
   'weapon-buff': 'Weapon Buffs',
   explosive: 'Explosives',
   worldbuff: 'World Buffs'

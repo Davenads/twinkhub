@@ -39,13 +39,22 @@
       "notes": "Item 5631, Requires Level 4. Useful to rage users (warrior, and druid in bear form). Shares the standard potion cooldown. Confirmed via Wowhead Classic item data."
     },
     {
-      "id": "heavy-silk-bandage",
-      "name": "Heavy Silk Bandage",
-      "type": "food",
-      "effect": "Channeled First Aid heal that does NOT share the potion cooldown; stack around a healing potion for extra effective healing. Breaks on damage taken and applies the 60s Recently Bandaged debuff.",
+      "id": "heavy-runecloth-bandage",
+      "name": "Heavy Runecloth Bandage",
+      "type": "bandage",
+      "effect": "BiS bandage at 19: channeled First Aid heal for 2000 over 8 sec \u2014 does NOT share the potion cooldown, so pair it with a healing potion. Breaks on damage taken and applies the 60s Recently Bandaged debuff.",
       "faction": "both",
       "reqLevel": null,
-      "notes": "Item 6451, requires First Aid 125 (no character-level requirement); heals 640 over 8 sec. Best bandage usable at 19 \u2014 Mageweave bandages need Expert First Aid (level 20+). Schema has no bandage type; modeled as food (the off-potion-cooldown heal role). Confirmed via Wowhead Classic item data."
+      "notes": "Item 14530, heals 2000 over 8 sec; requires First Aid 225 to USE (no character-level requirement). Reachable at 19 because Expert First Aid \u2014 Under Wraps has NO character-level gate (only First Aid 125), so a 19 twink can push First Aid to the 225 cap and use it. Mageweave (800), Heavy Mageweave (1104), and Runecloth (1360) fill the gap while leveling First Aid. Confirmed via Wowhead Classic item data."
+    },
+    {
+      "id": "heavy-silk-bandage",
+      "name": "Heavy Silk Bandage",
+      "type": "bandage",
+      "effect": "Budget bandage before you level First Aid to 225: channeled heal for 640 over 8 sec, off the potion cooldown. Breaks on damage taken and applies the 60s Recently Bandaged debuff.",
+      "faction": "both",
+      "reqLevel": null,
+      "notes": "Item 6451, heals 640 over 8 sec; low First Aid requirement to use (150 to craft), so it is available early. Strictly a leveling/backup option \u2014 Heavy Runecloth Bandage (2000) is BiS once First Aid reaches 225, which a 19 can do (Expert First Aid has no level requirement). Confirmed via Wowhead Classic item data."
     },
     {
       "id": "rumsey-rum-black-label",
@@ -55,6 +64,126 @@
       "faction": "both",
       "reqLevel": null,
       "notes": "Item 21151, no character-level requirement; grants +15 Stamina for 15 min (also applies mild drunkenness). Persists through the potion cooldown; strong 19 pre-buff. Obtained via AH/vendor. Confirmed via Wowhead Classic item data."
+    },
+    {
+      "id": "curiously-tasty-omelet",
+      "name": "Curiously Tasty Omelet",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 130 (crafted)" },
+      "notes": "Cooking from 1x Raptor Egg + 1x Hot Spices. One of the interchangeable +6 Stam/+6 Spirit Well Fed foods \u2014 pick whichever mats you can get. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "redridge-goulash",
+      "name": "Redridge Goulash",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 10,
+      "source": { "type": "profession", "detail": "Cooking 100 (crafted)" },
+      "notes": "Cooking from 1x Tough Condor Meat + 1x Hot Spices. Lowest eat-level (10) of the +6/+6 Well Fed foods \u2014 interchangeable, pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "crispy-lizard-tail",
+      "name": "Crispy Lizard Tail",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 12,
+      "source": { "type": "profession", "detail": "Cooking 100 (crafted)" },
+      "notes": "Cooking from 1x Thunder Lizard Tail + 1x Mild Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "big-bear-steak",
+      "name": "Big Bear Steak",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 110 (crafted)" },
+      "notes": "Cooking from 1x Big Bear Meat (no spice). One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "crocolisk-gumbo",
+      "name": "Crocolisk Gumbo",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 160 (crafted)" },
+      "notes": "Cooking from 1x Tender Crocolisk Meat + 1x Hot Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "hot-lion-chops",
+      "name": "Hot Lion Chops",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 175 (crafted)" },
+      "notes": "Cooking from 1x Lion Meat + 1x Hot Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "lean-venison",
+      "name": "Lean Venison",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 110 (crafted)" },
+      "notes": "Cooking from 1x Stag Meat + 1x Mild Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "lean-wolf-steak",
+      "name": "Lean Wolf Steak",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 165 (crafted)" },
+      "notes": "Cooking from 1x Lean Wolf Flank (no spice). One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "murloc-fin-soup",
+      "name": "Murloc Fin Soup",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 90 (crafted)" },
+      "notes": "Cooking from 2x Murloc Fin + 1x Hot Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "seasoned-wolf-kabob",
+      "name": "Seasoned Wolf Kabob",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 100 (crafted)" },
+      "notes": "Cooking from 2x Lean Wolf Flank + 1x Mild Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "gooey-spider-cake",
+      "name": "Gooey Spider Cake",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 150 (crafted)" },
+      "notes": "Cooking from 2x Gooey Spider Leg + 1x Ice Cold Milk. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+    },
+    {
+      "id": "goblin-deviled-clams",
+      "name": "Goblin Deviled Clams",
+      "type": "food",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "source": { "type": "profession", "detail": "Cooking 125 (crafted)" },
+      "notes": "Cooking from 1x Tangy Clam Meat + 1x Hot Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
     },
     {
       "id": "elixir-minor-agility",
