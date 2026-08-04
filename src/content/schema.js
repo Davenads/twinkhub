@@ -643,6 +643,108 @@ export function validateSpellCoefficients(obj, label = 'spellcoefficients.json')
 }
 
 /**
+ * `emoji.json` (store root, bracket-agnostic): the application-emoji registry that
+ * maps a slug to its uploaded `{ name, id }` so renders can decorate with custom
+ * emoji. `classes` is keyed by roster class key, `nodes` by talent slug (see
+ * 12-talent-builds.md). `id` may be an empty string — a not-yet-filled id degrades
+ * to text-only at render time (emoji is purely decorative), so a placeholder never
+ * fails the load. `animated` is optional (defaults false).
+ */
+export function validateEmojiRegistry(obj, label = 'emoji.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  if (obj.note !== undefined) {
+    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+  }
+  for (const group of ['classes', 'nodes']) {
+    if (obj[group] === undefined) continue;
+    if (!require_(errors, isObject(obj[group]), `${label}: ${group} must be an object when present`)) continue;
+    for (const [slug, e] of Object.entries(obj[group])) {
+      const at = `${label}: ${group}.${slug}`;
+      if (!require_(errors, isObject(e), `${at} must be an object`)) continue;
+      require_(errors, isNonEmptyString(e.name), `${at}.name must be a non-empty string`);
+      // id may be "" (an un-filled placeholder) but must be a string.
+      require_(errors, typeof e.id === 'string', `${at}.id must be a string (may be empty until filled)`);
+      if (e.animated !== undefined) {
+        require_(errors, isBoolean(e.animated), `${at}.animated must be a boolean when present`);
+      }
+    }
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+/**
+ * `<bracket>/talents.json`: level-19 PvP talent builds per class, backing
+ * `/talents` and the panel Talents follow-up (12-talent-builds.md). A mirror of
+ * spellcoefficients.json: `byClass` keyed by roster class -> a non-empty list of
+ * builds. Each build is a curated point allocation with an effect `summary`, the
+ * raw `points` string, a Wowhead talent-calc `url`, and `nodes[]` (talent + rank
+ * + max + emoji slug) driving the emoji row. Structural checks only — the
+ * referential guard (every `byClass` key is a real roster class) lives in the
+ * store. Node `emoji` slugs are NOT hard-checked against the registry: a missing
+ * emoji degrades to text, so builds can be authored before every icon is uploaded.
+ */
+export function validateTalents(obj, label = 'talents.json') {
+  const errors = [];
+  if (!require_(errors, isObject(obj), `${label}: must be an object`)) {
+    return { ok: false, errors };
+  }
+  if (obj.note !== undefined) {
+    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+  }
+  if (obj.credit !== undefined && require_(errors, isObject(obj.credit), `${label}: credit must be an object when present`)) {
+    for (const k of ['author', 'discordId', 'source', 'url']) {
+      if (obj.credit[k] !== undefined) {
+        require_(errors, isNonEmptyString(obj.credit[k]), `${label}: credit.${k} must be a non-empty string when present`);
+      }
+    }
+  }
+
+  if (require_(errors, isObject(obj.byClass), `${label}: byClass must be an object`)) {
+    const keys = Object.keys(obj.byClass);
+    require_(errors, keys.length > 0, `${label}: byClass must have at least one class`);
+    for (const [cls, list] of Object.entries(obj.byClass)) {
+      const clsAt = `${label}: byClass.${cls}`;
+      if (!require_(errors, Array.isArray(list) && list.length > 0, `${clsAt} must be a non-empty array`)) continue;
+      const seen = new Set();
+      list.forEach((b, i) => {
+        const at = `${clsAt}[${i}]`;
+        if (!require_(errors, isObject(b), `${at} must be an object`)) return;
+        require_(errors, isNonEmptyString(b.id), `${at}.id must be a non-empty string`);
+        require_(errors, isNonEmptyString(b.name), `${at}.name must be a non-empty string`);
+        require_(errors, isNonEmptyString(b.summary), `${at}.summary must be a non-empty string`);
+        require_(errors, isNonEmptyString(b.points), `${at}.points must be a non-empty string`);
+        require_(errors, isNonEmptyString(b.url), `${at}.url must be a non-empty string`);
+        if (b.default !== undefined) {
+          require_(errors, isBoolean(b.default), `${at}.default must be a boolean when present`);
+        }
+        if (b.note !== undefined) {
+          require_(errors, isNonEmptyString(b.note), `${at}.note must be a non-empty string when present`);
+        }
+        if (require_(errors, Array.isArray(b.nodes) && b.nodes.length > 0, `${at}.nodes must be a non-empty array`)) {
+          b.nodes.forEach((n, j) => {
+            const nAt = `${at}.nodes[${j}]`;
+            if (!require_(errors, isObject(n), `${nAt} must be an object`)) return;
+            require_(errors, isNonEmptyString(n.talent), `${nAt}.talent must be a non-empty string`);
+            require_(errors, isNonEmptyString(n.emoji), `${nAt}.emoji must be a non-empty string`);
+            require_(errors, isInteger(n.rank) && n.rank >= 0, `${nAt}.rank must be a non-negative integer`);
+            require_(errors, isInteger(n.max) && n.max > 0, `${nAt}.max must be a positive integer`);
+          });
+        }
+        if (isNonEmptyString(b.id)) {
+          require_(errors, !seen.has(b.id), `${at}.id "${b.id}" is duplicated`);
+          seen.add(b.id);
+        }
+      });
+    }
+  }
+
+  return { ok: errors.length === 0, errors };
+}
+
+/**
  * `<bracket>/consumables.json`: potions, poisons, elixirs, scrolls, food, weapon
  * buffs, explosives, and world buffs backing `/consumable`. Structural checks only
  * — the referential guard

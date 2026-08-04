@@ -7,6 +7,7 @@ import { renderEnchant } from '../services/enchant.js';
 import { renderConsumable } from '../services/consumable.js';
 import { renderStatweights } from '../services/statweights.js';
 import { renderSpellcoef } from '../services/spellcoef.js';
+import { renderTalents } from '../services/talents.js';
 import { renderPets } from '../services/pets.js';
 import { renderXpRules } from '../services/xprules.js';
 import { renderTierlist } from '../services/tierlist.js';
@@ -68,6 +69,7 @@ const HANDLERS = {
   consc: (i, ctx, [cls]) => reply(i, renderConsumable({ ...ctx, className: cls })),
   sw: (i, ctx, [cls]) => reply(i, renderStatweights({ ...ctx, className: cls })),
   scoef: (i, ctx, [cls]) => reply(i, renderSpellcoef({ ...ctx, className: cls })),
+  talents: (i, ctx, [cls]) => reply(i, renderTalents({ ...ctx, className: cls })),
   pets: (i, ctx) => reply(i, renderPets({ ...ctx })),
   xprules: (i, ctx) => reply(i, renderXpRules({ ...ctx })),
   tierlist: (i, ctx) => reply(i, renderTierlist({ ...ctx })),

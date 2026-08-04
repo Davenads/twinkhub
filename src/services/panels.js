@@ -13,7 +13,9 @@ import {
   listConsumableTypes,
   listGuides,
   listStatweightClasses,
-  listSpellcoefClasses
+  listSpellcoefClasses,
+  listTalentClasses,
+  classIconComponent
 } from '../content/store.js';
 
 // Persistent interactive enduser panels (P4, plans/08-enduser-panels.md). This
@@ -94,7 +96,16 @@ function buildClassBuildsPanel({ store, bracket }) {
   const select = new StringSelectMenuBuilder()
     .setCustomId(encodeCustomId('pick', 'bis'))
     .setPlaceholder('Pick a class\u2026')
-    .addOptions(classes.slice(0, 25).map((c) => ({ label: capitalize(c), value: c })));
+    .addOptions(
+      classes.slice(0, 25).map((c) => {
+        const opt = { label: capitalize(c), value: c };
+        // Per-class icon (application emoji). Omitted when the id is unfilled so
+        // the option still renders — the registry ids can be added later.
+        const emoji = classIconComponent(store, c);
+        if (emoji) opt.emoji = emoji;
+        return opt;
+      })
+    );
   return {
     embeds: [
       panelEmbed(
@@ -202,8 +213,13 @@ export function bisFollowups({ store, bracket, className }) {
   if (listSpellcoefClasses(store, bracket).includes(cls)) {
     buttons.push(new ButtonBuilder().setCustomId(encodeCustomId('scoef', cls)).setLabel('Spell Scaling').setStyle(ButtonStyle.Secondary));
   }
+  if (listTalentClasses(store, bracket).includes(cls)) {
+    buttons.push(new ButtonBuilder().setCustomId(encodeCustomId('talents', cls)).setLabel('Talents').setStyle(ButtonStyle.Secondary));
+  }
   if (cls === 'hunter') {
     buttons.push(new ButtonBuilder().setCustomId(encodeCustomId('pets')).setLabel('Pets').setStyle(ButtonStyle.Secondary));
   }
-  return [row(...buttons)];
+  // Up to 6 followups now (casters gain Talents) — split across rows of 5 so a
+  // full set never exceeds Discord's 5-buttons-per-row cap.
+  return chunk(buttons, 5).map((group) => row(...group));
 }

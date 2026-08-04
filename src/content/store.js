@@ -15,7 +15,9 @@ import {
   validateConsumables,
   validateQuests,
   validateGuideIndex,
-  validateGuide
+  validateGuide,
+  validateTalents,
+  validateEmojiRegistry
 } from './schema.js';
 import { logger } from '../lib/logger.js';
 
@@ -174,7 +176,7 @@ async function loadBracket(dir, key, strict) {
     return null;
   }
 
-  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null, consumables: null, quests: null, guides: null };
+  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null, consumables: null, quests: null, guides: null, talents: null };
 
   const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
   if (classIndex) {
@@ -487,6 +489,28 @@ async function loadBracket(dir, key, strict) {
     }
   }
 
+  // Optional talents file backing /talents. Referential guard mirrors the others:
+  // every `byClass` key must be a real roster class (03-data-model.md). No
+  // talent->emoji guard: a node can reference an emoji whose id isn't uploaded
+  // yet, and the renderer degrades to text-only for that node rather than crash.
+  const talentsFile = await readOptionalJson(path.join(dir, key, 'talents.json'));
+  if (talentsFile) {
+    const tResult = validateTalents(talentsFile, `${key}/talents.json`);
+    if (!tResult.ok) {
+      fail(strict, `content ${key}/talents.json invalid: ${tResult.errors.join('; ')}`);
+    } else {
+      const roster = new Set((bracket.classes.index?.classes ?? []).map((e) => e.class));
+      if (roster.size) {
+        for (const cls of Object.keys(talentsFile.byClass)) {
+          if (!roster.has(cls)) {
+            fail(strict, `content ${key}/talents.json references unknown class "${cls}"`);
+          }
+        }
+      }
+      bracket.talents = talentsFile;
+    }
+  }
+
   // Optional guides namespace loads last: its catalogue + bodies key off the
   // roster loaded above (a guide's `class` must be a real roster class). See
   // loadGuides for the referential guards.
@@ -533,10 +557,28 @@ export async function loadContentStore({ dir = CONTENT_DIR, strict = true } = {}
     if (bracket) brackets[key] = bracket;
   }
 
+  // Optional root-level emoji registry (application-emoji name->id lookup shared
+  // across brackets, backing the /talents and panel class-icon rendering). Ids
+  // may be empty strings until an emoji is uploaded; the markup helpers below
+  // degrade to text-only for a missing/empty id, so a partial registry is safe.
+  const emojiFile = await readOptionalJson(path.join(dir, 'emoji.json'));
+  let emoji = { classes: {}, nodes: {} };
+  if (emojiFile) {
+    const eResult = validateEmojiRegistry(emojiFile, 'emoji.json');
+    if (!eResult.ok) {
+      const msg = `content emoji.json invalid: ${eResult.errors.join('; ')}`;
+      if (strict) throw new Error(msg);
+      logger.error(msg);
+    } else {
+      emoji = { classes: emojiFile.classes ?? {}, nodes: emojiFile.nodes ?? {} };
+    }
+  }
+
   _cache = {
     schemaVersion: index.schemaVersion,
     brackets,
-    bracketKeys: Object.keys(brackets)
+    bracketKeys: Object.keys(brackets),
+    emoji
   };
   return _cache;
 }
@@ -800,6 +842,56 @@ export function spellcoefForClass(store, bracket, className) {
   if (!data) return null;
   const key = String(className ?? '').toLowerCase();
   return data.byClass[key] ?? null;
+}
+
+/** The talents bundle (`{ note, credit, byClass }`) for a bracket, or null. */
+export function bracketTalents(store, bracket) {
+  return store?.brackets?.[bracket]?.talents ?? null;
+}
+
+/** Class keys that have authored talent builds (for /talents autocomplete). */
+export function listTalentClasses(store, bracket) {
+  return Object.keys(bracketTalents(store, bracket)?.byClass ?? {});
+}
+
+/** A class's talent builds (each `{ id, name, summary, points, url, nodes }`), or null. */
+export function talentsForClass(store, bracket, className) {
+  const data = bracketTalents(store, bracket);
+  if (!data) return null;
+  const key = String(className ?? '').toLowerCase();
+  return data.byClass[key] ?? null;
+}
+
+/**
+ * Discord markup for an application emoji registry entry, or '' when the entry
+ * is missing or its id hasn't been filled in yet. This is what keeps the talent
+ * and class-icon rendering graceful: a not-yet-uploaded emoji renders as no
+ * glyph rather than broken `<::>` markup.
+ */
+function emojiMarkup(entry) {
+  return entry?.id ? `<${entry.animated ? 'a' : ''}:${entry.name}:${entry.id}>` : '';
+}
+
+/** Class-icon emoji markup for a class key (e.g. `<:classicon_hunter:123>`), or ''. */
+export function classIcon(store, className) {
+  return emojiMarkup(store?.emoji?.classes?.[String(className ?? '').toLowerCase()]);
+}
+
+/** Talent-node emoji markup for a node slug (e.g. `<:LethalShots:123>`), or ''. */
+export function talentIcon(store, slug) {
+  return emojiMarkup(store?.emoji?.nodes?.[String(slug ?? '')]);
+}
+
+/**
+ * The `{ id, name, animated }` shape discord.js accepts for a component's
+ * `emoji:` field (select-menu options, buttons), or null when the class has no
+ * icon or its id is unfilled. Distinct from `classIcon`, which returns message
+ * markup — a component emoji is a structured object, not inline text.
+ */
+export function classIconComponent(store, className) {
+  const entry = store?.emoji?.classes?.[String(className ?? '').toLowerCase()];
+  if (!entry?.id) return null;
+  return { id: entry.id, name: entry.name, animated: entry.animated ?? false };
 }
 
 /** The consumables bundle (`{ note, consumables }`) for a bracket, or null. */

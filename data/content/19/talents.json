@@ -1,0 +1,340 @@
+{
+  "note": "Level-19 WSG PvP talent builds transcribed verbatim from the community 19 Class Talents doc (point allocations, effect notes, and Wowhead embed links are the doc's own). The doc's builds and links target the source community talent calculator; opening a link on Wowhead's retail Classic Era calculator can render a different allocation because Wowhead only models the retail tree. Node emoji slugs are decorative and degrade to text when an id is unfilled.",
+  "credit": { "source": "19 Class Talents (community doc)" },
+  "byClass": {
+    "druid": [
+      {
+        "id": "druid-grasp-shapeshifter",
+        "name": "Nature's Grasp / Natural Shapeshifter",
+        "default": true,
+        "summary": "Focus on 100% proc chance Nature's Grasp, 2 in Furor for 40% chance to generate rage on shapeshift. Furor gains combat. Natural Shapeshifter is strong, shapeshifting is your bread and butter.",
+        "points": "5/5 Nature's Grasp, 3/3 Natural Shapeshifter, 2 Furor",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/druid/0140003--02",
+        "nodes": [
+          { "talent": "Nature's Grasp", "rank": 5, "max": 5, "emoji": "NaturesGrasp" },
+          { "talent": "Natural Shapeshifter", "rank": 3, "max": 3, "emoji": "NaturalShapeshifter" },
+          { "talent": "Furor", "rank": 2, "max": 5, "emoji": "Furor" }
+        ]
+      },
+      {
+        "id": "druid-grasp-furor",
+        "name": "Nature's Grasp / Furor",
+        "summary": "Full Nature's Grasp, full Furor.",
+        "points": "5/5 Nature's Grasp, 5/5 Furor",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/druid/014--05",
+        "nodes": [
+          { "talent": "Nature's Grasp", "rank": 5, "max": 5, "emoji": "NaturesGrasp" },
+          { "talent": "Furor", "rank": 5, "max": 5, "emoji": "Furor" }
+        ]
+      },
+      {
+        "id": "druid-grasp-roots",
+        "name": "Nature's Grasp / Improved Entangling Roots",
+        "summary": "Full Nature's Grasp, Natural Shapeshifter, and 70% chance to ignore pushback on root cast.",
+        "points": "5/5 Nature's Grasp, 3/3 Natural Shapeshifter, 2/3 Improved Entangling Roots",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/druid/0142003",
+        "nodes": [
+          { "talent": "Nature's Grasp", "rank": 5, "max": 5, "emoji": "NaturesGrasp" },
+          { "talent": "Natural Shapeshifter", "rank": 3, "max": 3, "emoji": "NaturalShapeshifter" },
+          { "talent": "Improved Entangling Roots", "rank": 2, "max": 3, "emoji": "ImprovedEntanglingRoots" }
+        ]
+      }
+    ],
+    "hunter": [
+      {
+        "id": "hunter-deflection-wingclip",
+        "name": "Deflection / Improved Wing Clip",
+        "default": true,
+        "summary": "+5% parry chance, 20% chance to proc root on Wing Clip. Spammable.",
+        "points": "5/5 Deflection, 5/5 Improved Wing Clip",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/hunter/--005005",
+        "nodes": [
+          { "talent": "Deflection", "rank": 5, "max": 5, "emoji": "Deflection" },
+          { "talent": "Improved Wing Clip", "rank": 5, "max": 5, "emoji": "ImprovedWingclip" }
+        ]
+      },
+      {
+        "id": "hunter-concussive-control",
+        "name": "Concussive / Humanoid Slaying control",
+        "note": "The source doc omitted this build's point line; ranks below are derived from the effect text and the talent-calc link.",
+        "summary": "8% chance to proc stun on Concussive Shot, 3% increased damage to humanoids, +2% parry chance, 12% chance to proc root on Wing Clip.",
+        "points": "2/5 Improved Concussive Shot, 3/3 Humanoid Slaying, 2/5 Deflection, 3/5 Improved Wing Clip",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/hunter/-2-032003",
+        "nodes": [
+          { "talent": "Improved Concussive Shot", "rank": 2, "max": 5, "emoji": "ImprovedConcussiveShot" },
+          { "talent": "Humanoid Slaying", "rank": 3, "max": 3, "emoji": "HumanoidSlaying" },
+          { "talent": "Deflection", "rank": 2, "max": 5, "emoji": "Deflection" },
+          { "talent": "Improved Wing Clip", "rank": 3, "max": 5, "emoji": "ImprovedWingclip" }
+        ]
+      },
+      {
+        "id": "hunter-concussive-lethal",
+        "name": "Concussive / Lethal Shots",
+        "summary": "+5% crit chance, 20% chance to proc stun on Concussive Shot, fatal against flag carriers who easily shapeshift out of slows and roots (although at a detriment to mana).",
+        "points": "5/5 Improved Concussive Shot, 5/5 Lethal Shots",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/hunter/-5005",
+        "nodes": [
+          { "talent": "Improved Concussive Shot", "rank": 5, "max": 5, "emoji": "ImprovedConcussiveShot" },
+          { "talent": "Lethal Shots", "rank": 5, "max": 5, "emoji": "LethalShots" }
+        ]
+      },
+      {
+        "id": "hunter-hawk-concussive",
+        "name": "Improved Aspect of the Hawk / Concussive",
+        "summary": "5% chance to increase attack speed by 30% for 12 seconds. Makes Venomstrike 1.5 speed on horde, and 1.49 speed on alliance (10% (11% alliance) quiver, 30% proc), 20% chance to proc stun on Concussive Shot.",
+        "points": "5/5 Improved Aspect of the Hawk, 5/5 Improved Concussive Shot",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/hunter/5-5",
+        "nodes": [
+          { "talent": "Improved Aspect of the Hawk", "rank": 5, "max": 5, "emoji": "ImprovedAspectoftheHawk" },
+          { "talent": "Improved Concussive Shot", "rank": 5, "max": 5, "emoji": "ImprovedConcussiveShot" }
+        ]
+      }
+    ],
+    "mage": [
+      {
+        "id": "mage-frost-frostbite",
+        "name": "Frost / Frostbite",
+        "default": true,
+        "summary": "Targets lose 5 resistance to your spells (negates cloak enchant), 2% hit for arcane, frost, and fire, -.5 seconds on Frostbolt cast time, 10% chance to proc root on all slows.",
+        "points": "1/2 Arcane Subtlety, 1/5 Arcane Focus, 5/5 Improved Frostbolt, 1/3 Elemental Precision, 2/3 Frostbite",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/mage/11--05102",
+        "nodes": [
+          { "talent": "Arcane Subtlety", "rank": 1, "max": 2, "emoji": "ArcaneSubtlety" },
+          { "talent": "Arcane Focus", "rank": 1, "max": 5, "emoji": "ArcaneFocus" },
+          { "talent": "Improved Frostbolt", "rank": 5, "max": 5, "emoji": "ImprovedFrostbolt" },
+          { "talent": "Elemental Precision", "rank": 1, "max": 3, "emoji": "ElementalPrecision" },
+          { "talent": "Frostbite", "rank": 2, "max": 3, "emoji": "Frostbite" }
+        ]
+      },
+      {
+        "id": "mage-frost-nova",
+        "name": "Frost / Improved Frost Nova",
+        "summary": "Targets lose 5 resistance to your spells (negates cloak enchant), 2% hit for arcane, frost, and fire, -.5 seconds on Frostbolt cast time, 21 sec cooldown for Frost Nova instead of 25 sec. If you are making 4 seconds impactful, very strong.",
+        "points": "1/2 Arcane Subtlety, 1/5 Arcane Focus, 5/5 Improved Frostbolt, 1/3 Elemental Precision, 2/2 Improved Frost Nova",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/mage/11--051002",
+        "nodes": [
+          { "talent": "Arcane Subtlety", "rank": 1, "max": 2, "emoji": "ArcaneSubtlety" },
+          { "talent": "Arcane Focus", "rank": 1, "max": 5, "emoji": "ArcaneFocus" },
+          { "talent": "Improved Frostbolt", "rank": 5, "max": 5, "emoji": "ImprovedFrostbolt" },
+          { "talent": "Elemental Precision", "rank": 1, "max": 3, "emoji": "ElementalPrecision" },
+          { "talent": "Improved Frost Nova", "rank": 2, "max": 2, "emoji": "ImprovedFrostNova" }
+        ]
+      },
+      {
+        "id": "mage-fire",
+        "name": "Fire / Impact",
+        "summary": "Targets lose 5 resistance to your spells (negates cloak enchant), 2% hit for arcane, frost, and fire, -.5 seconds on Fireball cast time, 2% chance to proc stun on fire spell, increased range of fire spells by 6 yards.",
+        "points": "1/2 Arcane Subtlety, 1/5 Arcane Focus, 4/5 Improved Fireball, 1/5 Impact, 2/2 Flame Throwing, 1/3 Elemental Precision",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/mage/11-4102-001",
+        "nodes": [
+          { "talent": "Arcane Subtlety", "rank": 1, "max": 2, "emoji": "ArcaneSubtlety" },
+          { "talent": "Arcane Focus", "rank": 1, "max": 5, "emoji": "ArcaneFocus" },
+          { "talent": "Improved Fireball", "rank": 4, "max": 5, "emoji": "ImprovedFireball" },
+          { "talent": "Impact", "rank": 1, "max": 5, "emoji": "Impact" },
+          { "talent": "Flame Throwing", "rank": 2, "max": 2, "emoji": "FlameThrowing" },
+          { "talent": "Elemental Precision", "rank": 1, "max": 3, "emoji": "ElementalPrecision" }
+        ]
+      },
+      {
+        "id": "mage-arcane-missiles",
+        "name": "Arcane Missiles / Wand",
+        "summary": "Targets lose 5 resistance to your spells (negates cloak enchant), 2% hit for arcane, frost, and fire, 100% chance to ignore pushback on Arcane Missiles cast, 25% increased wand damage.",
+        "points": "1/2 Arcane Subtlety, 1/5 Arcane Focus, 5/5 Improved Arcane Missiles, 2/2 Wand Specialization, 1/3 Elemental Precision",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/mage/1152--001",
+        "nodes": [
+          { "talent": "Arcane Subtlety", "rank": 1, "max": 2, "emoji": "ArcaneSubtlety" },
+          { "talent": "Arcane Focus", "rank": 1, "max": 5, "emoji": "ArcaneFocus" },
+          { "talent": "Improved Arcane Missiles", "rank": 5, "max": 5, "emoji": "ImprovedArcaneMissiles" },
+          { "talent": "Wand Specialization", "rank": 2, "max": 2, "emoji": "WandSpecialization" },
+          { "talent": "Elemental Precision", "rank": 1, "max": 3, "emoji": "ElementalPrecision" }
+        ]
+      }
+    ],
+    "paladin": [
+      {
+        "id": "paladin-redoubt-toughness",
+        "name": "Redoubt / Toughness",
+        "default": true,
+        "summary": "30% chance to block for 5 blocks or 10 seconds when you are a victim to a crit, -2 minutes cooldown on Blessing of Protection, +6 seconds on Blessing of Freedom Duration, 6% increased armor from items.",
+        "points": "5/5 Redoubt, 2/2 Guardian's Favor, 3/5 Toughness",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/paladin/-05023",
+        "nodes": [
+          { "talent": "Redoubt", "rank": 5, "max": 5, "emoji": "Redoubt" },
+          { "talent": "Guardian's Favor", "rank": 2, "max": 2, "emoji": "GuardiansFavor" },
+          { "talent": "Toughness", "rank": 3, "max": 5, "emoji": "Toughness" }
+        ]
+      },
+      {
+        "id": "paladin-redoubt-precision",
+        "name": "Redoubt / Precision",
+        "summary": "30% chance to block for 5 blocks or 10 seconds when you are a victim to a crit, -2 minutes cooldown on Blessing of Protection, +6 seconds on Blessing of Freedom Duration, 3% melee hit chance (hoj is not on melee hit table).",
+        "points": "5/5 Redoubt, 2/2 Guardian's Favor, 3/3 Precision",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/paladin/-0532",
+        "nodes": [
+          { "talent": "Redoubt", "rank": 5, "max": 5, "emoji": "Redoubt" },
+          { "talent": "Guardian's Favor", "rank": 2, "max": 2, "emoji": "GuardiansFavor" },
+          { "talent": "Precision", "rank": 3, "max": 3, "emoji": "Precision" }
+        ]
+      }
+    ],
+    "priest": [
+      {
+        "id": "priest-blackout-renew",
+        "name": "Blackout / Renew",
+        "default": true,
+        "summary": "70% chance to ignore pushback on healing spells, 10% increase to BASE Renew healing, 10% chance to proc stun on shadow spell applications (Mind Blast, Power Word: Shadow APPLICATION, not DOT, Touch of Weakness, NOT Hex of Weakness), 2% Shadow hit (benefits Psychic Scream).",
+        "points": "2/2 Healing Focus, 1/3 Improved Renew, 5/5 Blackout, 1/5 Shadow Focus",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/priest/-22-05001",
+        "nodes": [
+          { "talent": "Healing Focus", "rank": 2, "max": 2, "emoji": "HealingFocus" },
+          { "talent": "Improved Renew", "rank": 1, "max": 3, "emoji": "ImprovedRenew" },
+          { "talent": "Blackout", "rank": 5, "max": 5, "emoji": "Blackout" },
+          { "talent": "Shadow Focus", "rank": 1, "max": 5, "emoji": "ShadowFocus" }
+        ]
+      },
+      {
+        "id": "priest-unbreakable-will",
+        "name": "Unbreakable Will / Martyrdom",
+        "summary": "15% Stun, Fear, Silence resist chance, 100% chance to ignore pushback on all spells for 6 seconds when you are a victim to a crit, 70% chance to ignore pushback on healing spells, 2% chance to proc stun on shadow spell applications (Mind Blast, Power Word: Shadow APPLICATION, not DOT, Touch of Weakness, NOT Hex of Weakness).",
+        "points": "5/5 Unbreakable Will, 2/2 Martyrdom, 2/2 Healing Focus, 1/5 Blackout",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/priest/500002-2-01",
+        "nodes": [
+          { "talent": "Unbreakable Will", "rank": 5, "max": 5, "emoji": "UnbreakableWill" },
+          { "talent": "Martyrdom", "rank": 2, "max": 2, "emoji": "Martyrdom" },
+          { "talent": "Healing Focus", "rank": 2, "max": 2, "emoji": "HealingFocus" },
+          { "talent": "Blackout", "rank": 1, "max": 5, "emoji": "Blackout" }
+        ]
+      },
+      {
+        "id": "priest-divine-fury",
+        "name": "Divine Fury / Renew",
+        "summary": "70% chance to ignore pushback on healing spells, 30% increase to BASE Renew healing, -.5 seconds on Heal cast time (just Heal, not Lesser Heal).",
+        "points": "2/2 Healing Focus, 3/3 Improved Renew, 5/5 Divine Fury",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/priest/-23005",
+        "nodes": [
+          { "talent": "Healing Focus", "rank": 2, "max": 2, "emoji": "HealingFocus" },
+          { "talent": "Improved Renew", "rank": 3, "max": 3, "emoji": "ImprovedRenew" },
+          { "talent": "Divine Fury", "rank": 5, "max": 5, "emoji": "DivineFury" }
+        ]
+      },
+      {
+        "id": "priest-wand-blackout",
+        "name": "Wand / Blackout",
+        "summary": "25% increased Wand damage, 10% chance to proc stun on shadow spell applications (Mind Blast, Power Word: Shadow APPLICATION, not DOT, Touch of Weakness, NOT Hex of Weakness).",
+        "points": "5/5 Wand Specialization, 5/5 Blackout",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/priest/05--05",
+        "nodes": [
+          { "talent": "Wand Specialization", "rank": 5, "max": 5, "emoji": "WandSpecialization" },
+          { "talent": "Blackout", "rank": 5, "max": 5, "emoji": "Blackout" }
+        ]
+      }
+    ],
+    "rogue": [
+      {
+        "id": "rogue-gouge-precision",
+        "name": "Improved Gouge / Precision",
+        "default": true,
+        "summary": "+1.5 seconds on Gouge duration, -5 energy for Sinister Strike, 5% melee hit chance.",
+        "points": "3/3 Improved Gouge, 2/2 Improved Sinister Strike, 5/5 Precision",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/rogue/-320005",
+        "nodes": [
+          { "talent": "Improved Gouge", "rank": 3, "max": 3, "emoji": "ImprovedGouge" },
+          { "talent": "Improved Sinister Strike", "rank": 2, "max": 2, "emoji": "ImprovedSinisterStrike" },
+          { "talent": "Precision", "rank": 5, "max": 5, "emoji": "PrecisionRogue" }
+        ]
+      },
+      {
+        "id": "rogue-gouge-deception",
+        "name": "Improved Gouge / Master of Deception",
+        "summary": "+1.5 seconds on Gouge duration, 15 points of Stealth Effectiveness (3 levels, Human Perception is 10 levels or 50 points, this will reduce power of Perception by 30%), 6% increased speed in Stealth (56% speed instead of 50%).",
+        "points": "3/3 Improved Gouge, 5/5 Master of Deception, 2/5 Camouflage",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/rogue/-3-50002",
+        "nodes": [
+          { "talent": "Improved Gouge", "rank": 3, "max": 3, "emoji": "ImprovedGouge" },
+          { "talent": "Master of Deception", "rank": 5, "max": 5, "emoji": "MasterofDeception" },
+          { "talent": "Camouflage", "rank": 2, "max": 5, "emoji": "Camouflage" }
+        ]
+      }
+    ],
+    "shaman": [
+      {
+        "id": "shaman-convection-grasp",
+        "name": "Convection / Earth's Grasp",
+        "default": true,
+        "summary": "10% reduced mana cost on Shocks and Lightning Bolt, 20% increased radius of Earthbind (12 yard radius range, 24 yard diameter range), -.3 seconds on Healing Wave cast time.",
+        "points": "5/5 Convection, 2/2 Earth's Grasp, 3/5 Improved Healing Wave",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/shaman/502--3",
+        "nodes": [
+          { "talent": "Convection", "rank": 5, "max": 5, "emoji": "Convection" },
+          { "talent": "Earth's Grasp", "rank": 2, "max": 2, "emoji": "EarthsGrasp" },
+          { "talent": "Improved Healing Wave", "rank": 3, "max": 5, "emoji": "ImprovedHealingWave" }
+        ]
+      },
+      {
+        "id": "shaman-concussion-grasp",
+        "name": "Concussion / Earth's Grasp",
+        "summary": "10% increased BASE damage on Shocks and Lightning Bolt, 20% increased radius of Earthbind (12 yard radius range, 24 yard diameter range), -.3 seconds on Healing Wave cast time.",
+        "points": "5/5 Concussion, 2/2 Earth's Grasp, 3/5 Improved Healing Wave",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/shaman/052--3",
+        "nodes": [
+          { "talent": "Concussion", "rank": 5, "max": 5, "emoji": "Concussion" },
+          { "talent": "Earth's Grasp", "rank": 2, "max": 2, "emoji": "EarthsGrasp" },
+          { "talent": "Improved Healing Wave", "rank": 3, "max": 5, "emoji": "ImprovedHealingWave" }
+        ]
+      },
+      {
+        "id": "shaman-convection-healing",
+        "name": "Convection / Improved Healing Wave",
+        "summary": "10% reduced mana cost on Shocks and Lightning Bolt, -.5 seconds on Healing Wave cast time.",
+        "points": "5/5 Convection, 5/5 Improved Healing Wave",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/shaman/5--5",
+        "nodes": [
+          { "talent": "Convection", "rank": 5, "max": 5, "emoji": "Convection" },
+          { "talent": "Improved Healing Wave", "rank": 5, "max": 5, "emoji": "ImprovedHealingWave" }
+        ]
+      }
+    ],
+    "warlock": [
+      {
+        "id": "warlock-corruption",
+        "name": "Improved Corruption / Life Tap",
+        "default": true,
+        "summary": "2% Affliction hit chance (Fear affected), -2 seconds Corruption cast time (now instant), 20% increased mana from mana tap (81.6 instead of 68), 20% increased health restored by Healthstone (300 instead of 250).",
+        "points": "1/5 Suppression, 5/5 Improved Corruption, 2/2 Improved Life Tap, 2/2 Improved Healthstone",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/warlock/15002-2",
+        "nodes": [
+          { "talent": "Suppression", "rank": 1, "max": 5, "emoji": "Suppression" },
+          { "talent": "Improved Corruption", "rank": 5, "max": 5, "emoji": "ImprovedCorruption" },
+          { "talent": "Improved Life Tap", "rank": 2, "max": 2, "emoji": "ImprovedLifeTap" },
+          { "talent": "Improved Healthstone", "rank": 2, "max": 2, "emoji": "ImprovedHealthstone" }
+        ]
+      }
+    ],
+    "warrior": [
+      {
+        "id": "warrior-deflection-tactical",
+        "name": "Deflection / Tactical Mastery",
+        "default": true,
+        "summary": "+5% chance to Parry, 3 increased Rage from Charge (12 instead of 9), ability to retain 20 rage when swapping stances (enough to insta disarm).",
+        "points": "5/5 Deflection, 1/2 Improved Charge, 4/5 Tactical Mastery",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/warrior/05014",
+        "nodes": [
+          { "talent": "Deflection", "rank": 5, "max": 5, "emoji": "Deflection" },
+          { "talent": "Improved Charge", "rank": 1, "max": 2, "emoji": "ImprovedCharge" },
+          { "talent": "Tactical Mastery", "rank": 4, "max": 5, "emoji": "TacticalMastery" }
+        ]
+      },
+      {
+        "id": "warrior-anticipation-ironwill",
+        "name": "Anticipation / Iron Will",
+        "summary": "+10 Defense skill (.4% chance to be missed, dodge, block, and .4% less chance to be crit, .2% less chance to be crit against those with +5 weapon skill.), 15% increased chance to resist Stun and Charm effects.",
+        "points": "5/5 Anticipation, 5/5 Iron Will",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/warrior/--05005",
+        "nodes": [
+          { "talent": "Anticipation", "rank": 5, "max": 5, "emoji": "Anticipation" },
+          { "talent": "Iron Will", "rank": 5, "max": 5, "emoji": "IronWill" }
+        ]
+      }
+    ]
+  }
+}

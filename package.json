@@ -11,6 +11,7 @@
   "scripts": {
     "start": "node src/index.js",
     "deploy": "node src/deploy-commands.js",
+    "emojis:list": "node scripts/list-emojis.js",
     "test": "node --test"
   },
   "dependencies": {
