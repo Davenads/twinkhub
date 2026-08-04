@@ -53,6 +53,53 @@ export function field(name, value, inline = false) {
   return f;
 }
 
+// Headroom left under the 6000 total so the overflow note itself always fits.
+const TOTAL_RESERVE = 200;
+
+/**
+ * Append `fields` to `embed` while honoring BOTH Discord hard caps at once: the
+ * 25-field count AND the 6000-char combined embed size (title + description +
+ * footer + every field name/value). Stops before the field that would breach
+ * either cap and, when anything is dropped, appends a single overflow note built
+ * by `overflowNote(dropped)` within the reserved headroom.
+ *
+ * A per-field cap alone is insufficient: a class-only `/enchant` (the widest
+ * match set) yields ~20 individually-legal fields whose *combined* length blows
+ * past 6000, so Discord 400s the whole reply (error 50035
+ * MAX_EMBED_SIZE_EXCEEDED). Route any single-embed list render through this so it
+ * can never emit an over-size payload. Set the title/description/footer BEFORE
+ * calling so their lengths are counted.
+ *
+ * @param {EmbedBuilder} embed  title/description/footer already set
+ * @param {{name:string,value:string}[]} fields  pre-guarded fields (via `field()`)
+ * @param {(dropped:number)=>{name:string,value:string}} overflowNote
+ * @returns {EmbedBuilder} the same embed, for chaining
+ */
+export function addFieldsWithinLimits(embed, fields, overflowNote) {
+  const d = embed.data ?? {};
+  const budget = LIMITS.total - TOTAL_RESERVE;
+  const accepted = [];
+  let len = (d.title?.length ?? 0) + (d.description?.length ?? 0) + (d.footer?.text?.length ?? 0);
+  let dropped = 0;
+  for (const f of fields) {
+    const cost = (f.name?.length ?? 0) + (f.value?.length ?? 0);
+    if (accepted.length < LIMITS.fields && len + cost <= budget) {
+      accepted.push(f);
+      len += cost;
+    } else {
+      dropped += 1;
+    }
+  }
+  // If we filled all 25 slots but still have leftovers, free one for the note.
+  if (dropped > 0 && accepted.length >= LIMITS.fields) {
+    accepted.pop();
+    dropped += 1;
+  }
+  if (accepted.length) embed.addFields(...accepted);
+  if (dropped > 0) embed.addFields(overflowNote(dropped));
+  return embed;
+}
+
 /**
  * Pack an array of line strings into as many guarded fields as needed so none
  * exceeds the 1024-char value cap — instead of truncating and dropping lines.

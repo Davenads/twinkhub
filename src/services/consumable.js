@@ -1,10 +1,16 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketConsumables, consumablesFor } from '../content/store.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
-
-// Discord caps embeds at 25 fields; one consumable per field.
-const MAX_FIELDS = 25;
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed,
+  addFieldsWithinLimits
+} from '../lib/embed.js';
 
 // Display order + labels for each consumable type.
 const TYPE_ORDER = ['potion', 'poison', 'elixir', 'scroll', 'food', 'weapon-buff', 'explosive', 'worldbuff'];
@@ -19,10 +25,12 @@ const TYPE_LABEL = {
   worldbuff: 'World buff'
 };
 
-function consumableLine(c) {
+function consumableLine(c, hideClasses = false) {
   const bits = [`_${TYPE_LABEL[c.type] ?? capitalize(c.type)}_`];
   if (c.faction && c.faction !== 'both') bits.push(capitalize(c.faction));
-  if (Array.isArray(c.classes)) bits.push(c.classes.map(capitalize).join(', '));
+  // Under a class filter the per-row class list is redundant (every row applies
+  // to that class), so it's hidden to fit more entries under the 6000-char cap.
+  if (!hideClasses && Array.isArray(c.classes)) bits.push(c.classes.map(capitalize).join(', '));
   if (c.reqLevel != null) bits.push(`Req ${c.reqLevel}`);
   if (c.source) bits.push(c.source.detail);
   const lines = [c.effect, bits.join(' \u00b7 ')];
@@ -77,6 +85,10 @@ export function renderConsumable({ store, bracket, type = null, className = null
   if (data.note) descParts.push(data.note);
   if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
 
+  // Footer is set before packing fields so its length counts toward the 6000 cap.
+  const footerText = metaFooter(meta);
+  if (footerText) embed.setFooter({ text: footerText });
+
   // Group by type in a stable order so the list reads predictably.
   const ordered = [...matches].sort((a, b) => {
     const ai = TYPE_ORDER.indexOf(a.type);
@@ -84,17 +96,12 @@ export function renderConsumable({ store, bracket, type = null, className = null
     return (ai === -1 ? TYPE_ORDER.length : ai) - (bi === -1 ? TYPE_ORDER.length : bi);
   });
 
-  for (const c of ordered.slice(0, MAX_FIELDS)) {
-    embed.addFields(field(c.name, consumableLine(c)));
-  }
-  if (ordered.length > MAX_FIELDS) {
-    embed.addFields(
-      field('\u2026', `${ordered.length - MAX_FIELDS} more not shown \u2014 narrow with a type or class filter.`)
-    );
-  }
-
-  const footerText = metaFooter(meta);
-  if (footerText) embed.setFooter({ text: footerText });
+  const fields = ordered.map((c) => field(c.name, consumableLine(c, Boolean(classKey))));
+  // Pack under BOTH the 25-field and 6000-char caps so a class-only list can't
+  // overrun the total-embed size (error 50035).
+  addFieldsWithinLimits(embed, fields, (dropped) =>
+    field('\u2026', `${dropped} more not shown \u2014 narrow with a type or class filter.`)
+  );
 
   return { embeds: [embed] };
 }

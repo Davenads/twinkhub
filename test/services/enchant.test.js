@@ -79,3 +79,47 @@ test('renderEnchant degrades for a bracket with no enchant data', () => {
   assert.equal(e.title, 'Enchants');
   assert.ok(e.description.includes('49'));
 });
+
+// Discord counts title + description + footer + every field name/value toward 6000.
+function totalSize(json) {
+  let n = (json.title?.length ?? 0) + (json.description?.length ?? 0) + (json.footer?.text?.length ?? 0);
+  for (const f of json.fields ?? []) n += f.name.length + f.value.length;
+  return n;
+}
+
+// A class-only view (no slot filter) is the widest match set and used to 400 with
+// MAX_EMBED_SIZE_EXCEEDED; build a store big enough to prove it's now capped.
+const bigStore = {
+  brackets: {
+    19: {
+      meta: { levelCap: 19, battleground: 'Warsong Gulch', gameVersion: { clientPatch: '1.15.x' } },
+      enchants: {
+        note: 'x'.repeat(1200),
+        enchants: Array.from({ length: 30 }, (_, i) => ({
+          id: `e${i}`,
+          name: `Enchant Number ${i}`,
+          slot: 'chest',
+          effect: 'Adds a sizeable effect line to inflate the field. '.repeat(3),
+          noLevelReq: true,
+          notes: 'A verbose authored note that pads each field well past a trivial length. '.repeat(2),
+          classes: ['warrior', 'rogue', 'hunter', 'paladin', 'shaman', 'druid', 'mage', 'warlock', 'priest']
+        }))
+      }
+    }
+  }
+};
+
+test('renderEnchant never exceeds the 6000-char embed cap under a wide class filter', () => {
+  const { embeds } = renderEnchant({ store: bigStore, bracket: '19', className: 'priest' });
+  const e = embeds[0].toJSON();
+  assert.ok(totalSize(e) <= 6000, `embed total ${totalSize(e)} must stay <= 6000`);
+  assert.equal(e.fields.at(-1).name, '\u2026', 'an overflow note is appended when entries are dropped');
+});
+
+test('renderEnchant drops the redundant Classes line only under a class filter', () => {
+  const filtered = renderEnchant({ store, bracket: '19', className: 'mage' }).embeds[0].toJSON();
+  assert.ok(!filtered.fields[0].value.includes('Classes:'), 'class-filtered rows omit the Classes line');
+
+  const unfiltered = renderEnchant({ store, bracket: '19' }).embeds[0].toJSON();
+  assert.ok(unfiltered.fields[0].value.includes('Classes:'), 'unfiltered rows keep the Classes line');
+});
