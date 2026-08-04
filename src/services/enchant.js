@@ -65,7 +65,8 @@ export function renderEnchant({ store, bracket, slot = null, className = null })
   if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
 
   // Footer is set before packing fields so its length counts toward the 6000 cap.
-  const footerText = metaFooter(meta);
+  // Provenance lives here so it's stated exactly once, on every view.
+  const footerText = metaFooter(meta, ['Values confirmed on Wowhead Classic']);
   if (footerText) embed.setFooter({ text: footerText });
 
   const fields = matches.map((ench) => {
@@ -74,13 +75,15 @@ export function renderEnchant({ store, bracket, slot = null, className = null })
     const url = enchantWowheadUrl(ench);
     const nameMarkup = url ? `**[${ench.name}](${url})**` : `**${ench.name}**`;
     const lines = [`${nameMarkup} \u2014 ${ench.effect}`];
-    if (ench.noLevelReq) lines.push('_Ignores the item\u2019s level requirement._');
     // Under a class filter every row already applies to that class, so the
     // Classes: line is redundant noise — drop it to fit more enchants under the
     // 6000-char total-embed cap.
     if (!classKey) lines.push(`Classes: ${ench.classes.map(capitalize).join(', ')}`);
     if (ench.notes) lines.push(ench.notes);
-    return field(`${capitalize(ench.slot)}${ench.noLevelReq ? ' \u2014 no level req' : ''}`, lines.join('\n'));
+    // Every listed enchant is no-level-req (stated once in the note), so decorate
+    // the field name only for the exception — a row that DOES gate on level.
+    const levelTag = ench.noLevelReq ? '' : ` \u2014 requires level ${ench.reqLevel}`;
+    return field(`${capitalize(ench.slot)}${levelTag}`, lines.join('\n'));
   });
 
   // Pack as many as fit under BOTH the 25-field and 6000-char caps; a class-only

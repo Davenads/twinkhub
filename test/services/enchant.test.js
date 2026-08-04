@@ -43,11 +43,22 @@ test('renderEnchant lists all enchants and flags no-level-req ones', () => {
   assert.equal(e.title, 'Enchants (Warsong Gulch 19)');
   assert.ok(e.description.includes('cornerstone'));
   assert.equal(e.fields.length, 2);
-  assert.ok(e.fields[0].name.includes('no level req'));
+  // Every enchant is no-level-req (stated once in the note/footer), so the field
+  // name is just the slot — no per-row "no level req" decoration.
+  assert.equal(e.fields[0].name, 'Weapon');
   // Enchant name now leads the value line (so its Wowhead masked link renders).
   assert.ok(e.fields[0].value.includes('Enchant Weapon - Fiery Weapon'));
-  assert.ok(e.fields[0].value.includes('Ignores the item'));
-  assert.equal(e.footer.text, 'WoW Classic Era 1.15.x');
+  assert.ok(!e.fields[0].value.includes('Ignores the item'), 'no per-row level-req line');
+  assert.ok(e.footer.text.includes('Values confirmed on Wowhead Classic'), 'footer states provenance once');
+});
+
+test('renderEnchant tags the field name only when an enchant DOES gate on level', () => {
+  const s = structuredClone(store);
+  s.brackets['19'].enchants.enchants[0].noLevelReq = false;
+  s.brackets['19'].enchants.enchants[0].reqLevel = 35;
+  const e = renderEnchant({ store: s, bracket: '19' }).embeds[0].toJSON();
+  assert.equal(e.fields[0].name, 'Weapon \u2014 requires level 35');
+  assert.equal(e.fields[1].name, 'Boots', 'no-level-req rows stay bare');
 });
 
 test('renderEnchant filters by slot', () => {
