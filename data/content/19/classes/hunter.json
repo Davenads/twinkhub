@@ -2,9 +2,7 @@
   "class": "hunter",
   "tier": "S",
   "roles": ["ranged-dps"],
-  "specs": [
-    { "name": "Beast Mastery / Marksmanship hybrid", "statPriority": ["agility", "stamina", "intellect"] }
-  ],
+  "statPriority": ["stamina", "agility", "intellect"],
   "summary": "Top of the bracket: ranged burst plus a pet and strong survivability; frequently called the strongest 10-19 class.",
   "factionNotes": "Alliance hunters get green-or-better ammo pouches (Quiver / Bandolier of the Night Watch); Horde hunters lack green+ pouches, a real mechanical disadvantage. Pets need ~25% of player XP and gain none from quest turn-ins, so sync pets before turning in gear quests."
 }

@@ -2,10 +2,7 @@
   "class": "warrior",
   "tier": "B",
   "roles": ["melee-dps", "flag-carrier"],
-  "specs": [
-    { "name": "Arms (2H duelist)", "statPriority": ["strength", "stamina", "agility"] },
-    { "name": "Protection (flag carrier)", "statPriority": ["stamina", "strength"] }
-  ],
+  "statPriority": ["stamina", "strength", "agility"],
   "summary": "Charge and Hamstring create constant pressure; a strong duelist as Arms and an excellent flag carrier as Protection.",
   "factionNotes": "Gear is largely mirrored; racials shift matchups (e.g. Orc stun resistance, Human weapon skill). Stamina is prized on the flag-carrier build to reach the ~1000+ HP the meta targets."
 }

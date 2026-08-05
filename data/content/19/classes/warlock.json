@@ -2,10 +2,7 @@
   "class": "warlock",
   "tier": "A",
   "roles": ["caster-dps"],
-  "specs": [
-    { "name": "Affliction (DoT pressure)", "statPriority": ["intellect", "stamina", "spirit"] },
-    { "name": "Demonology (pet & survival)", "statPriority": ["stamina", "intellect", "spirit"] }
-  ],
+  "statPriority": ["stamina", "intellect", "spirit"],
   "summary": "DoT pressure (Corruption, Immolate, Curse of Agony) plus Fear and pet utility: the Voidwalker's shield and sacrifice and the Imp's Blood Pact stamina buff. Note the Succubus and its Seduction come from a level-20 quest, so a 19 warlock leans on Voidwalker and Imp. Skill- and comp-dependent.",
   "factionNotes": "Warlocks play both factions - Undead (Horde) Will of the Forsaken guards against fear, charm, and sleep, while Gnome (Alliance) Escape Artist frees them from roots and snares. Verify current racial and pet/quest specifics against the Wowhead Warlock guide at authoring."
 }

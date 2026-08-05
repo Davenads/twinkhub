@@ -155,13 +155,9 @@ export function validateClass(obj, label = 'class') {
   require_(errors, isStringArray(obj.roles), `${label}: roles must be a non-empty string array`);
   require_(errors, isNonEmptyString(obj.summary), `${label}: summary must be a non-empty string`);
 
-  if (require_(errors, Array.isArray(obj.specs) && obj.specs.length > 0, `${label}: specs must be a non-empty array`)) {
-    obj.specs.forEach((spec, i) => {
-      const at = `${label}: specs[${i}]`;
-      require_(errors, isNonEmptyString(spec?.name), `${at}.name must be a non-empty string`);
-      require_(errors, isStringArray(spec?.statPriority), `${at}.statPriority must be a non-empty string array`);
-    });
-  }
+  // A single stamina-first stat-priority flow per class (tokens like `stamina`,
+  // `intellect`, `healing`). Rendered as one line by /class and the panel hub.
+  require_(errors, isStringArray(obj.statPriority), `${label}: statPriority must be a non-empty string array`);
   return { ok: errors.length === 0, errors };
 }
 

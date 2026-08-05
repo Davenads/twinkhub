@@ -1,11 +1,11 @@
 import { EmbedBuilder } from 'discord.js';
-import { capitalize } from '../lib/text.js';
+import { capitalize, formatStatPriority } from '../lib/text.js';
 import { getClass } from '../content/store.js';
 import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
 
 /**
- * Render a single class overview (tier, roles, specs, stat priority, faction
- * notes) from content data. Uses the full detail file when present and degrades
+ * Render a single class overview (tier, roles, stat priority, faction notes)
+ * from content data. Uses the full detail file when present and degrades
  * to the roster entry otherwise. Shared by `/class` and the class-builds panel.
  *
  * @param {{ store: object, bracket: string, className: string }} args
@@ -25,13 +25,8 @@ export function renderClass({ store, bracket, className }) {
     .setDescription(truncate(data.summary, LIMITS.description))
     .addFields(field('Roles', data.roles.join(', ')));
 
-  if (Array.isArray(data.specs) && data.specs.length) {
-    embed.addFields(
-      field(
-        'Specs & stat priority',
-        data.specs.map((s) => `**${s.name}** \u2014 ${s.statPriority.map(capitalize).join(' > ')}`).join('\n')
-      )
-    );
+  if (Array.isArray(data.statPriority) && data.statPriority.length) {
+    embed.addFields(field('Stat priority', formatStatPriority(data.statPriority)));
   }
 
   if (data.factionNotes) {

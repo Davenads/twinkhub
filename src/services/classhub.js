@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { capitalize } from '../lib/text.js';
+import { capitalize, formatStatPriority } from '../lib/text.js';
 import { getClass, classIcon } from '../content/store.js';
 import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
 
@@ -46,16 +46,9 @@ export function renderClassHub({ store, bracket, className }) {
   parts.push('Pick a build below for its best-in-slot gear; use the buttons for enchants, consumables, and more.');
   embed.setDescription(truncate(parts.join('\n\n'), LIMITS.description));
 
-  // Per-spec stat priority (offense/caster builds care most).
-  if (Array.isArray(cls.specs) && cls.specs.length) {
-    const lines = cls.specs
-      .map((s) => {
-        const pri = Array.isArray(s.statPriority) ? s.statPriority.map(capitalize).join(' > ') : null;
-        if (!pri) return s.name ?? null;
-        return s.name ? `**${s.name}**: ${pri}` : pri;
-      })
-      .filter(Boolean);
-    if (lines.length) embed.addFields(field('Stat priority', lines.join('\n')));
+  // Single stamina-first stat-priority flow per class (specs barely differ at 19).
+  if (Array.isArray(cls.statPriority) && cls.statPriority.length) {
+    embed.addFields(field('Stat priority', formatStatPriority(cls.statPriority)));
   }
 
   if (cls.factionNotes) embed.addFields(field('Faction notes', cls.factionNotes));

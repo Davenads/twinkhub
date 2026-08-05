@@ -70,8 +70,9 @@ test('loadContentStore indexes the class roster and per-class detail', async () 
   const hunter = classes.byClass.hunter;
   assert.ok(hunter, 'hunter detail is loaded');
   assert.equal(hunter.tier, 'S');
-  assert.ok(hunter.specs.length > 0);
-  assert.ok(hunter.specs[0].statPriority.includes('agility'));
+  assert.ok(hunter.statPriority.length > 0);
+  assert.equal(hunter.statPriority[0], 'stamina');
+  assert.ok(hunter.statPriority.includes('agility'));
 });
 
 test('listClassNames returns roster keys; empty for an unknown bracket', async () => {
@@ -85,7 +86,7 @@ test('getClass prefers detail, falls back to roster, and is case-insensitive', a
   const store = await loadContentStore();
   const hunter = getClass(store, '19', 'Hunter');
   assert.equal(hunter.class, 'hunter');
-  assert.ok(hunter.specs, 'detail file carries specs');
+  assert.ok(hunter.statPriority, 'detail file carries stat priority');
 
   // A roster class without a detail file still resolves (roster-only entry).
   const rosterOnly = store.brackets['19'].classes.index.classes.find(
@@ -94,7 +95,7 @@ test('getClass prefers detail, falls back to roster, and is case-insensitive', a
   if (rosterOnly) {
     const resolved = getClass(store, '19', rosterOnly.class);
     assert.equal(resolved.class, rosterOnly.class);
-    assert.equal(resolved.specs, undefined);
+    assert.equal(resolved.statPriority, undefined);
   }
 
   assert.equal(getClass(store, '19', 'notaclass'), null);
@@ -229,8 +230,9 @@ test('rogue is authored end-to-end: tier-S detail and a merged BiS list', async 
   const rogue = getClass(store, '19', 'Rogue');
   assert.equal(rogue.class, 'rogue');
   assert.equal(rogue.tier, 'S');
-  assert.ok(rogue.specs.length > 0);
-  assert.ok(rogue.specs[0].statPriority.includes('agility'));
+  assert.ok(rogue.statPriority.length > 0);
+  assert.equal(rogue.statPriority[0], 'stamina');
+  assert.ok(rogue.statPriority.includes('agility'));
   assert.ok(rogue.factionNotes, 'carries faction notes surfaced by /class and /optimize');
 
   // Gear list is registered and merges the rogue anchor with the shared set.
@@ -348,8 +350,9 @@ test('priest is authored as a tier-S healer with mana-first stat weights', async
   assert.equal(priest.class, 'priest');
   assert.equal(priest.tier, 'S');
   assert.ok(priest.roles.includes('healer'));
-  assert.ok(priest.specs.length > 0);
-  assert.ok(priest.specs[0].statPriority.includes('intellect'));
+  assert.ok(priest.statPriority.length > 0);
+  assert.equal(priest.statPriority[0], 'stamina');
+  assert.ok(priest.statPriority.includes('intellect'));
   assert.ok(priest.factionNotes, 'carries faction notes surfaced by /class and /optimize');
 
   // Stat weights are registered and lead with the caster stats.
@@ -366,17 +369,17 @@ test('the full roster is class-detail complete with scaling for every class', as
   const roster = listClassNames(store, '19');
   assert.equal(roster.length, 9, 'all nine Classic classes are on the roster');
 
-  // Every roster class now resolves to a detail file (specs present) and a
-  // stat-weight entry - a strict load reaching here already proved each tier
+  // Every roster class now resolves to a detail file (statPriority present) and
+  // a stat-weight entry - a strict load reaching here already proved each tier
   // matches the roster and each scaling priority names a declared stat.
   for (const cls of roster) {
     const detail = getClass(store, '19', cls);
-    assert.ok(detail.specs && detail.specs.length > 0, `${cls} has an authored detail file`);
+    assert.ok(detail.statPriority && detail.statPriority.length > 0, `${cls} has an authored detail file`);
     assert.ok(listStatweightClasses(store, '19').includes(cls), `${cls} has stat weights`);
   }
 
   // Spot-check a newly authored caster and a hybrid flag carrier.
-  assert.ok(getClass(store, '19', 'mage').specs[0].statPriority.includes('intellect'));
+  assert.ok(getClass(store, '19', 'mage').statPriority.includes('intellect'));
   assert.ok(getClass(store, '19', 'druid').roles.includes('flag-carrier'));
 });
 

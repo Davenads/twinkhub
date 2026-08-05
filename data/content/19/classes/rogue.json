@@ -2,9 +2,7 @@
   "class": "rogue",
   "tier": "S",
   "roles": ["melee-dps"],
-  "specs": [
-    { "name": "Combat / Subtlety burst", "statPriority": ["agility", "stamina"] }
-  ],
+  "statPriority": ["stamina", "agility", "strength"],
   "summary": "Strong stealth opener and burst with control tools (Blind, Sap) and a high skill ceiling.",
   "factionNotes": "Poisons such as Venomhide add meaningful sustained damage. Availability is largely mirrored across factions; racials shift specific matchups."
 }

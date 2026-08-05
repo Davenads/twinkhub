@@ -89,17 +89,15 @@ const validClass = () => ({
   tier: 'S',
   roles: ['ranged-dps'],
   summary: 'Top ranged DPS.',
-  specs: [{ name: 'BM/MM hybrid', statPriority: ['agility', 'stamina'] }]
+  statPriority: ['stamina', 'agility']
 });
 
 test('validateClass accepts a full per-class detail file', () => {
   assert.deepEqual(validateClass(validClass()), { ok: true, errors: [] });
 });
 
-test('validateClass requires a non-empty specs array with stat priorities', () => {
-  assert.equal(validateClass({ ...validClass(), specs: [] }).ok, false);
-  const badSpec = { ...validClass(), specs: [{ name: 'BM', statPriority: [] }] };
-  const res = validateClass(badSpec);
+test('validateClass requires a non-empty statPriority array', () => {
+  const res = validateClass({ ...validClass(), statPriority: [] });
   assert.equal(res.ok, false);
   assert.ok(res.errors.some((e) => e.includes('statPriority')));
 });
