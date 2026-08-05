@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
-import { bracketConsumables, consumablesFor } from '../content/store.js';
+import { bracketConsumables, consumablesFor, consumableIcon } from '../content/store.js';
 import {
   EMBED_COLOR,
   LIMITS,
@@ -26,7 +26,7 @@ const TYPE_LABEL = {
   worldbuff: 'World buff'
 };
 
-function consumableLine(c, hideClasses = false) {
+function consumableLine(c, hideClasses = false, icon = '') {
   const bits = [`_${TYPE_LABEL[c.type] ?? capitalize(c.type)}_`];
   if (c.faction && c.faction !== 'both') bits.push(capitalize(c.faction));
   // Under a class filter the per-row class list is redundant (every row applies
@@ -34,7 +34,8 @@ function consumableLine(c, hideClasses = false) {
   if (!hideClasses && Array.isArray(c.classes)) bits.push(c.classes.map(capitalize).join(', '));
   if (c.reqLevel != null) bits.push(`Req ${c.reqLevel}`);
   if (c.source) bits.push(c.source.detail);
-  const lines = [c.effect, bits.join(' \u00b7 ')];
+  // Custom emoji render in field VALUES, not names, so the icon leads the body.
+  const lines = [icon ? `${icon} ${c.effect}` : c.effect, bits.join(' \u00b7 ')];
   if (c.notes) lines.push(c.notes);
   return lines.join('\n');
 }
@@ -97,7 +98,9 @@ export function renderConsumable({ store, bracket, type = null, className = null
     return (ai === -1 ? TYPE_ORDER.length : ai) - (bi === -1 ? TYPE_ORDER.length : bi);
   });
 
-  const fields = ordered.map((c) => field(c.name, consumableLine(c, Boolean(classKey))));
+  const fields = ordered.map((c) =>
+    field(c.name, consumableLine(c, Boolean(classKey), consumableIcon(store, c.id)))
+  );
   // Pack under BOTH the 25-field and 6000-char caps so a class-only list can't
   // overrun the total-embed size (error 50035).
   addFieldsWithinLimits(embed, fields, (dropped) =>

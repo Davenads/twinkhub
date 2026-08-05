@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import { renderConsumable } from '../../src/services/consumable.js';
 
 const store = {
+  emoji: {
+    consumables: {
+      'healing-potion': { name: 'HealingPotion', id: '111' }
+    }
+  },
   brackets: {
     19: {
       meta: {
@@ -35,6 +40,14 @@ test('renderConsumable lists all consumables with the file note and title', () =
   assert.ok(names.includes('Venomhide Poison'));
   assert.ok(names.includes('Heavy Dynamite'));
   assert.ok(e.footer.text.includes('WoW Classic Era 1.15.x'));
+});
+
+test('renderConsumable prefixes a row with its consumable emoji when registered', () => {
+  const { embeds } = renderConsumable({ store, bracket: '19' });
+  const hp = fieldsOf(embeds).find((f) => f.name === 'Healing Potion');
+  assert.ok(hp.value.startsWith('<:HealingPotion:111> '), 'icon leads the field value');
+  const dyn = fieldsOf(embeds).find((f) => f.name === 'Heavy Dynamite');
+  assert.ok(!dyn.value.includes('<:'), 'an unregistered consumable degrades to text-only');
 });
 
 test('renderConsumable filters by type', () => {

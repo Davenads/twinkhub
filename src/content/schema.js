@@ -658,7 +658,7 @@ export function validateEmojiRegistry(obj, label = 'emoji.json') {
   if (obj.note !== undefined) {
     require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
   }
-  for (const group of ['classes', 'nodes']) {
+  for (const group of ['classes', 'nodes', 'consumables']) {
     if (obj[group] === undefined) continue;
     if (!require_(errors, isObject(obj[group]), `${label}: ${group} must be an object when present`)) continue;
     for (const [slug, e] of Object.entries(obj[group])) {

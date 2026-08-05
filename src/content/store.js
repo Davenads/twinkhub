@@ -562,7 +562,7 @@ export async function loadContentStore({ dir = CONTENT_DIR, strict = true } = {}
   // may be empty strings until an emoji is uploaded; the markup helpers below
   // degrade to text-only for a missing/empty id, so a partial registry is safe.
   const emojiFile = await readOptionalJson(path.join(dir, 'emoji.json'));
-  let emoji = { classes: {}, nodes: {} };
+  let emoji = { classes: {}, nodes: {}, consumables: {} };
   if (emojiFile) {
     const eResult = validateEmojiRegistry(emojiFile, 'emoji.json');
     if (!eResult.ok) {
@@ -570,7 +570,11 @@ export async function loadContentStore({ dir = CONTENT_DIR, strict = true } = {}
       if (strict) throw new Error(msg);
       logger.error(msg);
     } else {
-      emoji = { classes: emojiFile.classes ?? {}, nodes: emojiFile.nodes ?? {} };
+      emoji = {
+        classes: emojiFile.classes ?? {},
+        nodes: emojiFile.nodes ?? {},
+        consumables: emojiFile.consumables ?? {}
+      };
     }
   }
 
@@ -880,6 +884,11 @@ export function classIcon(store, className) {
 /** Talent-node emoji markup for a node slug (e.g. `<:LethalShots:123>`), or ''. */
 export function talentIcon(store, slug) {
   return emojiMarkup(store?.emoji?.nodes?.[String(slug ?? '')]);
+}
+
+/** Consumable-icon emoji markup for a consumable id (e.g. `<:ThistleTea:123>`), or ''. */
+export function consumableIcon(store, id) {
+  return emojiMarkup(store?.emoji?.consumables?.[String(id ?? '')]);
 }
 
 /**
