@@ -15,7 +15,8 @@ import {
   listStatweightClasses,
   listSpellcoefClasses,
   listTalentClasses,
-  classIconComponent
+  classIconComponent,
+  consumableIconComponent
 } from '../content/store.js';
 
 // Persistent interactive enduser panels (P4, plans/08-enduser-panels.md). This
@@ -50,6 +51,20 @@ const CONSUMABLE_LABELS = {
 function consumableLabel(type) {
   return CONSUMABLE_LABELS[type] ?? String(type).split('-').map(capitalize).join(' ');
 }
+
+// Representative registry consumable id per type, used to put a recognisable icon
+// on each consumables-panel button (and the BiS Consumables follow-up). The id
+// only needs to exist in the emoji registry; a missing/unfilled one degrades to a
+// text-only button. Types without a good stand-in are simply omitted.
+const CONSUMABLE_BUTTON_EMOJI = {
+  potion: 'healing-potion',
+  elixir: 'elixir-lesser-agility',
+  scroll: 'scroll-of-agility',
+  food: 'rumsey-rum-black-label',
+  bandage: 'heavy-runecloth-bandage',
+  'weapon-buff': 'heavy-sharpening-stone',
+  explosive: 'heavy-dynamite'
+};
 
 /**
  * Encode a panel component id: `p1|action|arg|arg...`. Args must be short slugs
@@ -133,11 +148,16 @@ function buildEnchantsPanel({ store, bracket }) {
 function buildConsumablesPanel({ store, bracket }) {
   const types = listConsumableTypes(store, bracket);
   if (!types.length) return null;
-  const buttons = types
-    .slice(0, 25)
-    .map((t) =>
-      new ButtonBuilder().setCustomId(encodeCustomId('cons', t)).setLabel(consumableLabel(t)).setStyle(ButtonStyle.Secondary)
-    );
+  const buttons = types.slice(0, 25).map((t) => {
+    const button = new ButtonBuilder()
+      .setCustomId(encodeCustomId('cons', t))
+      .setLabel(consumableLabel(t))
+      .setStyle(ButtonStyle.Secondary);
+    // Representative icon per type; degrades to text-only when unmapped/unfilled.
+    const emoji = consumableIconComponent(store, CONSUMABLE_BUTTON_EMOJI[t]);
+    if (emoji) button.setEmoji(emoji);
+    return button;
+  });
   // 5 buttons per row, up to 5 rows.
   const components = chunk(buttons, 5).slice(0, 5).map((group) => row(...group));
   return {
@@ -203,9 +223,15 @@ export function buildPanels({ store, bracket }) {
  */
 export function bisFollowups({ store, bracket, className }) {
   const cls = String(className ?? '').toLowerCase();
+  const consBtn = new ButtonBuilder()
+    .setCustomId(encodeCustomId('consc', cls))
+    .setLabel('Consumables')
+    .setStyle(ButtonStyle.Secondary);
+  const consEmoji = consumableIconComponent(store, CONSUMABLE_BUTTON_EMOJI.potion);
+  if (consEmoji) consBtn.setEmoji(consEmoji);
   const buttons = [
     new ButtonBuilder().setCustomId(encodeCustomId('ench', cls)).setLabel('Enchants').setStyle(ButtonStyle.Secondary),
-    new ButtonBuilder().setCustomId(encodeCustomId('consc', cls)).setLabel('Consumables').setStyle(ButtonStyle.Secondary)
+    consBtn
   ];
   if (listStatweightClasses(store, bracket).includes(cls)) {
     buttons.push(new ButtonBuilder().setCustomId(encodeCustomId('sw', cls)).setLabel('Stat Weights').setStyle(ButtonStyle.Secondary));

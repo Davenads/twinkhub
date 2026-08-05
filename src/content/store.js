@@ -903,6 +903,17 @@ export function classIconComponent(store, className) {
   return { id: entry.id, name: entry.name, animated: entry.animated ?? false };
 }
 
+/**
+ * Component-emoji shape (`{ id, name, animated }`) for a consumable-registry id,
+ * or null when the entry is missing or its id is unfilled. Mirrors
+ * `classIconComponent`; used to put a representative icon on a panel button.
+ */
+export function consumableIconComponent(store, id) {
+  const entry = store?.emoji?.consumables?.[String(id ?? '')];
+  if (!entry?.id) return null;
+  return { id: entry.id, name: entry.name, animated: entry.animated ?? false };
+}
+
 /** The consumables bundle (`{ note, consumables }`) for a bracket, or null. */
 export function bracketConsumables(store, bracket) {
   return store?.brackets?.[bracket]?.consumables ?? null;
