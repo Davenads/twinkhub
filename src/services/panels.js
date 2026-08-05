@@ -259,38 +259,70 @@ export function buildPicker({ store, bracket, className, selectedId = null }) {
 }
 
 /**
- * Follow-up controls appended to a BiS ephemeral result. Each button carries the
- * class in its customId so the next click needs no re-pick. Stat Weights / Spell
- * Scaling appear only for classes that have that data; Pets only for Hunter.
+ * Follow-up controls appended to a class ephemeral (hub or BiS result). Each
+ * button carries the class in its customId so the next click needs no re-pick,
+ * and — when a build is active — the build id too, so the router can rebuild the
+ * exact loadout when the user hits Back. Stat Weights / Spell Scaling appear only
+ * for classes that have that data; Pets only for Hunter.
  *
- * @param {{ store: object, bracket: string, className: string }} args
+ * @param {{ store: object, bracket: string, className: string, build?: string|null }} args
  * @returns {ActionRowBuilder[]}
  */
-export function bisFollowups({ store, bracket, className }) {
+export function bisFollowups({ store, bracket, className, build = null }) {
   const cls = String(className ?? '').toLowerCase();
+  // Thread the active build id into every follow-up id (omitted when none is
+  // selected, e.g. the neutral hub), keeping ids as short slugs under the cap.
+  const fid = (action) => encodeCustomId(action, cls, ...(build ? [build] : []));
   const consBtn = new ButtonBuilder()
-    .setCustomId(encodeCustomId('consc', cls))
+    .setCustomId(fid('consc'))
     .setLabel('Consumables')
     .setStyle(ButtonStyle.Secondary);
   const consEmoji = consumableIconComponent(store, CONSUMABLE_BUTTON_EMOJI.potion);
   if (consEmoji) consBtn.setEmoji(consEmoji);
   const buttons = [
-    new ButtonBuilder().setCustomId(encodeCustomId('ench', cls)).setLabel('Enchants').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId(fid('ench')).setLabel('Enchants').setStyle(ButtonStyle.Secondary),
     consBtn
   ];
   if (listStatweightClasses(store, bracket).includes(cls)) {
-    buttons.push(new ButtonBuilder().setCustomId(encodeCustomId('sw', cls)).setLabel('Stat Weights').setStyle(ButtonStyle.Secondary));
+    buttons.push(new ButtonBuilder().setCustomId(fid('sw')).setLabel('Stat Weights').setStyle(ButtonStyle.Secondary));
   }
   if (listSpellcoefClasses(store, bracket).includes(cls)) {
-    buttons.push(new ButtonBuilder().setCustomId(encodeCustomId('scoef', cls)).setLabel('Spell Scaling').setStyle(ButtonStyle.Secondary));
+    buttons.push(new ButtonBuilder().setCustomId(fid('scoef')).setLabel('Spell Scaling').setStyle(ButtonStyle.Secondary));
   }
   if (listTalentClasses(store, bracket).includes(cls)) {
-    buttons.push(new ButtonBuilder().setCustomId(encodeCustomId('talents', cls)).setLabel('Talents').setStyle(ButtonStyle.Secondary));
+    buttons.push(new ButtonBuilder().setCustomId(fid('talents')).setLabel('Talents').setStyle(ButtonStyle.Secondary));
   }
   if (cls === 'hunter') {
-    buttons.push(new ButtonBuilder().setCustomId(encodeCustomId('pets')).setLabel('Pets').setStyle(ButtonStyle.Secondary));
+    buttons.push(new ButtonBuilder().setCustomId(fid('pets')).setLabel('Pets').setStyle(ButtonStyle.Secondary));
   }
   // Up to 6 followups now (casters gain Talents) — split across rows of 5 so a
   // full set never exceeds Discord's 5-buttons-per-row cap.
   return chunk(buttons, 5).map((group) => row(...group));
+}
+
+/**
+ * Navigation row for an ephemeral panel view. A Close button (deletes the
+ * clicker's ephemeral so panels don't pile up in the channel) is always present;
+ * an optional Back button precedes it on follow-up sub-views, carrying the class
+ * and active build so Back restores the exact gear view (or the neutral overview
+ * when no build is set). The gear view itself and single-shot lookup ephemerals
+ * pass `{}` for a Close-only row.
+ *
+ * @param {{ className?: string|null, build?: string|null, back?: boolean }} args
+ * @returns {ActionRowBuilder}
+ */
+export function navRow({ className = null, build = null, back = false } = {}) {
+  const buttons = [];
+  if (back && className) {
+    buttons.push(
+      new ButtonBuilder()
+        .setCustomId(encodeCustomId('back', className, ...(build ? [build] : [])))
+        .setLabel('Back')
+        .setStyle(ButtonStyle.Secondary)
+    );
+  }
+  buttons.push(
+    new ButtonBuilder().setCustomId(encodeCustomId('close')).setLabel('Close').setStyle(ButtonStyle.Secondary)
+  );
+  return row(...buttons);
 }

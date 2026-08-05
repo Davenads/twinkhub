@@ -7,7 +7,8 @@ import {
   parseCustomId,
   buildPanels,
   bisFollowups,
-  buildPicker
+  buildPicker,
+  navRow
 } from '../../src/services/panels.js';
 
 // The select options of a buildPicker row (or [] when null).
@@ -79,16 +80,44 @@ test('bisFollowups always carries the class and adds Pets for hunter', async () 
   const ids = customIds(bisFollowups({ store, bracket: '19', className: 'hunter' }));
   assert.ok(ids.includes(encodeCustomId('ench', 'hunter')), 'enchants follow-up carries the class');
   assert.ok(ids.includes(encodeCustomId('consc', 'hunter')), 'consumables follow-up carries the class');
-  assert.ok(ids.includes(encodeCustomId('pets')), 'hunter gets a Pets follow-up');
+  assert.ok(ids.includes(encodeCustomId('pets', 'hunter')), 'hunter gets a Pets follow-up carrying the class');
 
   const consEmoji = emojiById(bisFollowups({ store, bracket: '19', className: 'hunter' }))[encodeCustomId('consc', 'hunter')];
   assert.equal(consEmoji?.name, 'HealingPotion', 'consumables follow-up carries a potion icon');
 });
 
+test('bisFollowups threads the active build id into every follow-up id', async () => {
+  const store = await loadContentStore();
+  const build = 'rogue-offense-alliance';
+  const ids = customIds(bisFollowups({ store, bracket: '19', className: 'rogue', build }));
+  assert.ok(ids.includes(encodeCustomId('ench', 'rogue', build)), 'enchants follow-up carries the build');
+  assert.ok(ids.includes(encodeCustomId('consc', 'rogue', build)), 'consumables follow-up carries the build');
+  assert.ok(
+    ids.every((id) => id.startsWith('p1|') && id.split('|').slice(2).includes(build)),
+    'no follow-up drops the build arg'
+  );
+});
+
 test('bisFollowups omits the Pets button for non-hunter classes', async () => {
   const store = await loadContentStore();
   const ids = customIds(bisFollowups({ store, bracket: '19', className: 'rogue' }));
-  assert.ok(!ids.includes(encodeCustomId('pets')), 'no Pets button for rogue');
+  assert.ok(!ids.some((id) => id.startsWith(encodeCustomId('pets'))), 'no Pets button for rogue');
+});
+
+test('navRow builds a Close-only row by default and prepends Back when requested', () => {
+  assert.deepEqual(customIds([navRow({})]), [encodeCustomId('close')], 'default is Close only');
+
+  const back = customIds([navRow({ className: 'rogue', build: 'rogue-offense-alliance', back: true })]);
+  assert.deepEqual(
+    back,
+    [encodeCustomId('back', 'rogue', 'rogue-offense-alliance'), encodeCustomId('close')],
+    'Back carries class+build, then Close'
+  );
+});
+
+test('navRow Back omits the build arg when no build is active', () => {
+  const ids = customIds([navRow({ className: 'rogue', back: true })]);
+  assert.deepEqual(ids, [encodeCustomId('back', 'rogue'), encodeCustomId('close')]);
 });
 
 test('buildPicker options carry build ids and route to the build action', async () => {
