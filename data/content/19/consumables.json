@@ -1,7 +1,8 @@
 {
   "typeNotes": {
     "scroll": "Scrolls last 30 min and stack with elixirs (separate buff aura). Each pick is the highest rank usable at 19 \u2014 the next rank up is level-gated above the cap.",
-    "food": "The interchangeable +6 Stamina / +6 Spirit Well Fed foods all give the same buff \u2014 pick whichever mats you can get."
+    "food": "The interchangeable +6 Stamina / +6 Spirit Well Fed foods all give the same buff \u2014 pick whichever mats you can get.",
+    "weapon-buff": "These weapon enhancements use the temporary weapon-enchant slot, so they can't be combined with a shaman's weapon imbues (Flametongue, Rockbiter, etc.) \u2014 applying one replaces the other."
   },
   "consumables": [
     {

@@ -58,19 +58,23 @@ test('renderConsumable filters by type', () => {
   const { embeds } = renderConsumable({ store, bracket: '19', type: 'potion' });
   const e = embeds[0].toJSON();
   assert.ok(e.description.includes('Filtered to'));
-  assert.deepEqual(fieldNames(embeds), ['Healing Potion']);
+  assert.deepEqual(fieldNames(embeds).filter((n) => n !== 'Note'), ['Healing Potion']);
 });
 
-test('renderConsumable shows a type note only under that type filter', () => {
+test('renderConsumable shows a type note as a bottom field only under that type filter', () => {
+  const noteValues = (json) => (json.fields ?? []).filter((f) => f.name === 'Note').map((f) => f.value);
+
   const unfiltered = renderConsumable({ store, bracket: '19' }).embeds[0].toJSON();
-  assert.ok(!unfiltered.description.includes('Potions share a cooldown'), 'type note does not leak onto the full list');
+  assert.equal(noteValues(unfiltered).length, 0, 'type note does not leak onto the full list');
 
   const potion = renderConsumable({ store, bracket: '19', type: 'potion' }).embeds[0].toJSON();
-  assert.ok(potion.description.includes('Potions share a cooldown'), 'potion filter surfaces the potion type note');
-  assert.ok(!potion.description.includes('Explosives share'), 'only the matching type note appears');
+  // The note trails the item rows (bottom footnote), not the description header.
+  assert.ok(!potion.description?.includes('Potions share a cooldown'), 'note is not in the description');
+  assert.equal(potion.fields.at(-1).name, 'Note', 'the last field is the note');
+  assert.ok(noteValues(potion)[0].includes('Potions share a cooldown'), 'potion filter surfaces the potion type note');
 
   const explosive = renderConsumable({ store, bracket: '19', type: 'explosive' }).embeds[0].toJSON();
-  assert.ok(explosive.description.includes('Explosives share'), 'explosive filter surfaces the explosive type note');
+  assert.ok(noteValues(explosive)[0].includes('Explosives share'), 'explosive filter surfaces the explosive type note');
 });
 
 test('renderConsumable class filter keeps universal + class-specific consumables', () => {

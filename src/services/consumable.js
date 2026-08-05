@@ -85,10 +85,12 @@ export function renderConsumable({ store, bracket, type = null, className = null
   const descParts = [];
   if (scope.length) descParts.push(`Filtered to ${scope.join(' and ')}.`);
   if (data.note) descParts.push(data.note);
-  // A per-type header note (e.g. the scroll/food universal facts) is shown once
-  // here, only when the list is filtered to that type, instead of on every row.
-  if (typeKey && data.typeNotes?.[typeKey]) descParts.push(data.typeNotes[typeKey]);
   if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
+
+  // A per-type note (e.g. the weapon-buff/shaman-imbue conflict) is shown once —
+  // only when the list is filtered to that type — as a footnote field at the
+  // bottom (just above the footer), instead of on every row or up in the header.
+  const typeNote = typeKey ? data.typeNotes?.[typeKey] ?? null : null;
 
   // Footer is set before packing fields so its length counts toward the 6000 cap.
   const footerText = metaFooter(meta);
@@ -104,6 +106,9 @@ export function renderConsumable({ store, bracket, type = null, className = null
   const fields = ordered.map((c) =>
     field(c.name, consumableLine(c, Boolean(classKey), consumableIcon(store, c.id)))
   );
+  // The type note trails the item list so it reads as a bottom footnote; kept in
+  // the packed set so it counts toward the 6000-char cap.
+  if (typeNote) fields.push(field('Note', typeNote));
   // Pack under BOTH the 25-field and 6000-char caps so a class-only list can't
   // overrun the total-embed size (error 50035).
   addFieldsWithinLimits(embed, fields, (dropped) =>
