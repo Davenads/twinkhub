@@ -15,6 +15,7 @@ import {
   listStatweightClasses,
   listSpellcoefClasses,
   listTalentClasses,
+  buildsForClass,
   classIconComponent,
   consumableIconComponent
 } from '../content/store.js';
@@ -109,7 +110,7 @@ function buildClassBuildsPanel({ store, bracket }) {
   const classes = listClassNames(store, bracket);
   if (!classes.length) return null;
   const select = new StringSelectMenuBuilder()
-    .setCustomId(encodeCustomId('pick', 'bis'))
+    .setCustomId(encodeCustomId('pick', 'hub'))
     .setPlaceholder('Pick a class\u2026')
     .addOptions(
       classes.slice(0, 25).map((c) => {
@@ -125,7 +126,7 @@ function buildClassBuildsPanel({ store, bracket }) {
     embeds: [
       panelEmbed(
         'Class Builds & BiS',
-        'Pick a class to see its best-in-slot gear and role builds. Your result is private \u2014 only you see it, and each result carries buttons for that class\u2019s enchants, consumables, and more.'
+        'Pick a class to open its overview \u2014 then choose a role/faction build to see its best-in-slot gear. Your result is private (only you see it) and carries buttons for that class\u2019s enchants, consumables, and more.'
       )
     ],
     components: [row(select)]
@@ -211,6 +212,48 @@ export function buildPanels({ store, bracket }) {
   add('consumables', buildConsumablesPanel({ store, bracket }));
   add('reference', buildReferencePanel({ store, bracket }));
   return out;
+}
+
+/**
+ * The build-selection dropdown for a class's hub (role x faction picker). One
+ * option per authored build, value = the build id (which `renderBis` matches
+ * directly, so no separate faction arg is needed). The faction suffix
+ * (`Offense \u2014 Horde`) is appended only when a role name exists on more than one
+ * faction, so single-faction classes (paladin/shaman) and roles unique to one
+ * side stay clean. `selectedId` marks the current pick so an in-place refresh
+ * reflects state. Returns an ActionRow or null when the class has no builds.
+ *
+ * @param {{ store: object, bracket: string, className: string, selectedId?: string|null }} args
+ * @returns {ActionRowBuilder|null}
+ */
+export function buildPicker({ store, bracket, className, selectedId = null }) {
+  const cls = String(className ?? '').toLowerCase();
+  const builds = buildsForClass(store, bracket, cls);
+  if (!builds.length) return null;
+
+  // Per role name, which factions offer it — drives the "where applicable" suffix.
+  const factionsByRole = new Map();
+  for (const b of builds) {
+    const set = factionsByRole.get(b.name) ?? new Set();
+    set.add(b.faction ?? 'both');
+    factionsByRole.set(b.name, set);
+  }
+
+  const options = builds.slice(0, 25).map((b) => {
+    const fac = b.faction && b.faction !== 'both' ? capitalize(b.faction) : null;
+    const needsSuffix = (factionsByRole.get(b.name)?.size ?? 1) > 1 && fac;
+    const label = needsSuffix ? `${b.name} \u2014 ${fac}` : b.name;
+    const desc = fac ? `${capitalize(b.role)} \u00b7 ${fac}` : capitalize(b.role);
+    const opt = { label: truncate(label, 100), value: b.id, description: truncate(desc, 100) };
+    if (selectedId && b.id === selectedId) opt.default = true;
+    return opt;
+  });
+
+  const select = new StringSelectMenuBuilder()
+    .setCustomId(encodeCustomId('build', cls))
+    .setPlaceholder('Pick a build\u2026')
+    .addOptions(options);
+  return row(select);
 }
 
 /**

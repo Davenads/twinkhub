@@ -6,8 +6,14 @@ import {
   encodeCustomId,
   parseCustomId,
   buildPanels,
-  bisFollowups
+  bisFollowups,
+  buildPicker
 } from '../../src/services/panels.js';
+
+// The select options of a buildPicker row (or [] when null).
+function pickerOptions(row) {
+  return row ? row.toJSON().components[0].options : [];
+}
 
 // Collect the custom_ids of every component across an array of ActionRowBuilders.
 function customIds(components) {
@@ -38,7 +44,7 @@ test('parseCustomId rejects foreign, stale, and malformed ids', () => {
   assert.equal(parseCustomId(undefined), null, 'non-string');
 });
 
-test('buildPanels produces the class-picker panel wired to the bis picker', async () => {
+test('buildPanels produces the class-picker panel wired to the class hub', async () => {
   const store = await loadContentStore();
   const panels = buildPanels({ store, bracket: '19' });
 
@@ -46,7 +52,7 @@ test('buildPanels produces the class-picker panel wired to the bis picker', asyn
   assert.ok(classBuilds, 'a classBuilds panel is built');
 
   const select = classBuilds.components[0].toJSON().components[0];
-  assert.equal(select.custom_id, encodeCustomId('pick', 'bis'));
+  assert.equal(select.custom_id, encodeCustomId('pick', 'hub'));
   assert.ok(select.options.some((o) => o.value === 'hunter'), 'class select offers hunter');
 });
 
@@ -83,4 +89,41 @@ test('bisFollowups omits the Pets button for non-hunter classes', async () => {
   const store = await loadContentStore();
   const ids = customIds(bisFollowups({ store, bracket: '19', className: 'rogue' }));
   assert.ok(!ids.includes(encodeCustomId('pets')), 'no Pets button for rogue');
+});
+
+test('buildPicker options carry build ids and route to the build action', async () => {
+  const store = await loadContentStore();
+  const row = buildPicker({ store, bracket: '19', className: 'rogue' });
+  assert.ok(row, 'rogue has a build picker');
+  assert.equal(row.toJSON().components[0].custom_id, encodeCustomId('build', 'rogue'));
+  const values = pickerOptions(row).map((o) => o.value);
+  assert.ok(values.includes('rogue-offense-alliance'), 'option value is the build id (faction-encoded)');
+});
+
+test('buildPicker appends the faction suffix only where a role spans both sides', async () => {
+  const store = await loadContentStore();
+  // rogue: Offense exists on both factions -> suffix required to disambiguate.
+  const rogue = pickerOptions(buildPicker({ store, bracket: '19', className: 'rogue' }));
+  assert.ok(rogue.some((o) => o.label === 'Offense \u2014 Horde'), 'rogue Offense disambiguated');
+  assert.ok(rogue.some((o) => o.label === 'Offense \u2014 Alliance'), 'both sides labelled');
+
+  // shaman: Horde-only -> no suffix, labels stay the bare role name.
+  const shaman = pickerOptions(buildPicker({ store, bracket: '19', className: 'shaman' }));
+  assert.ok(shaman.length > 0, 'shaman has builds');
+  assert.ok(shaman.every((o) => !o.label.includes('\u2014')), 'single-faction class carries no faction suffix');
+});
+
+test('buildPicker marks the selected build as the default option', async () => {
+  const store = await loadContentStore();
+  const opts = pickerOptions(
+    buildPicker({ store, bracket: '19', className: 'rogue', selectedId: 'rogue-midfield-alliance' })
+  );
+  const selected = opts.filter((o) => o.default);
+  assert.equal(selected.length, 1, 'exactly one option is defaulted');
+  assert.equal(selected[0].value, 'rogue-midfield-alliance', 'the selected build id is defaulted');
+});
+
+test('buildPicker returns null for a class with no authored builds', async () => {
+  const store = await loadContentStore();
+  assert.equal(buildPicker({ store, bracket: '19', className: 'nonexistent' }), null);
 });

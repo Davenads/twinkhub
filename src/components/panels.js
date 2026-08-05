@@ -1,8 +1,9 @@
 import { MessageFlags } from 'discord.js';
 import { getContentStore } from '../content/store.js';
 import { resolveBracket } from '../content/bracket.js';
-import { parseCustomId, bisFollowups } from '../services/panels.js';
+import { parseCustomId, bisFollowups, buildPicker } from '../services/panels.js';
 import { renderBis } from '../services/bis.js';
+import { renderClassHub } from '../services/classhub.js';
 import { renderEnchant } from '../services/enchant.js';
 import { renderConsumable } from '../services/consumable.js';
 import { renderStatweights } from '../services/statweights.js';
@@ -23,6 +24,11 @@ import { renderGearPage } from '../services/gear.js';
 /** Ephemeral reply that never pings (mentions in embeds stay display-only). */
 async function reply(interaction, payload) {
   await interaction.reply({ ...payload, flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
+}
+
+/** Edit the user's own ephemeral in place (the build dropdown's morph-in-view). */
+async function update(interaction, payload) {
+  await interaction.update({ components: [], ...payload, allowedMentions: { parse: [] } });
 }
 
 /** Stale/unknown control: point the user at an admin refresh instead of failing. */
@@ -56,13 +62,37 @@ async function replyBis(interaction, ctx, className) {
   await reply(interaction, { ...payload, components });
 }
 
+/** Rows for a class hub / BiS view: build dropdown (if any) + follow-up buttons. */
+function classControls(ctx, className, selectedId = null) {
+  const picker = buildPicker({ ...ctx, className, selectedId });
+  return [...(picker ? [picker] : []), ...bisFollowups({ ...ctx, className })];
+}
+
+/** Class overview hub: neutral landing with the build picker + class buttons. */
+async function replyHub(interaction, ctx, className) {
+  if (!className) return outOfDate(interaction);
+  const payload = renderClassHub({ ...ctx, className });
+  await reply(interaction, { ...payload, components: classControls(ctx, className) });
+}
+
+/** Build pick from the hub dropdown: rewrite the same ephemeral to that loadout. */
+async function updateBuild(interaction, ctx, className) {
+  const buildId = interaction.values?.[0];
+  if (!className || !buildId) return outOfDate(interaction);
+  const payload = renderBis({ ...ctx, className, build: buildId });
+  await update(interaction, { ...payload, components: classControls(ctx, className, buildId) });
+}
+
 // action -> handler(interaction, ctx = { store, bracket }, args). Select menus
 // carry their chosen value in interaction.values[0]; buttons carry args in the id.
 const HANDLERS = {
-  // Class select -> render the picked class. `what` lets one picker drive several
-  // targets later; today only `bis` is wired.
-  pick: (i, ctx, [what]) => (what === 'bis' ? replyBis(i, ctx, i.values?.[0]) : outOfDate(i)),
+  // Class select -> open that class's hub. `bis` is the legacy target (older
+  // posted panels) that jumps straight to the default BiS; `hub` is current.
+  pick: (i, ctx, [what]) =>
+    what === 'hub' ? replyHub(i, ctx, i.values?.[0]) : what === 'bis' ? replyBis(i, ctx, i.values?.[0]) : outOfDate(i),
   bis: (i, ctx, [cls]) => replyBis(i, ctx, cls),
+  // Build dropdown on a hub -> rewrite the ephemeral in place to that loadout.
+  build: (i, ctx, [cls]) => updateBuild(i, ctx, cls),
   eslot: (i, ctx) => reply(i, renderEnchant({ ...ctx, slot: i.values?.[0] })),
   ench: (i, ctx, [cls]) => reply(i, renderEnchant({ ...ctx, className: cls })),
   cons: (i, ctx, [type]) => reply(i, renderConsumable({ ...ctx, type })),
