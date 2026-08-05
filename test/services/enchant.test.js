@@ -67,15 +67,16 @@ test('renderEnchant tags the field name when a slot-filtered enchant gates on le
   s.brackets['19'].enchants.enchants[0].noLevelReq = false;
   s.brackets['19'].enchants.enchants[0].reqLevel = 35;
   const e = renderEnchant({ store: s, bracket: '19', slot: 'weapon' }).embeds[0].toJSON();
-  assert.equal(e.fields[0].name, 'Weapon \u2014 requires level 35');
+  assert.equal(e.fields[0].name, 'Fiery Weapon \u2014 requires level 35');
 });
 
-test('renderEnchant filters by slot', () => {
+test('renderEnchant filters by slot and headers each field with the enchant name', () => {
   const { embeds } = renderEnchant({ store, bracket: '19', slot: 'Boots' });
   const e = embeds[0].toJSON();
   assert.equal(e.fields.length, 1);
-  assert.ok(e.fields[0].name.includes('Boots'));
-  assert.ok(e.fields[0].value.includes('Minor Speed'));
+  // Header is the enchant name (slot prefix stripped), NOT a repeated "Boots".
+  assert.equal(e.fields[0].name, 'Minor Speed');
+  assert.ok(e.fields[0].value.includes('movement speed'), 'effect leads the value');
   assert.ok(e.description.includes('slot **boots**'));
 });
 

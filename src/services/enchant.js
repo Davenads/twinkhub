@@ -110,11 +110,11 @@ export function renderEnchant({ store, bracket, slot = null, className = null })
     // with full copy (effect, classes, authored notes). The match set is small
     // enough that per-enchant fields comfortably fit.
     fields = matches.map((ench) => {
-      // The enchant name leads the value line as a masked link (field NAMES can't
-      // render links); the field name is just the slot for scannability.
+      // The field NAME carries the enchant's (short) name so a slot-filtered list
+      // reads as distinct headers, not a column of identical slot labels. Names
+      // can't render links, so the Wowhead link rides the effect line in the value.
       const url = enchantWowheadUrl(ench);
-      const nameMarkup = url ? `**[${ench.name}](${url})**` : `**${ench.name}**`;
-      const lines = [`${nameMarkup} \u2014 ${ench.effect}`];
+      const lines = [url ? `${ench.effect} \u00b7 [Wowhead](${url})` : ench.effect];
       // Under a class filter every row already applies to that class, so the
       // Classes: line is redundant noise — drop it.
       if (!classKey) lines.push(`Classes: ${ench.classes.map(capitalize).join(', ')}`);
@@ -122,7 +122,7 @@ export function renderEnchant({ store, bracket, slot = null, className = null })
       // Every listed enchant is no-level-req (stated once in the note), so decorate
       // the field name only for the exception — a row that DOES gate on level.
       const levelTag = ench.noLevelReq ? '' : ` \u2014 requires level ${ench.reqLevel}`;
-      return field(`${capitalize(ench.slot)}${levelTag}`, lines.join('\n'));
+      return field(`${shortName(ench.name)}${levelTag}`, lines.join('\n'));
     });
   } else {
     // Overview (all enchants, or class-only): collapse to ONE field per slot with
