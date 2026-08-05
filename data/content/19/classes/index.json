@@ -6,7 +6,7 @@
     { "class": "mage", "tier": "S", "roles": ["caster-dps"], "summary": "Strong CC: Polymorph, Frostbolt, Frost Nova, and Frostbite." },
     { "class": "rogue", "tier": "S", "roles": ["melee-dps"], "summary": "Strong CC and damage: Sap, Gouge, and Kick." },
     { "class": "warlock", "tier": "A", "roles": ["caster-dps"], "summary": "Strong CC and blanket damage: Fear and Curse of Recklessness." },
-    { "class": "druid", "tier": "A", "roles": ["flag-carrier", "hybrid"], "summary": "Strong CC and survivability: Root, Bash, Regrowth, Rejuvenation, and Bear Form." },
+    { "class": "druid", "tier": "A", "roles": ["flag-carrier", "hybrid"], "summary": "Strong CC and survivability: Root, Bash, Regrowth, Rejuvenation, and Bear Form. The bracket's best flag carrier." },
     { "class": "paladin", "tier": "B", "roles": ["hybrid"], "summary": "Good survivability and support (Blessings, Hammer of Justice, Divine Protection, Holy Light) but countered by Dispel/Purge." },
     { "class": "warrior", "tier": "B", "roles": ["melee-dps", "flag-carrier"], "summary": "Good survivability and CC (Hamstring, Charge, Disarm, Shield Bash/Block) but heavily locked down." },
     { "class": "shaman", "tier": "B", "roles": ["hybrid"], "summary": "Good CC and support (Purge, Earthbind/Tremor Totem, Earth Shock, Healing Wave) but lacks damage." }
