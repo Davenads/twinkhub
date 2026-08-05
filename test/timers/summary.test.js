@@ -58,6 +58,37 @@ test('renderEventLine — AGM / DMF / STV active vs idle', () => {
   assert.equal(renderEventLine('stv', st(false, 4 * DAY + 2 * HOUR)), 'Starts in 4d 2h 0m');
 });
 
+test('renderEventLine — DMF names the Era zone when location is known', () => {
+  const mulgore = { meta: { location: { name: 'Mulgore', short: 'Mulgore' } } };
+  const elwynn = { meta: { location: { name: 'Elwynn Forest', short: 'Elwynn' } } };
+  assert.equal(
+    renderEventLine('dmf', st(true, 3 * DAY, mulgore)),
+    '**Mulgore** \u00b7 open, ends in 3d 0m'
+  );
+  assert.equal(
+    renderEventLine('dmf', st(false, 10 * DAY, elwynn)),
+    '**Elwynn Forest** \u00b7 opens in 10d 0m'
+  );
+});
+
+test('renderEventsSummary rotates the DMF icon with the Era zone', () => {
+  const store = { emoji: { events: { dmfef: { name: 'dmfef', id: '9' }, dmftb: { name: 'dmftb', id: '8' } } } };
+  const base = {
+    bg: st(false, 2 * HOUR, { meta: { currentBG: { shortName: 'AV' }, nextBG: { shortName: 'WSG' } } }),
+    agm: st(false, 2 * HOUR),
+    stv: st(false, 2 * HOUR)
+  };
+  const mul = { ...base, dmf: st(false, 10 * DAY, { meta: { location: { name: 'Mulgore', short: 'Mulgore' } } }) };
+  const elw = { ...base, dmf: st(true, 3 * DAY, { meta: { location: { name: 'Elwynn Forest', short: 'Elwynn' } } }) };
+  const dmfVal = (states) =>
+    render(states).embeds[0].toJSON().fields.find((f) => f.name === 'Darkmoon Faire').value;
+  function render(states) {
+    return renderEventsSummary(states, { store });
+  }
+  assert.ok(dmfVal(mul).startsWith('<:dmftb:8> '), 'Mulgore -> Thunder Bluff icon');
+  assert.ok(dmfVal(elw).startsWith('<:dmfef:9> '), 'Elwynn -> Elwynn Forest icon');
+});
+
 test('eventTitle returns the display name', () => {
   assert.equal(eventTitle('bg'), 'BG Weekend');
   assert.equal(eventTitle('stv'), 'STV Fishing');

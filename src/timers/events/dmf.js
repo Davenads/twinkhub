@@ -14,6 +14,28 @@ import { MT_ZONE, asDateTime, mod } from '../../lib/time.js';
 const OPEN_HOUR_MT = 2; // ~US weekly reset, Mountain
 const US_DAY_OFFSET = 2; // first Friday -> Sunday
 
+// Classic Era 2-zone rotation. Anniversary/TBC uses a 3-zone (Outlands/Elwynn/
+// Mulgore) table and SoD a weeks-anchored one, but Era only ever alternates
+// Elwynn Forest <-> Mulgore. No Terokkar/Outlands on Era.
+const DMF_ZONES = {
+  elwynn: { name: 'Elwynn Forest', short: 'Elwynn' },
+  mulgore: { name: 'Mulgore', short: 'Mulgore' }
+};
+
+/**
+ * Zone for a given faire, per NovaWorldBuffs `DMF.lua` isClassic branch: pick by
+ * the open month's parity — odd -> Elwynn Forest, even -> Mulgore. NWB bumps the
+ * month when the faire opens after the 20th; our US open is always the first
+ * Sunday (day <= 9) so that edge never fires, but we mirror it for fidelity.
+ *
+ * @param {import('luxon').DateTime} start faire open in Mountain time
+ */
+function dmfLocation(start) {
+  let month = start.month;
+  if (start.day > 20) month = month === 12 ? 1 : month + 1;
+  return month % 2 === 0 ? DMF_ZONES.mulgore : DMF_ZONES.elwynn;
+}
+
 /** First-Friday + 2 days (Sunday) at 02:00 Mountain (MT DateTime). */
 function dmfStart(year, month) {
   const firstOfMonth = DateTime.fromObject(
@@ -44,11 +66,12 @@ export function getState(now) {
     const end = start.plus({ days: 7 });
     const sMs = start.toMillis();
     const eMs = end.toMillis();
+    const location = dmfLocation(start);
     if (sMs <= nowMs && nowMs < eMs) {
-      return { active: true, startsInMs: 0, endsInMs: eMs - nowMs, label: 'DMF', meta: {} };
+      return { active: true, startsInMs: 0, endsInMs: eMs - nowMs, label: 'DMF', meta: { location } };
     }
     if (nowMs < sMs) {
-      return { active: false, startsInMs: sMs - nowMs, endsInMs: 0, label: 'DMF', meta: {} };
+      return { active: false, startsInMs: sMs - nowMs, endsInMs: 0, label: 'DMF', meta: { location } };
     }
   }
 
@@ -57,6 +80,13 @@ export function getState(now) {
   const total = mt.month + 2;
   const fbYear = total > 12 ? mt.year + 1 : mt.year;
   const fbMonth = total > 12 ? total - 12 : total;
-  const sMs = dmfStart(fbYear, fbMonth).toMillis();
-  return { active: false, startsInMs: sMs - nowMs, endsInMs: 0, label: 'DMF', meta: {} };
+  const fbStart = dmfStart(fbYear, fbMonth);
+  const sMs = fbStart.toMillis();
+  return {
+    active: false,
+    startsInMs: sMs - nowMs,
+    endsInMs: 0,
+    label: 'DMF',
+    meta: { location: dmfLocation(fbStart) }
+  };
 }

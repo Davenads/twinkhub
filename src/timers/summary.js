@@ -19,15 +19,19 @@ export const DISPLAY = {
   stv: { name: 'STV Fishing' }
 };
 
-// Event -> application-emoji registry key (in emoji.json `events`). BG is dynamic:
-// the icon tracks the current battleground (av/wsg/ab), matching the line's crest.
-// The rest are static. Custom emoji don't render in embed field NAMES, so these
-// lead the field VALUE instead.
-const EVENT_EMOJI = { agm: 'arena', dmf: 'dmftf', stv: 'fishing' };
+// Event -> application-emoji registry key (in emoji.json `events`). BG and DMF
+// are dynamic: BG's icon tracks the current battleground (av/wsg/ab) and DMF's
+// tracks the faire's Era zone (Elwynn/Mulgore). The rest are static. Custom
+// emoji don't render in embed field NAMES, so these lead the field VALUE instead.
+const EVENT_EMOJI = { agm: 'arena', stv: 'fishing' };
+
+// Classic Era DMF zone (state.meta.location.short) -> emoji registry key.
+const DMF_ZONE_EMOJI = { Elwynn: 'dmfef', Mulgore: 'dmftb' };
 
 /** Registry key for an event's icon, or null when there's no sensible glyph. */
 function eventEmojiKey(key, state) {
   if (key === 'bg') return state?.meta?.currentBG?.shortName?.toLowerCase() ?? null;
+  if (key === 'dmf') return DMF_ZONE_EMOJI[state?.meta?.location?.short] ?? null;
   return EVENT_EMOJI[key] ?? null;
 }
 
@@ -68,10 +72,18 @@ export function renderEventLine(key, state) {
       return state.active
         ? `Chest up! \u00b7 closes in ${formatCountdown(state.endsInMs)}`
         : `Next chest in ${formatCountdown(state.startsInMs)}`;
-    case 'dmf':
-      return state.active
-        ? `Open \u00b7 ends in ${formatCountdown(state.endsInMs)}`
+    case 'dmf': {
+      // Name the Era zone (Elwynn/Mulgore) when known; degrade to zoneless text.
+      const zone = state.meta?.location?.name;
+      if (state.active) {
+        return zone
+          ? `**${zone}** \u00b7 open, ends in ${formatCountdown(state.endsInMs)}`
+          : `Open \u00b7 ends in ${formatCountdown(state.endsInMs)}`;
+      }
+      return zone
+        ? `**${zone}** \u00b7 opens in ${formatCountdown(state.startsInMs)}`
         : `Opens in ${formatCountdown(state.startsInMs)}`;
+    }
     case 'stv':
       return state.active
         ? `Active \u00b7 ends in ${formatCountdown(state.endsInMs)}`
