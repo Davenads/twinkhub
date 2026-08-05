@@ -85,6 +85,9 @@ export function renderConsumable({ store, bracket, type = null, className = null
   const descParts = [];
   if (scope.length) descParts.push(`Filtered to ${scope.join(' and ')}.`);
   if (data.note) descParts.push(data.note);
+  // A per-type header note (e.g. the scroll/food universal facts) is shown once
+  // here, only when the list is filtered to that type, instead of on every row.
+  if (typeKey && data.typeNotes?.[typeKey]) descParts.push(data.typeNotes[typeKey]);
   if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
 
   // Footer is set before packing fields so its length counts toward the 6000 cap.

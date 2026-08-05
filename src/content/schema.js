@@ -761,6 +761,15 @@ export function validateConsumables(obj, label = 'consumables.json') {
   if (obj.note !== undefined) {
     require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
   }
+  // Optional per-type header notes: a universal fact for a type stated once at the
+  // top of its filtered list, so it need not repeat on every row. Keys must be
+  // real consumable types; each value a non-empty string.
+  if (obj.typeNotes !== undefined && require_(errors, isObject(obj.typeNotes), `${label}: typeNotes must be an object when present`)) {
+    for (const [type, note] of Object.entries(obj.typeNotes)) {
+      require_(errors, CONSUMABLE_TYPES.includes(type), `${label}: typeNotes key "${type}" must be one of ${CONSUMABLE_TYPES.join('|')}`);
+      require_(errors, isNonEmptyString(note), `${label}: typeNotes.${type} must be a non-empty string`);
+    }
+  }
 
   if (
     require_(

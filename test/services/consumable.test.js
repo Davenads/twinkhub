@@ -17,6 +17,10 @@ const store = {
       },
       consumables: {
         note: 'Seeded from verified domain notes.',
+        typeNotes: {
+          potion: 'Potions share a cooldown.',
+          explosive: 'Explosives share the thrown-item cooldown.'
+        },
         consumables: [
           { id: 'healing-potion', name: 'Healing Potion', type: 'potion', effect: 'Instant heal on cooldown.', faction: 'both', reqLevel: null },
           { id: 'venomhide-poison', name: 'Venomhide Poison', type: 'poison', effect: 'Stacking DPS poison.', classes: ['rogue'] },
@@ -55,6 +59,18 @@ test('renderConsumable filters by type', () => {
   const e = embeds[0].toJSON();
   assert.ok(e.description.includes('Filtered to'));
   assert.deepEqual(fieldNames(embeds), ['Healing Potion']);
+});
+
+test('renderConsumable shows a type note only under that type filter', () => {
+  const unfiltered = renderConsumable({ store, bracket: '19' }).embeds[0].toJSON();
+  assert.ok(!unfiltered.description.includes('Potions share a cooldown'), 'type note does not leak onto the full list');
+
+  const potion = renderConsumable({ store, bracket: '19', type: 'potion' }).embeds[0].toJSON();
+  assert.ok(potion.description.includes('Potions share a cooldown'), 'potion filter surfaces the potion type note');
+  assert.ok(!potion.description.includes('Explosives share'), 'only the matching type note appears');
+
+  const explosive = renderConsumable({ store, bracket: '19', type: 'explosive' }).embeds[0].toJSON();
+  assert.ok(explosive.description.includes('Explosives share'), 'explosive filter surfaces the explosive type note');
 });
 
 test('renderConsumable class filter keeps universal + class-specific consumables', () => {
