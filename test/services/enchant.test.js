@@ -42,23 +42,32 @@ test('renderEnchant lists all enchants and flags no-level-req ones', () => {
 
   assert.equal(e.title, 'Enchants (Warsong Gulch 19)');
   assert.ok(e.description.includes('cornerstone'));
-  assert.equal(e.fields.length, 2);
-  // Every enchant is no-level-req (stated once in the note/footer), so the field
-  // name is just the slot — no per-row "no level req" decoration.
-  assert.equal(e.fields[0].name, 'Weapon');
-  // Enchant name now leads the value line (so its Wowhead masked link renders).
-  assert.ok(e.fields[0].value.includes('Enchant Weapon - Fiery Weapon'));
+  // The overview groups by slot: one field per slot (here weapon + boots), in the
+  // deliberate SLOT_ORDER, with the "Enchant <Slot> - " name prefix stripped.
+  assert.deepEqual(e.fields.map((f) => f.name), ['Weapon', 'Boots']);
+  assert.ok(e.fields[0].value.includes('Fiery Weapon'), 'enchant name (masked link) leads the line');
+  assert.ok(!e.fields[0].value.includes('Enchant Weapon -'), 'redundant slot prefix stripped');
   assert.ok(!e.fields[0].value.includes('Ignores the item'), 'no per-row level-req line');
   assert.ok(e.footer.text.includes('Values confirmed on Wowhead Classic'), 'footer states provenance once');
 });
 
-test('renderEnchant tags the field name only when an enchant DOES gate on level', () => {
+test('renderEnchant flags a level requirement inline in the grouped overview', () => {
   const s = structuredClone(store);
   s.brackets['19'].enchants.enchants[0].noLevelReq = false;
   s.brackets['19'].enchants.enchants[0].reqLevel = 35;
   const e = renderEnchant({ store: s, bracket: '19' }).embeds[0].toJSON();
+  const weapon = e.fields.find((f) => f.name === 'Weapon');
+  const boots = e.fields.find((f) => f.name === 'Boots');
+  assert.ok(weapon.value.includes('requires level 35'), 'gated enchant tagged inline');
+  assert.ok(!boots.value.includes('requires level'), 'no-level-req rows stay bare');
+});
+
+test('renderEnchant tags the field name when a slot-filtered enchant gates on level', () => {
+  const s = structuredClone(store);
+  s.brackets['19'].enchants.enchants[0].noLevelReq = false;
+  s.brackets['19'].enchants.enchants[0].reqLevel = 35;
+  const e = renderEnchant({ store: s, bracket: '19', slot: 'weapon' }).embeds[0].toJSON();
   assert.equal(e.fields[0].name, 'Weapon \u2014 requires level 35');
-  assert.equal(e.fields[1].name, 'Boots', 'no-level-req rows stay bare');
 });
 
 test('renderEnchant filters by slot', () => {
@@ -127,10 +136,14 @@ test('renderEnchant never exceeds the 6000-char embed cap under a wide class fil
   assert.equal(e.fields.at(-1).name, '\u2026', 'an overflow note is appended when entries are dropped');
 });
 
-test('renderEnchant drops the redundant Classes line only under a class filter', () => {
-  const filtered = renderEnchant({ store, bracket: '19', className: 'mage' }).embeds[0].toJSON();
-  assert.ok(!filtered.fields[0].value.includes('Classes:'), 'class-filtered rows omit the Classes line');
+test('renderEnchant shows the Classes line in the slot view only without a class filter', () => {
+  // Classes only appear in the detailed slot view; the grouped overview omits them.
+  const withClass = renderEnchant({ store, bracket: '19', slot: 'weapon', className: 'warrior' }).embeds[0].toJSON();
+  assert.ok(!withClass.fields[0].value.includes('Classes:'), 'class-filtered rows omit the Classes line');
 
-  const unfiltered = renderEnchant({ store, bracket: '19' }).embeds[0].toJSON();
-  assert.ok(unfiltered.fields[0].value.includes('Classes:'), 'unfiltered rows keep the Classes line');
+  const noClass = renderEnchant({ store, bracket: '19', slot: 'weapon' }).embeds[0].toJSON();
+  assert.ok(noClass.fields[0].value.includes('Classes:'), 'slot-only rows keep the Classes line');
+
+  const overview = renderEnchant({ store, bracket: '19' }).embeds[0].toJSON();
+  assert.ok(!overview.fields[0].value.includes('Classes:'), 'grouped overview omits the Classes line');
 });
