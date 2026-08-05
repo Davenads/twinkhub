@@ -1,5 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
+import { classIcon } from '../content/store.js';
 import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
 
 // Conventional high-to-low order; any tier not listed is appended alphabetically.
@@ -38,7 +39,18 @@ export function renderTierlist({ store, bracket }) {
 
   for (const tier of tiers) {
     const members = roster.filter((e) => e.tier === tier);
-    embed.addFields(field(`Tier ${tier}`, members.map((e) => `**${capitalize(e.class)}** \u2014 ${e.summary}`).join('\n')));
+    embed.addFields(
+      field(
+        `Tier ${tier}`,
+        members
+          .map((e) => {
+            // Class emoji prefix; degrades to text-only when the id is unfilled.
+            const icon = classIcon(store, e.class);
+            return `${icon ? `${icon} ` : ''}**${capitalize(e.class)}** \u2014 ${e.summary}`;
+          })
+          .join('\n')
+      )
+    );
   }
 
   const footerText = metaFooter(meta);
