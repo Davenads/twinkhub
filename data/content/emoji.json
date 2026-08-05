@@ -101,8 +101,8 @@
     "big-bronze-bomb": { "name": "BigBronzeBomb", "id": "1534595861357531338" },
     "explosive-sheep": { "name": "ExplosiveSheep", "id": "1534595862708228136" },
     "portable-bronze-mortar": { "name": "PortableBronzeMortar", "id": "1534595863760994335" },
-    "magic-dust": { "name": "MagicDust", "id": "" },
-    "goblin-rocket-boots": { "name": "GoblinRocketBoots", "id": "" }
+    "magic-dust": { "name": "MagicDust", "id": "1534667685529391275" },
+    "goblin-rocket-boots": { "name": "GoblinRocketBoots", "id": "1534667684338467078" }
   },
   "events": {
     "av": { "name": "av", "id": "1534625727951929435" },
