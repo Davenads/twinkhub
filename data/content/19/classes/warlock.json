@@ -1,6 +1,6 @@
 {
   "class": "warlock",
-  "tier": "B",
+  "tier": "A",
   "roles": ["caster-dps"],
   "specs": [
     { "name": "Affliction (DoT pressure)", "statPriority": ["intellect", "stamina", "spirit"] },

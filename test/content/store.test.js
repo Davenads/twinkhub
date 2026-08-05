@@ -222,13 +222,13 @@ test('gearForClass filters the browse pool by armor proficiency', async () => {
   }
 });
 
-test('rogue is authored end-to-end: tier-A detail and a merged BiS list', async () => {
+test('rogue is authored end-to-end: tier-S detail and a merged BiS list', async () => {
   const store = await loadContentStore();
 
   // Class detail resolves with the roster tier and rogue-specific stat priority.
   const rogue = getClass(store, '19', 'Rogue');
   assert.equal(rogue.class, 'rogue');
-  assert.equal(rogue.tier, 'A');
+  assert.equal(rogue.tier, 'S');
   assert.ok(rogue.specs.length > 0);
   assert.ok(rogue.specs[0].statPriority.includes('agility'));
   assert.ok(rogue.factionNotes, 'carries faction notes surfaced by /class and /optimize');
@@ -341,12 +341,12 @@ test('loadContentStore loads scaling with valid per-class priority references', 
   assert.equal(bracketScaling(store, '49'), null);
 });
 
-test('priest is authored as a tier-A healer with mana-first stat weights', async () => {
+test('priest is authored as a tier-S healer with mana-first stat weights', async () => {
   const store = await loadContentStore();
 
   const priest = getClass(store, '19', 'Priest');
   assert.equal(priest.class, 'priest');
-  assert.equal(priest.tier, 'A');
+  assert.equal(priest.tier, 'S');
   assert.ok(priest.roles.includes('healer'));
   assert.ok(priest.specs.length > 0);
   assert.ok(priest.specs[0].statPriority.includes('intellect'));

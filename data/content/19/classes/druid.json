@@ -1,6 +1,6 @@
 {
   "class": "druid",
-  "tier": "B",
+  "tier": "A",
   "roles": ["flag-carrier", "hybrid"],
   "specs": [
     { "name": "Feral (flag carrier)", "statPriority": ["stamina", "agility"] },

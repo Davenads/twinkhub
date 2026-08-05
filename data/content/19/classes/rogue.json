@@ -1,6 +1,6 @@
 {
   "class": "rogue",
-  "tier": "A",
+  "tier": "S",
   "roles": ["melee-dps"],
   "specs": [
     { "name": "Combat / Subtlety burst", "statPriority": ["agility", "stamina"] }

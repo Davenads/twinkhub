@@ -1,6 +1,6 @@
 {
   "class": "priest",
-  "tier": "A",
+  "tier": "S",
   "roles": ["healer"],
   "specs": [
     { "name": "Discipline (PvP healer)", "statPriority": ["intellect", "stamina", "spirit"] },

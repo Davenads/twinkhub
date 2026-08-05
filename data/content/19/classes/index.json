@@ -1,14 +1,14 @@
 {
   "tierNote": "Tiers are playstyle- and composition-dependent, not absolute rankings. WSG rewards survivability (stamina) and coordination, so placements shift with team comp and player skill.",
   "classes": [
-    { "class": "hunter", "tier": "S", "roles": ["ranged-dps"], "summary": "Top of the bracket: ranged burst, pet utility, and survivability." },
-    { "class": "rogue", "tier": "A", "roles": ["melee-dps"], "summary": "Stealth burst with control (Blind, Sap) and a high skill ceiling." },
-    { "class": "warrior", "tier": "A", "roles": ["melee-dps", "flag-carrier"], "summary": "Charge/Hamstring pressure; strong duelist and flag carrier." },
-    { "class": "priest", "tier": "A", "roles": ["healer"], "summary": "Premier healer: dispels and Power Word: Shield; premade backbone." },
-    { "class": "druid", "tier": "B", "roles": ["flag-carrier", "hybrid"], "summary": "Excellent flag carrier; force-cast builds rated highly. Comp-dependent." },
-    { "class": "paladin", "tier": "B", "roles": ["hybrid"], "summary": "Alliance hybrid; utility, burst, and off-heals. Swings on comp." },
-    { "class": "shaman", "tier": "B", "roles": ["hybrid"], "summary": "Horde hybrid; totems and burst. Swings on comp." },
-    { "class": "mage", "tier": "B", "roles": ["caster-dps"], "summary": "Control and burst but fragile; skill- and comp-dependent." },
-    { "class": "warlock", "tier": "B", "roles": ["caster-dps"], "summary": "DoT pressure and pet utility; skill- and comp-dependent." }
+    { "class": "hunter", "tier": "S", "roles": ["ranged-dps"], "summary": "Strong damage: Wing Clip, Concussive Shot, and Track Humanoids." },
+    { "class": "priest", "tier": "S", "roles": ["healer"], "summary": "Strong support: enemy/friendly Dispel and Blackout." },
+    { "class": "mage", "tier": "S", "roles": ["caster-dps"], "summary": "Strong CC: Polymorph, Frostbolt, Frost Nova, and Frostbite." },
+    { "class": "rogue", "tier": "S", "roles": ["melee-dps"], "summary": "Strong CC and damage: Sap, Gouge, and Kick." },
+    { "class": "warlock", "tier": "A", "roles": ["caster-dps"], "summary": "Strong CC and blanket damage: Fear and Curse of Recklessness." },
+    { "class": "druid", "tier": "A", "roles": ["flag-carrier", "hybrid"], "summary": "Strong CC and survivability: Root, Bash, Regrowth, Rejuvenation, and Bear Form." },
+    { "class": "paladin", "tier": "B", "roles": ["hybrid"], "summary": "Good survivability and support (Blessings, Hammer of Justice, Divine Protection, Holy Light) but countered by Dispel/Purge." },
+    { "class": "warrior", "tier": "B", "roles": ["melee-dps", "flag-carrier"], "summary": "Good survivability and CC (Hamstring, Charge, Disarm, Shield Bash/Block) but heavily locked down." },
+    { "class": "shaman", "tier": "B", "roles": ["hybrid"], "summary": "Good CC and support (Purge, Earthbind/Tremor Totem, Earth Shock, Healing Wave) but lacks damage." }
   ]
 }

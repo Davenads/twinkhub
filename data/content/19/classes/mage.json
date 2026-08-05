@@ -1,6 +1,6 @@
 {
   "class": "mage",
-  "tier": "B",
+  "tier": "S",
   "roles": ["caster-dps"],
   "specs": [
     { "name": "Frost (control)", "statPriority": ["intellect", "stamina", "spirit"] },
