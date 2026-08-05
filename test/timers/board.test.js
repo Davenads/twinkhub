@@ -58,7 +58,8 @@ function makeUpdater(guilds, configs) {
   const update = createBoardUpdater(client, {
     loadConfig: async (id) => configs[id],
     saveBoard: async (id, board) => saved.push({ id, board }),
-    render
+    render,
+    getStore: async () => null
   });
   return { update, saved };
 }

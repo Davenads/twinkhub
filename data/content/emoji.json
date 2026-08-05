@@ -101,5 +101,15 @@
     "big-bronze-bomb": { "name": "BigBronzeBomb", "id": "1534595861357531338" },
     "explosive-sheep": { "name": "ExplosiveSheep", "id": "1534595862708228136" },
     "portable-bronze-mortar": { "name": "PortableBronzeMortar", "id": "1534595863760994335" }
+  },
+  "events": {
+    "av": { "name": "av", "id": "1534625727951929435" },
+    "wsg": { "name": "wsg", "id": "1534625732880502784" },
+    "ab": { "name": "ab", "id": "1534625726144450560" },
+    "arena": { "name": "arena", "id": "1534625727192764458" },
+    "fishing": { "name": "fishing", "id": "1534625731861020672" },
+    "dmftf": { "name": "dmftf", "id": "1534625730984677597" },
+    "dmftb": { "name": "dmftb", "id": "1534625730196017484" },
+    "dmfef": { "name": "dmfef", "id": "1534625728895783023" }
   }
 }

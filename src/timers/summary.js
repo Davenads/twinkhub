@@ -1,5 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import { formatCountdown } from '../lib/time.js';
+import { eventIcon } from '../content/store.js';
 import { EVENT_KEYS } from './events/index.js';
 
 // 100 days — pushes idle events after active ones in the urgency sort. Ported
@@ -10,13 +11,25 @@ const BIG = 100 * 24 * 60 * 60 * 1000;
 
 const EMBED_COLOR = 0xc8aa6e; // muted gold
 
-/** Display metadata per event (no emojis — kept plain per project convention). */
+/** Display metadata per event. */
 export const DISPLAY = {
   bg: { name: 'BG Weekend' },
   agm: { name: 'Arena Grand Master' },
   dmf: { name: 'Darkmoon Faire' },
   stv: { name: 'STV Fishing' }
 };
+
+// Event -> application-emoji registry key (in emoji.json `events`). BG is dynamic:
+// the icon tracks the current battleground (av/wsg/ab), matching the line's crest.
+// The rest are static. Custom emoji don't render in embed field NAMES, so these
+// lead the field VALUE instead.
+const EVENT_EMOJI = { agm: 'arena', dmf: 'dmftf', stv: 'fishing' };
+
+/** Registry key for an event's icon, or null when there's no sensible glyph. */
+function eventEmojiKey(key, state) {
+  if (key === 'bg') return state?.meta?.currentBG?.shortName?.toLowerCase() ?? null;
+  return EVENT_EMOJI[key] ?? null;
+}
 
 /** Slash-command choices ({ name, value }) for event-selection options. */
 export const EVENT_CHOICES = EVENT_KEYS.map((k) => ({ name: DISPLAY[k].name, value: k }));
@@ -86,14 +99,16 @@ export function eventTitle(key) {
  * @param {Record<string, object>} states  - from getAllStates(now)
  * @param {{ now?: number }} [opts]
  */
-export function renderEventsSummary(states, { now = Date.now() } = {}) {
+export function renderEventsSummary(states, { now = Date.now(), store = null } = {}) {
   const embed = new EmbedBuilder()
     .setTitle('WoW Classic \u2014 Event Timers')
     .setColor(EMBED_COLOR)
     .setDescription(`Updated <t:${Math.floor(now / 1000)}:R>`);
 
   for (const key of rankedEvents(states)) {
-    embed.addFields({ name: eventTitle(key), value: renderEventLine(key, states[key]) });
+    const line = renderEventLine(key, states[key]);
+    const icon = eventIcon(store, eventEmojiKey(key, states[key]));
+    embed.addFields({ name: eventTitle(key), value: icon ? `${icon} ${line}` : line });
   }
 
   return { embeds: [embed] };

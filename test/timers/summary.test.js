@@ -81,3 +81,29 @@ test('renderEventsSummary builds a ranked embed with a live updated cue', () => 
   assert.equal(json.fields[0].value, 'Chest up! \u00b7 closes in 3m');
   assert.equal(json.fields[1].value, 'Active \u00b7 ends in 1h 0m');
 });
+
+test('renderEventsSummary leads each field value with its event icon when a store is passed', () => {
+  const store = {
+    emoji: {
+      events: {
+        wsg: { name: 'wsg', id: '1' },
+        arena: { name: 'arena', id: '2' },
+        fishing: { name: 'fishing', id: '3' }
+        // dmftf intentionally omitted -> that row degrades to text-only
+      }
+    }
+  };
+  const states = {
+    bg: st(true, 2 * DAY, { meta: { currentBG: { shortName: 'WSG' }, nextBG: { shortName: 'AB' } } }),
+    agm: st(true, 3 * MIN),
+    dmf: st(false, 10 * DAY),
+    stv: st(true, 1 * HOUR)
+  };
+  const byName = {};
+  for (const f of renderEventsSummary(states, { store }).embeds[0].toJSON().fields) byName[f.name] = f.value;
+
+  assert.ok(byName['BG Weekend'].startsWith('<:wsg:1> '), 'BG icon tracks the current battleground');
+  assert.ok(byName['Arena Grand Master'].startsWith('<:arena:2> '), 'AGM leads with the arena icon');
+  assert.ok(byName['STV Fishing'].startsWith('<:fishing:3> '), 'STV leads with the fishing icon');
+  assert.ok(!byName['Darkmoon Faire'].includes('<:'), 'an unregistered event icon degrades to text-only');
+});

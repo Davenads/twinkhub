@@ -1,5 +1,6 @@
 import { loadGuildConfig, setTimerBoard } from '../config/guildConfig.js';
 import { renderEventsSummary } from './summary.js';
+import { getContentStore } from '../content/store.js';
 import { logger } from '../lib/logger.js';
 
 // Discord API: the stored message no longer exists (deleted). Our cue to repost
@@ -22,10 +23,17 @@ const UNKNOWN_MESSAGE = 10008;
  */
 export function createBoardUpdater(
   client,
-  { loadConfig = loadGuildConfig, saveBoard = setTimerBoard, render = renderEventsSummary } = {}
+  {
+    loadConfig = loadGuildConfig,
+    saveBoard = setTimerBoard,
+    render = renderEventsSummary,
+    getStore = getContentStore
+  } = {}
 ) {
   return async function updateBoards({ states, now = Date.now() }) {
-    const payload = { ...render(states, { now }), allowedMentions: { parse: [] } };
+    // Store powers the event icons; a load hiccup degrades to a text-only board.
+    const store = await getStore().catch(() => null);
+    const payload = { ...render(states, { now, store }), allowedMentions: { parse: [] } };
     const results = [];
 
     for (const guild of client.guilds.cache.values()) {
