@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { renderGuide, renderGuideIndex } from '../../src/services/guide.js';
-import { loadContentStore } from '../../src/content/store.js';
+import { loadContentStore, classIcon } from '../../src/content/store.js';
 
 // Synthetic fixture: a multi-section guide (to exercise real pagination), a
 // class-scoped guide, and a catalogued-but-unauthored slug.
@@ -114,4 +114,13 @@ test('renderGuide/Index run over the real seeded content store', async () => {
   assert.ok(fieldsOf(roles.embeds).length > 0, 'roles guide renders sections');
   const strat = renderGuideIndex({ store: real, bracket: '19', tag: 'strategy' });
   assert.ok(fieldsOf(strat.embeds).some((f) => f.value.includes('19-wsg-roles')));
+
+  // Bolded class names carry their icon emoji, and each class in a listing sits
+  // on its own line (per-class newline spacing).
+  const healers = fieldsOf(roles.embeds).find((f) => f.name === 'Healers anchor the premade');
+  assert.ok(healers, 'healers section present');
+  const priestIcon = classIcon(real, 'priest');
+  assert.ok(priestIcon, 'priest icon resolves from the real store');
+  assert.ok(healers.value.includes(`${priestIcon} **Priest**`), 'class icon prefixes the bolded name');
+  assert.ok(healers.value.includes(`\n${classIcon(real, 'paladin')} **Paladin**`), 'each class starts a new line');
 });

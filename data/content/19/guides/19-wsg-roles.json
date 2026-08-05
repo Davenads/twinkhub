@@ -10,15 +10,15 @@
     },
     {
       "heading": "Healers anchor the premade",
-      "body": "**Priest** is the premier healer — dispels and Power Word: Shield make it the backbone of a premade, and losing the healer usually loses the fight. **Paladin** (Alliance) and **Shaman** (Horde) add off-heals and utility as hybrids. Protect your healer and focus the enemy's. See `/class class:priest`."
+      "body": "**Priest** — the premier healer; dispels and Power Word: Shield make it the backbone of a premade, and losing the healer usually loses the fight.\n**Paladin** (Alliance) — off-heals and hybrid utility (Blessings, Hammer of Justice).\n**Shaman** (Horde) — off-heals and hybrid utility (Purge, Tremor/Earthbind Totem).\n\nProtect your healer and focus the enemy's. See `/class class:priest`."
     },
     {
       "heading": "Flag carriers",
-      "body": "**Warrior** (Protection) and **Druid** (Bear Form) make the best carriers: high armor plus the stamina to reach the meta's **~1000+ HP** target, and tools to shed roots and snares. Stack stamina and a movement-speed boots enchant so the carrier lives and moves. Check exact conversions with `/statweights`."
+      "body": "**Warrior** (Protection) — high armor and Berserker Rage to break fears; a durable carrier under focus.\n**Druid** (Bear Form) — the bracket's best carrier; extra armor and health plus shifting to shed roots and snares.\n\nBoth want the stamina to reach the meta's **~1000+ HP** target. Stack stamina and a movement-speed boots enchant so the carrier lives and moves. Check exact conversions with `/statweights`."
     },
     {
       "heading": "Damage and control",
-      "body": "**Hunter** brings top-tier ranged burst plus a pet, **Rogue** a stealth opener with Sap and Blind control, **Mage** Frost Nova roots and Frostbolt slows on a fragile frame, and **Warlock** DoT pressure plus Fear. In a flag game, **control** — slows, roots, stuns, peels — often frees or stops a carrier better than damage alone."
+      "body": "**Hunter** — top-tier ranged burst plus a pet; Wing Clip and Concussive Shot to kite and peel.\n**Rogue** — a stealth opener with Sap, Gouge, Blind, and Kick control.\n**Mage** — Frost Nova roots and Frostbolt slows plus Polymorph, on a fragile frame.\n**Warlock** — DoT pressure plus Fear and Curse of Recklessness.\n\nIn a flag game, control — slows, roots, stuns, peels — often frees or stops a carrier better than damage alone."
     },
     {
       "heading": "Why coordination and stamina win",
