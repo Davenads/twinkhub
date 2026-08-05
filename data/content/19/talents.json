@@ -292,6 +292,18 @@
           { "talent": "Convection", "rank": 5, "max": 5, "emoji": "Convection" },
           { "talent": "Improved Healing Wave", "rank": 5, "max": 5, "emoji": "ImprovedHealingWave" }
         ]
+      },
+      {
+        "id": "shaman-shield-healing",
+        "name": "Shield Specialization / Improved Healing Wave",
+        "role": "FC",
+        "summary": "+5% chance to block and +25% increased amount blocked, -.5 seconds on Healing Wave cast time. Tanky healing-support loadout that trades offense for survivability and cast-under-pressure heals as a flag carrier.",
+        "points": "5/5 Shield Specialization, 5/5 Improved Healing Wave",
+        "url": "https://www.wowhead.com/classic/talent-calc/embed/shaman/-05-5",
+        "nodes": [
+          { "talent": "Shield Specialization", "rank": 5, "max": 5, "emoji": "ShieldSpecialization" },
+          { "talent": "Improved Healing Wave", "rank": 5, "max": 5, "emoji": "ImprovedHealingWave" }
+        ]
       }
     ],
     "warlock": [
