@@ -32,5 +32,8 @@ export const env = {
   token: required('DISCORD_TOKEN'),
   appId: required('DISCORD_APP_ID'),
   guildIds: parseGuildIds(),
-  logLevel: process.env.LOG_LEVEL?.trim() || 'info'
+  logLevel: process.env.LOG_LEVEL?.trim() || 'info',
+  // Optional: when set, every executed command and panel interaction is posted
+  // as an audit embed to this channel. Unset (e.g. dev) disables audit logging.
+  auditChannelId: process.env.AUDIT_LOG_CHANNEL_ID?.trim() || null
 };

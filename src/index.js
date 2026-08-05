@@ -3,6 +3,7 @@ import { env } from './config/env.js';
 import { logger } from './lib/logger.js';
 import { loadCommands } from './commands/index.js';
 import { handleComponent } from './components/panels.js';
+import { postAudit } from './lib/audit.js';
 import { runTimerEngine } from './timers/engine.js';
 import { createDispatch } from './timers/dispatch.js';
 import { createBoardUpdater } from './timers/board.js';
@@ -70,9 +71,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
   // types. Route them to the component handler, which replies to the clicker
   // ephemerally via the same render services the slash commands use.
   if (interaction.isButton() || interaction.isAnySelectMenu()) {
+    const startedAt = Date.now();
+    let outcome = { ok: true };
     try {
       await handleComponent(interaction);
     } catch (err) {
+      outcome = { ok: false, error: err };
       logger.error({ err, customId: interaction.customId }, 'component failed');
       const payload = {
         content: 'Something went wrong with that panel control.',
@@ -83,6 +87,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
       } else {
         await interaction.reply(payload).catch(() => {});
       }
+    } finally {
+      postAudit(client, { kind: 'panel', interaction, outcome, ms: Date.now() - startedAt });
     }
     return;
   }
@@ -93,9 +99,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
     logger.warn(`Unknown command: ${interaction.commandName}`);
     return;
   }
+  const startedAt = Date.now();
+  let outcome = { ok: true };
   try {
     await command.execute(interaction);
   } catch (err) {
+    outcome = { ok: false, error: err };
     logger.error({ err, command: interaction.commandName }, 'command failed');
     const payload = {
       content: 'Something went wrong running that command.',
@@ -106,6 +115,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } else {
       await interaction.reply(payload).catch(() => {});
     }
+  } finally {
+    postAudit(client, { kind: 'command', interaction, outcome, ms: Date.now() - startedAt });
   }
 });
 
