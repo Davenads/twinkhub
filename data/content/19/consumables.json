@@ -215,6 +215,15 @@
       "notes": "Item 2458, Requires Level 2. Small but cheap HP bump; stacks with the other elixirs. Confirmed via Wowhead Classic item data."
     },
     {
+      "id": "strong-trolls-blood",
+      "name": "Strong Troll's Blood Potion",
+      "type": "elixir",
+      "effect": "Regenerate 6 health every 5 sec for 1 hour. Persistent buff; does NOT share the combat potion cooldown.",
+      "faction": "both",
+      "reqLevel": 15,
+      "notes": "Item 3388, Requires Level 15. Technically a potion, but its 1-hour regen buff behaves like an elixir \u2014 it applies its own aura, does not trigger the shared combat potion cooldown, and stacks with your other elixirs and scrolls. Mighty Troll's Blood (regen 12) requires level 26, so Strong is the best Troll's Blood usable at 19. Confirmed via Wowhead Classic item data."
+    },
+    {
       "id": "scroll-of-agility",
       "name": "Scroll of Agility",
       "type": "scroll",
