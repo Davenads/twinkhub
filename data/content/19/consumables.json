@@ -1,5 +1,5 @@
 {
-  "note": "Seeded from the verified domain notes; ranks, reqLevels, and exact sources are nulled pending per-item verification at authoring.",
+  "note": "The interchangeable +6 Stamina / +6 Spirit Well Fed foods all give the same buff \u2014 pick whichever mats you can get.",
   "consumables": [
     {
       "id": "healing-potion",
@@ -8,7 +8,7 @@
       "effect": "Instant health restore; shares the potion cooldown. Keep the highest rank usable at level 19 on cooldown.",
       "faction": "both",
       "reqLevel": 12,
-      "notes": "Healing Potion (item 929, Requires Level 12) is the highest healing potion usable at 19; Greater Healing Potion requires level 21. Confirmed via Wowhead Classic item data."
+      "notes": "Healing Potion (item 929, Requires Level 12) is the highest healing potion usable at 19; Greater Healing Potion requires level 21."
     },
     {
       "id": "mana-potion",
@@ -18,7 +18,7 @@
       "faction": "both",
       "classes": ["hunter", "priest", "druid", "paladin", "shaman", "mage", "warlock"],
       "reqLevel": 14,
-      "notes": "For mana-using classes. Lesser Mana Potion (item 3385, Requires Level 14) is the highest mana potion usable at 19; Mana Potion requires level 22. Confirmed via Wowhead Classic item data."
+      "notes": "For mana-using classes. Lesser Mana Potion (item 3385, Requires Level 14) is the highest mana potion usable at 19; Mana Potion requires level 22."
     },
     {
       "id": "swiftness-potion",
@@ -27,7 +27,7 @@
       "effect": "Increases run speed by 50% for 15 sec; shares the potion cooldown. Flag-running and gap-closing tool in WSG.",
       "faction": "both",
       "reqLevel": 5,
-      "notes": "Item 2459, Requires Level 5. Shares the standard potion cooldown (trade-off vs a Healing Potion). Note: Free Action Potion (stun/root immunity) is NOT usable at 19 \u2014 it requires level 20. Confirmed via Wowhead Classic item data."
+      "notes": "Item 2459, Requires Level 5. Shares the standard potion cooldown (trade-off vs a Healing Potion). Note: Free Action Potion (stun/root immunity) is NOT usable at 19 \u2014 it requires level 20."
     },
     {
       "id": "rage-potion",
@@ -37,7 +37,7 @@
       "faction": "both",
       "classes": ["warrior", "druid"],
       "reqLevel": 4,
-      "notes": "Item 5631, Requires Level 4. Useful to rage users (warrior, and druid in bear form). Shares the standard potion cooldown. Confirmed via Wowhead Classic item data."
+      "notes": "Item 5631, Requires Level 4. Useful to rage users (warrior, and druid in bear form). Shares the standard potion cooldown."
     },
     {
       "id": "heavy-runecloth-bandage",
@@ -46,7 +46,7 @@
       "effect": "BiS bandage at 19: channeled First Aid heal for 2000 over 8 sec \u2014 does NOT share the potion cooldown, so pair it with a healing potion. Breaks on damage taken and applies the 60s Recently Bandaged debuff.",
       "faction": "both",
       "reqLevel": null,
-      "notes": "Item 14530, heals 2000 over 8 sec; requires First Aid 225 to USE (no character-level requirement). Reachable at 19 because Expert First Aid \u2014 Under Wraps has NO character-level gate (only First Aid 125), so a 19 twink can push First Aid to the 225 cap and use it. Mageweave (800), Heavy Mageweave (1104), and Runecloth (1360) fill the gap while leveling First Aid. Confirmed via Wowhead Classic item data."
+      "notes": "Item 14530, heals 2000 over 8 sec; requires First Aid 225 to USE (no character-level requirement). Reachable at 19 because Expert First Aid \u2014 Under Wraps has NO character-level gate (only First Aid 125), so a 19 twink can push First Aid to the 225 cap and use it. Mageweave (800), Heavy Mageweave (1104), and Runecloth (1360) fill the gap while leveling First Aid."
     },
     {
       "id": "rumsey-rum-black-label",
@@ -55,127 +55,115 @@
       "effect": "Persistent Well Fed-style buff: +15 Stamina for 15 min (does NOT share the potion cooldown). Pre-buff before a match for ~150 extra HP.",
       "faction": "both",
       "reqLevel": null,
-      "notes": "Item 21151, no character-level requirement; grants +15 Stamina for 15 min (also applies mild drunkenness). Persists through the potion cooldown; strong 19 pre-buff. Obtained via AH/vendor. Confirmed via Wowhead Classic item data."
+      "notes": "Item 21151, no character-level requirement; grants +15 Stamina for 15 min (also applies mild drunkenness). Persists through the potion cooldown; strong 19 pre-buff. Obtained via AH/vendor."
     },
     {
       "id": "curiously-tasty-omelet",
       "name": "Curiously Tasty Omelet",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 130 (crafted)" },
-      "notes": "Cooking from 1x Raptor Egg + 1x Hot Spices. One of the interchangeable +6 Stam/+6 Spirit Well Fed foods \u2014 pick whichever mats you can get. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 130 \u2014 1x Raptor Egg + 1x Hot Spices" }
     },
     {
       "id": "redridge-goulash",
       "name": "Redridge Goulash",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 10,
-      "source": { "type": "profession", "detail": "Cooking 100 (crafted)" },
-      "notes": "Cooking from 1x Tough Condor Meat + 1x Hot Spices. Lowest eat-level (10) of the +6/+6 Well Fed foods \u2014 interchangeable, pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 100 \u2014 1x Tough Condor Meat + 1x Hot Spices" }
     },
     {
       "id": "crispy-lizard-tail",
       "name": "Crispy Lizard Tail",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 12,
-      "source": { "type": "profession", "detail": "Cooking 100 (crafted)" },
-      "notes": "Cooking from 1x Thunder Lizard Tail + 1x Mild Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 100 \u2014 1x Thunder Lizard Tail + 1x Mild Spices" }
     },
     {
       "id": "big-bear-steak",
       "name": "Big Bear Steak",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 110 (crafted)" },
-      "notes": "Cooking from 1x Big Bear Meat (no spice). One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 110 \u2014 1x Big Bear Meat (no spice)" }
     },
     {
       "id": "crocolisk-gumbo",
       "name": "Crocolisk Gumbo",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 160 (crafted)" },
-      "notes": "Cooking from 1x Tender Crocolisk Meat + 1x Hot Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 160 \u2014 1x Tender Crocolisk Meat + 1x Hot Spices" }
     },
     {
       "id": "hot-lion-chops",
       "name": "Hot Lion Chops",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 175 (crafted)" },
-      "notes": "Cooking from 1x Lion Meat + 1x Hot Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 175 \u2014 1x Lion Meat + 1x Hot Spices" }
     },
     {
       "id": "lean-venison",
       "name": "Lean Venison",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 110 (crafted)" },
-      "notes": "Cooking from 1x Stag Meat + 1x Mild Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 110 \u2014 1x Stag Meat + 1x Mild Spices" }
     },
     {
       "id": "lean-wolf-steak",
       "name": "Lean Wolf Steak",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 165 (crafted)" },
-      "notes": "Cooking from 1x Lean Wolf Flank (no spice). One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 165 \u2014 1x Lean Wolf Flank (no spice)" }
     },
     {
       "id": "murloc-fin-soup",
       "name": "Murloc Fin Soup",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 90 (crafted)" },
-      "notes": "Cooking from 2x Murloc Fin + 1x Hot Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 90 \u2014 2x Murloc Fin + 1x Hot Spices" }
     },
     {
       "id": "seasoned-wolf-kabob",
       "name": "Seasoned Wolf Kabob",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 100 (crafted)" },
-      "notes": "Cooking from 2x Lean Wolf Flank + 1x Mild Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 100 \u2014 2x Lean Wolf Flank + 1x Mild Spices" }
     },
     {
       "id": "gooey-spider-cake",
       "name": "Gooey Spider Cake",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 150 (crafted)" },
-      "notes": "Cooking from 2x Gooey Spider Leg + 1x Ice Cold Milk. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 150 \u2014 2x Gooey Spider Leg + 1x Ice Cold Milk" }
     },
     {
       "id": "goblin-deviled-clams",
       "name": "Goblin Deviled Clams",
       "type": "food",
-      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min (eat ~10s while seated; also restores health). Cheap stat pre-buff \u2014 off the potion cooldown.",
+      "effect": "Well Fed: +6 Stamina & +6 Spirit for 15 min. Off the potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "source": { "type": "profession", "detail": "Cooking 125 (crafted)" },
-      "notes": "Cooking from 1x Tangy Clam Meat + 1x Hot Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
+      "source": { "type": "profession", "detail": "Cooking 125 \u2014 1x Tangy Clam Meat + 1x Hot Spices" }
     },
     {
       "id": "elixir-lesser-agility",
@@ -184,7 +172,7 @@
       "effect": "+8 Agility for 1 hour. Persistent buff; does NOT share the potion cooldown.",
       "faction": "both",
       "reqLevel": 18,
-      "notes": "Item 3390, Requires Level 18. Best agility elixir usable at 19 \u2014 its +8 Agility strictly replaces Elixir of Minor Agility's +4, and Elixir of Agility requires level 40. In Classic Era elixirs stack freely (no battle/guardian limit) and stack with the matching scroll (different buff aura), so run this alongside Scroll of Agility. Confirmed via Wowhead Classic item data."
+      "notes": "Item 3390, Requires Level 18. Best agility elixir usable at 19 \u2014 its +8 Agility strictly replaces Elixir of Minor Agility's +4, and Elixir of Agility requires level 40. In Classic Era elixirs stack freely (no battle/guardian limit) and stack with the matching scroll (different buff aura), so run this alongside Scroll of Agility."
     },
     {
       "id": "elixir-lions-strength",
@@ -194,7 +182,7 @@
       "faction": "both",
       "classes": ["rogue", "warrior", "druid", "paladin", "shaman"],
       "reqLevel": null,
-      "notes": "Item 2454, no character-level requirement. Stacks with Scroll of Strength and other elixirs in Classic Era. Confirmed via Wowhead Classic item data."
+      "notes": "Item 2454, no character-level requirement. Stacks with Scroll of Strength and other elixirs in Classic Era."
     },
     {
       "id": "elixir-defense",
@@ -203,7 +191,7 @@
       "effect": "+150 armor for 1 hour. Persistent buff; does NOT share the potion cooldown.",
       "faction": "both",
       "reqLevel": 16,
-      "notes": "Item 3389, Requires Level 16. Highest flat-armor elixir usable at 19; stacks with Scroll of Protection II. Confirmed via Wowhead Classic item data."
+      "notes": "Item 3389, Requires Level 16. Highest flat-armor elixir usable at 19; stacks with Scroll of Protection II."
     },
     {
       "id": "elixir-minor-fortitude",
@@ -212,7 +200,7 @@
       "effect": "+27 maximum health for 1 hour. Persistent buff; does NOT share the potion cooldown.",
       "faction": "both",
       "reqLevel": 2,
-      "notes": "Item 2458, Requires Level 2. Small but cheap HP bump; stacks with the other elixirs. Confirmed via Wowhead Classic item data."
+      "notes": "Item 2458, Requires Level 2. Small but cheap HP bump; stacks with the other elixirs."
     },
     {
       "id": "strong-trolls-blood",
@@ -221,7 +209,7 @@
       "effect": "Regenerate 6 health every 5 sec for 1 hour. Persistent buff; does NOT share the combat potion cooldown.",
       "faction": "both",
       "reqLevel": 15,
-      "notes": "Item 3388, Requires Level 15. Technically a potion, but its 1-hour regen buff behaves like an elixir \u2014 it applies its own aura, does not trigger the shared combat potion cooldown, and stacks with your other elixirs and scrolls. Mighty Troll's Blood (regen 12) requires level 26, so Strong is the best Troll's Blood usable at 19. Confirmed via Wowhead Classic item data."
+      "notes": "Item 3388, Requires Level 15. Technically a potion, but its 1-hour regen buff behaves like an elixir \u2014 it applies its own aura, does not trigger the shared combat potion cooldown, and stacks with your other elixirs and scrolls. Mighty Troll's Blood (regen 12) requires level 26, so Strong is the best Troll's Blood usable at 19."
     },
     {
       "id": "scroll-of-agility",
@@ -230,7 +218,7 @@
       "effect": "+5 Agility for 30 min. Stacks with elixirs (separate buff aura).",
       "faction": "both",
       "reqLevel": 10,
-      "notes": "Item 3012 (rank I), Requires Level 10. Best usable at 19 \u2014 Scroll of Agility II requires level 25. Confirmed via Wowhead Classic item data."
+      "notes": "Item 3012 (rank I), Requires Level 10. Best usable at 19 \u2014 Scroll of Agility II requires level 25."
     },
     {
       "id": "scroll-of-strength",
@@ -240,7 +228,7 @@
       "faction": "both",
       "classes": ["rogue", "warrior", "druid", "paladin", "shaman"],
       "reqLevel": 10,
-      "notes": "Item 954 (rank I), Requires Level 10. Best usable at 19 \u2014 Scroll of Strength II requires level 25. Confirmed via Wowhead Classic item data."
+      "notes": "Item 954 (rank I), Requires Level 10. Best usable at 19 \u2014 Scroll of Strength II requires level 25."
     },
     {
       "id": "scroll-of-stamina",
@@ -249,7 +237,7 @@
       "effect": "+4 Stamina for 30 min. Stacks with elixirs (separate buff aura).",
       "faction": "both",
       "reqLevel": 5,
-      "notes": "Item 1180 (rank I), Requires Level 5. Best usable at 19 \u2014 Scroll of Stamina II requires level 25. Confirmed via Wowhead Classic item data."
+      "notes": "Item 1180 (rank I), Requires Level 5. Best usable at 19 \u2014 Scroll of Stamina II requires level 25."
     },
     {
       "id": "scroll-of-intellect",
@@ -259,7 +247,7 @@
       "faction": "both",
       "classes": ["hunter", "priest", "druid", "paladin", "shaman", "mage", "warlock"],
       "reqLevel": 5,
-      "notes": "Item 955 (rank I), Requires Level 5. For mana users. Best usable at 19 \u2014 rank II requires level 25. Confirmed via Wowhead Classic item data."
+      "notes": "Item 955 (rank I), Requires Level 5. For mana users. Best usable at 19 \u2014 rank II requires level 25."
     },
     {
       "id": "scroll-of-spirit",
@@ -269,7 +257,7 @@
       "faction": "both",
       "classes": ["hunter", "priest", "druid", "paladin", "shaman", "mage", "warlock"],
       "reqLevel": null,
-      "notes": "Item 1181 (rank I), no character-level requirement. For mana-regen classes. Confirmed via Wowhead Classic item data."
+      "notes": "Item 1181 (rank I), no character-level requirement. For mana-regen classes."
     },
     {
       "id": "scroll-of-protection",
@@ -278,7 +266,7 @@
       "effect": "+120 armor for 30 min. Stacks with Elixir of Defense.",
       "faction": "both",
       "reqLevel": 15,
-      "notes": "Item 1478 (rank II), Requires Level 15. Best usable at 19 \u2014 Scroll of Protection III requires level 35. Confirmed via Wowhead Classic item data."
+      "notes": "Item 1478 (rank II), Requires Level 15. Best usable at 19 \u2014 Scroll of Protection III requires level 35."
     },
     {
       "id": "heavy-sharpening-stone",
@@ -288,7 +276,7 @@
       "faction": "both",
       "classes": ["rogue", "warrior", "druid", "paladin", "shaman"],
       "reqLevel": 15,
-      "notes": "Item 2871, Requires Level 15. Best sharpening stone usable at 19 \u2014 Solid Sharpening Stone requires level 35. Confirmed via Wowhead Classic item data."
+      "notes": "Item 2871, Requires Level 15. Best sharpening stone usable at 19 \u2014 Solid Sharpening Stone requires level 35."
     },
     {
       "id": "heavy-weightstone",
@@ -298,7 +286,7 @@
       "faction": "both",
       "classes": ["rogue", "warrior", "druid", "paladin", "shaman"],
       "reqLevel": 15,
-      "notes": "Item 3241, Requires Level 15. Blunt-weapon counterpart to the Heavy Sharpening Stone; Solid Weightstone requires level 35. Confirmed via Wowhead Classic item data."
+      "notes": "Item 3241, Requires Level 15. Blunt-weapon counterpart to the Heavy Sharpening Stone; Solid Weightstone requires level 35."
     },
     {
       "id": "minor-wizard-oil",
@@ -308,7 +296,7 @@
       "faction": "both",
       "classes": ["priest", "druid", "shaman", "mage", "warlock"],
       "reqLevel": 5,
-      "notes": "Item 20744, Requires Level 5. Spell-damage weapon enhancement (ZG-era, patch 1.11). Minor Mana Oil is NOT usable at 19 \u2014 it requires level 20. Confirmed via Wowhead Classic item data."
+      "notes": "Item 20744, Requires Level 5. Spell-damage weapon enhancement (ZG-era, patch 1.11). Minor Mana Oil is NOT usable at 19 \u2014 it requires level 20."
     },
     {
       "id": "thistle-tea",
@@ -318,7 +306,7 @@
       "faction": "both",
       "classes": ["rogue"],
       "reqLevel": 5,
-      "notes": "Item 7676, Rogue-only, Requires Level 5; restores 100 energy, 5-min cooldown. Rogues can carry these at 19 (poisons unlock at level 20, so a 19 rogue uses no weapon poisons). Confirmed via Wowhead Classic item data."
+      "notes": "Item 7676, Rogue-only, Requires Level 5; restores 100 energy, 5-min cooldown. Rogues can carry these at 19 (poisons unlock at level 20, so a 19 rogue uses no weapon poisons)."
     },
     {
       "id": "heavy-dynamite",
@@ -328,7 +316,7 @@
       "faction": "both",
       "reqLevel": null,
       "source": { "type": "profession", "detail": "Engineering 125 (crafted)" },
-      "notes": "Item 4378, inflicts 128\u2013172 Fire damage in a 5-yard radius on a 1-minute cooldown; requires Engineering 125 to craft, no character-level requirement. Confirmed via Wowhead Classic item data."
+      "notes": "Item 4378, inflicts 128\u2013172 Fire damage in a 5-yard radius on a 1-minute cooldown; requires Engineering 125 to craft, no character-level requirement."
     },
     {
       "id": "big-bronze-bomb",
@@ -338,7 +326,7 @@
       "faction": "both",
       "reqLevel": null,
       "source": { "type": "profession", "detail": "Engineering 140 (crafted)" },
-      "notes": "Item 4380, inflicts 85\u2013115 Fire damage and stuns targets in a 5-yard radius for 2 sec (any damage breaks the stun; unreliable vs level 44+). Requires Engineering 140 to craft, no character-level requirement \u2014 any 19 engineer can carry it (Journeyman caps at 150). Confirmed via Wowhead Classic item data."
+      "notes": "Item 4380, inflicts 85\u2013115 Fire damage and stuns targets in a 5-yard radius for 2 sec (any damage breaks the stun; unreliable vs level 44+). Requires Engineering 140 to craft, no character-level requirement \u2014 any 19 engineer can carry it (Journeyman caps at 150)."
     },
     {
       "id": "explosive-sheep",
@@ -348,7 +336,7 @@
       "faction": "both",
       "reqLevel": null,
       "source": { "type": "profession", "detail": "Engineering 150 (crafted)" },
-      "notes": "Item 4384, summons an Explosive Sheep that charges a nearby enemy and explodes for 135\u2013165 damage; lasts 3 min or until it detonates, 1-minute cooldown. Requires Engineering 150 to craft, no character-level requirement \u2014 sits right at the 19 Journeyman skill cap of 150. Confirmed via Wowhead Classic item data."
+      "notes": "Item 4384, summons an Explosive Sheep that charges a nearby enemy and explodes for 135\u2013165 damage; lasts 3 min or until it detonates, 1-minute cooldown. Requires Engineering 150 to craft, no character-level requirement \u2014 sits right at the 19 Journeyman skill cap of 150."
     },
     {
       "id": "portable-bronze-mortar",
@@ -358,7 +346,7 @@
       "faction": "both",
       "reqLevel": null,
       "source": { "type": "profession", "detail": "Engineering 165 (crafted, gnome-only at 19)" },
-      "notes": "Item 4403, inflicts 100 Fire damage and incapacitates targets in a 5-yard radius for 2 sec (any damage breaks it; unreliable vs level 44+). Requires Engineering 165 to craft (schematic is a world drop) \u2014 at level 19 non-gnomes cap at 150 (Expert 151+ needs level 20), but the Gnome +15 Engineering Specialization racial reaches 165, so only Gnome engineers can make this in the bracket. Confirmed via Wowhead Classic item data."
+      "notes": "Item 4403, inflicts 100 Fire damage and incapacitates targets in a 5-yard radius for 2 sec (any damage breaks it; unreliable vs level 44+). Requires Engineering 165 to craft (schematic is a world drop) \u2014 at level 19 non-gnomes cap at 150 (Expert 151+ needs level 20), but the Gnome +15 Engineering Specialization racial reaches 165, so only Gnome engineers can make this in the bracket."
     }
   ]
 }
