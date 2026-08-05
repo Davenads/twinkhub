@@ -49,15 +49,6 @@
       "notes": "Item 14530, heals 2000 over 8 sec; requires First Aid 225 to USE (no character-level requirement). Reachable at 19 because Expert First Aid \u2014 Under Wraps has NO character-level gate (only First Aid 125), so a 19 twink can push First Aid to the 225 cap and use it. Mageweave (800), Heavy Mageweave (1104), and Runecloth (1360) fill the gap while leveling First Aid. Confirmed via Wowhead Classic item data."
     },
     {
-      "id": "heavy-silk-bandage",
-      "name": "Heavy Silk Bandage",
-      "type": "bandage",
-      "effect": "Budget bandage before you level First Aid to 225: channeled heal for 640 over 8 sec, off the potion cooldown. Breaks on damage taken and applies the 60s Recently Bandaged debuff.",
-      "faction": "both",
-      "reqLevel": null,
-      "notes": "Item 6451, heals 640 over 8 sec; low First Aid requirement to use (150 to craft), so it is available early. Strictly a leveling/backup option \u2014 Heavy Runecloth Bandage (2000) is BiS once First Aid reaches 225, which a 19 can do (Expert First Aid has no level requirement). Confirmed via Wowhead Classic item data."
-    },
-    {
       "id": "rumsey-rum-black-label",
       "name": "Rumsey Rum Black Label",
       "type": "food",
@@ -187,13 +178,13 @@
       "notes": "Cooking from 1x Tangy Clam Meat + 1x Hot Spices. One of the interchangeable +6/+6 Well Fed foods \u2014 pick by mats. Confirmed via Wowhead Classic (Era 1.15.x) data."
     },
     {
-      "id": "elixir-minor-agility",
-      "name": "Elixir of Minor Agility",
+      "id": "elixir-lesser-agility",
+      "name": "Elixir of Lesser Agility",
       "type": "elixir",
-      "effect": "+4 Agility for 1 hour. Persistent buff; does NOT share the potion cooldown.",
+      "effect": "+8 Agility for 1 hour. Persistent buff; does NOT share the potion cooldown.",
       "faction": "both",
-      "reqLevel": 2,
-      "notes": "Item 2457, Requires Level 2. In Classic Era elixirs stack freely (no battle/guardian limit) and stack with the matching scroll (different buff aura), so run this alongside Scroll of Agility. Confirmed via Wowhead Classic item data."
+      "reqLevel": 18,
+      "notes": "Item 3390, Requires Level 18. Best agility elixir usable at 19 \u2014 its +8 Agility strictly replaces Elixir of Minor Agility's +4, and Elixir of Agility requires level 40. In Classic Era elixirs stack freely (no battle/guardian limit) and stack with the matching scroll (different buff aura), so run this alongside Scroll of Agility. Confirmed via Wowhead Classic item data."
     },
     {
       "id": "elixir-lions-strength",
