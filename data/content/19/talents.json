@@ -56,7 +56,6 @@
       {
         "id": "hunter-concussive-control",
         "name": "Concussive / Humanoid Slaying control",
-        "note": "The source doc omitted this build's point line; ranks below are derived from the effect text and the talent-calc link.",
         "summary": "8% chance to proc stun on Concussive Shot, 3% increased damage to humanoids, +2% parry chance, 12% chance to proc root on Wing Clip.",
         "points": "2/5 Improved Concussive Shot, 3/3 Humanoid Slaying, 2/5 Deflection, 3/5 Improved Wing Clip",
         "url": "https://www.wowhead.com/classic/talent-calc/embed/hunter/-2-032003",
