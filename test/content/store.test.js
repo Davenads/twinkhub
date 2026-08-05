@@ -446,6 +446,13 @@ test('loadContentStore loads consumables with valid class references and filters
   const potions = consumablesFor(store, '19', { type: 'potion' });
   assert.ok(potions.length > 0 && potions.every((c) => c.type === 'potion'));
 
+  // The situational `utility` type carries the class-agnostic tools.
+  assert.ok(types.includes('utility'));
+  const utility = consumablesFor(store, '19', { type: 'utility' });
+  assert.ok(utility.every((c) => c.type === 'utility'));
+  assert.ok(utility.some((c) => c.id === 'magic-dust'), 'utility includes Magic Dust');
+  assert.ok(utility.some((c) => c.id === 'goblin-rocket-boots'), 'utility includes Goblin Rocket Boots');
+
   // Class filter keeps universal consumables plus class-specific ones; rogue sees
   // its Thistle Tea, a class without it does not.
   const rogue = consumablesFor(store, '19', { className: 'Rogue' });

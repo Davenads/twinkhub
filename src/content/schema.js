@@ -42,8 +42,9 @@ const SPELL_TYPES = ['direct-damage', 'dot', 'direct-heal', 'hot', 'shield', 'pr
 
 // Controlled consumable types (03-data-model.md) — the set `/consumable type:` exposes.
 // elixir/scroll are persistent stat buffs (no shared potion cooldown); weapon-buff
-// covers temporary weapon enhancements (sharpening/weightstones, wizard/mana oils).
-const CONSUMABLE_TYPES = ['potion', 'poison', 'elixir', 'scroll', 'food', 'bandage', 'weapon-buff', 'explosive', 'worldbuff'];
+// covers temporary weapon enhancements (sharpening/weightstones, wizard/mana oils);
+// utility covers situational, class-agnostic tools (Magic Dust, Goblin Rocket Boots).
+const CONSUMABLE_TYPES = ['potion', 'poison', 'elixir', 'scroll', 'food', 'bandage', 'weapon-buff', 'explosive', 'worldbuff', 'utility'];
 
 /** Record `msg` when `cond` is false; returns `cond` for control flow. */
 function require_(errors, cond, msg) {

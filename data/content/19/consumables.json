@@ -2,7 +2,8 @@
   "typeNotes": {
     "scroll": "Scrolls last 30 min and stack with elixirs (separate buff aura). Each pick is the highest rank usable at 19 \u2014 the next rank up is level-gated above the cap.",
     "food": "The interchangeable +6 Stamina / +6 Spirit Well Fed foods all give the same buff \u2014 pick whichever mats you can get.",
-    "weapon-buff": "These weapon enhancements use the temporary weapon-enchant slot, so they can't be combined with a shaman's weapon imbues (Flametongue, Rockbiter, etc.) \u2014 applying one replaces the other."
+    "weapon-buff": "These weapon enhancements use the temporary weapon-enchant slot, so they can't be combined with a shaman's weapon imbues (Flametongue, Rockbiter, etc.) \u2014 applying one replaces the other.",
+    "utility": "Situational, class-agnostic tools \u2014 widely considered poor WSG etiquette and best reserved for a blatant team imbalance rather than an even match."
   },
   "consumables": [
     {
@@ -348,6 +349,26 @@
       "reqLevel": null,
       "source": { "type": "profession", "detail": "Engineering 165 (crafted, gnome-only at 19)" },
       "notes": "Item 4403, inflicts 100 Fire damage and incapacitates targets in a 5-yard radius for 2 sec (any damage breaks it; unreliable vs level 44+). Requires Engineering 165 to craft (schematic is a world drop) \u2014 at level 19 non-gnomes cap at 150 (Expert 151+ needs level 20), but the Gnome +15 Engineering Specialization racial reaches 165, so only Gnome engineers can make this in the bracket."
+    },
+    {
+      "id": "magic-dust",
+      "name": "Magic Dust",
+      "type": "utility",
+      "effect": "Puts one enemy to sleep for up to 30 sec on a 1-minute cooldown; any damage breaks it, and only one target can be asleep at a time. A class-agnostic ranged incapacitate to lock down a flag carrier or peel a chaser.",
+      "faction": "both",
+      "reqLevel": 10,
+      "source": { "type": "drop", "detail": "Looted (Dust Devils, Westfall) or bought off the AH" },
+      "notes": "Item 2091, Requires Level 10 \u2014 usable at 19. Thrown consumable that needs no profession; stacks to 10 and works regardless of target level, which is why it lands on capped 19s."
+    },
+    {
+      "id": "goblin-rocket-boots",
+      "name": "Goblin Rocket Boots",
+      "type": "utility",
+      "effect": "Feet-slot engineering boots with a Use: sprint that boosts run speed for 20 sec on a 5-minute cooldown (small chance to malfunction and explode). Paired with the Minor Speed boots enchant for a permanent +8% run speed, they make a dedicated flag-runner setup.",
+      "faction": "both",
+      "reqLevel": null,
+      "source": { "type": "boe", "detail": "Engineering 225 (crafted, BoE) \u2014 buy off the AH at 19" },
+      "notes": "Item 7189, Item Level 45, Binds when equipped, no character-level requirement \u2014 equippable at 19. Needs Engineering 225 to craft, above the 19 cap, so a twink acquires it via the AH rather than self-crafting. Enchant the boots with Enchant Boots \u2014 Minor Speed (+8% run speed) for the full runner setup."
     }
   ]
 }

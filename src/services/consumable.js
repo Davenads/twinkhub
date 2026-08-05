@@ -13,7 +13,7 @@ import {
 } from '../lib/embed.js';
 
 // Display order + labels for each consumable type.
-const TYPE_ORDER = ['potion', 'poison', 'elixir', 'scroll', 'food', 'bandage', 'weapon-buff', 'explosive', 'worldbuff'];
+const TYPE_ORDER = ['potion', 'poison', 'elixir', 'scroll', 'food', 'bandage', 'weapon-buff', 'explosive', 'worldbuff', 'utility'];
 const TYPE_LABEL = {
   potion: 'Potion',
   poison: 'Poison',
@@ -23,7 +23,8 @@ const TYPE_LABEL = {
   bandage: 'Bandage',
   'weapon-buff': 'Weapon buff',
   explosive: 'Explosive',
-  worldbuff: 'World buff'
+  worldbuff: 'World buff',
+  utility: 'Utility'
 };
 
 function consumableLine(c, hideClasses = false, icon = '') {

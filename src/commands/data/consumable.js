@@ -24,7 +24,8 @@ export const data = new SlashCommandBuilder()
         { name: 'Bandage', value: 'bandage' },
         { name: 'Weapon buff', value: 'weapon-buff' },
         { name: 'Explosive', value: 'explosive' },
-        { name: 'World buff', value: 'worldbuff' }
+        { name: 'World buff', value: 'worldbuff' },
+        { name: 'Utility', value: 'utility' }
       )
   )
   .addStringOption((o) =>

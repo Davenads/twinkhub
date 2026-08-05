@@ -15,7 +15,7 @@ test('/consumable is registered with a choice type option and autocompleted clas
   assert.ok(type && !type.required, 'type: optional');
   assert.deepEqual(
     (type.choices ?? []).map((c) => c.value),
-    ['potion', 'poison', 'elixir', 'scroll', 'food', 'bandage', 'weapon-buff', 'explosive', 'worldbuff']
+    ['potion', 'poison', 'elixir', 'scroll', 'food', 'bandage', 'weapon-buff', 'explosive', 'worldbuff', 'utility']
   );
 
   assert.ok(opt('class') && !opt('class').required && opt('class').autocomplete, 'class: optional + autocompleted');

@@ -46,7 +46,8 @@ const CONSUMABLE_LABELS = {
   bandage: 'Bandages',
   'weapon-buff': 'Weapon Buffs',
   explosive: 'Explosives',
-  worldbuff: 'World Buffs'
+  worldbuff: 'World Buffs',
+  utility: 'Utility'
 };
 
 function consumableLabel(type) {
@@ -64,7 +65,8 @@ const CONSUMABLE_BUTTON_EMOJI = {
   food: 'rumsey-rum-black-label',
   bandage: 'heavy-runecloth-bandage',
   'weapon-buff': 'heavy-sharpening-stone',
-  explosive: 'heavy-dynamite'
+  explosive: 'heavy-dynamite',
+  utility: 'magic-dust'
 };
 
 /**
