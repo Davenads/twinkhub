@@ -60,14 +60,14 @@
     },
     {
       "id": "lesser-arcanum-of-voracity",
-      "wowhead": { "type": "item", "id": 11647 },
+      "wowhead": { "type": "item", "id": 11645 },
       "name": "Lesser Arcanum of Voracity",
       "slot": "head-legs",
       "effect": "+8 Agility (applies to head or legs).",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Dire Maul libram; the agility head/leg pick for damage builds.",
-      "classes": ["warrior", "rogue", "hunter", "shaman", "druid"]
+      "notes": "Dire Maul libram; the agility pick for rogue/hunter/feral damage. Warrior, paladin, and shaman melee builds instead run the parallel +8 Strength arcanum in this slot, since Strength scales their attack power.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
     },
     {
       "id": "might-of-the-scourge",
@@ -322,6 +322,17 @@
       "noLevelReq": true,
       "notes": "Dire Maul libram; the mana head/leg pick for caster-hybrid damage.",
       "classes": ["shaman", "druid", "paladin", "mage", "warlock", "priest", "hunter"]
+    },
+    {
+      "id": "arcanum-of-focus",
+      "wowhead": { "type": "item", "id": 18330 },
+      "name": "Arcanum of Focus",
+      "slot": "head-legs",
+      "effect": "+8 Spell Damage and Healing (applies to head or legs).",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Dire Maul libram (Anniversary); the spellpower head/leg pick for glass-cannon fire/frost mages and damage warlocks. A level-50+ applies it, then hands the piece over through the trade window's will-not-be-traded slot so a 19 can equip it.",
+      "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
     },
     {
       "id": "resilience-of-the-scourge",

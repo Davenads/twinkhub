@@ -154,6 +154,26 @@ test('the PPM-normalized proc enchants carry a ppm; Icy Chill deliberately does 
   }
 });
 
+test('the head/leg spellpower arcanum is authored; Voracity flags Strength as the melee alternative', async () => {
+  const store = await loadContentStore();
+  const data = bracketEnchants(store, '19');
+  const byId = new Map(data.enchants.map((e) => [e.id, e]));
+
+  // +8 spell damage & healing head/leg pick for glass-cannon fire/frost mages
+  // and damage warlocks — carryable by a 19 via the trade-window application.
+  const focus = byId.get('arcanum-of-focus');
+  assert.ok(focus, 'Arcanum of Focus is authored');
+  assert.equal(focus.slot, 'head-legs');
+  assert.equal(focus.noLevelReq, true);
+  assert.ok(focus.classes.includes('mage') && focus.classes.includes('warlock'), 'reaches the caster damage dealers');
+
+  // The +8 Agility arcanum tells melee builds Strength is the alternative here,
+  // and now surfaces for paladins (a Strength user) alongside warrior/shaman.
+  const voracity = byId.get('lesser-arcanum-of-voracity');
+  assert.ok(/strength/i.test(voracity.notes), 'Voracity note surfaces the Strength option');
+  assert.ok(voracity.classes.includes('paladin'), 'paladin sees the head/leg melee stat pick');
+});
+
 test('listEnchantSlots returns distinct slots; empty for an unknown bracket', async () => {
   const store = await loadContentStore();
   const slots = listEnchantSlots(store, '19');
