@@ -107,22 +107,25 @@ export function renderEnchant({ store, bracket, slot = null, className = null })
   let fields;
   if (slotKey) {
     // Detailed single-slot view (optionally class-narrowed): one field per enchant
-    // with full copy (effect, classes, authored notes). The match set is small
-    // enough that per-enchant fields comfortably fit.
-    fields = matches.map((ench) => {
+    // with effect + authored notes. The Classes: line is dropped here — within a
+    // single slot it's near-identical row to row and just pads each block; narrow
+    // with `/enchant class:<x>` to read per-class usability. A trailing zero-width
+    // blank line separates each block from the next field's bold header, since
+    // Discord stacks consecutive fields with no vertical gap (unreadable on mobile).
+    fields = matches.map((ench, i) => {
       // The field NAME carries the enchant's (short) name so a slot-filtered list
       // reads as distinct headers, not a column of identical slot labels. Names
       // can't render links, so the Wowhead link rides the effect line in the value.
       const url = enchantWowheadUrl(ench);
       const lines = [url ? `${ench.effect} \u00b7 [Wowhead](${url})` : ench.effect];
-      // Under a class filter every row already applies to that class, so the
-      // Classes: line is redundant noise — drop it.
-      if (!classKey) lines.push(`Classes: ${ench.classes.map(capitalize).join(', ')}`);
       if (ench.notes) lines.push(ench.notes);
       // Every listed enchant is no-level-req (stated once in the note), so decorate
       // the field name only for the exception — a row that DOES gate on level.
       const levelTag = ench.noLevelReq ? '' : ` \u2014 requires level ${ench.reqLevel}`;
-      return field(`${shortName(ench.name)}${levelTag}`, lines.join('\n'));
+      // Blank spacer after every block but the last so entries read as distinct.
+      // `\u200b` isn't whitespace, so it survives the field-value trim.
+      const spacer = i < matches.length - 1 ? '\n\u200b' : '';
+      return field(`${shortName(ench.name)}${levelTag}`, `${lines.join('\n')}${spacer}`);
     });
   } else {
     // Overview (all enchants, or class-only): collapse to ONE field per slot with

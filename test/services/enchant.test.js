@@ -137,14 +137,39 @@ test('renderEnchant never exceeds the 6000-char embed cap under a wide class fil
   assert.equal(e.fields.at(-1).name, '\u2026', 'an overflow note is appended when entries are dropped');
 });
 
-test('renderEnchant shows the Classes line in the slot view only without a class filter', () => {
-  // Classes only appear in the detailed slot view; the grouped overview omits them.
+test('renderEnchant omits the Classes line in every view (slot detail carries effect + notes only)', () => {
+  // The Classes line is dropped everywhere: within a slot it's near-identical row
+  // to row (use `/enchant class:<x>` to narrow), and the grouped overview never
+  // carried it.
   const withClass = renderEnchant({ store, bracket: '19', slot: 'weapon', className: 'warrior' }).embeds[0].toJSON();
   assert.ok(!withClass.fields[0].value.includes('Classes:'), 'class-filtered rows omit the Classes line');
 
   const noClass = renderEnchant({ store, bracket: '19', slot: 'weapon' }).embeds[0].toJSON();
-  assert.ok(noClass.fields[0].value.includes('Classes:'), 'slot-only rows keep the Classes line');
+  assert.ok(!noClass.fields[0].value.includes('Classes:'), 'slot detail omits the Classes line too');
 
   const overview = renderEnchant({ store, bracket: '19' }).embeds[0].toJSON();
   assert.ok(!overview.fields[0].value.includes('Classes:'), 'grouped overview omits the Classes line');
+});
+
+test('renderEnchant separates slot-detail fields with a trailing blank line except the last', () => {
+  // Discord stacks consecutive fields with no gap, so each block but the last ends
+  // with a zero-width blank line (\n\u200b) to keep the bold headers distinct.
+  const s = {
+    brackets: {
+      19: {
+        meta: store.brackets['19'].meta,
+        enchants: {
+          note: 'n',
+          enchants: [
+            { id: 'a', name: 'Enchant Weapon - Alpha', slot: 'weapon', effect: 'Effect A.', noLevelReq: true, classes: ['warrior'] },
+            { id: 'b', name: 'Enchant Weapon - Beta', slot: 'weapon', effect: 'Effect B.', noLevelReq: true, classes: ['warrior'] }
+          ]
+        }
+      }
+    }
+  };
+  const e = renderEnchant({ store: s, bracket: '19', slot: 'weapon' }).embeds[0].toJSON();
+  assert.equal(e.fields.length, 2);
+  assert.ok(e.fields[0].value.endsWith('\u200b'), 'non-last field ends with a zero-width blank line');
+  assert.ok(!e.fields[1].value.endsWith('\u200b'), 'the last field has no trailing spacer');
 });
