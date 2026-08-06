@@ -199,8 +199,41 @@
       "effect": "+10 Shadow Resistance.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Situational against warlocks, shadow priests, and rogue poisons.",
+      "notes": "Situational against warlocks and shadow priests \u2014 the bracket's main Shadow-damage dealers.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "cloak-lesser-agility",
+      "wowhead": { "type": "spell", "id": 13882 },
+      "name": "Enchant Cloak - Lesser Agility",
+      "slot": "cloak",
+      "effect": "+3 Agility.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "The offensive back pick for agility-scaling DPS sets \u2014 rogue, hunter, feral, enhance.",
+      "classes": ["warrior", "rogue", "hunter", "shaman", "druid"]
+    },
+    {
+      "id": "cloak-superior-defense",
+      "wowhead": { "type": "spell", "id": 20015 },
+      "name": "Enchant Cloak - Superior Defense",
+      "slot": "cloak",
+      "effect": "+70 Armor.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Flat physical mitigation; the pick into melee- and physical-cleave-heavy comps.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid", "mage", "warlock", "priest"]
+    },
+    {
+      "id": "cloak-dodge",
+      "wowhead": { "type": "spell", "id": 25086 },
+      "name": "Enchant Cloak - Dodge",
+      "slot": "cloak",
+      "effect": "+1% chance to dodge.",
+      "reqLevel": null,
+      "noLevelReq": true,
+      "notes": "Avoidance for tank and flag-carrier sets into melee-heavy comps.",
+      "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
     },
     {
       "id": "greater-strength-gloves",

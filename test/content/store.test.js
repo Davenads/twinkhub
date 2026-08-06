@@ -174,6 +174,28 @@ test('the head/leg spellpower arcanum is authored; Voracity flags Strength as th
   assert.ok(voracity.classes.includes('paladin'), 'paladin sees the head/leg melee stat pick');
 });
 
+test('the cloak slot carries the agility/armor/dodge picks and drops the bogus rogue-poison line', async () => {
+  const store = await loadContentStore();
+  const data = bracketEnchants(store, '19');
+  const byId = new Map(data.enchants.map((e) => [e.id, e]));
+
+  // The three added tactical cloak enchants, each authored on the cloak slot.
+  for (const [id, effect] of [
+    ['cloak-lesser-agility', /Agility/],
+    ['cloak-superior-defense', /Armor/],
+    ['cloak-dodge', /dodge/i]
+  ]) {
+    const ench = byId.get(id);
+    assert.ok(ench, `${id} is authored`);
+    assert.equal(ench.slot, 'cloak');
+    assert.ok(effect.test(ench.effect), `${id} effect reads right`);
+  }
+
+  // Rogue poisons don't exist at 19 (and aren't Shadow damage anyway): the
+  // Shadow Resistance note must no longer reference them.
+  assert.ok(!/poison/i.test(byId.get('shadow-resistance').notes), 'shadow-resistance drops the rogue-poison reference');
+});
+
 test('listEnchantSlots returns distinct slots; empty for an unknown bracket', async () => {
   const store = await loadContentStore();
   const slots = listEnchantSlots(store, '19');
