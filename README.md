@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.jpg" alt="TwinkHub" width="100%">
+</p>
+
 # TwinkHub
 
 A single, generalized **Discord bot for the WoW Classic Era twinking community** — starting
