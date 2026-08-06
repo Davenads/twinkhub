@@ -132,6 +132,28 @@ test('no per-enchant note restates the no-level-req norm (the top-level note own
   }
 });
 
+test('the PPM-normalized proc enchants carry a ppm; Icy Chill deliberately does not', async () => {
+  const store = await loadContentStore();
+  const data = bracketEnchants(store, '19');
+  const byId = new Map(data.enchants.map((e) => [e.id, e]));
+
+  // Fiery/Crusader/Lifestealing are PPM-normalized (Warcraft Wiki: 6/1/6 PPM).
+  assert.equal(byId.get('fiery-weapon').ppm, 6);
+  assert.equal(byId.get('crusader').ppm, 1);
+  assert.equal(byId.get('lifestealing').ppm, 6);
+
+  // Icy Chill is a flat per-hit proc, not PPM-normalized — it must NOT carry a
+  // false-precision ppm; its mechanic lives in the note instead.
+  assert.equal(byId.get('icy-chill').ppm, undefined);
+
+  // No non-proc enchant sprouts a ppm.
+  for (const ench of data.enchants) {
+    if (ench.ppm !== undefined) {
+      assert.ok(/Chance on hit/i.test(ench.effect), `${ench.id} has a ppm but isn't a chance-on-hit proc`);
+    }
+  }
+});
+
 test('listEnchantSlots returns distinct slots; empty for an unknown bracket', async () => {
   const store = await loadContentStore();
   const slots = listEnchantSlots(store, '19');

@@ -153,6 +153,22 @@ test('validateEnchants accepts an optional wowhead { type, id } reference', () =
   assert.equal(validateEnchants(itemRef).ok, true);
 });
 
+test('validateEnchants accepts an optional positive-integer ppm', () => {
+  const withPpm = validEnchants();
+  withPpm.enchants[0].ppm = 6;
+  assert.equal(validateEnchants(withPpm).ok, true);
+});
+
+test('validateEnchants rejects a non-positive or non-integer ppm', () => {
+  const zero = validEnchants();
+  zero.enchants[0].ppm = 0;
+  assert.ok(validateEnchants(zero).errors.some((e) => e.includes('ppm')));
+
+  const frac = validEnchants();
+  frac.enchants[0].ppm = 1.7;
+  assert.ok(validateEnchants(frac).errors.some((e) => e.includes('ppm')));
+});
+
 test('validateEnchants rejects a bad wowhead type or non-positive id', () => {
   const badType = validEnchants();
   badType.enchants[0].wowhead = { type: 'quest', id: 1 };

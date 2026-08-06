@@ -7,6 +7,7 @@
       "name": "Enchant Weapon - Fiery Weapon",
       "slot": "weapon",
       "effect": "Chance on hit: +40 Fire damage.",
+      "ppm": 6,
       "reqLevel": null,
       "noLevelReq": true,
       "notes": "The iconic melee weapon proc and a staple of most 19 melee sets.",
@@ -18,6 +19,7 @@
       "name": "Enchant Weapon - Crusader",
       "slot": "weapon",
       "effect": "Chance on hit: +100 Strength for 15s and a small heal.",
+      "ppm": 1,
       "reqLevel": null,
       "noLevelReq": true,
       "notes": "Big burst window on proc; healers also run it on a caster weapon for the heal.",
@@ -31,7 +33,7 @@
       "effect": "Chance on hit: frost damage and a movement/attack-speed slow.",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Control option for melee; the slow is valuable for kiting and flag-carrier pressure.",
+      "notes": "Control option for melee; the slow pressures kiters and flag carriers. Triggers on a flat per-hit chance (not PPM-normalized like Fiery/Crusader/Lifestealing), so it favors a fast weapon.",
       "classes": ["warrior", "rogue", "hunter", "paladin", "shaman", "druid"]
     },
     {
@@ -161,6 +163,7 @@
       "name": "Enchant Weapon - Lifestealing",
       "slot": "weapon",
       "effect": "Chance on hit: deal Shadow damage and heal the attacker for the amount dealt.",
+      "ppm": 6,
       "reqLevel": null,
       "noLevelReq": true,
       "notes": "Self-healing sustain; favored on midfield/duelist builds.",

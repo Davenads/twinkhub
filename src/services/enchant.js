@@ -117,7 +117,12 @@ export function renderEnchant({ store, bracket, slot = null, className = null })
       // reads as distinct headers, not a column of identical slot labels. Names
       // can't render links, so the Wowhead link rides the effect line in the value.
       const url = enchantWowheadUrl(ench);
-      const lines = [url ? `${ench.effect} \u00b7 [Wowhead](${url})` : ench.effect];
+      // Proc enchants carry a PPM (procs per minute); ride it on the effect line
+      // between the mechanic and the Wowhead link. Only proc entries set it, so
+      // stat-sticks/resistances render unchanged. Detail view only (the grouped
+      // overview stays lean).
+      const head = ench.ppm ? `${ench.effect} \u00b7 ${ench.ppm} PPM` : ench.effect;
+      const lines = [url ? `${head} \u00b7 [Wowhead](${url})` : head];
       if (ench.notes) lines.push(ench.notes);
       // Every listed enchant is no-level-req (stated once in the note), so decorate
       // the field name only for the exception — a row that DOES gate on level.

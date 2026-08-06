@@ -151,6 +151,32 @@ test('renderEnchant omits the Classes line in every view (slot detail carries ef
   assert.ok(!overview.fields[0].value.includes('Classes:'), 'grouped overview omits the Classes line');
 });
 
+test('renderEnchant shows PPM on proc enchants in the detail view only', () => {
+  const s = {
+    brackets: {
+      19: {
+        meta: store.brackets['19'].meta,
+        enchants: {
+          note: 'n',
+          enchants: [
+            { id: 'fiery', name: 'Enchant Weapon - Fiery Weapon', slot: 'weapon', effect: 'Chance on hit: +40 Fire damage.', noLevelReq: true, ppm: 6, classes: ['warrior'] },
+            { id: 'agi', name: 'Enchant Weapon - Agility', slot: 'weapon', effect: '+15 Agility.', noLevelReq: true, classes: ['warrior'] }
+          ]
+        }
+      }
+    }
+  };
+  const detail = renderEnchant({ store: s, bracket: '19', slot: 'weapon' }).embeds[0].toJSON();
+  const fiery = detail.fields.find((f) => f.name === 'Fiery Weapon');
+  const agi = detail.fields.find((f) => f.name === 'Agility');
+  assert.ok(fiery.value.includes('6 PPM'), 'proc enchant shows its PPM on the effect line');
+  assert.ok(!agi.value.includes('PPM'), 'a stat-stick with no ppm shows nothing');
+
+  // Detail view only: the grouped overview never surfaces PPM.
+  const overview = renderEnchant({ store: s, bracket: '19' }).embeds[0].toJSON();
+  assert.ok(!overview.fields.some((f) => f.value.includes('PPM')), 'overview omits PPM');
+});
+
 test('renderEnchant separates slot-detail fields with a trailing blank line except the last', () => {
   // Discord stacks consecutive fields with no gap, so each block but the last ends
   // with a zero-width blank line (\n\u200b) to keep the bold headers distinct.

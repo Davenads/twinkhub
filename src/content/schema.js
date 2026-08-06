@@ -196,6 +196,13 @@ export function validateEnchants(obj, label = 'enchants.json') {
         entry?.reqLevel == null || isInteger(entry.reqLevel),
         `${at}.reqLevel must be an integer or null`
       );
+      // Optional procs-per-minute rate for "chance on hit" proc enchants (Fiery,
+      // Crusader, Lifestealing). Absent on stat-stick/resistance enchants and on
+      // per-hit procs whose rate isn't PPM-normalized (Icy Chill). The render layer
+      // shows it only when present.
+      if (entry?.ppm !== undefined) {
+        require_(errors, isInteger(entry.ppm) && entry.ppm > 0, `${at}.ppm must be a positive integer when present`);
+      }
       require_(errors, isStringArray(entry?.classes), `${at}.classes must be a non-empty string array`);
       // Optional Wowhead reference. Enchants span two namespaces, so unlike gear
       // (a bare wowheadId) each records a { type, id } discriminator: profession
