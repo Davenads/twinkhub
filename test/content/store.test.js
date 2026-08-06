@@ -115,6 +115,23 @@ test('loadContentStore loads the enchants file and passes the referential class 
   }
 });
 
+test('no per-enchant note restates the no-level-req norm (the top-level note owns it)', async () => {
+  const store = await loadContentStore();
+  const data = bracketEnchants(store, '19');
+
+  // The universal "no level requirement" fact is stated exactly once, in the
+  // top-level note; per-enchant notes must not repeat it (the renderer already
+  // suppresses the level tag for noLevelReq rows). Guards against the redundant
+  // prose creeping back on the next content edit. "Requires Level 19" provenance
+  // on the Scourge shoulders is a different phrase and stays permitted.
+  const redundant = /level requirement|no-level-req/i;
+  for (const ench of data.enchants) {
+    if (ench.notes) {
+      assert.ok(!redundant.test(ench.notes), `${ench.id} note restates the no-level-req norm: "${ench.notes}"`);
+    }
+  }
+});
+
 test('listEnchantSlots returns distinct slots; empty for an unknown bracket', async () => {
   const store = await loadContentStore();
   const slots = listEnchantSlots(store, '19');
