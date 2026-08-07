@@ -23,6 +23,14 @@ function parseGuildIds() {
     .filter(Boolean);
 }
 
+/** Parse the optional admin role-ID allow-list (comma-separated). */
+function parseAdminRoleIds() {
+  return (process.env.DISCORD_ADMIN_ROLE_IDS?.trim() || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 /**
  * Validated environment. Importing this module throws fast if a required
  * secret is missing, so `npm start` / `npm run deploy` fail with a clear message
@@ -35,5 +43,10 @@ export const env = {
   logLevel: process.env.LOG_LEVEL?.trim() || 'info',
   // Optional: when set, every executed command and panel interaction is posted
   // as an audit embed to this channel. Unset (e.g. dev) disables audit logging.
-  auditChannelId: process.env.AUDIT_LOG_CHANNEL_ID?.trim() || null
+  auditChannelId: process.env.AUDIT_LOG_CHANNEL_ID?.trim() || null,
+  // Optional: role IDs that may run admin/dev commands. `lib/access.js` reads
+  // this straight from process.env (not this validated object) to stay decoupled
+  // from env-validation; surfaced here for discoverability. When unset, access
+  // falls back to the legacy "dev" role-name match.
+  adminRoleIds: parseAdminRoleIds()
 };

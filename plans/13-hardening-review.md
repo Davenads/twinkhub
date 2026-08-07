@@ -111,10 +111,28 @@ these plans) aren't reflowed. CI now gates on `npm run lint` and
 
 ## P5 — Security / auth
 
-### P5 #9 — Admin access model — `TODO`
-`src/lib/access.js` gates dev commands by **role name** `"dev"` (case-insensitive).
-Role-name auth is weak (anyone who can create/rename a role escalates). Consider
-role IDs from config, or Discord's native command permissions.
+### P5 #9 — Admin access model — `DONE` (this change)
+`src/lib/access.js` gated all 8 privileged commands by **role name** `"dev"`, which
+anyone able to create/rename a role could forge. Replaced `hasDevRole`/`requireDevRole`
+with a layered `hasAdminAccess`/`requireAdmin` gate, strongest first: (1) Discord's
+**Manage Server** permission (`PermissionFlagsBits.ManageGuild`) — server-side
+enforced, unforgeable, and owners/admins always qualify; (2) a role ID in the new
+optional `DISCORD_ADMIN_ROLE_IDS` allow-list (IDs survive renames — the real fix);
+(3) a **fallback** to the legacy `"dev"` role-name match *only when no role IDs are
+configured*, so the current live deployment keeps working untouched and the weak path
+switches off the moment real IDs are set. `access.js` reads `DISCORD_ADMIN_ROLE_IDS`
+straight from `process.env` at call time (NOT via the validated `config/env.js`, whose
+body throws on a missing `DISCORD_TOKEN`) — same test-safety decoupling as the audit.js
+CI fix; `env.js` also surfaces `adminRoleIds` for discoverability and `.env.example`
+documents the var. Updated the 8 call sites (setup, panels, timerboard, alerts,
+timerdms, reloadcontent, testevent, ping). New `test/lib/access.test.js` covers the
+Manage-Server path, configured-role-ID allow/deny, the legacy fallback (active only
+with no IDs; a `"dev"`-named role no longer escalates once IDs are set), null member,
+and `requireAdmin`'s ephemeral denial reply. Updated the existing reloadcontent gating
+test to the new denial wording. 419 tests green; no command *definition* changed so no
+redeploy — runtime gate only. Optional future defense-in-depth (separate, needs
+redeploy): `setDefaultMemberPermissions(ManageGuild)` on the command builders to hide
+them in the Discord UI.
 
 ## P6 — Test coverage
 

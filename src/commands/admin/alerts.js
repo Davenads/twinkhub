@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, MessageFlags } from 'discord.js';
-import { requireDevRole } from '../../lib/access.js';
+import { requireAdmin } from '../../lib/access.js';
 import { setEventEnabled } from '../../config/guildConfig.js';
 import { EVENT_KEYS } from '../../timers/events/index.js';
 import { EVENT_CHOICES } from '../../timers/summary.js';
@@ -19,7 +19,7 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction) {
-  if (!(await requireDevRole(interaction))) return;
+  if (!(await requireAdmin(interaction))) return;
   if (!interaction.inGuild()) {
     await interaction.reply({
       content: 'This command can only be used in a server.',

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, MessageFlags } from 'discord.js';
-import { requireDevRole } from '../../lib/access.js';
+import { requireAdmin } from '../../lib/access.js';
 import { reloadContentStore, summarizeStore } from '../../content/store.js';
 
 // Dev-only authoring aid: re-reads and re-validates data/content/ into the live
@@ -10,7 +10,7 @@ export const data = new SlashCommandBuilder()
   .setDescription('Reload the content store from disk without restarting the bot (dev only).');
 
 export async function execute(interaction) {
-  if (!(await requireDevRole(interaction))) return;
+  if (!(await requireAdmin(interaction))) return;
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
   const result = await reloadContentStore();

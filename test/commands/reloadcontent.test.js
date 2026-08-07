@@ -30,14 +30,17 @@ test('/reloadcontent is registered as a no-option command', async () => {
   assert.ok(!json.options || json.options.length === 0, 'takes no options');
 });
 
-test('/reloadcontent is gated behind the dev role', async () => {
+test('/reloadcontent denies non-admins with a permission hint', async () => {
   const cmds = await loadCommands();
   const cmd = cmds.get('reloadcontent');
 
   const interaction = fakeInteraction({ dev: false });
   await cmd.execute(interaction);
 
-  assert.ok(interaction._calls.reply?.content?.includes('dev'), 'rejects with a dev-role hint');
+  assert.ok(
+    interaction._calls.reply?.content?.includes('Manage Server'),
+    'rejects with a permission hint'
+  );
   assert.equal(interaction._calls.deferred, false, 'does not defer or reload for non-dev');
   assert.equal(interaction._calls.editReply, null);
 });

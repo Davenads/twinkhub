@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChannelType, MessageFlags } from 'discord.js';
-import { requireDevRole } from '../../lib/access.js';
+import { requireAdmin } from '../../lib/access.js';
 import { loadGuildConfig, setTimerBoard } from '../../config/guildConfig.js';
 import { getAllStates } from '../../timers/events/index.js';
 import { renderEventsSummary } from '../../timers/summary.js';
@@ -31,7 +31,7 @@ async function removeExistingBoard(guild, board) {
 }
 
 export async function execute(interaction) {
-  if (!(await requireDevRole(interaction))) return;
+  if (!(await requireAdmin(interaction))) return;
   if (!interaction.inGuild()) {
     await interaction.reply({
       content: 'This command can only be used in a server.',
