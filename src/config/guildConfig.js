@@ -18,18 +18,40 @@ export const DEFAULT_CONFIG = {
   panels: null // { channelId, messageIds: { <panelKey>: messageId } }
 };
 
-function fileFor(guildId) {
-  return path.join(CONFIG_DIR, `${guildId}.json`);
+function fileFor(guildId, dir = CONFIG_DIR) {
+  return path.join(dir, `${guildId}.json`);
 }
 
-async function ensureDir() {
-  await fs.mkdir(CONFIG_DIR, { recursive: true });
+/**
+ * Write via a temp file + atomic rename so a crash mid-write can never leave a
+ * truncated/zero-filled config. Unlike the regenerable latch file, this holds
+ * unrecoverable wiring (alert channel/role, board + panel message ids), so a
+ * partial write would permanently break a guild until manual re-setup.
+ */
+async function atomicWrite(file, data) {
+  const tmp = `${file}.${process.pid}.tmp`;
+  await fs.writeFile(tmp, data);
+  await fs.rename(tmp, file);
+}
+
+/**
+ * Per-file async mutex (promise chain). Serializes read-modify-write for a given
+ * guild so concurrent saves — e.g. the per-tick board updater racing an admin
+ * toggle — can't clobber each other's fields. In-process only, which is correct
+ * for the single-fork pm2 model; a future Postgres move replaces it with a row
+ * transaction. Keyed by absolute path so distinct guilds/dirs never contend.
+ */
+const _locks = new Map();
+function withFileLock(file, fn) {
+  const next = (_locks.get(file) ?? Promise.resolve()).then(fn, fn);
+  _locks.set(file, next.catch(() => {}));
+  return next;
 }
 
 /** Load a guild's config merged over defaults. Missing file => defaults. */
-export async function loadGuildConfig(guildId) {
+export async function loadGuildConfig(guildId, { dir = CONFIG_DIR } = {}) {
   try {
-    const raw = await fs.readFile(fileFor(guildId), 'utf8');
+    const raw = await fs.readFile(fileFor(guildId, dir), 'utf8');
     return { ...DEFAULT_CONFIG, ...JSON.parse(raw) };
   } catch (err) {
     if (err.code === 'ENOENT') return { ...DEFAULT_CONFIG };
@@ -37,13 +59,22 @@ export async function loadGuildConfig(guildId) {
   }
 }
 
-/** Shallow-merge `patch` into a guild's config and persist. Returns the saved config. */
-export async function saveGuildConfig(guildId, patch) {
-  await ensureDir();
-  const current = await loadGuildConfig(guildId);
-  const next = { ...current, ...patch };
-  await fs.writeFile(fileFor(guildId), JSON.stringify(next, null, 2));
-  return next;
+/**
+ * Merge `patch` into a guild's config and persist atomically under the guild's
+ * lock. `patch` may be an object (shallow-merged) or an updater `(current) =>
+ * delta` — use the updater form to compute a merge against the fresh, under-lock
+ * state (so sibling fields aren't lost). Returns the saved config.
+ */
+export async function saveGuildConfig(guildId, patch, { dir = CONFIG_DIR } = {}) {
+  const file = fileFor(guildId, dir);
+  return withFileLock(file, async () => {
+    await fs.mkdir(dir, { recursive: true });
+    const current = await loadGuildConfig(guildId, { dir });
+    const delta = typeof patch === 'function' ? patch(current) : patch;
+    const next = { ...current, ...delta };
+    await atomicWrite(file, JSON.stringify(next, null, 2));
+    return next;
+  });
 }
 
 /** Convenience toggle for the per-guild DM fan-out flag. */
@@ -56,10 +87,11 @@ export function mergeTimers(current = {}, event, enabled) {
   return { ...current, [event]: Boolean(enabled) };
 }
 
-/** Set one event's alert toggle for a guild, preserving the other toggles. */
+/** Set one event's alert toggle for a guild, preserving the other toggles. The
+ *  functional patch computes the merged timers map against the under-lock state,
+ *  so concurrent toggles for the same guild can't drop each other. */
 export async function setEventEnabled(guildId, event, enabled) {
-  const cfg = await loadGuildConfig(guildId);
-  return saveGuildConfig(guildId, { timers: mergeTimers(cfg.timers, event, enabled) });
+  return saveGuildConfig(guildId, (cfg) => ({ timers: mergeTimers(cfg.timers, event, enabled) }));
 }
 
 /** Point (or clear with null) the persistent timer-board message for a guild. */
