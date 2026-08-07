@@ -41,6 +41,17 @@ Added `.github/workflows/ci.yml`: on push to `main` and on `pull_request`, runs
 when a newer commit lands. Does **not** run `deploy`/`start` (those need
 `DISCORD_TOKEN` and hit Discord). Now every push/PR is gated on the test suite.
 
+**Follow-up fix (CI immediately earned its keep):** the first Linux CI run went red
+where the suite is green locally. Cause was a test-isolation bug masked by the dev
+`.env`: `test/lib/audit.test.js` → `audit.js` imported the validated `env`
+(`../config/env.js`), whose module body throws on a missing `DISCORD_TOKEN`. With
+no `.env` on the runner the whole file failed to load (the 1 failure + ~9 missing
+tests). Fixed by decoupling `audit.js` from env *validation*: it now reads its one
+optional var (`AUDIT_LOG_CHANNEL_ID`) straight from `process.env` at call time in
+`postAudit`, mirroring `logger.js`'s existing rationale. `env.js`'s fail-fast for
+the real entry points (`index.js`, `deploy-commands.js`) is untouched. Verified by
+running the audit test with `DISCORD_TOKEN`/`DISCORD_APP_ID` unset.
+
 ### P2 #4 — Storage-adapter seam — `TODO`
 Per-guild config and timer latches write to the local `data/` filesystem. For a
 Heroku move (ephemeral FS) this state must go to a durable store. Introduce a

@@ -1,7 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
 import { EMBED_COLOR, truncate, field, LIMITS } from './embed.js';
 import { logger } from './logger.js';
-import { env } from '../config/env.js';
 import { parseCustomId } from '../services/panels.js';
 
 // Audit logging (P?). Every executed slash command and every panel button/select
@@ -181,7 +180,13 @@ async function drain() {
  * @param {{ kind:'command'|'panel', interaction:object, outcome?:object, ms?:number }} entry
  */
 export function postAudit(client, entry) {
-  const channelId = env.auditChannelId;
+  // Read the optional audit channel straight from the environment (like
+  // logger.js reads LOG_LEVEL) rather than importing the validated `env`. That
+  // keeps this module — and the pure formatters above — free of any dependency
+  // on env *validation*, so importing it for unit tests never requires real
+  // secrets (DISCORD_TOKEN etc). By the time an interaction fires at runtime,
+  // the entry point has already loaded env.js → dotenv, so this is populated.
+  const channelId = process.env.AUDIT_LOG_CHANNEL_ID?.trim() || null;
   if (!channelId) return;
   let embed;
   try {
