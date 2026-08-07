@@ -7,6 +7,7 @@ import { postAudit } from './lib/audit.js';
 import { runTimerEngine } from './timers/engine.js';
 import { createDispatch } from './timers/dispatch.js';
 import { createBoardUpdater } from './timers/board.js';
+import { createTickLoop } from './timers/loop.js';
 import { loadContentStore } from './content/store.js';
 
 const TICK_MS = 60_000;
@@ -38,18 +39,15 @@ client.once(Events.ClientReady, (c) => {
   // the same state snapshot (editing in place, reposting if it was deleted).
   const dispatch = createDispatch(client);
   const updateBoards = createBoardUpdater(client);
-  const tick = async () => {
-    try {
-      const now = Date.now();
-      const { fires, states } = await runTimerEngine({ now, dispatch });
-      if (fires.length) logger.info(`Timer engine fired ${fires.length} trigger(s)`);
-      await updateBoards({ states, now });
-    } catch (err) {
-      logger.error({ err }, 'tick failed');
-    }
+  const runTick = async () => {
+    const now = Date.now();
+    const { fires, states } = await runTimerEngine({ now, dispatch });
+    if (fires.length) logger.info(`Timer engine fired ${fires.length} trigger(s)`);
+    await updateBoards({ states, now });
   };
-  setInterval(tick, TICK_MS);
-  tick();
+  // Re-entrancy guard: if a tick outruns the interval, drop the overlapping one
+  // rather than double-fanning-out or racing the shared latch/board writes.
+  createTickLoop({ runTick, intervalMs: TICK_MS, logger }).start();
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {

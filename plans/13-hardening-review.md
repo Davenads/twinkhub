@@ -1,0 +1,81 @@
+# 13 — Hardening review roadmap
+
+A prioritized, cross-session tracker for the full-project review. We work these
+**one item at a time**: write a clear plan, get a "proceed", implement, then
+`npm test` → commit → `git push origin main` → `pm2 reload twinkhub`. Redeploy
+(`npm run deploy`) only when a command *definition* changes.
+
+Status legend: `DONE` (shipped, commit noted) · `NEXT` (teed up) · `TODO`.
+
+## P1 — Correctness / data-integrity (do first)
+
+### P1 #1 — Guild config: atomic + race-safe writes — `DONE` (`41b30b9`)
+`saveGuildConfig` funnels both the per-tick board updater (`setTimerBoard`) and
+admin toggles through a read-modify-write whose awaits yield the loop, so two
+racing writers could lose sibling fields; a non-atomic write could also truncate
+a config on crash. Fix: in-process promise-chain mutex keyed by file path +
+temp-write-then-rename (mirrors `latchStore`). `saveGuildConfig` now also accepts
+a **functional patch** `(cfg) => delta` that reads fresh under-lock state, which
+`setEventEnabled` delegates to. `loadGuildConfig` stays fail-loud on corrupt
+files (atomic rename makes truncation unproducible; silent re-seed would wipe
+unrecoverable wiring, unlike regenerable latches). Tests: round-trip over
+defaults, concurrent sibling-field preservation, concurrent functional-patch
+merge, no-temp-file-left-behind.
+
+### P1 #2 — Timer tick: re-entrancy guard — `DONE` (this change)
+A tick that outruns the 60s interval could overlap the next one, double-fanning
+pings or racing shared latch/board writes. Extracted the inline `setInterval`
+tick from `src/index.js` into a testable `createTickLoop({ runTick, intervalMs,
+logger })` factory (`src/timers/loop.js`) that drops any tick arriving while the
+previous is in flight (logs the skip) and owns the error boundary. `index.js`
+now supplies a `runTick` and calls `.start()`. Tests in `test/timers/loop.test.js`
+cover the overlap-skip (maxActive === 1), post-settle re-run, throw-then-recover,
+and `stop()`.
+
+## P2 — Reliability / infra
+
+### P2 #3 — CI — `TODO`
+Add `.github/workflows/ci.yml` running `npm ci && npm test` on push/PR. No CI
+today; nothing catches a broken content edit or a failing test before it lands.
+
+### P2 #4 — Storage-adapter seam — `TODO`
+Per-guild config and timer latches write to the local `data/` filesystem. For a
+Heroku move (ephemeral FS) this state must go to a durable store. Introduce a
+small storage adapter interface so the file backend can be swapped for Postgres/KV
+without touching call sites. (Prereq for the Heroku migration in CLAUDE.md.)
+
+## P3 — Housekeeping
+
+### P3 #5 — Stray binary — `TODO`
+`TwinkHub-consumable-icons.zip` (~54 KB) sits untracked **and un-ignored** at repo
+root. Decide: commit it as an asset, move it out of the tree, or add to
+`.gitignore`.
+
+### P3 #6 — Route `latchStore` warn through pino — `TODO`
+`latchStore.js` uses `console.warn` on a corrupt-read self-heal; route it through
+the shared pino `logger` for consistent structured logs.
+
+## P4 — Heroku migration prerequisites — `TODO`
+Tracked in CLAUDE.md: `Procfile` (`worker: node src/index.js`), move
+`DISCORD_TOKEN`/guild ids to config vars, durable storage (see P2 #4), drop local
+pm2 once Heroku owns the runtime.
+
+### P4 #7 — ESLint + Prettier — `TODO`
+No linter/formatter config in the repo. Add ESLint (flat config) + Prettier and a
+`npm run lint` script; wire into CI (P2 #3).
+
+## P5 — Security / auth
+
+### P5 #9 — Admin access model — `TODO`
+`src/lib/access.js` gates dev commands by **role name** `"dev"` (case-insensitive).
+Role-name auth is weak (anyone who can create/rename a role escalates). Consider
+role IDs from config, or Discord's native command permissions.
+
+## P6 — Test coverage
+
+### P6 #10 — Command-loader silent-skip test — `TODO`
+`loadCommands` silently skips malformed command modules. Add a test asserting a
+bad module is skipped (and, ideally, logged) without taking down the loader.
+
+### P6 #11 — Guild config concurrency test — `DONE` (folded into P1 #1)
+Shipped as part of P1 #1's test suite.
