@@ -19,7 +19,8 @@ client.once('ready', async (c) => {
     const rows = [...emojis.values()].sort((a, b) => a.name.localeCompare(b.name));
     if (asJson) {
       const obj = {};
-      for (const e of rows) obj[e.name] = { name: e.name, id: e.id, ...(e.animated ? { animated: true } : {}) };
+      for (const e of rows)
+        obj[e.name] = { name: e.name, id: e.id, ...(e.animated ? { animated: true } : {}) };
       console.log(JSON.stringify(obj, null, 2));
     } else {
       console.log(`# ${rows.length} application emoji(s)`);
