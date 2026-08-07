@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { logger } from '../lib/logger.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -30,7 +31,7 @@ export async function loadLatches(file = LATCH_FILE) {
   try {
     return JSON.parse(raw);
   } catch (err) {
-    console.warn(`[latchStore] ${file} is unreadable (${err.message}); re-seeding latches.`);
+    logger.warn({ err, file }, 'latch file unreadable; re-seeding latches');
     return {};
   }
 }

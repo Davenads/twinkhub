@@ -54,9 +54,12 @@ without touching call sites. (Prereq for the Heroku migration in CLAUDE.md.)
 root. Decide: commit it as an asset, move it out of the tree, or add to
 `.gitignore`.
 
-### P3 #6 — Route `latchStore` warn through pino — `TODO`
-`latchStore.js` uses `console.warn` on a corrupt-read self-heal; route it through
-the shared pino `logger` for consistent structured logs.
+### P3 #6 — Route `latchStore` warn through pino — `DONE` (this change)
+`latchStore.js` now logs the corrupt-read self-heal via the shared pino `logger`
+(`logger.warn({ err, file }, 'latch file unreadable; re-seeding latches')`)
+instead of `console.warn`, so the event carries structured `err`/`file` fields and
+honors `LOG_LEVEL`/prod-vs-pretty transport like every other log. The corruption
+test now spies on `logger.warn` rather than `console.warn`.
 
 ## P4 — Heroku migration prerequisites — `TODO`
 Tracked in CLAUDE.md: `Procfile` (`worker: node src/index.js`), move
