@@ -187,11 +187,11 @@ function buildReferencePanel({ store, bracket }) {
       new ButtonBuilder()
         .setCustomId(encodeCustomId('xprules'))
         .setLabel('XP Rules')
-        .setStyle(ButtonStyle.Primary),
+        .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId(encodeCustomId('tierlist'))
         .setLabel('Tier List')
-        .setStyle(ButtonStyle.Primary)
+        .setStyle(ButtonStyle.Secondary)
     )
   ];
   const guides = listGuides(store, bracket);
@@ -368,7 +368,7 @@ export function navRow({ className = null, build = null, back = false } = {}) {
     new ButtonBuilder()
       .setCustomId(encodeCustomId('close'))
       .setLabel('Close')
-      .setStyle(ButtonStyle.Secondary)
+      .setStyle(ButtonStyle.Danger)
   );
   return row(...buttons);
 }
