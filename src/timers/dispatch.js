@@ -82,7 +82,10 @@ export function createDispatch(client, { loadConfig = loadGuildConfig } = {}) {
 
           if (role) {
             dmsSent = await sendDms(role, body);
-            logger.info({ guild: guild.id, event, kind, sent: dmsSent }, 'timer dispatch: DM fan-out');
+            logger.info(
+              { guild: guild.id, event, kind, sent: dmsSent },
+              'timer dispatch: DM fan-out'
+            );
           }
         } catch (err) {
           logger.warn({ err, guild: guild.id, event, kind }, 'timer dispatch: DM fan-out failed');

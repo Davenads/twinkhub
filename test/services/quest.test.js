@@ -16,9 +16,31 @@ const store = {
       quests: {
         note: 'Seeded from verified domain notes.',
         quests: [
-          { id: 'the-night-watch', name: 'The Night Watch', zone: null, faction: 'alliance', reward: { desc: 'Quiver of the Night Watch' }, xpWarning: true, classes: ['hunter'] },
-          { id: 'talbar-quest', name: 'Talbar Mantle Quest', zone: 'Redridge', faction: 'both', reward: { itemId: 'talbar-mantle' }, xpWarning: false },
-          { id: 'screecher', name: 'Screecher Belt Quest', zone: 'Silverpine', faction: 'horde', reward: { desc: 'Screecher Belt' }, xpWarning: true }
+          {
+            id: 'the-night-watch',
+            name: 'The Night Watch',
+            zone: null,
+            faction: 'alliance',
+            reward: { desc: 'Quiver of the Night Watch' },
+            xpWarning: true,
+            classes: ['hunter']
+          },
+          {
+            id: 'talbar-quest',
+            name: 'Talbar Mantle Quest',
+            zone: 'Redridge',
+            faction: 'both',
+            reward: { itemId: 'talbar-mantle' },
+            xpWarning: false
+          },
+          {
+            id: 'screecher',
+            name: 'Screecher Belt Quest',
+            zone: 'Silverpine',
+            faction: 'horde',
+            reward: { desc: 'Screecher Belt' },
+            xpWarning: true
+          }
         ]
       }
     }
@@ -34,7 +56,11 @@ test('renderQuest lists quests with the file note, resolving reward itemIds to i
   const e = embeds[0].toJSON();
   assert.ok(e.title.includes('Warsong Gulch 19'));
   assert.ok(e.description.includes('Seeded from verified domain notes'));
-  assert.deepEqual(fieldNames(embeds).sort(), ['Screecher Belt Quest', 'Talbar Mantle Quest', 'The Night Watch']);
+  assert.deepEqual(fieldNames(embeds).sort(), [
+    'Screecher Belt Quest',
+    'Talbar Mantle Quest',
+    'The Night Watch'
+  ]);
   // reward.itemId resolves to the gear item's name.
   assert.ok(field(embeds, 'Talbar Mantle Quest').includes('Reward: Talbar Mantle'));
   assert.ok(e.footer.text.includes('WoW Classic Era 1.15.x'));
@@ -67,9 +93,25 @@ test('renderQuest degrades on no match and on an unloaded bracket', () => {
   const scoped = {
     brackets: {
       19: {
-        meta: { battleground: 'Warsong Gulch', levelCap: 19, gameVersion: { clientPatch: '1.15.x' } },
+        meta: {
+          battleground: 'Warsong Gulch',
+          levelCap: 19,
+          gameVersion: { clientPatch: '1.15.x' }
+        },
         gear: { byId: {} },
-        quests: { quests: [{ id: 'q', name: 'Hunter Quest', zone: null, faction: 'alliance', reward: { desc: 'x' }, xpWarning: false, classes: ['hunter'] }] }
+        quests: {
+          quests: [
+            {
+              id: 'q',
+              name: 'Hunter Quest',
+              zone: null,
+              faction: 'alliance',
+              reward: { desc: 'x' },
+              xpWarning: false,
+              classes: ['hunter']
+            }
+          ]
+        }
       }
     }
   };

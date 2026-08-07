@@ -143,7 +143,12 @@ function buildEnchantsPanel({ store, bracket }) {
     .setPlaceholder('Pick a gear slot\u2026')
     .addOptions(slots.slice(0, 25).map((s) => ({ label: capitalize(s), value: s })));
   return {
-    embeds: [panelEmbed('Enchants', 'Pick a slot to see its enchants, with the no-level-requirement ones flagged.')],
+    embeds: [
+      panelEmbed(
+        'Enchants',
+        'Pick a slot to see its enchants, with the no-level-requirement ones flagged.'
+      )
+    ],
     components: [row(select)]
   };
 }
@@ -162,9 +167,16 @@ function buildConsumablesPanel({ store, bracket }) {
     return button;
   });
   // 5 buttons per row, up to 5 rows.
-  const components = chunk(buttons, 5).slice(0, 5).map((group) => row(...group));
+  const components = chunk(buttons, 5)
+    .slice(0, 5)
+    .map((group) => row(...group));
   return {
-    embeds: [panelEmbed('Consumables', 'Pick a category to see the recommended consumables for the bracket.')],
+    embeds: [
+      panelEmbed(
+        'Consumables',
+        'Pick a category to see the recommended consumables for the bracket.'
+      )
+    ],
     components
   };
 }
@@ -172,8 +184,14 @@ function buildConsumablesPanel({ store, bracket }) {
 function buildReferencePanel({ store, bracket }) {
   const components = [
     row(
-      new ButtonBuilder().setCustomId(encodeCustomId('xprules')).setLabel('XP Rules').setStyle(ButtonStyle.Primary),
-      new ButtonBuilder().setCustomId(encodeCustomId('tierlist')).setLabel('Tier List').setStyle(ButtonStyle.Primary)
+      new ButtonBuilder()
+        .setCustomId(encodeCustomId('xprules'))
+        .setLabel('XP Rules')
+        .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+        .setCustomId(encodeCustomId('tierlist'))
+        .setLabel('Tier List')
+        .setStyle(ButtonStyle.Primary)
     )
   ];
   const guides = listGuides(store, bracket);
@@ -191,7 +209,12 @@ function buildReferencePanel({ store, bracket }) {
     components.push(row(select));
   }
   return {
-    embeds: [panelEmbed('Reference', 'XP-management rules, the class tier list, and curated guides for the bracket.')],
+    embeds: [
+      panelEmbed(
+        'Reference',
+        'XP-management rules, the class tier list, and curated guides for the bracket.'
+      )
+    ],
     components
   };
 }
@@ -280,20 +303,40 @@ export function bisFollowups({ store, bracket, className, build = null }) {
   const consEmoji = consumableIconComponent(store, CONSUMABLE_BUTTON_EMOJI.potion);
   if (consEmoji) consBtn.setEmoji(consEmoji);
   const buttons = [
-    new ButtonBuilder().setCustomId(fid('ench')).setLabel('Enchants').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder()
+      .setCustomId(fid('ench'))
+      .setLabel('Enchants')
+      .setStyle(ButtonStyle.Secondary),
     consBtn
   ];
   if (listStatweightClasses(store, bracket).includes(cls)) {
-    buttons.push(new ButtonBuilder().setCustomId(fid('sw')).setLabel('Stat Weights').setStyle(ButtonStyle.Secondary));
+    buttons.push(
+      new ButtonBuilder()
+        .setCustomId(fid('sw'))
+        .setLabel('Stat Weights')
+        .setStyle(ButtonStyle.Secondary)
+    );
   }
   if (listSpellcoefClasses(store, bracket).includes(cls)) {
-    buttons.push(new ButtonBuilder().setCustomId(fid('scoef')).setLabel('Spell Scaling').setStyle(ButtonStyle.Secondary));
+    buttons.push(
+      new ButtonBuilder()
+        .setCustomId(fid('scoef'))
+        .setLabel('Spell Scaling')
+        .setStyle(ButtonStyle.Secondary)
+    );
   }
   if (listTalentClasses(store, bracket).includes(cls)) {
-    buttons.push(new ButtonBuilder().setCustomId(fid('talents')).setLabel('Talents').setStyle(ButtonStyle.Secondary));
+    buttons.push(
+      new ButtonBuilder()
+        .setCustomId(fid('talents'))
+        .setLabel('Talents')
+        .setStyle(ButtonStyle.Secondary)
+    );
   }
   if (cls === 'hunter') {
-    buttons.push(new ButtonBuilder().setCustomId(fid('pets')).setLabel('Pets').setStyle(ButtonStyle.Secondary));
+    buttons.push(
+      new ButtonBuilder().setCustomId(fid('pets')).setLabel('Pets').setStyle(ButtonStyle.Secondary)
+    );
   }
   // Up to 6 followups now (casters gain Talents) — split across rows of 5 so a
   // full set never exceeds Discord's 5-buttons-per-row cap.
@@ -322,7 +365,10 @@ export function navRow({ className = null, build = null, back = false } = {}) {
     );
   }
   buttons.push(
-    new ButtonBuilder().setCustomId(encodeCustomId('close')).setLabel('Close').setStyle(ButtonStyle.Secondary)
+    new ButtonBuilder()
+      .setCustomId(encodeCustomId('close'))
+      .setLabel('Close')
+      .setStyle(ButtonStyle.Secondary)
   );
   return row(...buttons);
 }

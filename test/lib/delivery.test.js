@@ -10,9 +10,7 @@ function fakeChannel() {
 test('sendPing appends the role mention and whitelists only that role', async () => {
   const ch = fakeChannel();
   await sendPing(ch, 'R1', 'Hello');
-  assert.deepEqual(ch.sends, [
-    { content: 'Hello <@&R1>', allowedMentions: { roles: ['R1'] } }
-  ]);
+  assert.deepEqual(ch.sends, [{ content: 'Hello <@&R1>', allowedMentions: { roles: ['R1'] } }]);
 });
 
 test('sendBroadcast suppresses all mentions', async () => {

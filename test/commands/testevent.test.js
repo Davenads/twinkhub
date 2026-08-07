@@ -12,10 +12,7 @@ test('/testevent is discovered with event choices + optional warning flag', asyn
 
   const eventOpt = byName.event;
   assert.ok(eventOpt?.required, 'event option is required');
-  assert.deepEqual(
-    eventOpt.choices.map((c) => c.value).sort(),
-    ['agm', 'bg', 'dmf', 'stv']
-  );
+  assert.deepEqual(eventOpt.choices.map((c) => c.value).sort(), ['agm', 'bg', 'dmf', 'stv']);
 
   const warnOpt = byName.warning;
   assert.ok(warnOpt, 'warning option exists');

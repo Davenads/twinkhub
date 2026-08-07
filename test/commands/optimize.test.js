@@ -11,10 +11,16 @@ test('/optimize is registered with a required autocompleted class and a choice f
   const json = cmd.data.toJSON();
   const opt = (name) => (json.options ?? []).find((o) => o.name === name);
 
-  assert.ok(opt('class') && opt('class').required && opt('class').autocomplete, 'class: required + autocompleted');
+  assert.ok(
+    opt('class') && opt('class').required && opt('class').autocomplete,
+    'class: required + autocompleted'
+  );
   const faction = opt('faction');
   assert.ok(faction && !faction.required, 'faction: optional');
-  assert.deepEqual((faction.choices ?? []).map((c) => c.value), ['alliance', 'horde']);
+  assert.deepEqual(
+    (faction.choices ?? []).map((c) => c.value),
+    ['alliance', 'horde']
+  );
 });
 
 test('optimize autocomplete suggests roster classes and returns the class key', async () => {

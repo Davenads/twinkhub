@@ -1,0 +1,8 @@
+node_modules/
+data/
+logs/
+coverage/
+package-lock.json
+
+# authored prose docs — leave markdown formatting to the author
+*.md

@@ -54,7 +54,10 @@ test('buildPanels produces the class-picker panel wired to the class hub', async
 
   const select = classBuilds.components[0].toJSON().components[0];
   assert.equal(select.custom_id, encodeCustomId('pick', 'hub'));
-  assert.ok(select.options.some((o) => o.value === 'hunter'), 'class select offers hunter');
+  assert.ok(
+    select.options.some((o) => o.value === 'hunter'),
+    'class select offers hunter'
+  );
 });
 
 test('buildPanels wires consumable type buttons and reference buttons', async () => {
@@ -63,7 +66,10 @@ test('buildPanels wires consumable type buttons and reference buttons', async ()
 
   const consumables = panels.find((p) => p.key === 'consumables');
   assert.ok(consumables, 'a consumables panel is built');
-  assert.ok(customIds(consumables.components).every((id) => id.startsWith('p1|cons|')), 'all controls are type buttons');
+  assert.ok(
+    customIds(consumables.components).every((id) => id.startsWith('p1|cons|')),
+    'all controls are type buttons'
+  );
 
   // Representative icons: the potion button carries the HealingPotion emoji.
   const potionEmoji = emojiById(consumables.components)[encodeCustomId('cons', 'potion')];
@@ -79,10 +85,18 @@ test('bisFollowups always carries the class and adds Pets for hunter', async () 
   const store = await loadContentStore();
   const ids = customIds(bisFollowups({ store, bracket: '19', className: 'hunter' }));
   assert.ok(ids.includes(encodeCustomId('ench', 'hunter')), 'enchants follow-up carries the class');
-  assert.ok(ids.includes(encodeCustomId('consc', 'hunter')), 'consumables follow-up carries the class');
-  assert.ok(ids.includes(encodeCustomId('pets', 'hunter')), 'hunter gets a Pets follow-up carrying the class');
+  assert.ok(
+    ids.includes(encodeCustomId('consc', 'hunter')),
+    'consumables follow-up carries the class'
+  );
+  assert.ok(
+    ids.includes(encodeCustomId('pets', 'hunter')),
+    'hunter gets a Pets follow-up carrying the class'
+  );
 
-  const consEmoji = emojiById(bisFollowups({ store, bracket: '19', className: 'hunter' }))[encodeCustomId('consc', 'hunter')];
+  const consEmoji = emojiById(bisFollowups({ store, bracket: '19', className: 'hunter' }))[
+    encodeCustomId('consc', 'hunter')
+  ];
   assert.equal(consEmoji?.name, 'HealingPotion', 'consumables follow-up carries a potion icon');
 });
 
@@ -90,8 +104,14 @@ test('bisFollowups threads the active build id into every follow-up id', async (
   const store = await loadContentStore();
   const build = 'rogue-offense-alliance';
   const ids = customIds(bisFollowups({ store, bracket: '19', className: 'rogue', build }));
-  assert.ok(ids.includes(encodeCustomId('ench', 'rogue', build)), 'enchants follow-up carries the build');
-  assert.ok(ids.includes(encodeCustomId('consc', 'rogue', build)), 'consumables follow-up carries the build');
+  assert.ok(
+    ids.includes(encodeCustomId('ench', 'rogue', build)),
+    'enchants follow-up carries the build'
+  );
+  assert.ok(
+    ids.includes(encodeCustomId('consc', 'rogue', build)),
+    'consumables follow-up carries the build'
+  );
   assert.ok(
     ids.every((id) => id.startsWith('p1|') && id.split('|').slice(2).includes(build)),
     'no follow-up drops the build arg'
@@ -107,7 +127,9 @@ test('bisFollowups omits the Pets button for non-hunter classes', async () => {
 test('navRow builds a Close-only row by default and prepends Back when requested', () => {
   assert.deepEqual(customIds([navRow({})]), [encodeCustomId('close')], 'default is Close only');
 
-  const back = customIds([navRow({ className: 'rogue', build: 'rogue-offense-alliance', back: true })]);
+  const back = customIds([
+    navRow({ className: 'rogue', build: 'rogue-offense-alliance', back: true })
+  ]);
   assert.deepEqual(
     back,
     [encodeCustomId('back', 'rogue', 'rogue-offense-alliance'), encodeCustomId('close')],
@@ -126,20 +148,32 @@ test('buildPicker options carry build ids and route to the build action', async 
   assert.ok(row, 'rogue has a build picker');
   assert.equal(row.toJSON().components[0].custom_id, encodeCustomId('build', 'rogue'));
   const values = pickerOptions(row).map((o) => o.value);
-  assert.ok(values.includes('rogue-offense-alliance'), 'option value is the build id (faction-encoded)');
+  assert.ok(
+    values.includes('rogue-offense-alliance'),
+    'option value is the build id (faction-encoded)'
+  );
 });
 
 test('buildPicker appends the faction suffix only where a role spans both sides', async () => {
   const store = await loadContentStore();
   // rogue: Offense exists on both factions -> suffix required to disambiguate.
   const rogue = pickerOptions(buildPicker({ store, bracket: '19', className: 'rogue' }));
-  assert.ok(rogue.some((o) => o.label === 'Offense \u2014 Horde'), 'rogue Offense disambiguated');
-  assert.ok(rogue.some((o) => o.label === 'Offense \u2014 Alliance'), 'both sides labelled');
+  assert.ok(
+    rogue.some((o) => o.label === 'Offense \u2014 Horde'),
+    'rogue Offense disambiguated'
+  );
+  assert.ok(
+    rogue.some((o) => o.label === 'Offense \u2014 Alliance'),
+    'both sides labelled'
+  );
 
   // shaman: Horde-only -> no suffix, labels stay the bare role name.
   const shaman = pickerOptions(buildPicker({ store, bracket: '19', className: 'shaman' }));
   assert.ok(shaman.length > 0, 'shaman has builds');
-  assert.ok(shaman.every((o) => !o.label.includes('\u2014')), 'single-faction class carries no faction suffix');
+  assert.ok(
+    shaman.every((o) => !o.label.includes('\u2014')),
+    'single-faction class carries no faction suffix'
+  );
 });
 
 test('buildPicker marks the selected build as the default option', async () => {

@@ -44,11 +44,20 @@ test('renderEnchant lists all enchants and flags no-level-req ones', () => {
   assert.ok(e.description.includes('cornerstone'));
   // The overview groups by slot: one field per slot (here weapon + boots), in the
   // deliberate SLOT_ORDER, with the "Enchant <Slot> - " name prefix stripped.
-  assert.deepEqual(e.fields.map((f) => f.name), ['Weapon', 'Boots']);
-  assert.ok(e.fields[0].value.includes('Fiery Weapon'), 'enchant name (masked link) leads the line');
+  assert.deepEqual(
+    e.fields.map((f) => f.name),
+    ['Weapon', 'Boots']
+  );
+  assert.ok(
+    e.fields[0].value.includes('Fiery Weapon'),
+    'enchant name (masked link) leads the line'
+  );
   assert.ok(!e.fields[0].value.includes('Enchant Weapon -'), 'redundant slot prefix stripped');
   assert.ok(!e.fields[0].value.includes('Ignores the item'), 'no per-row level-req line');
-  assert.ok(e.footer.text.includes('Values confirmed on Wowhead Classic'), 'footer states provenance once');
+  assert.ok(
+    e.footer.text.includes('Values confirmed on Wowhead Classic'),
+    'footer states provenance once'
+  );
 });
 
 test('renderEnchant flags a level requirement inline in the grouped overview', () => {
@@ -103,7 +112,8 @@ test('renderEnchant degrades for a bracket with no enchant data', () => {
 
 // Discord counts title + description + footer + every field name/value toward 6000.
 function totalSize(json) {
-  let n = (json.title?.length ?? 0) + (json.description?.length ?? 0) + (json.footer?.text?.length ?? 0);
+  let n =
+    (json.title?.length ?? 0) + (json.description?.length ?? 0) + (json.footer?.text?.length ?? 0);
   for (const f of json.fields ?? []) n += f.name.length + f.value.length;
   return n;
 }
@@ -122,8 +132,20 @@ const bigStore = {
           slot: 'chest',
           effect: 'Adds a sizeable effect line to inflate the field. '.repeat(3),
           noLevelReq: true,
-          notes: 'A verbose authored note that pads each field well past a trivial length. '.repeat(2),
-          classes: ['warrior', 'rogue', 'hunter', 'paladin', 'shaman', 'druid', 'mage', 'warlock', 'priest']
+          notes: 'A verbose authored note that pads each field well past a trivial length. '.repeat(
+            2
+          ),
+          classes: [
+            'warrior',
+            'rogue',
+            'hunter',
+            'paladin',
+            'shaman',
+            'druid',
+            'mage',
+            'warlock',
+            'priest'
+          ]
         }))
       }
     }
@@ -134,21 +156,39 @@ test('renderEnchant never exceeds the 6000-char embed cap under a wide class fil
   const { embeds } = renderEnchant({ store: bigStore, bracket: '19', className: 'priest' });
   const e = embeds[0].toJSON();
   assert.ok(totalSize(e) <= 6000, `embed total ${totalSize(e)} must stay <= 6000`);
-  assert.equal(e.fields.at(-1).name, '\u2026', 'an overflow note is appended when entries are dropped');
+  assert.equal(
+    e.fields.at(-1).name,
+    '\u2026',
+    'an overflow note is appended when entries are dropped'
+  );
 });
 
 test('renderEnchant omits the Classes line in every view (slot detail carries effect + notes only)', () => {
   // The Classes line is dropped everywhere: within a slot it's near-identical row
   // to row (use `/enchant class:<x>` to narrow), and the grouped overview never
   // carried it.
-  const withClass = renderEnchant({ store, bracket: '19', slot: 'weapon', className: 'warrior' }).embeds[0].toJSON();
-  assert.ok(!withClass.fields[0].value.includes('Classes:'), 'class-filtered rows omit the Classes line');
+  const withClass = renderEnchant({
+    store,
+    bracket: '19',
+    slot: 'weapon',
+    className: 'warrior'
+  }).embeds[0].toJSON();
+  assert.ok(
+    !withClass.fields[0].value.includes('Classes:'),
+    'class-filtered rows omit the Classes line'
+  );
 
   const noClass = renderEnchant({ store, bracket: '19', slot: 'weapon' }).embeds[0].toJSON();
-  assert.ok(!noClass.fields[0].value.includes('Classes:'), 'slot detail omits the Classes line too');
+  assert.ok(
+    !noClass.fields[0].value.includes('Classes:'),
+    'slot detail omits the Classes line too'
+  );
 
   const overview = renderEnchant({ store, bracket: '19' }).embeds[0].toJSON();
-  assert.ok(!overview.fields[0].value.includes('Classes:'), 'grouped overview omits the Classes line');
+  assert.ok(
+    !overview.fields[0].value.includes('Classes:'),
+    'grouped overview omits the Classes line'
+  );
 });
 
 test('renderEnchant shows PPM on proc enchants in the detail view only', () => {
@@ -159,8 +199,23 @@ test('renderEnchant shows PPM on proc enchants in the detail view only', () => {
         enchants: {
           note: 'n',
           enchants: [
-            { id: 'fiery', name: 'Enchant Weapon - Fiery Weapon', slot: 'weapon', effect: 'Chance on hit: +40 Fire damage.', noLevelReq: true, ppm: 6, classes: ['warrior'] },
-            { id: 'agi', name: 'Enchant Weapon - Agility', slot: 'weapon', effect: '+15 Agility.', noLevelReq: true, classes: ['warrior'] }
+            {
+              id: 'fiery',
+              name: 'Enchant Weapon - Fiery Weapon',
+              slot: 'weapon',
+              effect: 'Chance on hit: +40 Fire damage.',
+              noLevelReq: true,
+              ppm: 6,
+              classes: ['warrior']
+            },
+            {
+              id: 'agi',
+              name: 'Enchant Weapon - Agility',
+              slot: 'weapon',
+              effect: '+15 Agility.',
+              noLevelReq: true,
+              classes: ['warrior']
+            }
           ]
         }
       }
@@ -187,8 +242,22 @@ test('renderEnchant separates slot-detail fields with a trailing blank line exce
         enchants: {
           note: 'n',
           enchants: [
-            { id: 'a', name: 'Enchant Weapon - Alpha', slot: 'weapon', effect: 'Effect A.', noLevelReq: true, classes: ['warrior'] },
-            { id: 'b', name: 'Enchant Weapon - Beta', slot: 'weapon', effect: 'Effect B.', noLevelReq: true, classes: ['warrior'] }
+            {
+              id: 'a',
+              name: 'Enchant Weapon - Alpha',
+              slot: 'weapon',
+              effect: 'Effect A.',
+              noLevelReq: true,
+              classes: ['warrior']
+            },
+            {
+              id: 'b',
+              name: 'Enchant Weapon - Beta',
+              slot: 'weapon',
+              effect: 'Effect B.',
+              noLevelReq: true,
+              classes: ['warrior']
+            }
           ]
         }
       }
@@ -196,6 +265,9 @@ test('renderEnchant separates slot-detail fields with a trailing blank line exce
   };
   const e = renderEnchant({ store: s, bracket: '19', slot: 'weapon' }).embeds[0].toJSON();
   assert.equal(e.fields.length, 2);
-  assert.ok(e.fields[0].value.endsWith('\u200b'), 'non-last field ends with a zero-width blank line');
+  assert.ok(
+    e.fields[0].value.endsWith('\u200b'),
+    'non-last field ends with a zero-width blank line'
+  );
   assert.ok(!e.fields[1].value.endsWith('\u200b'), 'the last field has no trailing spacer');
 });

@@ -1,7 +1,22 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
-import { getClass, gearForClass, gearSlots, getEnchant, consumablesFor, questsFor } from '../content/store.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  getClass,
+  gearForClass,
+  gearSlots,
+  getEnchant,
+  consumablesFor,
+  questsFor
+} from '../content/store.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 // Keep any single list within Discord's 1024-char field-value cap.
 const MAX_LIST = 15;
@@ -28,7 +43,14 @@ export function renderOptimize({ store, bracket, className, faction = null }) {
 
   const cls = getClass(store, bracket, classKey);
   if (!cls) {
-    return { embeds: [degradeEmbed(title, `No data for class **${capitalize(classKey)}** in bracket **${bracket}**.`)] };
+    return {
+      embeds: [
+        degradeEmbed(
+          title,
+          `No data for class **${capitalize(classKey)}** in bracket **${bracket}**.`
+        )
+      ]
+    };
   }
 
   const gear = gearForClass(store, bracket, classKey);
@@ -59,7 +81,9 @@ export function renderOptimize({ store, bracket, className, faction = null }) {
   embed.addFields(
     field(
       `Core slot coverage \u2014 ${slots.length - missing.length}/${slots.length}`,
-      missing.length ? `Missing a core pick for: ${missing.join(', ')}.` : 'Every declared slot has a core pick.'
+      missing.length
+        ? `Missing a core pick for: ${missing.join(', ')}.`
+        : 'Every declared slot has a core pick.'
     )
   );
 
@@ -74,7 +98,9 @@ export function renderOptimize({ store, bracket, className, faction = null }) {
   embed.addFields(
     field(
       'Enchants to apply',
-      enchantLines.length ? enchantLines.slice(0, MAX_LIST).join('\n') : 'No enchant recommendations on your core items yet.'
+      enchantLines.length
+        ? enchantLines.slice(0, MAX_LIST).join('\n')
+        : 'No enchant recommendations on your core items yet.'
     )
   );
 
@@ -86,7 +112,10 @@ export function renderOptimize({ store, bracket, className, faction = null }) {
     field(
       'Consumables to carry',
       orderedCons.length
-        ? orderedCons.slice(0, MAX_LIST).map((c) => `${c.name} (${c.type})`).join('\n')
+        ? orderedCons
+            .slice(0, MAX_LIST)
+            .map((c) => `${c.name} (${c.type})`)
+            .join('\n')
         : 'No consumables authored for this bracket yet.'
     )
   );
@@ -97,7 +126,10 @@ export function renderOptimize({ store, bracket, className, faction = null }) {
     embed.addFields(
       field(
         'Gear quests worth doing',
-        quests.slice(0, MAX_LIST).map((q) => `${q.name}${q.xpWarning ? ' \u2014 XP-risk turn-in' : ''}`).join('\n')
+        quests
+          .slice(0, MAX_LIST)
+          .map((q) => `${q.name}${q.xpWarning ? ' \u2014 XP-risk turn-in' : ''}`)
+          .join('\n')
       )
     );
   }
@@ -109,7 +141,9 @@ export function renderOptimize({ store, bracket, className, faction = null }) {
   if (profItems.length) reminders.push(`Profession pickups: ${uniqueNames(profItems).join(', ')}.`);
   const pvpItems = coreItems.filter((it) => it.source?.type === 'pvp');
   if (pvpItems.length) {
-    reminders.push(`PvP reward(s): ${uniqueNames(pvpItems).join(', ')} \u2014 mind the item-level requirement.`);
+    reminders.push(
+      `PvP reward(s): ${uniqueNames(pvpItems).join(', ')} \u2014 mind the item-level requirement.`
+    );
   }
   if (cls.factionNotes) reminders.push(cls.factionNotes);
   if (reminders.length) embed.addFields(field('Reminders', reminders.join('\n\n')));

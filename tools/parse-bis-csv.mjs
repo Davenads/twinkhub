@@ -18,7 +18,9 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const src = process.argv[2] ?? fileURLToPath(new URL('../plans/data-sources/bis-chart-19-horde.csv', import.meta.url));
+const src =
+  process.argv[2] ??
+  fileURLToPath(new URL('../plans/data-sources/bis-chart-19-horde.csv', import.meta.url));
 const text = readFileSync(src, 'utf8');
 
 /** RFC4180-ish parse: quoted fields may contain commas and newlines; "" escapes ". */
@@ -27,21 +29,34 @@ function parseCsv(str) {
   let row = [];
   let field = '';
   let inQuotes = false;
-  const pushField = () => { row.push(field); field = ''; };
-  const pushRow = () => { rows.push(row); row = []; };
+  const pushField = () => {
+    row.push(field);
+    field = '';
+  };
+  const pushRow = () => {
+    rows.push(row);
+    row = [];
+  };
   for (let i = 0; i < str.length; i++) {
     const c = str[i];
     if (inQuotes) {
       if (c === '"') {
-        if (str[i + 1] === '"') { field += '"'; i++; } else { inQuotes = false; }
+        if (str[i + 1] === '"') {
+          field += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
       } else field += c;
       continue;
     }
     if (c === '"') inQuotes = true;
     else if (c === ',') pushField();
     else if (c === '\r') continue;
-    else if (c === '\n') { pushField(); pushRow(); }
-    else field += c;
+    else if (c === '\n') {
+      pushField();
+      pushRow();
+    } else field += c;
   }
   pushField();
   if (row.length > 1 || row[0] !== '') pushRow();
@@ -75,7 +90,12 @@ for (let r = 2; r < rows.length; r++) {
   dataRows.push({ srcRow: r, picks });
 }
 
-const out = { source: src.split(/[\\/]/).pop(), builds: builds.map((b) => b.label), slotOrder: dataRows.length, rows: dataRows };
+const out = {
+  source: src.split(/[\\/]/).pop(),
+  builds: builds.map((b) => b.label),
+  slotOrder: dataRows.length,
+  rows: dataRows
+};
 const dest = src.replace(/\.csv$/i, '.parsed.json');
 writeFileSync(dest, `${JSON.stringify(out, null, 2)}\n`);
 

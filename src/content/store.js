@@ -97,11 +97,17 @@ async function loadGear(dir, key, roster, strict) {
     if (!gc) continue; // a roster class can lack a BiS list until authored
     const gcResult = validateGearClass(gc, `${key}/gear/${entry.class}.json`);
     if (!gcResult.ok) {
-      fail(strict, `content ${key}/gear/${entry.class}.json invalid: ${gcResult.errors.join('; ')}`);
+      fail(
+        strict,
+        `content ${key}/gear/${entry.class}.json invalid: ${gcResult.errors.join('; ')}`
+      );
       continue;
     }
     if (gc.class !== entry.class) {
-      fail(strict, `content ${key}/gear/${entry.class}.json class "${gc.class}" != roster "${entry.class}"`);
+      fail(
+        strict,
+        `content ${key}/gear/${entry.class}.json class "${gc.class}" != roster "${entry.class}"`
+      );
       continue;
     }
     gear.byClass[entry.class] = gc;
@@ -140,21 +146,33 @@ async function loadGuides(dir, key, roster, strict) {
 
   for (const entry of guidesIndex.guides) {
     if (rosterSet.size && entry.class != null && !rosterSet.has(entry.class)) {
-      fail(strict, `content ${key}/guides/index.json guide "${entry.slug}" references unknown class "${entry.class}"`);
+      fail(
+        strict,
+        `content ${key}/guides/index.json guide "${entry.slug}" references unknown class "${entry.class}"`
+      );
     }
     const body = await readOptionalJson(path.join(dir, key, 'guides', `${entry.slug}.json`));
     if (!body) continue; // catalogued but not yet authored
     const bResult = validateGuide(body, `${key}/guides/${entry.slug}.json`);
     if (!bResult.ok) {
-      fail(strict, `content ${key}/guides/${entry.slug}.json invalid: ${bResult.errors.join('; ')}`);
+      fail(
+        strict,
+        `content ${key}/guides/${entry.slug}.json invalid: ${bResult.errors.join('; ')}`
+      );
       continue;
     }
     if (body.slug !== entry.slug) {
-      fail(strict, `content ${key}/guides/${entry.slug}.json slug "${body.slug}" != index slug "${entry.slug}"`);
+      fail(
+        strict,
+        `content ${key}/guides/${entry.slug}.json slug "${body.slug}" != index slug "${entry.slug}"`
+      );
       continue;
     }
     if (rosterSet.size && body.class != null && !rosterSet.has(body.class)) {
-      fail(strict, `content ${key}/guides/${entry.slug}.json references unknown class "${body.class}"`);
+      fail(
+        strict,
+        `content ${key}/guides/${entry.slug}.json references unknown class "${body.class}"`
+      );
     }
     out.bySlug[entry.slug] = body;
   }
@@ -176,7 +194,19 @@ async function loadBracket(dir, key, strict) {
     return null;
   }
 
-  const bracket = { meta, classes: { index: null, byClass: {} }, enchants: null, gear: null, scaling: null, pets: null, spellcoef: null, consumables: null, quests: null, guides: null, talents: null };
+  const bracket = {
+    meta,
+    classes: { index: null, byClass: {} },
+    enchants: null,
+    gear: null,
+    scaling: null,
+    pets: null,
+    spellcoef: null,
+    consumables: null,
+    quests: null,
+    guides: null,
+    talents: null
+  };
 
   const classIndex = await readOptionalJson(path.join(dir, key, 'classes', 'index.json'));
   if (classIndex) {
@@ -186,11 +216,16 @@ async function loadBracket(dir, key, strict) {
     } else {
       bracket.classes.index = classIndex;
       for (const entry of classIndex.classes) {
-        const detail = await readOptionalJson(path.join(dir, key, 'classes', `${entry.class}.json`));
+        const detail = await readOptionalJson(
+          path.join(dir, key, 'classes', `${entry.class}.json`)
+        );
         if (!detail) continue; // roster-only until a detail file is authored
         const cResult = validateClass(detail, `${key}/classes/${entry.class}.json`);
         if (!cResult.ok) {
-          fail(strict, `content ${key}/classes/${entry.class}.json invalid: ${cResult.errors.join('; ')}`);
+          fail(
+            strict,
+            `content ${key}/classes/${entry.class}.json invalid: ${cResult.errors.join('; ')}`
+          );
           continue;
         }
         if (detail.tier !== entry.tier) {
@@ -242,13 +277,19 @@ async function loadBracket(dir, key, strict) {
     const enchantIds = new Set((bracket.enchants?.enchants ?? []).map((e) => e.id));
     for (const item of bracket.gear.items) {
       if (item.enchant != null && enchantIds.size && !enchantIds.has(item.enchant)) {
-        fail(strict, `content ${key}/gear: item "${item.id}" references unknown enchant "${item.enchant}"`);
+        fail(
+          strict,
+          `content ${key}/gear: item "${item.id}" references unknown enchant "${item.enchant}"`
+        );
       }
       for (const alt of item.alternatives ?? []) {
         if (alt === item.id) {
           fail(strict, `content ${key}/gear: item "${item.id}" lists itself as an alternative`);
         } else if (!bracket.gear.byId[alt]) {
-          fail(strict, `content ${key}/gear: item "${item.id}" references unknown alternative "${alt}"`);
+          fail(
+            strict,
+            `content ${key}/gear: item "${item.id}" references unknown alternative "${alt}"`
+          );
         }
       }
     }
@@ -269,7 +310,10 @@ async function loadBracket(dir, key, strict) {
       for (const [type, classes] of Object.entries(prof)) {
         for (const cls of classes) {
           if (!roster.has(cls)) {
-            fail(strict, `content ${key}/gear/index.json armorProficiency.${type} references unknown class "${cls}"`);
+            fail(
+              strict,
+              `content ${key}/gear/index.json armorProficiency.${type} references unknown class "${cls}"`
+            );
           }
         }
       }
@@ -277,10 +321,21 @@ async function loadBracket(dir, key, strict) {
     const levelCap = bracket.meta?.levelCap;
     for (const item of bracket.gear.items ?? []) {
       if (item.reqLevel != null && Number.isInteger(levelCap) && item.reqLevel > levelCap) {
-        fail(strict, `content ${key}/gear: item "${item.id}" reqLevel ${item.reqLevel} exceeds bracket levelCap ${levelCap}`);
+        fail(
+          strict,
+          `content ${key}/gear: item "${item.id}" reqLevel ${item.reqLevel} exceeds bracket levelCap ${levelCap}`
+        );
       }
-      if (item.armorType && item.armorType !== 'misc' && mappedTypes.size && !mappedTypes.has(item.armorType)) {
-        fail(strict, `content ${key}/gear: item "${item.id}" armorType "${item.armorType}" is not mapped in armorProficiency`);
+      if (
+        item.armorType &&
+        item.armorType !== 'misc' &&
+        mappedTypes.size &&
+        !mappedTypes.has(item.armorType)
+      ) {
+        fail(
+          strict,
+          `content ${key}/gear: item "${item.id}" armorType "${item.armorType}" is not mapped in armorProficiency`
+        );
       }
     }
 
@@ -292,13 +347,22 @@ async function loadBracket(dir, key, strict) {
       for (const [type, itemId] of Object.entries(strat.vesselByArmorType)) {
         const vessel = bracket.gear.byId[itemId];
         if (!vessel) {
-          fail(strict, `content ${key}/gear/index.json shoulderStrategy.vesselByArmorType.${type} references unknown item "${itemId}"`);
+          fail(
+            strict,
+            `content ${key}/gear/index.json shoulderStrategy.vesselByArmorType.${type} references unknown item "${itemId}"`
+          );
         } else {
           if (vessel.slot !== 'shoulder') {
-            fail(strict, `content ${key}/gear/index.json shoulderStrategy vessel "${itemId}" is slot "${vessel.slot}", not shoulder`);
+            fail(
+              strict,
+              `content ${key}/gear/index.json shoulderStrategy vessel "${itemId}" is slot "${vessel.slot}", not shoulder`
+            );
           }
           if (vessel.armorType !== type) {
-            fail(strict, `content ${key}/gear/index.json shoulderStrategy vessel "${itemId}" armorType "${vessel.armorType}" != mapped type "${type}"`);
+            fail(
+              strict,
+              `content ${key}/gear/index.json shoulderStrategy vessel "${itemId}" armorType "${vessel.armorType}" != mapped type "${type}"`
+            );
           }
         }
       }
@@ -323,23 +387,38 @@ async function loadBracket(dir, key, strict) {
       seenBuildIds.add(build.id);
       for (const [slot, val] of Object.entries(build.slots)) {
         if (declaredSlots.size && !declaredSlots.has(slot)) {
-          fail(strict, `content ${key}/gear: build "${build.id}" references undeclared slot "${slot}"`);
+          fail(
+            strict,
+            `content ${key}/gear: build "${build.id}" references undeclared slot "${slot}"`
+          );
         }
         const picks = Array.isArray(val) ? val : [val];
         for (const pick of picks) {
           const item = byId[pick.item];
           if (!item) {
-            fail(strict, `content ${key}/gear: build "${build.id}" slot "${slot}" references unknown item "${pick.item}"`);
+            fail(
+              strict,
+              `content ${key}/gear: build "${build.id}" slot "${slot}" references unknown item "${pick.item}"`
+            );
           } else {
             if (item.owner !== 'shared' && item.owner !== build.owner) {
-              fail(strict, `content ${key}/gear: build "${build.id}" slot "${slot}" references item "${pick.item}" owned by "${item.owner}"`);
+              fail(
+                strict,
+                `content ${key}/gear: build "${build.id}" slot "${slot}" references item "${pick.item}" owned by "${item.owner}"`
+              );
             }
             if (item.slot !== slot) {
-              fail(strict, `content ${key}/gear: build "${build.id}" places "${pick.item}" (slot "${item.slot}") in slot "${slot}"`);
+              fail(
+                strict,
+                `content ${key}/gear: build "${build.id}" places "${pick.item}" (slot "${item.slot}") in slot "${slot}"`
+              );
             }
           }
           if (pick.enchant != null && enchantIds.size && !enchantIds.has(pick.enchant)) {
-            fail(strict, `content ${key}/gear: build "${build.id}" slot "${slot}" references unknown enchant "${pick.enchant}"`);
+            fail(
+              strict,
+              `content ${key}/gear: build "${build.id}" slot "${slot}" references unknown enchant "${pick.enchant}"`
+            );
           }
         }
       }
@@ -347,7 +426,10 @@ async function loadBracket(dir, key, strict) {
     for (const [cls, builds] of Object.entries(bracket.gear.buildsByClass)) {
       const defaults = builds.filter((b) => b.default === true);
       if (defaults.length !== 1) {
-        fail(strict, `content ${key}/gear: class "${cls}" must have exactly one default build (has ${defaults.length})`);
+        fail(
+          strict,
+          `content ${key}/gear: class "${cls}" must have exactly one default build (has ${defaults.length})`
+        );
       }
     }
 
@@ -367,13 +449,22 @@ async function loadBracket(dir, key, strict) {
         const armorType = ARMOR_WEIGHT.find((t) => (prof[t] ?? []).includes(build.owner)) ?? null;
         const vesselId = armorType ? strat.vesselByArmorType?.[armorType] : null;
         if (vesselId && pick.item !== vesselId) {
-          fail(strict, `content ${key}/gear: build "${build.id}" shoulder picks "${pick.item}" but the ${armorType} vessel is "${vesselId}"`);
+          fail(
+            strict,
+            `content ${key}/gear: build "${build.id}" shoulder picks "${pick.item}" but the ${armorType} vessel is "${vesselId}"`
+          );
         }
         const ench = pick.enchant != null ? enchById.get(pick.enchant) : null;
         if (!ench) {
-          fail(strict, `content ${key}/gear: build "${build.id}" shoulder pick has no shoulder enchant (a Scourge inscription is expected)`);
+          fail(
+            strict,
+            `content ${key}/gear: build "${build.id}" shoulder pick has no shoulder enchant (a Scourge inscription is expected)`
+          );
         } else if (ench.slot !== 'shoulder') {
-          fail(strict, `content ${key}/gear: build "${build.id}" shoulder enchant "${pick.enchant}" is slot "${ench.slot}", not shoulder`);
+          fail(
+            strict,
+            `content ${key}/gear: build "${build.id}" shoulder enchant "${pick.enchant}" is slot "${ench.slot}", not shoulder`
+          );
         }
       }
     }
@@ -396,7 +487,10 @@ async function loadBracket(dir, key, strict) {
         }
         for (const stat of entry.priority) {
           if (!statKeys.has(stat)) {
-            fail(strict, `content ${key}/scaling.json class "${cls}" priority references unknown stat "${stat}"`);
+            fail(
+              strict,
+              `content ${key}/scaling.json class "${cls}" priority references unknown stat "${stat}"`
+            );
           }
         }
       }
@@ -453,7 +547,10 @@ async function loadBracket(dir, key, strict) {
         for (const c of consumablesFile.consumables) {
           for (const cls of c.classes ?? []) {
             if (!roster.has(cls)) {
-              fail(strict, `content ${key}/consumables.json consumable "${c.id}" references unknown class "${cls}"`);
+              fail(
+                strict,
+                `content ${key}/consumables.json consumable "${c.id}" references unknown class "${cls}"`
+              );
             }
           }
         }
@@ -475,12 +572,18 @@ async function loadBracket(dir, key, strict) {
       const gearIds = bracket.gear?.byId ?? {};
       for (const q of questsFile.quests) {
         if (q.reward?.itemId != null && Object.keys(gearIds).length && !gearIds[q.reward.itemId]) {
-          fail(strict, `content ${key}/quests.json quest "${q.id}" reward references unknown item "${q.reward.itemId}"`);
+          fail(
+            strict,
+            `content ${key}/quests.json quest "${q.id}" reward references unknown item "${q.reward.itemId}"`
+          );
         }
         if (roster.size) {
           for (const cls of q.classes ?? []) {
             if (!roster.has(cls)) {
-              fail(strict, `content ${key}/quests.json quest "${q.id}" references unknown class "${cls}"`);
+              fail(
+                strict,
+                `content ${key}/quests.json quest "${q.id}" references unknown class "${cls}"`
+              );
             }
           }
         }

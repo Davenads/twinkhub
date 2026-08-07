@@ -1,7 +1,15 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketPets } from '../content/store.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 const familyLabel = (family) => family.split('-').map(capitalize).join(' ');
 
@@ -27,12 +35,17 @@ export function renderPets({ store, bracket, family = null }) {
     const key = String(family).toLowerCase();
     families = families.filter((f) => f.family === key);
     if (!families.length) {
-      return degrade(`No pet family **${familyLabel(key)}** is authored for bracket **${bracket}**.`);
+      return degrade(
+        `No pet family **${familyLabel(key)}** is authored for bracket **${bracket}**.`
+      );
     }
   }
 
   const title = metaTitle('Hunter Pets', meta);
-  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(title).setDescription(truncate(pets.xpNote, LIMITS.description));
+  const embed = new EmbedBuilder()
+    .setColor(EMBED_COLOR)
+    .setTitle(title)
+    .setDescription(truncate(pets.xpNote, LIMITS.description));
   for (const f of families) embed.addFields(familyField(f));
 
   // Extra management notes only clutter a single-family filter; show on the full view.

@@ -32,7 +32,15 @@ function bgWeekStart(now) {
   const tueCal = nowMt.minus({ days: daysSinceTue });
   const tuesday2am = (cal) =>
     DateTime.fromObject(
-      { year: cal.year, month: cal.month, day: cal.day, hour: 2, minute: 0, second: 0, millisecond: 0 },
+      {
+        year: cal.year,
+        month: cal.month,
+        day: cal.day,
+        hour: 2,
+        minute: 0,
+        second: 0,
+        millisecond: 0
+      },
       { zone: MT_ZONE }
     );
   let start = tuesday2am(tueCal);

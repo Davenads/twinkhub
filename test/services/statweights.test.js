@@ -13,13 +13,25 @@ const store = {
       scaling: {
         note: 'Concrete conversions at 19.',
         stats: {
-          agility: { label: 'Agility', summary: 'Armor, crit, dodge, AP.', conversions: ['1 Agility = 2 armor'] },
+          agility: {
+            label: 'Agility',
+            summary: 'Armor, crit, dodge, AP.',
+            conversions: ['1 Agility = 2 armor']
+          },
           stamina: { label: 'Stamina', summary: 'Health.', conversions: ['1 Stamina = 10 health'] },
-          strength: { label: 'Strength', summary: 'Melee AP, block.', conversions: ['1 Strength = 2 AP (warrior)'] }
+          strength: {
+            label: 'Strength',
+            summary: 'Melee AP, block.',
+            conversions: ['1 Strength = 2 AP (warrior)']
+          }
         },
         derived: [
           { name: 'DPS from AP', formula: 'DPS = AP / 14' },
-          { name: 'Armor mitigation', formula: 'reduction% = Armor / (Armor + 2015)', notes: 'level-19 constant' }
+          {
+            name: 'Armor mitigation',
+            formula: 'reduction% = Armor / (Armor + 2015)',
+            notes: 'level-19 constant'
+          }
         ],
         hitCaps: [
           { type: 'melee', value: '5%' },

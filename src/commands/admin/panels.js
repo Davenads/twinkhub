@@ -16,7 +16,9 @@ export const data = new SlashCommandBuilder()
   .addSubcommand((s) =>
     s
       .setName('post')
-      .setDescription('Post the interactive panels into a channel (recommended: read-only for @everyone).')
+      .setDescription(
+        'Post the interactive panels into a channel (recommended: read-only for @everyone).'
+      )
       .addChannelOption((o) =>
         o
           .setName('channel')
@@ -26,7 +28,9 @@ export const data = new SlashCommandBuilder()
       )
   )
   .addSubcommand((s) =>
-    s.setName('refresh').setDescription('Re-render the posted panels in place (reposts any that were deleted).')
+    s
+      .setName('refresh')
+      .setDescription('Re-render the posted panels in place (reposts any that were deleted).')
   )
   .addSubcommand((s) => s.setName('remove').setDescription('Delete and forget the panels.'));
 
@@ -50,7 +54,11 @@ const SEND_OPTS = { allowedMentions: { parse: [] } };
 async function postAll(channel, built) {
   const messageIds = {};
   for (const panel of built) {
-    const msg = await channel.send({ embeds: panel.embeds, components: panel.components, ...SEND_OPTS });
+    const msg = await channel.send({
+      embeds: panel.embeds,
+      components: panel.components,
+      ...SEND_OPTS
+    });
     messageIds[panel.key] = msg.id;
   }
   return { channelId: channel.id, messageIds };
@@ -59,7 +67,10 @@ async function postAll(channel, built) {
 export async function execute(interaction) {
   if (!(await requireDevRole(interaction))) return;
   if (!interaction.inGuild()) {
-    await interaction.reply({ content: 'This command can only be used in a server.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({
+      content: 'This command can only be used in a server.',
+      flags: MessageFlags.Ephemeral
+    });
     return;
   }
 
@@ -78,7 +89,9 @@ export async function execute(interaction) {
   const bracket = await resolveBracket(interaction);
   const built = buildPanels({ store, bracket });
   if (!built.length) {
-    await interaction.editReply('No content is loaded for this bracket, so there are no panels to post.');
+    await interaction.editReply(
+      'No content is loaded for this bracket, so there are no panels to post.'
+    );
     return;
   }
 
@@ -91,7 +104,9 @@ export async function execute(interaction) {
     try {
       record = await postAll(channel, built);
     } catch {
-      await interaction.editReply(`Couldn't post in <#${channel.id}> — check I can send messages and embeds there.`);
+      await interaction.editReply(
+        `Couldn't post in <#${channel.id}> — check I can send messages and embeds there.`
+      );
       return;
     }
     await setPanels(interaction.guildId, record);
@@ -109,7 +124,9 @@ export async function execute(interaction) {
   }
   const channel = await interaction.guild.channels.fetch(cfg.panels.channelId).catch(() => null);
   if (!channel?.isTextBased?.()) {
-    await interaction.editReply('The panels channel is gone — run `/panels post` to place them somewhere new.');
+    await interaction.editReply(
+      'The panels channel is gone — run `/panels post` to place them somewhere new.'
+    );
     return;
   }
 
@@ -123,7 +140,11 @@ export async function execute(interaction) {
       await existing.edit({ embeds: panel.embeds, components: panel.components, ...SEND_OPTS });
       messageIds[panel.key] = existing.id;
     } else {
-      const msg = await channel.send({ embeds: panel.embeds, components: panel.components, ...SEND_OPTS });
+      const msg = await channel.send({
+        embeds: panel.embeds,
+        components: panel.components,
+        ...SEND_OPTS
+      });
       messageIds[panel.key] = msg.id;
     }
   }

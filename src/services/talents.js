@@ -94,7 +94,9 @@ export function renderTalents({ store, bracket, className, build = null }) {
     if (roster.includes(key)) {
       return degrade(`No talent builds are authored for **${capitalize(key)}** yet.`);
     }
-    return degrade(`No talent data is authored for **${capitalize(key || String(className))}** in bracket **${bracket}**.`);
+    return degrade(
+      `No talent data is authored for **${capitalize(key || String(className))}** in bracket **${bracket}**.`
+    );
   }
 
   const icon = classIcon(store, key);
@@ -119,7 +121,8 @@ export function renderTalents({ store, bracket, className, build = null }) {
   if (one) {
     const header = icon ? `${icon} **${one.name}**` : `**${one.name}**`;
     descParts.unshift(header);
-    if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
+    if (descParts.length)
+      embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
     if (one.summary) embed.addFields(field('Summary', one.summary));
     // One node per line so the per-node ranks read cleanly for a deep-dive; the
     // chips already carry each rank/max, so there's no separate Points field.
@@ -130,22 +133,29 @@ export function renderTalents({ store, bracket, className, build = null }) {
   } else {
     // Lead the description with the class icon so it renders (icons don't show in
     // titles). Then one field per build.
-    if (icon) descParts.unshift(`${icon} **${capitalize(key)}** \u2014 ${builds.length} build${builds.length === 1 ? '' : 's'}`);
-    if (descParts.length) embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
+    if (icon)
+      descParts.unshift(
+        `${icon} **${capitalize(key)}** \u2014 ${builds.length} build${builds.length === 1 ? '' : 's'}`
+      );
+    if (descParts.length)
+      embed.setDescription(truncate(descParts.join('\n\n'), LIMITS.description));
     // Append a rule after every build but the last so builds read as distinct blocks.
     const last = builds.length - 1;
     const fields = builds.map((b, i) => {
       const val = i < last ? `${buildValue(store, b)}\n${BUILD_DIVIDER}` : buildValue(store, b);
       return field(buildName(b), val);
     });
-    addFieldsWithinLimits(embed, fields, (dropped) => field('\u2026', `${dropped} more build${dropped === 1 ? '' : 's'} not shown`));
+    addFieldsWithinLimits(embed, fields, (dropped) =>
+      field('\u2026', `${dropped} more build${dropped === 1 ? '' : 's'} not shown`)
+    );
   }
 
   // Footer: bracket meta, plus a plain source credit when it wasn't shown above.
   const footerBits = [];
   const metaFoot = metaFooter(meta);
   if (metaFoot) footerBits.push(metaFoot);
-  if (credit && !creditInDesc) footerBits.push(`Source: ${credit.source ?? credit.url ?? 'source'}`);
+  if (credit && !creditInDesc)
+    footerBits.push(`Source: ${credit.source ?? credit.url ?? 'source'}`);
   if (footerBits.length) embed.setFooter({ text: footerBits.join(' \u00b7 ') });
 
   return { embeds: [embed] };

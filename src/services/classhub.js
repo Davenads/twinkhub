@@ -1,7 +1,15 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize, formatStatPriority } from '../lib/text.js';
 import { getClass, classIcon } from '../content/store.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 /** Title-case a slug like `ranged-dps` -> `Ranged Dps` / `flag-carrier` -> `Flag Carrier`. */
 function formatSlug(slug) {
@@ -28,7 +36,14 @@ export function renderClassHub({ store, bracket, className }) {
   const meta = store?.brackets?.[bracket]?.meta;
 
   if (!cls) {
-    return { embeds: [degradeEmbed('Class Overview', `No class **${capitalize(key)}** is authored for bracket **${bracket}**.`)] };
+    return {
+      embeds: [
+        degradeEmbed(
+          'Class Overview',
+          `No class **${capitalize(key)}** is authored for bracket **${bracket}**.`
+        )
+      ]
+    };
   }
 
   const icon = classIcon(store, key);
@@ -39,11 +54,14 @@ export function renderClassHub({ store, bracket, className }) {
   const header = [];
   if (icon) header.push(icon);
   if (cls.tier) header.push(`**Tier ${cls.tier}**`);
-  if (Array.isArray(cls.roles) && cls.roles.length) header.push(cls.roles.map(formatSlug).join(', '));
+  if (Array.isArray(cls.roles) && cls.roles.length)
+    header.push(cls.roles.map(formatSlug).join(', '));
   const parts = [];
   if (header.length) parts.push(header.join(' \u00b7 '));
   if (cls.summary) parts.push(cls.summary);
-  parts.push('Pick a build below for its best-in-slot gear; use the buttons for enchants, consumables, and more.');
+  parts.push(
+    'Pick a build below for its best-in-slot gear; use the buttons for enchants, consumables, and more.'
+  );
   embed.setDescription(truncate(parts.join('\n\n'), LIMITS.description));
 
   // Single stamina-first stat-priority flow per class (specs barely differ at 19).

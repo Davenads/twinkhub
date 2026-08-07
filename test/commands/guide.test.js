@@ -11,8 +11,14 @@ test('/guide is registered with autocompleted slug/class and page/tag options', 
   const json = cmd.data.toJSON();
   const opt = (name) => (json.options ?? []).find((o) => o.name === name);
 
-  assert.ok(opt('slug') && !opt('slug').required && opt('slug').autocomplete, 'slug: optional + autocompleted');
-  assert.ok(opt('class') && !opt('class').required && opt('class').autocomplete, 'class: optional + autocompleted');
+  assert.ok(
+    opt('slug') && !opt('slug').required && opt('slug').autocomplete,
+    'slug: optional + autocompleted'
+  );
+  assert.ok(
+    opt('class') && !opt('class').required && opt('class').autocomplete,
+    'class: optional + autocompleted'
+  );
   assert.ok(opt('tag') && !opt('tag').required, 'tag: optional');
   const page = opt('page');
   assert.ok(page && !page.required, 'page: optional');

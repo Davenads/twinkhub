@@ -17,12 +17,16 @@ export function renderItem({ store, bracket, id }) {
   const meta = store?.brackets?.[bracket]?.meta;
 
   if (!item) {
-    return { embeds: [degradeEmbed('Item', `No item found for **${id}** in bracket **${bracket}**.`)] };
+    return {
+      embeds: [degradeEmbed('Item', `No item found for **${id}** in bracket **${bracket}**.`)]
+    };
   }
 
   // The item name IS the Wowhead link (clickable title) rather than a raw URL
   // dumped in a field.
-  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(truncate(item.name, LIMITS.title));
+  const embed = new EmbedBuilder()
+    .setColor(EMBED_COLOR)
+    .setTitle(truncate(item.name, LIMITS.title));
   if (item.wowheadId != null) embed.setURL(wowheadItemUrl(item.wowheadId));
   if (item.notes) embed.setDescription(truncate(item.notes, LIMITS.description));
 
@@ -67,7 +71,10 @@ export function renderItem({ store, bracket, id }) {
     const lines = item.alternatives.map((altId) => {
       const alt = getGearItem(store, bracket, altId);
       if (!alt) return altId;
-      const name = alt.wowheadId != null ? `**[${alt.name}](${wowheadItemUrl(alt.wowheadId)})**` : `**${alt.name}**`;
+      const name =
+        alt.wowheadId != null
+          ? `**[${alt.name}](${wowheadItemUrl(alt.wowheadId)})**`
+          : `**${alt.name}**`;
       return `${name} (${capitalize(alt.slot)})`;
     });
     fields.push(field('Alternatives', lines.join('\n')));

@@ -66,8 +66,7 @@ export function computeTriggers(states, latches = {}, nowMs) {
   for (const key of EVENT_KEYS) {
     const s = states[key];
     const warnMs = WARN_MS[key] ?? 0;
-    const inWarn =
-      warnMs > 0 && !s.active && s.startsInMs > 0 && s.startsInMs <= warnMs;
+    const inWarn = warnMs > 0 && !s.active && s.startsInMs > 0 && s.startsInMs <= warnMs;
     const startKey = inWarn ? roundMinute(nowMs + s.startsInMs) : null;
 
     const prev = latches[key];

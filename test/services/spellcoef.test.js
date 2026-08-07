@@ -12,16 +12,15 @@ const store = {
       },
       classes: {
         index: {
-          classes: [
-            { class: 'mage' },
-            { class: 'priest' },
-            { class: 'warrior' }
-          ]
+          classes: [{ class: 'mage' }, { class: 'priest' }, { class: 'warrior' }]
         },
         byClass: {}
       },
       spellcoef: {
-        penalty: { perLevelBelow20: 0.0375, note: 'Sub-20 penalty applies; values are level-19-effective.' },
+        penalty: {
+          perLevelBelow20: 0.0375,
+          note: 'Sub-20 penalty applies; values are level-19-effective.'
+        },
         credit: {
           author: 'Lebs',
           discordId: '276172101654806529',
@@ -30,12 +29,37 @@ const store = {
         },
         byClass: {
           mage: [
-            { spell: 'Frostbolt', rank: 3, coefficient: 0.463, type: 'direct-damage', confirmed: false },
-            { spell: 'Fireball', rank: 4, coefficient: 0.793, type: 'direct-damage', confirmed: false },
-            { spell: 'Fireball', rank: 4, coefficient: 0, type: 'dot', confirmed: false, notes: 'DoT does not scale.' }
+            {
+              spell: 'Frostbolt',
+              rank: 3,
+              coefficient: 0.463,
+              type: 'direct-damage',
+              confirmed: false
+            },
+            {
+              spell: 'Fireball',
+              rank: 4,
+              coefficient: 0.793,
+              type: 'direct-damage',
+              confirmed: false
+            },
+            {
+              spell: 'Fireball',
+              rank: 4,
+              coefficient: 0,
+              type: 'dot',
+              confirmed: false,
+              notes: 'DoT does not scale.'
+            }
           ],
           priest: [
-            { spell: 'Lesser Heal', rank: 3, coefficient: 0.446, type: 'direct-heal', confirmed: true }
+            {
+              spell: 'Lesser Heal',
+              rank: 3,
+              coefficient: 0.446,
+              type: 'direct-heal',
+              confirmed: true
+            }
           ]
         }
       }
@@ -64,7 +88,9 @@ test('renderSpellcoef credits the source author with a masked link and a display
   const { embeds } = renderSpellcoef({ store, bracket: '19', className: 'mage' });
   const e = embeds[0].toJSON();
   assert.ok(
-    e.description.includes('[XPOff coefficient list](https://xpoff.com/threads/spell-power-coefficient-list-for-all-level-19-spells.93250/)'),
+    e.description.includes(
+      '[XPOff coefficient list](https://xpoff.com/threads/spell-power-coefficient-list-for-all-level-19-spells.93250/)'
+    ),
     'source is a masked link'
   );
   assert.ok(e.description.includes('Lebs'), 'author name is shown');
@@ -112,10 +138,19 @@ test('renderSpellcoef splits an oversized effect-type group instead of overrunni
   const dd = fields.filter((f) => f.name.startsWith('Direct damage'));
 
   assert.ok(dd.length >= 2, 'oversized group spans multiple fields');
-  assert.ok(dd.every((f) => f.value.length <= 1024), 'no field exceeds the 1024 cap');
-  assert.ok(fields.some((f) => f.name === 'Direct damage (cont.)'), 'continuation field is labelled');
+  assert.ok(
+    dd.every((f) => f.value.length <= 1024),
+    'no field exceeds the 1024 cap'
+  );
+  assert.ok(
+    fields.some((f) => f.name === 'Direct damage (cont.)'),
+    'continuation field is labelled'
+  );
   for (let i = 1; i <= many.length; i++) {
-    assert.ok(dd.some((f) => f.value.includes(`Big Spell Number ${i}`)), `rank ${i} is not dropped`);
+    assert.ok(
+      dd.some((f) => f.value.includes(`Big Spell Number ${i}`)),
+      `rank ${i} is not dropped`
+    );
   }
 });
 

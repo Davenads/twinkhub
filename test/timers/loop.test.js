@@ -43,7 +43,12 @@ test('an overlapping tick is dropped while the previous one is still running', a
 
 test('a fresh tick runs again after the previous one settles', async () => {
   let runs = 0;
-  const loop = createTickLoop({ runTick: async () => { runs += 1; }, intervalMs: 1000 });
+  const loop = createTickLoop({
+    runTick: async () => {
+      runs += 1;
+    },
+    intervalMs: 1000
+  });
 
   assert.equal(await loop.tick(), true);
   assert.equal(await loop.tick(), true);
@@ -71,7 +76,12 @@ test('a throwing tick is caught, logged, and clears the running flag', async () 
 
 test('stop() halts the interval so no further ticks are scheduled', async () => {
   let runs = 0;
-  const loop = createTickLoop({ runTick: async () => { runs += 1; }, intervalMs: 5 });
+  const loop = createTickLoop({
+    runTick: async () => {
+      runs += 1;
+    },
+    intervalMs: 5
+  });
 
   loop.start(); // fires an immediate tick, then schedules the interval
   loop.stop();

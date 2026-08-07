@@ -1,7 +1,15 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketScaling, statweightsForClass } from '../content/store.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 /**
  * Render a class's stat weights from `scaling.json`: its priority order and
@@ -28,7 +36,9 @@ export function renderStatweights({ store, bracket, className }) {
 
   const { entry } = forClass;
   const title = metaTitle(`Stat Weights \u2014 ${capitalize(forClass.className)}`, meta);
-  const priorityLine = entry.priority.map((s) => scaling.stats[s]?.label ?? capitalize(s)).join(' > ');
+  const priorityLine = entry.priority
+    .map((s) => scaling.stats[s]?.label ?? capitalize(s))
+    .join(' > ');
 
   const embed = new EmbedBuilder()
     .setColor(EMBED_COLOR)
@@ -38,7 +48,9 @@ export function renderStatweights({ store, bracket, className }) {
   for (const statKey of entry.priority) {
     const stat = scaling.stats[statKey];
     if (!stat) continue;
-    embed.addFields(field(stat.label, [stat.summary, ...stat.conversions.map((c) => `\u2022 ${c}`)].join('\n')));
+    embed.addFields(
+      field(stat.label, [stat.summary, ...stat.conversions.map((c) => `\u2022 ${c}`)].join('\n'))
+    );
   }
 
   embed.addFields(field('Class notes', entry.notes.map((n) => `\u2022 ${n}`).join('\n')));
@@ -47,12 +59,19 @@ export function renderStatweights({ store, bracket, className }) {
     embed.addFields(
       field(
         'Derived formulas',
-        scaling.derived.map((d) => `**${d.name}:** ${d.formula}${d.notes ? ` (${d.notes})` : ''}`).join('\n')
+        scaling.derived
+          .map((d) => `**${d.name}:** ${d.formula}${d.notes ? ` (${d.notes})` : ''}`)
+          .join('\n')
       )
     );
   }
   if (scaling.hitCaps?.length) {
-    embed.addFields(field('PvP hit caps', scaling.hitCaps.map((h) => `${capitalize(h.type)}: ${h.value}`).join('\n')));
+    embed.addFields(
+      field(
+        'PvP hit caps',
+        scaling.hitCaps.map((h) => `${capitalize(h.type)}: ${h.value}`).join('\n')
+      )
+    );
   }
 
   const footerText = metaFooter(meta);

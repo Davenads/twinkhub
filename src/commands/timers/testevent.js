@@ -77,7 +77,5 @@ export async function execute(interaction) {
   ];
   if (policy.dm) parts.push(`DMed ${r.dmsSent} role holder(s)`);
 
-  await interaction.editReply(
-    `Fired **${event.toUpperCase()}** ${kind}: ${parts.join(', ')}.`
-  );
+  await interaction.editReply(`Fired **${event.toUpperCase()}** ${kind}: ${parts.join(', ')}.`);
 }

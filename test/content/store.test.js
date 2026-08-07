@@ -127,7 +127,10 @@ test('no per-enchant note restates the no-level-req norm (the top-level note own
   const redundant = /level requirement|no-level-req/i;
   for (const ench of data.enchants) {
     if (ench.notes) {
-      assert.ok(!redundant.test(ench.notes), `${ench.id} note restates the no-level-req norm: "${ench.notes}"`);
+      assert.ok(
+        !redundant.test(ench.notes),
+        `${ench.id} note restates the no-level-req norm: "${ench.notes}"`
+      );
     }
   }
 });
@@ -149,7 +152,10 @@ test('the PPM-normalized proc enchants carry a ppm; Icy Chill deliberately does 
   // No non-proc enchant sprouts a ppm.
   for (const ench of data.enchants) {
     if (ench.ppm !== undefined) {
-      assert.ok(/Chance on hit/i.test(ench.effect), `${ench.id} has a ppm but isn't a chance-on-hit proc`);
+      assert.ok(
+        /Chance on hit/i.test(ench.effect),
+        `${ench.id} has a ppm but isn't a chance-on-hit proc`
+      );
     }
   }
 });
@@ -165,7 +171,10 @@ test('the head/leg spellpower arcanum is authored; Voracity flags Strength as th
   assert.ok(focus, 'Arcanum of Focus is authored');
   assert.equal(focus.slot, 'head-legs');
   assert.equal(focus.noLevelReq, true);
-  assert.ok(focus.classes.includes('mage') && focus.classes.includes('warlock'), 'reaches the caster damage dealers');
+  assert.ok(
+    focus.classes.includes('mage') && focus.classes.includes('warlock'),
+    'reaches the caster damage dealers'
+  );
 
   // The +8 Agility arcanum tells melee builds Strength is the alternative here,
   // and now surfaces for paladins (a Strength user) alongside warrior/shaman.
@@ -193,7 +202,10 @@ test('the cloak slot carries the agility/armor/dodge picks and drops the bogus r
 
   // Rogue poisons don't exist at 19 (and aren't Shadow damage anyway): the
   // Shadow Resistance note must no longer reference them.
-  assert.ok(!/poison/i.test(byId.get('shadow-resistance').notes), 'shadow-resistance drops the rogue-poison reference');
+  assert.ok(
+    !/poison/i.test(byId.get('shadow-resistance').notes),
+    'shadow-resistance drops the rogue-poison reference'
+  );
 });
 
 test('listEnchantSlots returns distinct slots; empty for an unknown bracket', async () => {
@@ -214,7 +226,8 @@ test('loadContentStore indexes gear with unique ids and declared slots', async (
   assert.ok(items.length > 0);
   const ids = items.map((i) => i.id);
   assert.equal(new Set(ids).size, ids.length, 'ids are unique bracket-wide');
-  for (const it of items) assert.ok(slots.includes(it.slot), `${it.id} slot "${it.slot}" is declared`);
+  for (const it of items)
+    assert.ok(slots.includes(it.slot), `${it.id} slot "${it.slot}" is declared`);
 
   const goggles = getGearItem(store, '19', 'green-tinted-goggles');
   assert.ok(goggles, 'shared item resolves by id');
@@ -241,7 +254,10 @@ test('enriched item references pass the referential guard (strict load succeeded
 
   const boots = getGearItem(store, '19', 'feet-of-the-lynx');
   assert.equal(boots.enchant, 'minor-speed-boots');
-  assert.ok(getEnchant(store, '19', boots.enchant), 'recommended enchant resolves to a real enchant');
+  assert.ok(
+    getEnchant(store, '19', boots.enchant),
+    'recommended enchant resolves to a real enchant'
+  );
   assert.ok(boots.alternatives.includes('trailblazer-boots'));
 });
 
@@ -251,7 +267,10 @@ test('shared set fills the neck slot and cross-links the stat rings', async () =
   const neck = getGearItem(store, '19', 'sentinels-medallion');
   assert.ok(neck, 'a neck item is authored');
   assert.equal(neck.slot, 'neck');
-  assert.ok(listGearItems(store, '19').some((i) => i.slot === 'neck'), 'neck slot is populated');
+  assert.ok(
+    listGearItems(store, '19').some((i) => i.slot === 'neck'),
+    'neck slot is populated'
+  );
 
   // The two stat rings list each other as alternatives; a strict load reaching
   // here proves those references resolved.
@@ -268,11 +287,19 @@ test('gearForClass merges shared + class items; null when class has no BiS', asy
 
   const hunter = gearForClass(store, '19', 'Hunter');
   assert.equal(hunter.className, 'hunter');
-  assert.ok(hunter.items.some((i) => i.owner === 'shared'), 'includes shared items');
-  assert.ok(hunter.items.some((i) => i.owner === 'hunter'), 'includes hunter items');
+  assert.ok(
+    hunter.items.some((i) => i.owner === 'shared'),
+    'includes shared items'
+  );
+  assert.ok(
+    hunter.items.some((i) => i.owner === 'hunter'),
+    'includes hunter items'
+  );
 
   // A roster class without an authored gear file yields null (clean degrade).
-  const withoutGear = listClassNames(store, '19').find((c) => !listGearClasses(store, '19').includes(c));
+  const withoutGear = listClassNames(store, '19').find(
+    (c) => !listGearClasses(store, '19').includes(c)
+  );
   if (withoutGear) assert.equal(gearForClass(store, '19', withoutGear), null);
 });
 
@@ -290,7 +317,10 @@ test('gearForClass filters the browse pool by armor proficiency', async () => {
 
   // Leather is shown to the hunter; the misc fishing hat is shown to everyone.
   assert.ok(has(hunter, 'leggings-of-the-fang'), 'hunter can equip shared leather');
-  assert.ok(has(hunter, 'lucky-fishing-hat') && has(warrior, 'lucky-fishing-hat'), 'misc shown to all');
+  assert.ok(
+    has(hunter, 'lucky-fishing-hat') && has(warrior, 'lucky-fishing-hat'),
+    'misc shown to all'
+  );
 
   // Nothing a class cannot equip leaks through: every gated item in the merged
   // list is one the class's proficiency actually allows.
@@ -298,7 +328,10 @@ test('gearForClass filters the browse pool by armor proficiency', async () => {
   for (const g of [warrior, hunter]) {
     for (const it of g.items) {
       if (it.armorType && it.armorType !== 'misc') {
-        assert.ok(prof[it.armorType].includes(g.className), `${g.className} may wear ${it.id} (${it.armorType})`);
+        assert.ok(
+          prof[it.armorType].includes(g.className),
+          `${g.className} may wear ${it.id} (${it.armorType})`
+        );
       }
     }
   }
@@ -326,7 +359,10 @@ test('rogue is authored end-to-end: tier-S detail and a merged BiS list', async 
   assert.equal(shadowfang.slot, 'mainhand');
   assert.equal(shadowfang.enchant, 'fiery-weapon');
   assert.ok(getEnchant(store, '19', shadowfang.enchant), 'its enchant resolves');
-  assert.ok(gear.items.some((i) => i.owner === 'shared'), 'shared items are merged in');
+  assert.ok(
+    gear.items.some((i) => i.owner === 'shared'),
+    'shared items are merged in'
+  );
 });
 
 test('gear builds load, resolve their picks, and expose one default per class', async () => {
@@ -348,7 +384,11 @@ test('gear builds load, resolve their picks, and expose one default per class', 
 
   // Hunter likewise, and getBuild resolves by id.
   const hunterBuilds = buildsForClass(store, '19', 'Hunter');
-  assert.equal(hunterBuilds.filter((b) => b.default === true).length, 1, 'exactly one default hunter build');
+  assert.equal(
+    hunterBuilds.filter((b) => b.default === true).length,
+    1,
+    'exactly one default hunter build'
+  );
   const byId = getBuild(store, '19', hunterBuilds[0].id);
   assert.ok(byId, 'getBuild resolves by id');
   assert.equal(byId.id, hunterBuilds[0].id);
@@ -358,8 +398,15 @@ test('gear builds load, resolve their picks, and expose one default per class', 
 
   // Paladin is authored Alliance-side and likewise exposes exactly one default.
   const paladinBuilds = buildsForClass(store, '19', 'paladin');
-  assert.equal(paladinBuilds.filter((b) => b.default === true).length, 1, 'exactly one default paladin build');
-  assert.ok(paladinBuilds.every((b) => b.faction === 'alliance'), 'paladin builds are Alliance-side');
+  assert.equal(
+    paladinBuilds.filter((b) => b.default === true).length,
+    1,
+    'exactly one default paladin build'
+  );
+  assert.ok(
+    paladinBuilds.every((b) => b.faction === 'alliance'),
+    'paladin builds are Alliance-side'
+  );
 
   // An unknown bracket/class yields an empty list, not an error.
   assert.equal(getBuild(store, '19', 'nope-not-a-build'), null);
@@ -455,7 +502,10 @@ test('the full roster is class-detail complete with scaling for every class', as
   // matches the roster and each scaling priority names a declared stat.
   for (const cls of roster) {
     const detail = getClass(store, '19', cls);
-    assert.ok(detail.statPriority && detail.statPriority.length > 0, `${cls} has an authored detail file`);
+    assert.ok(
+      detail.statPriority && detail.statPriority.length > 0,
+      `${cls} has an authored detail file`
+    );
     assert.ok(listStatweightClasses(store, '19').includes(cls), `${cls} has stat weights`);
   }
 
@@ -534,16 +584,31 @@ test('loadContentStore loads consumables with valid class references and filters
   assert.ok(types.includes('utility'));
   const utility = consumablesFor(store, '19', { type: 'utility' });
   assert.ok(utility.every((c) => c.type === 'utility'));
-  assert.ok(utility.some((c) => c.id === 'magic-dust'), 'utility includes Magic Dust');
-  assert.ok(utility.some((c) => c.id === 'goblin-rocket-boots'), 'utility includes Goblin Rocket Boots');
+  assert.ok(
+    utility.some((c) => c.id === 'magic-dust'),
+    'utility includes Magic Dust'
+  );
+  assert.ok(
+    utility.some((c) => c.id === 'goblin-rocket-boots'),
+    'utility includes Goblin Rocket Boots'
+  );
 
   // Class filter keeps universal consumables plus class-specific ones; rogue sees
   // its Thistle Tea, a class without it does not.
   const rogue = consumablesFor(store, '19', { className: 'Rogue' });
-  assert.ok(rogue.some((c) => c.id === 'thistle-tea'), 'rogue sees its Thistle Tea');
-  assert.ok(rogue.some((c) => !c.classes), 'rogue also sees universal consumables');
+  assert.ok(
+    rogue.some((c) => c.id === 'thistle-tea'),
+    'rogue sees its Thistle Tea'
+  );
+  assert.ok(
+    rogue.some((c) => !c.classes),
+    'rogue also sees universal consumables'
+  );
   const priest = consumablesFor(store, '19', { className: 'priest' });
-  assert.ok(!priest.some((c) => c.id === 'thistle-tea'), 'priest does not see the rogue Thistle Tea');
+  assert.ok(
+    !priest.some((c) => c.id === 'thistle-tea'),
+    'priest does not see the rogue Thistle Tea'
+  );
 
   assert.equal(bracketConsumables(store, '49'), null);
   assert.deepEqual(consumablesFor(store, '49', { type: 'potion' }), []);
@@ -562,7 +627,8 @@ test('loadContentStore loads quests with valid reward/class references and filte
   const roster = new Set(listClassNames(store, '19'));
   for (const q of data.quests) {
     assert.equal(typeof q.xpWarning, 'boolean');
-    if (q.reward.itemId) assert.ok(getGearItem(store, '19', q.reward.itemId), `${q.id} reward resolves`);
+    if (q.reward.itemId)
+      assert.ok(getGearItem(store, '19', q.reward.itemId), `${q.id} reward resolves`);
     for (const cls of q.classes ?? []) assert.ok(roster.has(cls), `${cls} is a roster class`);
   }
 
@@ -570,9 +636,13 @@ test('loadContentStore loads quests with valid reward/class references and filte
   // excluded by a mismatched faction.
   const nightWatch = data.quests.find((q) => q.id === 'the-night-watch');
   assert.ok(nightWatch, 'seeded Alliance quest is present');
-  assert.ok(questsFor(store, '19', { faction: 'alliance' }).some((q) => q.id === 'the-night-watch'));
+  assert.ok(
+    questsFor(store, '19', { faction: 'alliance' }).some((q) => q.id === 'the-night-watch')
+  );
   assert.ok(!questsFor(store, '19', { faction: 'horde' }).some((q) => q.id === 'the-night-watch'));
-  assert.ok(questsFor(store, '19', { className: 'Hunter' }).some((q) => q.id === 'the-night-watch'));
+  assert.ok(
+    questsFor(store, '19', { className: 'Hunter' }).some((q) => q.id === 'the-night-watch')
+  );
 
   assert.equal(bracketQuests(store, '49'), null);
   assert.deepEqual(questsFor(store, '49', { faction: 'alliance' }), []);
@@ -602,7 +672,9 @@ test('loadContentStore loads guides with a matching body slug and valid class re
   assert.ok(guidesFor(store, '19', { tag: 'beginner' }).some((g) => g.slug === '19-twink-basics'));
   assert.deepEqual(guidesFor(store, '19', { tag: 'nope-not-a-tag' }), []);
   // A class-less guide is universal, surfacing for any class filter.
-  assert.ok(guidesFor(store, '19', { className: 'Hunter' }).some((g) => g.slug === '19-twink-basics'));
+  assert.ok(
+    guidesFor(store, '19', { className: 'Hunter' }).some((g) => g.slug === '19-twink-basics')
+  );
 
   assert.equal(bracketGuides(store, '49'), null);
   assert.deepEqual(listGuides(store, '49'), []);
@@ -644,7 +716,11 @@ test('reloadContentStore fails cleanly and keeps the last-good store on a bad lo
 
 const fixtureMeta = () => ({
   bracket: '19',
-  gameVersion: { flavor: 'classic-era', contentState: 'all-pre-tbc-unlocked', clientPatch: '1.15.x' },
+  gameVersion: {
+    flavor: 'classic-era',
+    contentState: 'all-pre-tbc-unlocked',
+    clientPatch: '1.15.x'
+  },
   levelRange: [10, 19],
   levelCap: 19,
   battleground: 'Warsong Gulch',
@@ -664,7 +740,10 @@ function writeGearFixture(gearIndex) {
   const b = nodePath.join(dir, '19');
   mkdirSync(nodePath.join(b, 'classes'), { recursive: true });
   mkdirSync(nodePath.join(b, 'gear'), { recursive: true });
-  writeFileSync(nodePath.join(dir, 'index.json'), JSON.stringify({ schemaVersion: 1, brackets: ['19'] }));
+  writeFileSync(
+    nodePath.join(dir, 'index.json'),
+    JSON.stringify({ schemaVersion: 1, brackets: ['19'] })
+  );
   writeFileSync(nodePath.join(b, 'meta.json'), JSON.stringify(fixtureMeta()));
   writeFileSync(nodePath.join(b, 'classes', 'index.json'), JSON.stringify(fixtureRoster()));
   writeFileSync(nodePath.join(b, 'gear', 'index.json'), JSON.stringify(gearIndex));
@@ -684,9 +763,22 @@ test('a well-formed gear fixture loads under a strict load', async () => {
   await assert.doesNotReject(
     loadFixtureStrict({
       slots: ['head', 'ranged'],
-      armorProficiency: { cloth: ['mage', 'warrior'], leather: ['warrior'], mail: ['warrior'], plate: [] },
+      armorProficiency: {
+        cloth: ['mage', 'warrior'],
+        leather: ['warrior'],
+        mail: ['warrior'],
+        plate: []
+      },
       shared: [
-        { id: 'a-cloth-hat', name: 'Cloth Hat', slot: 'head', armorType: 'cloth', source: { type: 'drop', detail: 'x' }, faction: 'both', priority: 'core' }
+        {
+          id: 'a-cloth-hat',
+          name: 'Cloth Hat',
+          slot: 'head',
+          armorType: 'cloth',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          priority: 'core'
+        }
       ]
     })
   );
@@ -696,9 +788,22 @@ test('strict load rejects an item whose reqLevel exceeds the bracket cap', async
   await assert.rejects(
     loadFixtureStrict({
       slots: ['head', 'ranged'],
-      armorProficiency: { cloth: ['mage', 'warrior'], leather: ['warrior'], mail: ['warrior'], plate: [] },
+      armorProficiency: {
+        cloth: ['mage', 'warrior'],
+        leather: ['warrior'],
+        mail: ['warrior'],
+        plate: []
+      },
       shared: [
-        { id: 'over-cap-gun', name: 'Over-Cap Gun', slot: 'ranged', source: { type: 'drop', detail: 'x' }, faction: 'both', priority: 'core', reqLevel: 43 }
+        {
+          id: 'over-cap-gun',
+          name: 'Over-Cap Gun',
+          slot: 'ranged',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          priority: 'core',
+          reqLevel: 43
+        }
       ]
     }),
     /reqLevel 43 exceeds bracket levelCap 19/
@@ -711,7 +816,15 @@ test('strict load rejects a gating armorType not mapped in armorProficiency', as
       slots: ['head'],
       armorProficiency: { cloth: ['mage', 'warrior'] },
       shared: [
-        { id: 'orphan-mail', name: 'Orphan Mail', slot: 'head', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', priority: 'core' }
+        {
+          id: 'orphan-mail',
+          name: 'Orphan Mail',
+          slot: 'head',
+          armorType: 'mail',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          priority: 'core'
+        }
       ]
     }),
     /armorType "mail" is not mapped in armorProficiency/
@@ -724,7 +837,15 @@ test('strict load rejects an armorProficiency class outside the roster', async (
       slots: ['head'],
       armorProficiency: { cloth: ['mage', 'ghost'] },
       shared: [
-        { id: 'a-cloth-hat', name: 'Cloth Hat', slot: 'head', armorType: 'cloth', source: { type: 'drop', detail: 'x' }, faction: 'both', priority: 'core' }
+        {
+          id: 'a-cloth-hat',
+          name: 'Cloth Hat',
+          slot: 'head',
+          armorType: 'cloth',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          priority: 'core'
+        }
       ]
     }),
     /armorProficiency\.cloth references unknown class "ghost"/
@@ -733,7 +854,12 @@ test('strict load rejects an armorProficiency class outside the roster', async (
 
 // --- Shoulder-vessel loader guards -----------------------------------------
 
-const fixtureProf = () => ({ cloth: ['mage', 'warrior'], leather: ['warrior'], mail: ['warrior'], plate: [] });
+const fixtureProf = () => ({
+  cloth: ['mage', 'warrior'],
+  leather: ['warrior'],
+  mail: ['warrior'],
+  plate: []
+});
 
 test('a shoulder strategy with a valid mail vessel loads under a strict load', async () => {
   await assert.doesNotReject(
@@ -742,7 +868,16 @@ test('a shoulder strategy with a valid mail vessel loads under a strict load', a
       armorProficiency: fixtureProf(),
       shoulderStrategy: { note: 'Vessel meta.', vesselByArmorType: { mail: 'a-mail-shoulder' } },
       shared: [
-        { id: 'a-mail-shoulder', name: 'Mail Shoulder', slot: 'shoulder', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+        {
+          id: 'a-mail-shoulder',
+          name: 'Mail Shoulder',
+          slot: 'shoulder',
+          armorType: 'mail',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          reqLevel: 19,
+          priority: 'core'
+        }
       ]
     })
   );
@@ -755,7 +890,16 @@ test('strict load rejects a shoulder vessel that references an unknown item', as
       armorProficiency: fixtureProf(),
       shoulderStrategy: { vesselByArmorType: { mail: 'ghost-vessel' } },
       shared: [
-        { id: 'a-mail-shoulder', name: 'Mail Shoulder', slot: 'shoulder', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+        {
+          id: 'a-mail-shoulder',
+          name: 'Mail Shoulder',
+          slot: 'shoulder',
+          armorType: 'mail',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          reqLevel: 19,
+          priority: 'core'
+        }
       ]
     }),
     /vesselByArmorType\.mail references unknown item "ghost-vessel"/
@@ -769,7 +913,16 @@ test('strict load rejects a shoulder vessel whose armorType mismatches its key',
       armorProficiency: fixtureProf(),
       shoulderStrategy: { vesselByArmorType: { mail: 'a-leather-shoulder' } },
       shared: [
-        { id: 'a-leather-shoulder', name: 'Leather Shoulder', slot: 'shoulder', armorType: 'leather', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+        {
+          id: 'a-leather-shoulder',
+          name: 'Leather Shoulder',
+          slot: 'shoulder',
+          armorType: 'leather',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          reqLevel: 19,
+          priority: 'core'
+        }
       ]
     }),
     /armorType "leather" != mapped type "mail"/
@@ -783,7 +936,10 @@ function writeBuildFixture(shoulderPick) {
   const b = nodePath.join(dir, '19');
   mkdirSync(nodePath.join(b, 'classes'), { recursive: true });
   mkdirSync(nodePath.join(b, 'gear'), { recursive: true });
-  writeFileSync(nodePath.join(dir, 'index.json'), JSON.stringify({ schemaVersion: 1, brackets: ['19'] }));
+  writeFileSync(
+    nodePath.join(dir, 'index.json'),
+    JSON.stringify({ schemaVersion: 1, brackets: ['19'] })
+  );
   writeFileSync(nodePath.join(b, 'meta.json'), JSON.stringify(fixtureMeta()));
   writeFileSync(nodePath.join(b, 'classes', 'index.json'), JSON.stringify(fixtureRoster()));
   writeFileSync(
@@ -793,8 +949,26 @@ function writeBuildFixture(shoulderPick) {
       armorProficiency: fixtureProf(),
       shoulderStrategy: { note: 'Vessel meta.', vesselByArmorType: { mail: 'mail-vessel' } },
       shared: [
-        { id: 'mail-vessel', name: 'Mail Vessel', slot: 'shoulder', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' },
-        { id: 'leather-shoulder', name: 'Leather Shoulder', slot: 'shoulder', armorType: 'leather', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+        {
+          id: 'mail-vessel',
+          name: 'Mail Vessel',
+          slot: 'shoulder',
+          armorType: 'mail',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          reqLevel: 19,
+          priority: 'core'
+        },
+        {
+          id: 'leather-shoulder',
+          name: 'Leather Shoulder',
+          slot: 'shoulder',
+          armorType: 'leather',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          reqLevel: 19,
+          priority: 'core'
+        }
       ]
     })
   );
@@ -802,8 +976,24 @@ function writeBuildFixture(shoulderPick) {
     nodePath.join(b, 'enchants.json'),
     JSON.stringify({
       enchants: [
-        { id: 'scourge-shoulder', name: 'Scourge Inscription', slot: 'shoulder', effect: '+stuff', noLevelReq: true, reqLevel: null, classes: ['mage', 'warrior'] },
-        { id: 'weapon-ench', name: 'Weapon Enchant', slot: 'weapon', effect: '+stuff', noLevelReq: true, reqLevel: null, classes: ['warrior'] }
+        {
+          id: 'scourge-shoulder',
+          name: 'Scourge Inscription',
+          slot: 'shoulder',
+          effect: '+stuff',
+          noLevelReq: true,
+          reqLevel: null,
+          classes: ['mage', 'warrior']
+        },
+        {
+          id: 'weapon-ench',
+          name: 'Weapon Enchant',
+          slot: 'weapon',
+          effect: '+stuff',
+          noLevelReq: true,
+          reqLevel: null,
+          classes: ['warrior']
+        }
       ]
     })
   );
@@ -812,10 +1002,26 @@ function writeBuildFixture(shoulderPick) {
     JSON.stringify({
       class: 'warrior',
       items: [
-        { id: 'filler-head', name: 'Filler Head', slot: 'head', armorType: 'mail', source: { type: 'drop', detail: 'x' }, faction: 'both', reqLevel: 19, priority: 'core' }
+        {
+          id: 'filler-head',
+          name: 'Filler Head',
+          slot: 'head',
+          armorType: 'mail',
+          source: { type: 'drop', detail: 'x' },
+          faction: 'both',
+          reqLevel: 19,
+          priority: 'core'
+        }
       ],
       builds: [
-        { id: 'w-off', name: 'Offense', role: 'offense', faction: 'both', default: true, slots: { shoulder: shoulderPick } }
+        {
+          id: 'w-off',
+          name: 'Offense',
+          role: 'offense',
+          faction: 'both',
+          default: true,
+          slots: { shoulder: shoulderPick }
+        }
       ]
     })
   );
@@ -832,7 +1038,9 @@ async function loadBuildFixtureStrict(shoulderPick) {
 }
 
 test('a build whose shoulder is the class vessel + a Scourge inscription loads', async () => {
-  await assert.doesNotReject(loadBuildFixtureStrict({ item: 'mail-vessel', enchant: 'scourge-shoulder' }));
+  await assert.doesNotReject(
+    loadBuildFixtureStrict({ item: 'mail-vessel', enchant: 'scourge-shoulder' })
+  );
 });
 
 test('strict load rejects a build whose shoulder is not the class armor-type vessel', async () => {

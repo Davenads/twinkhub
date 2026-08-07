@@ -17,10 +17,12 @@ function fieldValue(embed, name) {
 test('describeChatInput flattens leaf options to name=value args', () => {
   const i = {
     commandName: 'talents',
-    options: { data: [
-      { name: 'class', type: STR, value: 'hunter' },
-      { name: 'build', type: STR, value: 'hunter-concussive-control' }
-    ] }
+    options: {
+      data: [
+        { name: 'class', type: STR, value: 'hunter' },
+        { name: 'build', type: STR, value: 'hunter-concussive-control' }
+      ]
+    }
   };
   assert.deepEqual(describeChatInput(i), {
     title: '/talents',
@@ -39,11 +41,15 @@ test('describeChatInput folds a sub-command into the title', () => {
 test('describeChatInput folds group + sub-command and keeps leaf args', () => {
   const i = {
     commandName: 'cfg',
-    options: { data: [
-      { name: 'grp', type: GROUP, options: [
-        { name: 'sub', type: SUB, options: [{ name: 'n', type: INT, value: 3 }] }
-      ] }
-    ] }
+    options: {
+      data: [
+        {
+          name: 'grp',
+          type: GROUP,
+          options: [{ name: 'sub', type: SUB, options: [{ name: 'n', type: INT, value: 3 }] }]
+        }
+      ]
+    }
   };
   assert.deepEqual(describeChatInput(i), { title: '/cfg grp sub', args: 'n=3' });
 });
@@ -74,7 +80,12 @@ test('formatAuditEntry builds a success embed with brand color and OK outcome', 
     id: 'INT1',
     options: { data: [{ name: 'class', type: STR, value: 'hunter' }] }
   };
-  const embed = formatAuditEntry({ kind: 'command', interaction: i, outcome: { ok: true }, ms: 12 });
+  const embed = formatAuditEntry({
+    kind: 'command',
+    interaction: i,
+    outcome: { ok: true },
+    ms: 12
+  });
   assert.equal(embed.data.title, '/talents');
   assert.equal(embed.data.color, 0xc8aa6e);
   assert.equal(fieldValue(embed, 'Args'), 'class=hunter');

@@ -1,7 +1,15 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketSpellcoef, spellcoefForClass, listClassNames } from '../content/store.js';
-import { EMBED_COLOR, LIMITS, truncate, fieldsFromLines, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  fieldsFromLines,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 // Display order + labels for each effect type. dot/hot are per-tick and proc is
 // per-hit, so the coefficient unit differs from the per-cast direct spells.
@@ -73,7 +81,9 @@ export function renderSpellcoef({ store, bracket, className }) {
         `**${capitalize(key)}** has no spell-power scaling at level 19 \u2014 its abilities scale with attack power, not spell power.`
       );
     }
-    return degrade(`No spell-coefficient data is authored for **${capitalize(key || String(className))}** in bracket **${bracket}**.`);
+    return degrade(
+      `No spell-coefficient data is authored for **${capitalize(key || String(className))}** in bracket **${bracket}**.`
+    );
   }
 
   const title = metaTitle(`Spell Coefficients \u2014 ${capitalize(key)}`, meta);

@@ -13,7 +13,10 @@ test('renderClassHub builds a neutral overview embed from class content', async 
   assert.match(json.description, /Pick a build/i, 'prompts a build choice');
   assert.match(json.description, /Tier S/, 'summarises tier');
   // Faction notes surface as a field (rogue authors them).
-  assert.ok(json.fields.some((f) => f.name === 'Faction notes'), 'faction notes field present');
+  assert.ok(
+    json.fields.some((f) => f.name === 'Faction notes'),
+    'faction notes field present'
+  );
 });
 
 test('renderClassHub degrades cleanly for an unknown class', async () => {

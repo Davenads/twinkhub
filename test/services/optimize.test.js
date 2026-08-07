@@ -8,7 +8,12 @@ const store = {
     19: {
       meta: { battleground: 'Warsong Gulch', levelCap: 19, gameVersion: { clientPatch: '1.15.x' } },
       classes: {
-        index: { classes: [{ class: 'hunter', tier: 'S' }, { class: 'warrior', tier: 'A' }] },
+        index: {
+          classes: [
+            { class: 'hunter', tier: 'S' },
+            { class: 'warrior', tier: 'A' }
+          ]
+        },
         byClass: {
           hunter: {
             class: 'hunter',
@@ -18,7 +23,14 @@ const store = {
         }
       },
       enchants: {
-        enchants: [{ id: 'boots-speed', name: 'Enchant Boots - Minor Speed', slot: 'boots', noLevelReq: true }]
+        enchants: [
+          {
+            id: 'boots-speed',
+            name: 'Enchant Boots - Minor Speed',
+            slot: 'boots',
+            noLevelReq: true
+          }
+        ]
       },
       consumables: {
         consumables: [
@@ -28,8 +40,23 @@ const store = {
       },
       quests: {
         quests: [
-          { id: 'nw', name: 'The Night Watch', zone: null, faction: 'alliance', reward: { desc: 'x' }, xpWarning: true, classes: ['hunter'] },
-          { id: 'talbar', name: 'Talbar Quest', zone: null, faction: 'both', reward: { desc: 'y' }, xpWarning: false }
+          {
+            id: 'nw',
+            name: 'The Night Watch',
+            zone: null,
+            faction: 'alliance',
+            reward: { desc: 'x' },
+            xpWarning: true,
+            classes: ['hunter']
+          },
+          {
+            id: 'talbar',
+            name: 'Talbar Quest',
+            zone: null,
+            faction: 'both',
+            reward: { desc: 'y' },
+            xpWarning: false
+          }
         ]
       },
       gear: {
@@ -37,11 +64,53 @@ const store = {
         byClass: { hunter: { class: 'hunter', items: [] } },
         byId: {},
         items: [
-          { id: 'goggles', name: 'Goggles', slot: 'head', owner: 'shared', priority: 'core', faction: 'both', source: { type: 'profession', detail: 'Engineering' }, enchant: null },
-          { id: 'boots', name: 'Boots', slot: 'feet', owner: 'shared', priority: 'core', faction: 'both', source: { type: 'world' }, enchant: 'boots-speed' },
-          { id: 'insignia-a', name: 'Insignia A', slot: 'trinket', owner: 'shared', priority: 'core', faction: 'alliance', source: { type: 'pvp' } },
-          { id: 'insignia-h', name: 'Insignia H', slot: 'trinket', owner: 'shared', priority: 'core', faction: 'horde', source: { type: 'pvp' } },
-          { id: 'gun', name: 'Gun', slot: 'ranged', owner: 'hunter', priority: 'situational', faction: 'both', source: { type: 'profession' } }
+          {
+            id: 'goggles',
+            name: 'Goggles',
+            slot: 'head',
+            owner: 'shared',
+            priority: 'core',
+            faction: 'both',
+            source: { type: 'profession', detail: 'Engineering' },
+            enchant: null
+          },
+          {
+            id: 'boots',
+            name: 'Boots',
+            slot: 'feet',
+            owner: 'shared',
+            priority: 'core',
+            faction: 'both',
+            source: { type: 'world' },
+            enchant: 'boots-speed'
+          },
+          {
+            id: 'insignia-a',
+            name: 'Insignia A',
+            slot: 'trinket',
+            owner: 'shared',
+            priority: 'core',
+            faction: 'alliance',
+            source: { type: 'pvp' }
+          },
+          {
+            id: 'insignia-h',
+            name: 'Insignia H',
+            slot: 'trinket',
+            owner: 'shared',
+            priority: 'core',
+            faction: 'horde',
+            source: { type: 'pvp' }
+          },
+          {
+            id: 'gun',
+            name: 'Gun',
+            slot: 'ranged',
+            owner: 'hunter',
+            priority: 'situational',
+            faction: 'both',
+            source: { type: 'profession' }
+          }
         ]
       }
     }
@@ -53,7 +122,12 @@ const field = (embeds, prefix) => fieldsOf(embeds).find((f) => f.name.startsWith
 const fieldName = (embeds, prefix) => fieldsOf(embeds).find((f) => f.name.startsWith(prefix))?.name;
 
 test('renderOptimize reports core-slot coverage and the missing slots', () => {
-  const { embeds } = renderOptimize({ store, bracket: '19', className: 'hunter', faction: 'alliance' });
+  const { embeds } = renderOptimize({
+    store,
+    bracket: '19',
+    className: 'hunter',
+    faction: 'alliance'
+  });
   const e = embeds[0].toJSON();
   assert.ok(e.title.includes('Optimize Hunter'));
   assert.ok(e.title.includes('Warsong Gulch 19'));
@@ -64,28 +138,48 @@ test('renderOptimize reports core-slot coverage and the missing slots', () => {
 });
 
 test('renderOptimize lists core-item enchants and flags no-level-req ones', () => {
-  const { embeds } = renderOptimize({ store, bracket: '19', className: 'hunter', faction: 'alliance' });
+  const { embeds } = renderOptimize({
+    store,
+    bracket: '19',
+    className: 'hunter',
+    faction: 'alliance'
+  });
   const val = field(embeds, 'Enchants to apply');
   assert.ok(val.includes('Boots: Enchant Boots - Minor Speed'));
   assert.ok(val.includes('(no level req)'));
 });
 
 test('renderOptimize includes universal consumables but not off-class ones', () => {
-  const { embeds } = renderOptimize({ store, bracket: '19', className: 'hunter', faction: 'alliance' });
+  const { embeds } = renderOptimize({
+    store,
+    bracket: '19',
+    className: 'hunter',
+    faction: 'alliance'
+  });
   const val = field(embeds, 'Consumables to carry');
   assert.ok(val.includes('Healing Potion'));
   assert.ok(!val.includes('Instant Poison'), 'rogue-only poison excluded for hunter');
 });
 
 test('renderOptimize lists gear quests and flags XP-risk turn-ins', () => {
-  const { embeds } = renderOptimize({ store, bracket: '19', className: 'hunter', faction: 'alliance' });
+  const { embeds } = renderOptimize({
+    store,
+    bracket: '19',
+    className: 'hunter',
+    faction: 'alliance'
+  });
   const val = field(embeds, 'Gear quests worth doing');
   assert.ok(val.includes('The Night Watch \u2014 XP-risk turn-in'));
   assert.ok(/Talbar Quest(?!.*XP-risk)/.test(val));
 });
 
 test('renderOptimize reminders derive from item source types and factionNotes', () => {
-  const { embeds } = renderOptimize({ store, bracket: '19', className: 'hunter', faction: 'alliance' });
+  const { embeds } = renderOptimize({
+    store,
+    bracket: '19',
+    className: 'hunter',
+    faction: 'alliance'
+  });
   const val = field(embeds, 'Reminders');
   assert.ok(val.includes('Profession pickups: Goggles'));
   assert.ok(val.includes('PvP reward(s): Insignia A'));
@@ -113,17 +207,33 @@ test('renderOptimize degrades for an unknown class and a class without a gear li
 
 test('renderOptimize runs over the real content store for a seeded class', async () => {
   const real = await loadContentStore({ strict: true });
-  const { embeds } = renderOptimize({ store: real, bracket: '19', className: 'hunter', faction: 'alliance' });
+  const { embeds } = renderOptimize({
+    store: real,
+    bracket: '19',
+    className: 'hunter',
+    faction: 'alliance'
+  });
   const names = fieldsOf(embeds).map((f) => f.name);
   assert.ok(names.some((n) => n.startsWith('Core slot coverage')));
 });
 
 test('renderOptimize surfaces the rogue anchor and its class consumable on the real store', async () => {
   const real = await loadContentStore({ strict: true });
-  const { embeds } = renderOptimize({ store: real, bracket: '19', className: 'rogue', faction: 'alliance' });
+  const { embeds } = renderOptimize({
+    store: real,
+    bracket: '19',
+    className: 'rogue',
+    faction: 'alliance'
+  });
   const names = fieldsOf(embeds).map((f) => f.name);
-  assert.ok(names.some((n) => n.startsWith('Core slot coverage')), 'rogue has a coverage line');
+  assert.ok(
+    names.some((n) => n.startsWith('Core slot coverage')),
+    'rogue has a coverage line'
+  );
   // Shadowfang covers mainhand, so it is not reported missing.
   assert.ok(!(field(embeds, 'Core slot coverage') ?? '').includes('mainhand'));
-  assert.ok(field(embeds, 'Consumables to carry').includes('Thistle Tea'), 'rogue-only Thistle Tea shows');
+  assert.ok(
+    field(embeds, 'Consumables to carry').includes('Thistle Tea'),
+    'rogue-only Thistle Tea shows'
+  );
 });

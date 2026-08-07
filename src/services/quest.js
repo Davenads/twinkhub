@@ -1,7 +1,15 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketQuests, questsFor, getGearItem } from '../content/store.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 // Discord caps embeds at 25 fields; one quest per field.
 const MAX_FIELDS = 25;
@@ -18,7 +26,8 @@ function rewardText(store, bracket, reward) {
 
 function questValue(store, bracket, q) {
   const lines = [];
-  if (q.xpWarning) lines.push('**XP-risk turn-in** \u2014 awards XP; complete well before dinging 20.');
+  if (q.xpWarning)
+    lines.push('**XP-risk turn-in** \u2014 awards XP; complete well before dinging 20.');
   lines.push(`Reward: ${rewardText(store, bracket, q.reward)}`);
   const meta = [];
   if (q.zone) meta.push(q.zone);
@@ -81,7 +90,10 @@ export function renderQuest({ store, bracket, faction = null, className = null }
   }
   if (matches.length > MAX_FIELDS) {
     embed.addFields(
-      field('\u2026', `${matches.length - MAX_FIELDS} more not shown \u2014 narrow with a faction or class filter.`)
+      field(
+        '\u2026',
+        `${matches.length - MAX_FIELDS} more not shown \u2014 narrow with a faction or class filter.`
+      )
     );
   }
 

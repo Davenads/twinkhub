@@ -30,7 +30,11 @@ import { renderGearPage } from '../services/gear.js';
 
 /** Ephemeral reply that never pings (mentions in embeds stay display-only). */
 async function reply(interaction, payload) {
-  await interaction.reply({ ...payload, flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
+  await interaction.reply({
+    ...payload,
+    flags: MessageFlags.Ephemeral,
+    allowedMentions: { parse: [] }
+  });
 }
 
 /** Edit the user's own ephemeral in place (the build dropdown's morph-in-view). */
@@ -112,8 +116,13 @@ async function updateBuild(interaction, ctx, className) {
 /** Back from a follow-up: rebuild the gear view (with build) or the hub (without). */
 async function updateBack(interaction, ctx, className, build) {
   if (!className) return outOfDate(interaction);
-  const payload = build ? renderBis({ ...ctx, className, build }) : renderClassHub({ ...ctx, className });
-  await update(interaction, { ...payload, components: gearControls(ctx, className, build ?? null) });
+  const payload = build
+    ? renderBis({ ...ctx, className, build })
+    : renderClassHub({ ...ctx, className });
+  await update(interaction, {
+    ...payload,
+    components: gearControls(ctx, className, build ?? null)
+  });
 }
 
 /** A class follow-up (enchants/consumables/...): morph the same ephemeral in place. */
@@ -128,7 +137,11 @@ const HANDLERS = {
   // Class select -> open that class's hub. `bis` is the legacy target (older
   // posted panels) that jumps straight to the default BiS; `hub` is current.
   pick: (i, ctx, [what]) =>
-    what === 'hub' ? replyHub(i, ctx, i.values?.[0]) : what === 'bis' ? replyBis(i, ctx, i.values?.[0]) : outOfDate(i),
+    what === 'hub'
+      ? replyHub(i, ctx, i.values?.[0])
+      : what === 'bis'
+        ? replyBis(i, ctx, i.values?.[0])
+        : outOfDate(i),
   bis: (i, ctx, [cls]) => replyBis(i, ctx, cls),
   // Build dropdown / Back button on a class ephemeral -> rewrite it in place.
   build: (i, ctx, [cls]) => updateBuild(i, ctx, cls),
@@ -136,11 +149,16 @@ const HANDLERS = {
   // Close button -> delete the ephemeral so it doesn't linger.
   close: (i) => closeEphemeral(i),
   // Class follow-ups -> morph the same class ephemeral in place (no stacking).
-  ench: (i, ctx, [cls, build]) => updateFollowup(i, ctx, cls, build, renderEnchant({ ...ctx, className: cls })),
-  consc: (i, ctx, [cls, build]) => updateFollowup(i, ctx, cls, build, renderConsumable({ ...ctx, className: cls })),
-  sw: (i, ctx, [cls, build]) => updateFollowup(i, ctx, cls, build, renderStatweights({ ...ctx, className: cls })),
-  scoef: (i, ctx, [cls, build]) => updateFollowup(i, ctx, cls, build, renderSpellcoef({ ...ctx, className: cls })),
-  talents: (i, ctx, [cls, build]) => updateFollowup(i, ctx, cls, build, renderTalents({ ...ctx, className: cls })),
+  ench: (i, ctx, [cls, build]) =>
+    updateFollowup(i, ctx, cls, build, renderEnchant({ ...ctx, className: cls })),
+  consc: (i, ctx, [cls, build]) =>
+    updateFollowup(i, ctx, cls, build, renderConsumable({ ...ctx, className: cls })),
+  sw: (i, ctx, [cls, build]) =>
+    updateFollowup(i, ctx, cls, build, renderStatweights({ ...ctx, className: cls })),
+  scoef: (i, ctx, [cls, build]) =>
+    updateFollowup(i, ctx, cls, build, renderSpellcoef({ ...ctx, className: cls })),
+  talents: (i, ctx, [cls, build]) =>
+    updateFollowup(i, ctx, cls, build, renderTalents({ ...ctx, className: cls })),
   pets: (i, ctx, [cls, build]) => updateFollowup(i, ctx, cls, build, renderPets({ ...ctx })),
   // Standalone lookups from the enchant/consumable/reference panels — each opens a
   // fresh ephemeral (their buttons live on public panels) with just a Close button.

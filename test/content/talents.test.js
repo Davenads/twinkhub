@@ -1,7 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validateTalents, validateEmojiRegistry } from '../../src/content/schema.js';
-import { classIcon, talentIcon, classIconComponent, talentsForClass, listTalentClasses } from '../../src/content/store.js';
+import {
+  classIcon,
+  talentIcon,
+  classIconComponent,
+  talentsForClass,
+  listTalentClasses
+} from '../../src/content/store.js';
 
 const validTalents = () => ({
   note: 'Level-19 builds.',
@@ -69,7 +75,10 @@ test('validateEmojiRegistry rejects a non-string id and missing name', () => {
 
 const store = {
   emoji: {
-    classes: { druid: { name: 'classicon_druid', id: '111' }, warrior: { name: 'classicon_warrior', id: '' } },
+    classes: {
+      druid: { name: 'classicon_druid', id: '111' },
+      warrior: { name: 'classicon_warrior', id: '' }
+    },
     nodes: { Furor: { name: 'Furor', id: '222' }, NaturesGrasp: { name: 'NaturesGrasp', id: '' } }
   },
   brackets: { 19: { talents: { byClass: { druid: [{ id: 'a' }] } } } }
@@ -85,7 +94,11 @@ test('classIcon/talentIcon render markup when the id is filled, "" otherwise', (
 });
 
 test('classIconComponent returns a discord.js emoji object or null', () => {
-  assert.deepEqual(classIconComponent(store, 'druid'), { id: '111', name: 'classicon_druid', animated: false });
+  assert.deepEqual(classIconComponent(store, 'druid'), {
+    id: '111',
+    name: 'classicon_druid',
+    animated: false
+  });
   assert.equal(classIconComponent(store, 'warrior'), null, 'unfilled id yields null');
   assert.equal(classIconComponent(store, 'nobody'), null);
 });

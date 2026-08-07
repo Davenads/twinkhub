@@ -127,7 +127,12 @@ test('itemNameMarkup degrades to plain bold (no link) when wowheadId is absent',
 });
 
 test('itemLine (/bis flat view + /gear) links the item name when linkable', () => {
-  const line = itemLine({ name: 'Green Tinted Goggles', faction: 'both', priority: 'core', wowheadId: 10399 });
+  const line = itemLine({
+    name: 'Green Tinted Goggles',
+    faction: 'both',
+    priority: 'core',
+    wowheadId: 10399
+  });
   assert.ok(line.includes('](https://www.wowhead.com/classic/item=10399)'), 'links the name');
 });
 

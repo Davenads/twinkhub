@@ -15,10 +15,7 @@ export const data = new SlashCommandBuilder()
       .addChoices(...EVENT_CHOICES)
   )
   .addBooleanOption((o) =>
-    o
-      .setName('enabled')
-      .setDescription('True to enable, false to disable')
-      .setRequired(true)
+    o.setName('enabled').setDescription('True to enable, false to disable').setRequired(true)
   );
 
 export async function execute(interaction) {

@@ -17,7 +17,15 @@ export function getState(now) {
   const sundayCal = mt.minus({ days: daysSinceSun });
   const atMt = (hour) =>
     DateTime.fromObject(
-      { year: sundayCal.year, month: sundayCal.month, day: sundayCal.day, hour, minute: 0, second: 0, millisecond: 0 },
+      {
+        year: sundayCal.year,
+        month: sundayCal.month,
+        day: sundayCal.day,
+        hour,
+        minute: 0,
+        second: 0,
+        millisecond: 0
+      },
       { zone: MT_ZONE }
     );
 

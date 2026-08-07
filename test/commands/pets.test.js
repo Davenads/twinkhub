@@ -10,7 +10,10 @@ test('/pets is registered with an optional autocompleted family option', async (
 
   const json = cmd.data.toJSON();
   const opt = (name) => (json.options ?? []).find((o) => o.name === name);
-  assert.ok(opt('family') && !opt('family').required && opt('family').autocomplete, 'family: optional + autocompleted');
+  assert.ok(
+    opt('family') && !opt('family').required && opt('family').autocomplete,
+    'family: optional + autocompleted'
+  );
 });
 
 test('pets autocomplete suggests the seeded families and returns the family key', async () => {

@@ -64,8 +64,7 @@ export function renderEventLine(key, state) {
         );
       }
       return (
-        `Next: **${cur}** in ${formatCountdown(state.startsInMs)}` +
-        (next ? `\nThen: ${next}` : '')
+        `Next: **${cur}** in ${formatCountdown(state.startsInMs)}` + (next ? `\nThen: ${next}` : '')
       );
     }
     case 'agm':

@@ -104,7 +104,12 @@ test('renderGear faction both narrows to faction-agnostic items only', () => {
 });
 
 test('renderGear priority situational keeps only situational items', () => {
-  const { embeds } = renderGear({ store, bracket: '19', className: 'hunter', priority: 'situational' });
+  const { embeds } = renderGear({
+    store,
+    bracket: '19',
+    className: 'hunter',
+    priority: 'situational'
+  });
   const e = embeds[0].toJSON();
   assert.equal(e.fields.length, 1);
   assert.equal(e.fields[0].name, 'Trinket');
@@ -175,7 +180,10 @@ const bigStore = (() => {
         id: `${slot}-${n}`,
         name: `Very Long Item Name For ${slot} Number ${n} Of The Test`,
         slot,
-        source: { type: 'drop', detail: 'Some fairly wordy source description to pad the line out nicely' },
+        source: {
+          type: 'drop',
+          detail: 'Some fairly wordy source description to pad the line out nicely'
+        },
         faction: 'both',
         stats: { agility: 6, stamina: 6, intellect: 4 },
         priority: 'core',
@@ -187,7 +195,11 @@ const bigStore = (() => {
   return {
     brackets: {
       19: {
-        meta: { levelCap: 19, battleground: 'Warsong Gulch', gameVersion: { clientPatch: '1.15.x' } },
+        meta: {
+          levelCap: 19,
+          battleground: 'Warsong Gulch',
+          gameVersion: { clientPatch: '1.15.x' }
+        },
         gear: { index: { slots }, byClass: { hunter: {} }, byId: {}, items }
       }
     }
@@ -211,13 +223,48 @@ test('renderGear paginates a broad result and every page fits under 6000', () =>
 // --- Shoulder slot: the level-19 vessel-meta strategy view -----------------
 
 const shoulderItems = [
-  { id: 'feral-shoulder-pads', name: 'Feral Shoulder Pads', slot: 'shoulder', armorType: 'leather', source: { type: 'drop', detail: 'Blackfathom Deeps' }, faction: 'both', priority: 'core', owner: 'shared', wowheadId: 15313 },
-  { id: 'woolen-shoulders', name: 'Reinforced Woolen Shoulders', slot: 'shoulder', armorType: 'cloth', source: { type: 'profession', detail: 'Tailoring' }, faction: 'both', priority: 'core', owner: 'shared', wowheadId: 4315 },
-  { id: 'talbar-mantle', name: 'Talbar Mantle', slot: 'shoulder', armorType: 'cloth', source: { type: 'quest', detail: 'Quest reward' }, faction: 'both', priority: 'core', owner: 'shared', wowheadId: 10657 }
+  {
+    id: 'feral-shoulder-pads',
+    name: 'Feral Shoulder Pads',
+    slot: 'shoulder',
+    armorType: 'leather',
+    source: { type: 'drop', detail: 'Blackfathom Deeps' },
+    faction: 'both',
+    priority: 'core',
+    owner: 'shared',
+    wowheadId: 15313
+  },
+  {
+    id: 'woolen-shoulders',
+    name: 'Reinforced Woolen Shoulders',
+    slot: 'shoulder',
+    armorType: 'cloth',
+    source: { type: 'profession', detail: 'Tailoring' },
+    faction: 'both',
+    priority: 'core',
+    owner: 'shared',
+    wowheadId: 4315
+  },
+  {
+    id: 'talbar-mantle',
+    name: 'Talbar Mantle',
+    slot: 'shoulder',
+    armorType: 'cloth',
+    source: { type: 'quest', detail: 'Quest reward' },
+    faction: 'both',
+    priority: 'core',
+    owner: 'shared',
+    wowheadId: 10657
+  }
 ];
 
 const rogueBuild = {
-  id: 'rogue-offense', name: 'Offense', role: 'offense', faction: 'both', default: true, owner: 'rogue',
+  id: 'rogue-offense',
+  name: 'Offense',
+  role: 'offense',
+  faction: 'both',
+  default: true,
+  owner: 'rogue',
   slots: { shoulder: { item: 'feral-shoulder-pads', enchant: 'might-scourge' } }
 };
 
@@ -225,7 +272,16 @@ const shoulderStore = {
   brackets: {
     19: {
       meta: { levelCap: 19, battleground: 'Warsong Gulch', gameVersion: { clientPatch: '1.15.x' } },
-      enchants: { enchants: [{ id: 'might-scourge', name: 'Might of the Scourge', slot: 'shoulder', wowhead: { type: 'item', id: 23548 } }] },
+      enchants: {
+        enchants: [
+          {
+            id: 'might-scourge',
+            name: 'Might of the Scourge',
+            slot: 'shoulder',
+            wowhead: { type: 'item', id: 23548 }
+          }
+        ]
+      },
       gear: {
         index: {
           slots: ['head', 'shoulder'],
@@ -246,7 +302,12 @@ const shoulderStore = {
 };
 
 test('renderGear shoulder slot renders the vessel-meta strategy view', () => {
-  const { embeds } = renderGear({ store: shoulderStore, bracket: '19', className: 'rogue', slot: 'shoulder' });
+  const { embeds } = renderGear({
+    store: shoulderStore,
+    bracket: '19',
+    className: 'rogue',
+    slot: 'shoulder'
+  });
   const e = embeds[0].toJSON();
   assert.equal(e.title, 'Gear \u2014 Rogue shoulder (Warsong Gulch 19)');
   assert.ok(e.description.includes('Scourge inscription'));

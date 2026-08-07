@@ -13,9 +13,31 @@ const store = {
       pets: {
         class: 'hunter',
         families: [
-          { family: 'boar', exampleName: 'Great Goretusk', keyAbility: 'Charge', tameLevel: null, zone: null, notes: 'Charge utility.' },
-          { family: 'cat', exampleName: 'The Rake', keyAbility: null, attackSpeed: 1.2, tameLevel: null, zone: null, notes: 'Fastest swing.' },
-          { family: 'wind-serpent', exampleName: 'Deviate Stinglash', keyAbility: null, tameLevel: null, zone: null, notes: 'Ranged nature damage.' }
+          {
+            family: 'boar',
+            exampleName: 'Great Goretusk',
+            keyAbility: 'Charge',
+            tameLevel: null,
+            zone: null,
+            notes: 'Charge utility.'
+          },
+          {
+            family: 'cat',
+            exampleName: 'The Rake',
+            keyAbility: null,
+            attackSpeed: 1.2,
+            tameLevel: null,
+            zone: null,
+            notes: 'Fastest swing.'
+          },
+          {
+            family: 'wind-serpent',
+            exampleName: 'Deviate Stinglash',
+            keyAbility: null,
+            tameLevel: null,
+            zone: null,
+            notes: 'Ranged nature damage.'
+          }
         ],
         xpNote: 'Pets need ~25% of player XP and gain none from turn-ins.',
         abilityNote: 'Ability-shop while taming.',
@@ -37,7 +59,10 @@ test('renderPets lists every family plus the XP-management notes', () => {
 
   const names = fieldsOf(embeds).map((f) => f.name);
   assert.ok(names.some((n) => n.includes('Boar') && n.includes('Great Goretusk')));
-  assert.ok(names.some((n) => n.includes('Wind Serpent')), 'hyphenated family key is title-cased');
+  assert.ok(
+    names.some((n) => n.includes('Wind Serpent')),
+    'hyphenated family key is title-cased'
+  );
   assert.ok(field(embeds, 'Ability shopping').includes('Ability-shop'));
   assert.ok(field(embeds, 'XP budgeting').includes('Sync pets first'));
   assert.equal(e.footer.text, 'WoW Classic Era 1.15.x');

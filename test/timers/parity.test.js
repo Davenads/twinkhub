@@ -33,7 +33,13 @@ const GOLDEN = {
     stv: { active: false, startsInMs: 115200000, endsInMs: 0 }
   },
   '2026-08-04T09:00:00Z': {
-    bg: { active: false, startsInMs: 169200000, endsInMs: 601200000, label: 'AV', nextLabel: 'WSG' },
+    bg: {
+      active: false,
+      startsInMs: 169200000,
+      endsInMs: 601200000,
+      label: 'AV',
+      nextLabel: 'WSG'
+    },
     agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
     dmf: { active: false, startsInMs: 428400000, endsInMs: 0 },
     stv: { active: false, startsInMs: 471600000, endsInMs: 0 }
@@ -45,7 +51,13 @@ const GOLDEN = {
     stv: { active: false, startsInMs: 115200000, endsInMs: 0 }
   },
   '2026-08-11T09:00:00Z': {
-    bg: { active: false, startsInMs: 169200000, endsInMs: 601200000, label: 'WSG', nextLabel: 'AB' },
+    bg: {
+      active: false,
+      startsInMs: 169200000,
+      endsInMs: 601200000,
+      label: 'WSG',
+      nextLabel: 'AB'
+    },
     agm: { active: false, startsInMs: 3600000, endsInMs: 0, msUntilNext: 3600000, msWindowLeft: 0 },
     dmf: { active: true, startsInMs: 0, endsInMs: 428400000 },
     stv: { active: false, startsInMs: 471600000, endsInMs: 0 }
@@ -88,19 +100,37 @@ const GOLDEN = {
   },
   '2026-08-03T07:00:00Z': {
     bg: { active: true, startsInMs: 0, endsInMs: 90000000, label: 'AB', nextLabel: 'AV' },
-    agm: { active: true, startsInMs: 0, endsInMs: 300000, msUntilNext: 10800000, msWindowLeft: 300000 },
+    agm: {
+      active: true,
+      startsInMs: 0,
+      endsInMs: 300000,
+      msUntilNext: 10800000,
+      msWindowLeft: 300000
+    },
     dmf: { active: false, startsInMs: 522000000, endsInMs: 0 },
     stv: { active: false, startsInMs: 565200000, endsInMs: 0 }
   },
   '2026-08-03T07:04:00Z': {
     bg: { active: true, startsInMs: 0, endsInMs: 89760000, label: 'AB', nextLabel: 'AV' },
-    agm: { active: true, startsInMs: 0, endsInMs: 60000, msUntilNext: 10560000, msWindowLeft: 60000 },
+    agm: {
+      active: true,
+      startsInMs: 0,
+      endsInMs: 60000,
+      msUntilNext: 10560000,
+      msWindowLeft: 60000
+    },
     dmf: { active: false, startsInMs: 521760000, endsInMs: 0 },
     stv: { active: false, startsInMs: 564960000, endsInMs: 0 }
   },
   '2026-08-03T07:06:00Z': {
     bg: { active: true, startsInMs: 0, endsInMs: 89640000, label: 'AB', nextLabel: 'AV' },
-    agm: { active: false, startsInMs: 10440000, endsInMs: 0, msUntilNext: 10440000, msWindowLeft: 0 },
+    agm: {
+      active: false,
+      startsInMs: 10440000,
+      endsInMs: 0,
+      msUntilNext: 10440000,
+      msWindowLeft: 0
+    },
     dmf: { active: false, startsInMs: 521640000, endsInMs: 0 },
     stv: { active: false, startsInMs: 564840000, endsInMs: 0 }
   },

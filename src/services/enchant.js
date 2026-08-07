@@ -32,7 +32,7 @@ const SLOT_ORDER = [
 
 // Display labels for slot keys the plain capitalize() renders awkwardly.
 const SLOT_LABELS = {
-  'weapon': 'Weapon',
+  weapon: 'Weapon',
   '2h-weapon': '2H Weapon',
   'head-legs': 'Head / Legs'
 };
@@ -62,7 +62,9 @@ export function renderEnchant({ store, bracket, slot = null, className = null })
   const meta = store?.brackets?.[bracket]?.meta;
 
   if (!data) {
-    return { embeds: [degradeEmbed('Enchants', `No enchant data is loaded for bracket **${bracket}**.`)] };
+    return {
+      embeds: [degradeEmbed('Enchants', `No enchant data is loaded for bracket **${bracket}**.`)]
+    };
   }
 
   const slotKey = slot ? String(slot).toLowerCase() : null;
@@ -165,7 +167,10 @@ export function renderEnchant({ store, bracket, slot = null, className = null })
   // the overview well within budget, but a future content expansion could still
   // overrun (error 50035), so this guard stays.
   addFieldsWithinLimits(embed, fields, (dropped) =>
-    field('\u2026', `${dropped} more not shown \u2014 narrow with a slot filter (e.g. \`/enchant slot:head\`).`)
+    field(
+      '\u2026',
+      `${dropped} more not shown \u2014 narrow with a slot filter (e.g. \`/enchant slot:head\`).`
+    )
   );
 
   return { embeds: [embed] };

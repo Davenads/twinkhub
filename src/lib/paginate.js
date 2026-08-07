@@ -65,7 +65,8 @@ export function paginateFields({
     const embed = new EmbedBuilder().setColor(color).setTitle(truncate(title, LIMITS.title));
     if (description) embed.setDescription(truncate(description, LIMITS.description));
     if (fs.length) embed.addFields(fs);
-    const foot = total > 1 ? [footer, `Page ${i + 1}/${total}`].filter(Boolean).join(' \u00b7 ') : footer;
+    const foot =
+      total > 1 ? [footer, `Page ${i + 1}/${total}`].filter(Boolean).join(' \u00b7 ') : footer;
     if (foot) embed.setFooter({ text: foot });
     return embed;
   });

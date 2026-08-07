@@ -1,7 +1,15 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize, formatStatPriority } from '../lib/text.js';
 import { getClass } from '../content/store.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 /**
  * Render a single class overview (tier, roles, stat priority, faction notes)
@@ -15,7 +23,9 @@ export function renderClass({ store, bracket, className }) {
   const data = getClass(store, bracket, className);
   const bracketData = store?.brackets?.[bracket];
   if (!data) {
-    return { embeds: [degradeEmbed('Class', `No data for **${className}** in bracket **${bracket}**.`)] };
+    return {
+      embeds: [degradeEmbed('Class', `No data for **${className}** in bracket **${bracket}**.`)]
+    };
   }
 
   const meta = bracketData.meta;

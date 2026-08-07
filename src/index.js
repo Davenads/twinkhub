@@ -19,9 +19,7 @@ const client = new Client({
 });
 
 client.commands = await loadCommands();
-logger.info(
-  `Loaded ${client.commands.size} command(s): ${[...client.commands.keys()].join(', ')}`
-);
+logger.info(`Loaded ${client.commands.size} command(s): ${[...client.commands.keys()].join(', ')}`);
 
 // Validate + index the authored content store up front (fail loud in dev if a
 // file is malformed) so the data commands serve from a known-good cache.

@@ -14,7 +14,9 @@ import { EMBED_COLOR, field, metaFooter, degradeEmbed } from '../lib/embed.js';
 export function renderXpRules({ store, bracket }) {
   const entry = store?.brackets?.[bracket];
   if (!entry) {
-    return { embeds: [degradeEmbed('XP Rules', `No content is loaded for bracket **${bracket}**.`)] };
+    return {
+      embeds: [degradeEmbed('XP Rules', `No content is loaded for bracket **${bracket}**.`)]
+    };
   }
 
   const { meta } = entry;

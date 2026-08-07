@@ -31,7 +31,9 @@ function mockInteraction(customId, values = []) {
 
 // Every component custom_id across a payload's ActionRowBuilders.
 function idsOf(payload) {
-  return (payload?.components ?? []).flatMap((row) => row.toJSON().components.map((c) => c.custom_id));
+  return (payload?.components ?? []).flatMap((row) =>
+    row.toJSON().components.map((c) => c.custom_id)
+  );
 }
 
 test('class pick opens ONE ephemeral with a build picker, follow-ups, and Close', async () => {
@@ -66,7 +68,10 @@ test('picking a build threads the build id into the follow-up ids', async () => 
 
   assert.equal(i.calls.update.length, 1, 'the build pick edits in place');
   const ids = idsOf(i.calls.update[0]);
-  assert.ok(ids.includes(encodeCustomId('ench', 'rogue', build)), 'follow-ups carry the active build');
+  assert.ok(
+    ids.includes(encodeCustomId('ench', 'rogue', build)),
+    'follow-ups carry the active build'
+  );
   assert.ok(ids.includes(encodeCustomId('close')), 'Close is present on the gear view');
 });
 
@@ -95,7 +100,11 @@ test('a standalone panel lookup opens a fresh ephemeral with only a Close button
   const i = mockInteraction(encodeCustomId('cons', 'potion'));
   await handleComponent(i);
 
-  assert.equal(i.calls.reply.length, 1, 'standalone lookups reply (their button is on a public panel)');
+  assert.equal(
+    i.calls.reply.length,
+    1,
+    'standalone lookups reply (their button is on a public panel)'
+  );
   assert.equal(i.calls.update.length, 0, 'the public panel is never edited');
   const ids = idsOf(i.calls.reply[0]);
   assert.deepEqual(ids, [encodeCustomId('close')], 'just a Close button, no Back / follow-ups');

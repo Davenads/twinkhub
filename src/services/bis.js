@@ -9,7 +9,15 @@ import {
   getEnchant
 } from '../content/store.js';
 import { slotFields, buildItemLine } from './gearFormat.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 /**
  * Render a class's best-in-slot gear. When the class has authored role builds
@@ -23,7 +31,14 @@ import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmb
  * @param {{ store: object, bracket: string, className: string, build?: string|null, slot?: string|null, faction?: string|null }} args
  * @returns {{ embeds: EmbedBuilder[] }}
  */
-export function renderBis({ store, bracket, className, build: buildId = null, slot = null, faction = null }) {
+export function renderBis({
+  store,
+  bracket,
+  className,
+  build: buildId = null,
+  slot = null,
+  faction = null
+}) {
   const gear = bracketGear(store, bracket);
   const meta = store?.brackets?.[bracket]?.meta;
   const key = String(className ?? '').toLowerCase();
@@ -101,7 +116,9 @@ function renderBuildView({ store, bracket, meta, key, builds, buildId, slot, fac
     chosen = builds.find((b) => b.id.toLowerCase() === q);
     if (!chosen) {
       const pool = fac ? builds.filter((b) => buildFaction(b) === fac) : builds;
-      chosen = pool.find((b) => b.name.toLowerCase() === q) ?? builds.find((b) => b.name.toLowerCase() === q);
+      chosen =
+        pool.find((b) => b.name.toLowerCase() === q) ??
+        builds.find((b) => b.name.toLowerCase() === q);
     }
     if (!chosen) {
       return degrade(

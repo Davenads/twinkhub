@@ -1,7 +1,15 @@
 import { EmbedBuilder } from 'discord.js';
 import { bracketGuides, guidesFor, classIcon, listClassNames } from '../content/store.js';
 import { capitalize } from '../lib/text.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 // One embed page groups this many sections. Discord allows 25 fields, but a
 // smaller page keeps a long guide readable; the same render function backs both
@@ -67,8 +75,11 @@ export function renderGuide({ store, bracket, slug, page = 1 }) {
   const current = Math.min(Math.max(1, Math.trunc(Number(page)) || 1), totalPages);
   const start = (current - 1) * SECTIONS_PER_PAGE;
 
-  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(truncate(body.title, LIMITS.title));
-  if (current === 1 && body.summary) embed.setDescription(truncate(body.summary, LIMITS.description));
+  const embed = new EmbedBuilder()
+    .setColor(EMBED_COLOR)
+    .setTitle(truncate(body.title, LIMITS.title));
+  if (current === 1 && body.summary)
+    embed.setDescription(truncate(body.summary, LIMITS.description));
   for (const s of sections.slice(start, start + SECTIONS_PER_PAGE)) {
     embed.addFields(field(s.heading, withClassIcons(store, bracket, s.body)));
   }
@@ -117,10 +128,15 @@ export function renderGuideIndex({ store, bracket, className = null, tag = null 
   for (const g of matches.slice(0, MAX_FIELDS)) {
     const authored = Boolean(guides.bySlug[String(g.slug).toLowerCase()]);
     const tags = (g.tags ?? []).length ? ` \u2014 _${g.tags.join(', ')}_` : '';
-    embed.addFields(field(g.title, `\`${g.slug}\`${authored ? '' : ' (coming soon)'} \u2014 ${g.summary}${tags}`));
+    embed.addFields(
+      field(g.title, `\`${g.slug}\`${authored ? '' : ' (coming soon)'} \u2014 ${g.summary}${tags}`)
+    );
   }
 
-  const extra = matches.length > MAX_FIELDS ? [`Showing ${MAX_FIELDS} of ${matches.length}. Filter with class or tag.`] : [];
+  const extra =
+    matches.length > MAX_FIELDS
+      ? [`Showing ${MAX_FIELDS} of ${matches.length}. Filter with class or tag.`]
+      : [];
   const footerText = metaFooter(meta, extra);
   if (footerText) embed.setFooter({ text: footerText });
 

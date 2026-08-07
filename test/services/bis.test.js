@@ -109,11 +109,46 @@ test('renderBis degrades for a bracket with no gear', () => {
 // --- Multi-build view -------------------------------------------------------
 
 const buildItems = [
-  { id: 'lucky-fishing-hat', name: 'Lucky Fishing Hat', slot: 'head', faction: 'both', priority: 'core', owner: 'shared' },
-  { id: 'speedy-boots', name: 'Speedy Boots', slot: 'feet', faction: 'both', priority: 'core', owner: 'rogue' },
-  { id: 'seal-of-sylvanas', name: 'Seal of Sylvanas', slot: 'finger', faction: 'horde', priority: 'core', owner: 'shared' },
-  { id: 'blood-ring', name: 'Blood Ring', slot: 'finger', faction: 'both', priority: 'core', owner: 'shared' },
-  { id: 'assassins-blade', name: "Assassin's Blade", slot: 'mainhand', faction: 'both', priority: 'core', owner: 'rogue' }
+  {
+    id: 'lucky-fishing-hat',
+    name: 'Lucky Fishing Hat',
+    slot: 'head',
+    faction: 'both',
+    priority: 'core',
+    owner: 'shared'
+  },
+  {
+    id: 'speedy-boots',
+    name: 'Speedy Boots',
+    slot: 'feet',
+    faction: 'both',
+    priority: 'core',
+    owner: 'rogue'
+  },
+  {
+    id: 'seal-of-sylvanas',
+    name: 'Seal of Sylvanas',
+    slot: 'finger',
+    faction: 'horde',
+    priority: 'core',
+    owner: 'shared'
+  },
+  {
+    id: 'blood-ring',
+    name: 'Blood Ring',
+    slot: 'finger',
+    faction: 'both',
+    priority: 'core',
+    owner: 'shared'
+  },
+  {
+    id: 'assassins-blade',
+    name: "Assassin's Blade",
+    slot: 'mainhand',
+    faction: 'both',
+    priority: 'core',
+    owner: 'rogue'
+  }
 ];
 const rogueBuilds = [
   {
@@ -220,7 +255,12 @@ test('renderBis renders the default build when no build is named', () => {
 });
 
 test('renderBis renders a named build (by id) and drops slots it omits', () => {
-  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', build: 'rogue-midfield' });
+  const { embeds } = renderBis({
+    store: buildStore,
+    bracket: '19',
+    className: 'rogue',
+    build: 'rogue-midfield'
+  });
   const e = embeds[0].toJSON();
   assert.equal(e.title, 'Best in Slot \u2014 Rogue \u00b7 Midfield (Warsong Gulch 19)');
   assert.deepEqual(
@@ -230,7 +270,12 @@ test('renderBis renders a named build (by id) and drops slots it omits', () => {
 });
 
 test('renderBis narrows a build to a single slot', () => {
-  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', slot: 'Mainhand' });
+  const { embeds } = renderBis({
+    store: buildStore,
+    bracket: '19',
+    className: 'rogue',
+    slot: 'Mainhand'
+  });
   const e = embeds[0].toJSON();
   assert.equal(e.fields.length, 1);
   assert.equal(e.fields[0].name, 'Mainhand');
@@ -238,7 +283,12 @@ test('renderBis narrows a build to a single slot', () => {
 });
 
 test('renderBis degrades for an unknown build id', () => {
-  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', build: 'rogue-tank' });
+  const { embeds } = renderBis({
+    store: buildStore,
+    bracket: '19',
+    className: 'rogue',
+    build: 'rogue-tank'
+  });
   const e = embeds[0].toJSON();
   assert.equal(e.title, 'Best in Slot');
   assert.ok(e.description.includes('No build **rogue-tank**'));
@@ -251,7 +301,12 @@ test('renderBis defaults to the Horde build when no faction is given', () => {
 });
 
 test('renderBis selects the Alliance build when faction:alliance', () => {
-  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', faction: 'alliance' });
+  const { embeds } = renderBis({
+    store: buildStore,
+    bracket: '19',
+    className: 'rogue',
+    faction: 'alliance'
+  });
   const e = embeds[0].toJSON();
   assert.equal(e.title, 'Best in Slot \u2014 Rogue \u00b7 Offense (Warsong Gulch 19)');
   assert.ok(e.description.includes('(alliance)'), 'chosen build is the Alliance one');
@@ -261,13 +316,23 @@ test('renderBis selects the Alliance build when faction:alliance', () => {
 });
 
 test('renderBis honors an explicit Alliance build id even without the faction arg', () => {
-  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'rogue', build: 'rogue-offense-alliance' });
+  const { embeds } = renderBis({
+    store: buildStore,
+    bracket: '19',
+    className: 'rogue',
+    build: 'rogue-offense-alliance'
+  });
   const e = embeds[0].toJSON();
   assert.ok(e.description.includes('(alliance)'));
 });
 
 test('renderBis falls back with a note when a single-faction class is asked for the other side', () => {
-  const { embeds } = renderBis({ store: buildStore, bracket: '19', className: 'paladin', faction: 'horde' });
+  const { embeds } = renderBis({
+    store: buildStore,
+    bracket: '19',
+    className: 'paladin',
+    faction: 'horde'
+  });
   const e = embeds[0].toJSON();
   assert.ok(e.description.includes('no Horde builds'), 'explains the fallback');
   assert.ok(e.description.includes('showing Alliance'));

@@ -13,7 +13,18 @@ import {
 } from '../lib/embed.js';
 
 // Display order + labels for each consumable type.
-const TYPE_ORDER = ['potion', 'poison', 'elixir', 'scroll', 'food', 'bandage', 'weapon-buff', 'explosive', 'worldbuff', 'utility'];
+const TYPE_ORDER = [
+  'potion',
+  'poison',
+  'elixir',
+  'scroll',
+  'food',
+  'bandage',
+  'weapon-buff',
+  'explosive',
+  'worldbuff',
+  'utility'
+];
 const TYPE_LABEL = {
   potion: 'Potion',
   poison: 'Poison',
@@ -56,7 +67,9 @@ export function renderConsumable({ store, bracket, type = null, className = null
   const title = metaTitle('Consumables', meta);
 
   if (!data) {
-    return { embeds: [degradeEmbed(title, `No consumable data is loaded for bracket **${bracket}**.`)] };
+    return {
+      embeds: [degradeEmbed(title, `No consumable data is loaded for bracket **${bracket}**.`)]
+    };
   }
 
   const typeKey = type ? String(type).toLowerCase() : null;
@@ -91,7 +104,7 @@ export function renderConsumable({ store, bracket, type = null, className = null
   // A per-type note (e.g. the weapon-buff/shaman-imbue conflict) is shown once —
   // only when the list is filtered to that type — as a footnote field at the
   // bottom (just above the footer), instead of on every row or up in the header.
-  const typeNote = typeKey ? data.typeNotes?.[typeKey] ?? null : null;
+  const typeNote = typeKey ? (data.typeNotes?.[typeKey] ?? null) : null;
 
   // Footer is set before packing fields so its length counts toward the 6000 cap.
   const footerText = metaFooter(meta);

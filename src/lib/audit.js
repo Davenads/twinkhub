@@ -101,7 +101,8 @@ export function formatAuditEntry({ kind, interaction, outcome = { ok: true }, ms
     .setTitle(truncate(desc.title, LIMITS.title));
 
   if (user.tag) {
-    const iconURL = typeof user.displayAvatarURL === 'function' ? user.displayAvatarURL() : undefined;
+    const iconURL =
+      typeof user.displayAvatarURL === 'function' ? user.displayAvatarURL() : undefined;
     embed.setAuthor(iconURL ? { name: user.tag, iconURL } : { name: user.tag });
   }
 
@@ -112,15 +113,20 @@ export function formatAuditEntry({ kind, interaction, outcome = { ok: true }, ms
   embed.addFields(
     field('Args', desc.args || '\u2014', true),
     field('User', user.id ? `<@${user.id}> (${user.id})` : '\u2014', true),
-    field('Channel', interaction.channelId ? `<#${interaction.channelId}>` : 'Direct message', true),
+    field(
+      'Channel',
+      interaction.channelId ? `<#${interaction.channelId}>` : 'Direct message',
+      true
+    ),
     field('Outcome', outcomeText, true),
     field('Latency', Number.isFinite(ms) ? `${ms} ms` : '\u2014', true)
   );
 
   const guildName = interaction.guild?.name ?? interaction.guildId ?? 'unknown guild';
   embed.setFooter({ text: truncate(`${guildName} \u00b7 ${interaction.id ?? ''}`, 2048) });
-  const ts = interaction.createdAt
-    ?? (interaction.createdTimestamp ? new Date(interaction.createdTimestamp) : new Date());
+  const ts =
+    interaction.createdAt ??
+    (interaction.createdTimestamp ? new Date(interaction.createdTimestamp) : new Date());
   embed.setTimestamp(ts);
   return embed;
 }

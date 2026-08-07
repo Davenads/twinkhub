@@ -44,7 +44,18 @@ const SPELL_TYPES = ['direct-damage', 'dot', 'direct-heal', 'hot', 'shield', 'pr
 // elixir/scroll are persistent stat buffs (no shared potion cooldown); weapon-buff
 // covers temporary weapon enhancements (sharpening/weightstones, wizard/mana oils);
 // utility covers situational, class-agnostic tools (Magic Dust, Goblin Rocket Boots).
-const CONSUMABLE_TYPES = ['potion', 'poison', 'elixir', 'scroll', 'food', 'bandage', 'weapon-buff', 'explosive', 'worldbuff', 'utility'];
+const CONSUMABLE_TYPES = [
+  'potion',
+  'poison',
+  'elixir',
+  'scroll',
+  'food',
+  'bandage',
+  'weapon-buff',
+  'explosive',
+  'worldbuff',
+  'utility'
+];
 
 /** Record `msg` when `cond` is false; returns `cond` for control flow. */
 function require_(errors, cond, msg) {
@@ -79,9 +90,7 @@ export function validateMeta(obj, label = 'meta.json') {
   require_(errors, isInteger(obj.levelCap), `${label}: levelCap must be an integer`);
   require_(
     errors,
-    Array.isArray(obj.levelRange) &&
-      obj.levelRange.length === 2 &&
-      obj.levelRange.every(isInteger),
+    Array.isArray(obj.levelRange) && obj.levelRange.length === 2 && obj.levelRange.every(isInteger),
     `${label}: levelRange must be a [min, max] integer pair`
   );
   require_(
@@ -91,8 +100,16 @@ export function validateMeta(obj, label = 'meta.json') {
   );
 
   if (require_(errors, isObject(obj.xpLock), `${label}: xpLock must be an object`)) {
-    require_(errors, isBoolean(obj.xpLock.available), `${label}: xpLock.available must be a boolean`);
-    require_(errors, isNonEmptyString(obj.xpLock.note), `${label}: xpLock.note must be a non-empty string`);
+    require_(
+      errors,
+      isBoolean(obj.xpLock.available),
+      `${label}: xpLock.available must be a boolean`
+    );
+    require_(
+      errors,
+      isNonEmptyString(obj.xpLock.note),
+      `${label}: xpLock.note must be a non-empty string`
+    );
   }
 
   if (require_(errors, isObject(obj.gameVersion), `${label}: gameVersion must be an object`)) {
@@ -134,7 +151,11 @@ export function validateClassIndex(obj, label = 'classes/index.json') {
       require_(errors, isNonEmptyString(entry?.class), `${at}.class must be a non-empty string`);
       require_(errors, isNonEmptyString(entry?.tier), `${at}.tier must be a non-empty string`);
       require_(errors, isStringArray(entry?.roles), `${at}.roles must be a non-empty string array`);
-      require_(errors, isNonEmptyString(entry?.summary), `${at}.summary must be a non-empty string`);
+      require_(
+        errors,
+        isNonEmptyString(entry?.summary),
+        `${at}.summary must be a non-empty string`
+      );
       if (isNonEmptyString(entry?.class)) {
         require_(errors, !seen.has(entry.class), `${at}.class "${entry.class}" is duplicated`);
         seen.add(entry.class);
@@ -157,7 +178,11 @@ export function validateClass(obj, label = 'class') {
 
   // A single stamina-first stat-priority flow per class (tokens like `stamina`,
   // `intellect`, `healing`). Rendered as one line by /class and the panel hub.
-  require_(errors, isStringArray(obj.statPriority), `${label}: statPriority must be a non-empty string array`);
+  require_(
+    errors,
+    isStringArray(obj.statPriority),
+    `${label}: statPriority must be a non-empty string array`
+  );
   return { ok: errors.length === 0, errors };
 }
 
@@ -174,7 +199,11 @@ export function validateEnchants(obj, label = 'enchants.json') {
     return { ok: false, errors };
   }
   if (obj.note !== undefined) {
-    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.note),
+      `${label}: note must be a non-empty string when present`
+    );
   }
   if (
     require_(
@@ -201,15 +230,26 @@ export function validateEnchants(obj, label = 'enchants.json') {
       // per-hit procs whose rate isn't PPM-normalized (Icy Chill). The render layer
       // shows it only when present.
       if (entry?.ppm !== undefined) {
-        require_(errors, isInteger(entry.ppm) && entry.ppm > 0, `${at}.ppm must be a positive integer when present`);
+        require_(
+          errors,
+          isInteger(entry.ppm) && entry.ppm > 0,
+          `${at}.ppm must be a positive integer when present`
+        );
       }
-      require_(errors, isStringArray(entry?.classes), `${at}.classes must be a non-empty string array`);
+      require_(
+        errors,
+        isStringArray(entry?.classes),
+        `${at}.classes must be a non-empty string array`
+      );
       // Optional Wowhead reference. Enchants span two namespaces, so unlike gear
       // (a bare wowheadId) each records a { type, id } discriminator: profession
       // enchants are "spell" pages, applied items (inscriptions/arcanums/scopes/
       // spikes/chains) are "item" pages. Optional so an enchant can be authored
       // before its id is verified — the render layer degrades to plain text.
-      if (entry?.wowhead !== undefined && require_(errors, isObject(entry.wowhead), `${at}.wowhead must be an object when present`)) {
+      if (
+        entry?.wowhead !== undefined &&
+        require_(errors, isObject(entry.wowhead), `${at}.wowhead must be an object when present`)
+      ) {
         require_(
           errors,
           entry.wowhead.type === 'spell' || entry.wowhead.type === 'item',
@@ -258,17 +298,33 @@ function validateItem(obj, at, errors) {
       `${at}.armorType is only allowed on armor slots (${ARMOR_SLOTS.join('|')})`
     );
   }
-  require_(errors, FACTIONS.includes(obj.faction), `${at}.faction must be one of ${FACTIONS.join('|')}`);
-  require_(errors, PRIORITIES.includes(obj.priority), `${at}.priority must be one of ${PRIORITIES.join('|')}`);
+  require_(
+    errors,
+    FACTIONS.includes(obj.faction),
+    `${at}.faction must be one of ${FACTIONS.join('|')}`
+  );
+  require_(
+    errors,
+    PRIORITIES.includes(obj.priority),
+    `${at}.priority must be one of ${PRIORITIES.join('|')}`
+  );
   if (require_(errors, isObject(obj.source), `${at}.source must be an object`)) {
     require_(
       errors,
       SOURCE_TYPES.includes(obj.source.type),
       `${at}.source.type must be one of ${SOURCE_TYPES.join('|')}`
     );
-    require_(errors, isNonEmptyString(obj.source.detail), `${at}.source.detail must be a non-empty string`);
+    require_(
+      errors,
+      isNonEmptyString(obj.source.detail),
+      `${at}.source.detail must be a non-empty string`
+    );
   }
-  require_(errors, obj.reqLevel == null || isInteger(obj.reqLevel), `${at}.reqLevel must be an integer or null`);
+  require_(
+    errors,
+    obj.reqLevel == null || isInteger(obj.reqLevel),
+    `${at}.reqLevel must be an integer or null`
+  );
   if (obj.wowheadId !== undefined) {
     require_(
       errors,
@@ -276,7 +332,10 @@ function validateItem(obj, at, errors) {
       `${at}.wowheadId must be an integer or null`
     );
   }
-  if (obj.stats !== undefined && require_(errors, isObject(obj.stats), `${at}.stats must be an object`)) {
+  if (
+    obj.stats !== undefined &&
+    require_(errors, isObject(obj.stats), `${at}.stats must be an object`)
+  ) {
     for (const [k, v] of Object.entries(obj.stats)) {
       require_(errors, isInteger(v), `${at}.stats.${k} must be an integer`);
     }
@@ -286,10 +345,18 @@ function validateItem(obj, at, errors) {
   // (enchant id is real, alternative ids resolve) live in the store, which sees
   // the whole bracket at once (03-data-model.md).
   if (obj.enchant !== undefined) {
-    require_(errors, isNonEmptyString(obj.enchant), `${at}.enchant must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.enchant),
+      `${at}.enchant must be a non-empty string when present`
+    );
   }
   if (obj.alternatives !== undefined) {
-    require_(errors, isStringArray(obj.alternatives), `${at}.alternatives must be a non-empty string array when present`);
+    require_(
+      errors,
+      isStringArray(obj.alternatives),
+      `${at}.alternatives must be a non-empty string array when present`
+    );
   }
 }
 
@@ -305,13 +372,24 @@ export function validateGearIndex(obj, label = 'gear/index.json') {
   }
   require_(errors, isStringArray(obj.slots), `${label}: slots must be a non-empty string array`);
   if (obj.notes !== undefined) {
-    require_(errors, isNonEmptyString(obj.notes), `${label}: notes must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.notes),
+      `${label}: notes must be a non-empty string when present`
+    );
   }
   // Armor-proficiency map: each key is a gating material type and its value is the
   // set of classes that can wear it (possibly empty, e.g. plate at level 19). The
   // referential guard that those class names are real roster classes lives in the
   // store, which holds the class index (03-data-model.md). `misc` is never a key.
-  if (obj.armorProficiency !== undefined && require_(errors, isObject(obj.armorProficiency), `${label}: armorProficiency must be an object when present`)) {
+  if (
+    obj.armorProficiency !== undefined &&
+    require_(
+      errors,
+      isObject(obj.armorProficiency),
+      `${label}: armorProficiency must be an object when present`
+    )
+  ) {
     for (const [type, classes] of Object.entries(obj.armorProficiency)) {
       const at = `${label}: armorProficiency.${type}`;
       require_(
@@ -333,23 +411,42 @@ export function validateGearIndex(obj, label = 'gear/index.json') {
   // in the store (03-data-model.md), which holds the full item map.
   if (
     obj.shoulderStrategy !== undefined &&
-    require_(errors, isObject(obj.shoulderStrategy), `${label}: shoulderStrategy must be an object when present`)
+    require_(
+      errors,
+      isObject(obj.shoulderStrategy),
+      `${label}: shoulderStrategy must be an object when present`
+    )
   ) {
     const s = obj.shoulderStrategy;
     if (s.note !== undefined) {
-      require_(errors, isNonEmptyString(s.note), `${label}: shoulderStrategy.note must be a non-empty string when present`);
+      require_(
+        errors,
+        isNonEmptyString(s.note),
+        `${label}: shoulderStrategy.note must be a non-empty string when present`
+      );
     }
     if (
-      require_(errors, isObject(s.vesselByArmorType), `${label}: shoulderStrategy.vesselByArmorType must be an object`)
+      require_(
+        errors,
+        isObject(s.vesselByArmorType),
+        `${label}: shoulderStrategy.vesselByArmorType must be an object`
+      )
     ) {
       for (const [type, itemId] of Object.entries(s.vesselByArmorType)) {
         const at = `${label}: shoulderStrategy.vesselByArmorType.${type}`;
-        require_(errors, ARMOR_PROFICIENCY_TYPES.includes(type), `${at} key must be one of ${ARMOR_PROFICIENCY_TYPES.join('|')}`);
+        require_(
+          errors,
+          ARMOR_PROFICIENCY_TYPES.includes(type),
+          `${at} key must be one of ${ARMOR_PROFICIENCY_TYPES.join('|')}`
+        );
         require_(errors, isNonEmptyString(itemId), `${at} must be an item-id string`);
       }
     }
   }
-  if (obj.shared !== undefined && require_(errors, Array.isArray(obj.shared), `${label}: shared must be an array`)) {
+  if (
+    obj.shared !== undefined &&
+    require_(errors, Array.isArray(obj.shared), `${label}: shared must be an array`)
+  ) {
     const seen = new Set();
     obj.shared.forEach((it, i) => {
       const at = `${label}: shared[${i}]`;
@@ -393,12 +490,26 @@ function validateBuild(obj, at, errors) {
   if (!require_(errors, isObject(obj), `${at}: must be an object`)) return;
   require_(errors, isNonEmptyString(obj.id), `${at}.id must be a non-empty string`);
   require_(errors, isNonEmptyString(obj.name), `${at}.name must be a non-empty string`);
-  require_(errors, BUILD_ROLES.includes(obj.role), `${at}.role must be one of ${BUILD_ROLES.join('|')}`);
-  require_(errors, FACTIONS.includes(obj.faction), `${at}.faction must be one of ${FACTIONS.join('|')}`);
+  require_(
+    errors,
+    BUILD_ROLES.includes(obj.role),
+    `${at}.role must be one of ${BUILD_ROLES.join('|')}`
+  );
+  require_(
+    errors,
+    FACTIONS.includes(obj.faction),
+    `${at}.faction must be one of ${FACTIONS.join('|')}`
+  );
   if (obj.default !== undefined) {
     require_(errors, isBoolean(obj.default), `${at}.default must be a boolean when present`);
   }
-  if (require_(errors, isObject(obj.slots) && Object.keys(obj.slots).length > 0, `${at}.slots must be a non-empty object`)) {
+  if (
+    require_(
+      errors,
+      isObject(obj.slots) && Object.keys(obj.slots).length > 0,
+      `${at}.slots must be a non-empty object`
+    )
+  ) {
     for (const [slot, val] of Object.entries(obj.slots)) {
       const slotAt = `${at}.slots.${slot}`;
       if (Array.isArray(val)) {
@@ -423,7 +534,13 @@ export function validateGearClass(obj, label = 'gear/class') {
     return { ok: false, errors };
   }
   require_(errors, isNonEmptyString(obj.class), `${label}: class must be a non-empty string`);
-  if (require_(errors, Array.isArray(obj.items) && obj.items.length > 0, `${label}: items must be a non-empty array`)) {
+  if (
+    require_(
+      errors,
+      Array.isArray(obj.items) && obj.items.length > 0,
+      `${label}: items must be a non-empty array`
+    )
+  ) {
     const seen = new Set();
     obj.items.forEach((it, i) => {
       const at = `${label}: items[${i}]`;
@@ -468,7 +585,11 @@ export function validateScaling(obj, label = 'scaling.json') {
     return { ok: false, errors };
   }
   if (obj.note !== undefined) {
-    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.note),
+      `${label}: note must be a non-empty string when present`
+    );
   }
 
   if (require_(errors, isObject(obj.stats), `${label}: stats must be an object`)) {
@@ -479,22 +600,36 @@ export function validateScaling(obj, label = 'scaling.json') {
       if (!require_(errors, isObject(s), `${at} must be an object`)) continue;
       require_(errors, isNonEmptyString(s.label), `${at}.label must be a non-empty string`);
       require_(errors, isNonEmptyString(s.summary), `${at}.summary must be a non-empty string`);
-      require_(errors, isStringArray(s.conversions), `${at}.conversions must be a non-empty string array`);
+      require_(
+        errors,
+        isStringArray(s.conversions),
+        `${at}.conversions must be a non-empty string array`
+      );
     }
   }
 
-  if (obj.derived !== undefined && require_(errors, Array.isArray(obj.derived), `${label}: derived must be an array`)) {
+  if (
+    obj.derived !== undefined &&
+    require_(errors, Array.isArray(obj.derived), `${label}: derived must be an array`)
+  ) {
     obj.derived.forEach((d, i) => {
       const at = `${label}: derived[${i}]`;
       require_(errors, isNonEmptyString(d?.name), `${at}.name must be a non-empty string`);
       require_(errors, isNonEmptyString(d?.formula), `${at}.formula must be a non-empty string`);
       if (d?.notes !== undefined) {
-        require_(errors, isNonEmptyString(d.notes), `${at}.notes must be a non-empty string when present`);
+        require_(
+          errors,
+          isNonEmptyString(d.notes),
+          `${at}.notes must be a non-empty string when present`
+        );
       }
     });
   }
 
-  if (obj.hitCaps !== undefined && require_(errors, Array.isArray(obj.hitCaps), `${label}: hitCaps must be an array`)) {
+  if (
+    obj.hitCaps !== undefined &&
+    require_(errors, Array.isArray(obj.hitCaps), `${label}: hitCaps must be an array`)
+  ) {
     obj.hitCaps.forEach((h, i) => {
       const at = `${label}: hitCaps[${i}]`;
       require_(errors, isNonEmptyString(h?.type), `${at}.type must be a non-empty string`);
@@ -508,7 +643,11 @@ export function validateScaling(obj, label = 'scaling.json') {
     for (const [key, c] of Object.entries(obj.classes)) {
       const at = `${label}: classes.${key}`;
       if (!require_(errors, isObject(c), `${at} must be an object`)) continue;
-      require_(errors, isStringArray(c.priority), `${at}.priority must be a non-empty string array`);
+      require_(
+        errors,
+        isStringArray(c.priority),
+        `${at}.priority must be a non-empty string array`
+      );
       require_(errors, isStringArray(c.notes), `${at}.notes must be a non-empty string array`);
     }
   }
@@ -532,7 +671,11 @@ export function validatePets(obj, label = 'pets.json') {
   require_(errors, isNonEmptyString(obj.xpNote), `${label}: xpNote must be a non-empty string`);
   for (const opt of ['abilityNote', 'budgetNote']) {
     if (obj[opt] !== undefined) {
-      require_(errors, isNonEmptyString(obj[opt]), `${label}: ${opt} must be a non-empty string when present`);
+      require_(
+        errors,
+        isNonEmptyString(obj[opt]),
+        `${label}: ${opt} must be a non-empty string when present`
+      );
     }
   }
 
@@ -548,10 +691,18 @@ export function validatePets(obj, label = 'pets.json') {
       const at = `${label}: families[${i}]`;
       if (!require_(errors, isObject(f), `${at} must be an object`)) return;
       require_(errors, isNonEmptyString(f.family), `${at}.family must be a non-empty string`);
-      require_(errors, isNonEmptyString(f.exampleName), `${at}.exampleName must be a non-empty string`);
+      require_(
+        errors,
+        isNonEmptyString(f.exampleName),
+        `${at}.exampleName must be a non-empty string`
+      );
       require_(errors, isNonEmptyString(f.notes), `${at}.notes must be a non-empty string`);
       if (f.keyAbility != null) {
-        require_(errors, isNonEmptyString(f.keyAbility), `${at}.keyAbility must be a non-empty string or null`);
+        require_(
+          errors,
+          isNonEmptyString(f.keyAbility),
+          `${at}.keyAbility must be a non-empty string or null`
+        );
       }
       if (f.zone != null) {
         require_(errors, isNonEmptyString(f.zone), `${at}.zone must be a non-empty string or null`);
@@ -560,7 +711,11 @@ export function validatePets(obj, label = 'pets.json') {
         require_(errors, isInteger(f.tameLevel), `${at}.tameLevel must be an integer or null`);
       }
       if (f.attackSpeed !== undefined) {
-        require_(errors, typeof f.attackSpeed === 'number', `${at}.attackSpeed must be a number when present`);
+        require_(
+          errors,
+          typeof f.attackSpeed === 'number',
+          `${at}.attackSpeed must be a number when present`
+        );
       }
       if (isNonEmptyString(f.family)) {
         require_(errors, !seen.has(f.family), `${at}.family "${f.family}" is duplicated`);
@@ -595,15 +750,26 @@ export function validateSpellCoefficients(obj, label = 'spellcoefficients.json')
       `${label}: penalty.perLevelBelow20 must be a number`
     );
     if (obj.penalty.note !== undefined) {
-      require_(errors, isNonEmptyString(obj.penalty.note), `${label}: penalty.note must be a non-empty string when present`);
+      require_(
+        errors,
+        isNonEmptyString(obj.penalty.note),
+        `${label}: penalty.note must be a non-empty string when present`
+      );
     }
   }
 
   // Optional attribution for the coefficient source (rendered as a credit line).
-  if (obj.credit !== undefined && require_(errors, isObject(obj.credit), `${label}: credit must be an object when present`)) {
+  if (
+    obj.credit !== undefined &&
+    require_(errors, isObject(obj.credit), `${label}: credit must be an object when present`)
+  ) {
     for (const k of ['author', 'discordId', 'source', 'url']) {
       if (obj.credit[k] !== undefined) {
-        require_(errors, isNonEmptyString(obj.credit[k]), `${label}: credit.${k} must be a non-empty string when present`);
+        require_(
+          errors,
+          isNonEmptyString(obj.credit[k]),
+          `${label}: credit.${k} must be a non-empty string when present`
+        );
       }
     }
   }
@@ -613,7 +779,14 @@ export function validateSpellCoefficients(obj, label = 'spellcoefficients.json')
     require_(errors, keys.length > 0, `${label}: byClass must have at least one class`);
     for (const [cls, list] of Object.entries(obj.byClass)) {
       const clsAt = `${label}: byClass.${cls}`;
-      if (!require_(errors, Array.isArray(list) && list.length > 0, `${clsAt} must be a non-empty array`)) continue;
+      if (
+        !require_(
+          errors,
+          Array.isArray(list) && list.length > 0,
+          `${clsAt} must be a non-empty array`
+        )
+      )
+        continue;
       const seen = new Set();
       list.forEach((s, i) => {
         const at = `${clsAt}[${i}]`;
@@ -625,18 +798,34 @@ export function validateSpellCoefficients(obj, label = 'spellcoefficients.json')
           typeof s.coefficient === 'number' && s.coefficient >= 0,
           `${at}.coefficient must be a number >= 0`
         );
-        require_(errors, SPELL_TYPES.includes(s.type), `${at}.type must be one of ${SPELL_TYPES.join('|')}`);
+        require_(
+          errors,
+          SPELL_TYPES.includes(s.type),
+          `${at}.type must be one of ${SPELL_TYPES.join('|')}`
+        );
         if (s.confirmed !== undefined) {
-          require_(errors, isBoolean(s.confirmed), `${at}.confirmed must be a boolean when present`);
+          require_(
+            errors,
+            isBoolean(s.confirmed),
+            `${at}.confirmed must be a boolean when present`
+          );
         }
         if (s.notes !== undefined) {
-          require_(errors, isNonEmptyString(s.notes), `${at}.notes must be a non-empty string when present`);
+          require_(
+            errors,
+            isNonEmptyString(s.notes),
+            `${at}.notes must be a non-empty string when present`
+          );
         }
         // A spell can carry both a direct and a dot/hot entry at the same rank
         // (Fireball, Immolate, Moonfire), so the type is part of the identity.
         if (isNonEmptyString(s.spell) && isInteger(s.rank) && SPELL_TYPES.includes(s.type)) {
           const dupKey = `${s.spell}#${s.rank}#${s.type}`;
-          require_(errors, !seen.has(dupKey), `${at} duplicates "${s.spell}" rank ${s.rank} (${s.type})`);
+          require_(
+            errors,
+            !seen.has(dupKey),
+            `${at} duplicates "${s.spell}" rank ${s.rank} (${s.type})`
+          );
           seen.add(dupKey);
         }
       });
@@ -660,17 +849,28 @@ export function validateEmojiRegistry(obj, label = 'emoji.json') {
     return { ok: false, errors };
   }
   if (obj.note !== undefined) {
-    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.note),
+      `${label}: note must be a non-empty string when present`
+    );
   }
   for (const group of ['classes', 'nodes', 'consumables', 'events']) {
     if (obj[group] === undefined) continue;
-    if (!require_(errors, isObject(obj[group]), `${label}: ${group} must be an object when present`)) continue;
+    if (
+      !require_(errors, isObject(obj[group]), `${label}: ${group} must be an object when present`)
+    )
+      continue;
     for (const [slug, e] of Object.entries(obj[group])) {
       const at = `${label}: ${group}.${slug}`;
       if (!require_(errors, isObject(e), `${at} must be an object`)) continue;
       require_(errors, isNonEmptyString(e.name), `${at}.name must be a non-empty string`);
       // id may be "" (an un-filled placeholder) but must be a string.
-      require_(errors, typeof e.id === 'string', `${at}.id must be a string (may be empty until filled)`);
+      require_(
+        errors,
+        typeof e.id === 'string',
+        `${at}.id must be a string (may be empty until filled)`
+      );
       if (e.animated !== undefined) {
         require_(errors, isBoolean(e.animated), `${at}.animated must be a boolean when present`);
       }
@@ -696,12 +896,23 @@ export function validateTalents(obj, label = 'talents.json') {
     return { ok: false, errors };
   }
   if (obj.note !== undefined) {
-    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.note),
+      `${label}: note must be a non-empty string when present`
+    );
   }
-  if (obj.credit !== undefined && require_(errors, isObject(obj.credit), `${label}: credit must be an object when present`)) {
+  if (
+    obj.credit !== undefined &&
+    require_(errors, isObject(obj.credit), `${label}: credit must be an object when present`)
+  ) {
     for (const k of ['author', 'discordId', 'source', 'url']) {
       if (obj.credit[k] !== undefined) {
-        require_(errors, isNonEmptyString(obj.credit[k]), `${label}: credit.${k} must be a non-empty string when present`);
+        require_(
+          errors,
+          isNonEmptyString(obj.credit[k]),
+          `${label}: credit.${k} must be a non-empty string when present`
+        );
       }
     }
   }
@@ -711,7 +922,14 @@ export function validateTalents(obj, label = 'talents.json') {
     require_(errors, keys.length > 0, `${label}: byClass must have at least one class`);
     for (const [cls, list] of Object.entries(obj.byClass)) {
       const clsAt = `${label}: byClass.${cls}`;
-      if (!require_(errors, Array.isArray(list) && list.length > 0, `${clsAt} must be a non-empty array`)) continue;
+      if (
+        !require_(
+          errors,
+          Array.isArray(list) && list.length > 0,
+          `${clsAt} must be a non-empty array`
+        )
+      )
+        continue;
       const seen = new Set();
       list.forEach((b, i) => {
         const at = `${clsAt}[${i}]`;
@@ -725,16 +943,38 @@ export function validateTalents(obj, label = 'talents.json') {
           require_(errors, isBoolean(b.default), `${at}.default must be a boolean when present`);
         }
         if (b.note !== undefined) {
-          require_(errors, isNonEmptyString(b.note), `${at}.note must be a non-empty string when present`);
+          require_(
+            errors,
+            isNonEmptyString(b.note),
+            `${at}.note must be a non-empty string when present`
+          );
         }
-        if (require_(errors, Array.isArray(b.nodes) && b.nodes.length > 0, `${at}.nodes must be a non-empty array`)) {
+        if (
+          require_(
+            errors,
+            Array.isArray(b.nodes) && b.nodes.length > 0,
+            `${at}.nodes must be a non-empty array`
+          )
+        ) {
           b.nodes.forEach((n, j) => {
             const nAt = `${at}.nodes[${j}]`;
             if (!require_(errors, isObject(n), `${nAt} must be an object`)) return;
-            require_(errors, isNonEmptyString(n.talent), `${nAt}.talent must be a non-empty string`);
+            require_(
+              errors,
+              isNonEmptyString(n.talent),
+              `${nAt}.talent must be a non-empty string`
+            );
             require_(errors, isNonEmptyString(n.emoji), `${nAt}.emoji must be a non-empty string`);
-            require_(errors, isInteger(n.rank) && n.rank >= 0, `${nAt}.rank must be a non-negative integer`);
-            require_(errors, isInteger(n.max) && n.max > 0, `${nAt}.max must be a positive integer`);
+            require_(
+              errors,
+              isInteger(n.rank) && n.rank >= 0,
+              `${nAt}.rank must be a non-negative integer`
+            );
+            require_(
+              errors,
+              isInteger(n.max) && n.max > 0,
+              `${nAt}.max must be a positive integer`
+            );
           });
         }
         if (isNonEmptyString(b.id)) {
@@ -763,15 +1003,30 @@ export function validateConsumables(obj, label = 'consumables.json') {
     return { ok: false, errors };
   }
   if (obj.note !== undefined) {
-    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.note),
+      `${label}: note must be a non-empty string when present`
+    );
   }
   // Optional per-type header notes: a universal fact for a type stated once at the
   // top of its filtered list, so it need not repeat on every row. Keys must be
   // real consumable types; each value a non-empty string.
-  if (obj.typeNotes !== undefined && require_(errors, isObject(obj.typeNotes), `${label}: typeNotes must be an object when present`)) {
+  if (
+    obj.typeNotes !== undefined &&
+    require_(errors, isObject(obj.typeNotes), `${label}: typeNotes must be an object when present`)
+  ) {
     for (const [type, note] of Object.entries(obj.typeNotes)) {
-      require_(errors, CONSUMABLE_TYPES.includes(type), `${label}: typeNotes key "${type}" must be one of ${CONSUMABLE_TYPES.join('|')}`);
-      require_(errors, isNonEmptyString(note), `${label}: typeNotes.${type} must be a non-empty string`);
+      require_(
+        errors,
+        CONSUMABLE_TYPES.includes(type),
+        `${label}: typeNotes key "${type}" must be one of ${CONSUMABLE_TYPES.join('|')}`
+      );
+      require_(
+        errors,
+        isNonEmptyString(note),
+        `${label}: typeNotes.${type} must be a non-empty string`
+      );
     }
   }
 
@@ -788,23 +1043,54 @@ export function validateConsumables(obj, label = 'consumables.json') {
       if (!require_(errors, isObject(c), `${at} must be an object`)) return;
       require_(errors, isNonEmptyString(c.id), `${at}.id must be a non-empty string`);
       require_(errors, isNonEmptyString(c.name), `${at}.name must be a non-empty string`);
-      require_(errors, CONSUMABLE_TYPES.includes(c.type), `${at}.type must be one of ${CONSUMABLE_TYPES.join('|')}`);
+      require_(
+        errors,
+        CONSUMABLE_TYPES.includes(c.type),
+        `${at}.type must be one of ${CONSUMABLE_TYPES.join('|')}`
+      );
       require_(errors, isNonEmptyString(c.effect), `${at}.effect must be a non-empty string`);
       if (c.faction !== undefined) {
-        require_(errors, FACTIONS.includes(c.faction), `${at}.faction must be one of ${FACTIONS.join('|')}`);
+        require_(
+          errors,
+          FACTIONS.includes(c.faction),
+          `${at}.faction must be one of ${FACTIONS.join('|')}`
+        );
       }
       if (c.reqLevel !== undefined) {
-        require_(errors, c.reqLevel === null || isInteger(c.reqLevel), `${at}.reqLevel must be an integer or null`);
+        require_(
+          errors,
+          c.reqLevel === null || isInteger(c.reqLevel),
+          `${at}.reqLevel must be an integer or null`
+        );
       }
       if (c.classes !== undefined) {
-        require_(errors, isStringArray(c.classes), `${at}.classes must be a non-empty string array when present`);
+        require_(
+          errors,
+          isStringArray(c.classes),
+          `${at}.classes must be a non-empty string array when present`
+        );
       }
-      if (c.source !== undefined && require_(errors, isObject(c.source), `${at}.source must be an object when present`)) {
-        require_(errors, SOURCE_TYPES.includes(c.source.type), `${at}.source.type must be one of ${SOURCE_TYPES.join('|')}`);
-        require_(errors, isNonEmptyString(c.source.detail), `${at}.source.detail must be a non-empty string`);
+      if (
+        c.source !== undefined &&
+        require_(errors, isObject(c.source), `${at}.source must be an object when present`)
+      ) {
+        require_(
+          errors,
+          SOURCE_TYPES.includes(c.source.type),
+          `${at}.source.type must be one of ${SOURCE_TYPES.join('|')}`
+        );
+        require_(
+          errors,
+          isNonEmptyString(c.source.detail),
+          `${at}.source.detail must be a non-empty string`
+        );
       }
       if (c.notes !== undefined) {
-        require_(errors, isNonEmptyString(c.notes), `${at}.notes must be a non-empty string when present`);
+        require_(
+          errors,
+          isNonEmptyString(c.notes),
+          `${at}.notes must be a non-empty string when present`
+        );
       }
       if (isNonEmptyString(c.id)) {
         require_(errors, !seen.has(c.id), `${at}.id "${c.id}" is duplicated`);
@@ -831,7 +1117,11 @@ export function validateQuests(obj, label = 'quests.json') {
     return { ok: false, errors };
   }
   if (obj.note !== undefined) {
-    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.note),
+      `${label}: note must be a non-empty string when present`
+    );
   }
 
   if (
@@ -847,21 +1137,47 @@ export function validateQuests(obj, label = 'quests.json') {
       if (!require_(errors, isObject(q), `${at} must be an object`)) return;
       require_(errors, isNonEmptyString(q.id), `${at}.id must be a non-empty string`);
       require_(errors, isNonEmptyString(q.name), `${at}.name must be a non-empty string`);
-      require_(errors, q.zone === null || isNonEmptyString(q.zone), `${at}.zone must be a non-empty string or null`);
-      require_(errors, FACTIONS.includes(q.faction), `${at}.faction must be one of ${FACTIONS.join('|')}`);
+      require_(
+        errors,
+        q.zone === null || isNonEmptyString(q.zone),
+        `${at}.zone must be a non-empty string or null`
+      );
+      require_(
+        errors,
+        FACTIONS.includes(q.faction),
+        `${at}.faction must be one of ${FACTIONS.join('|')}`
+      );
       require_(errors, isBoolean(q.xpWarning), `${at}.xpWarning must be a boolean`);
       if (require_(errors, isObject(q.reward), `${at}.reward must be an object`)) {
         const hasItem = q.reward.itemId !== undefined;
         const hasDesc = q.reward.desc !== undefined;
         require_(errors, hasItem || hasDesc, `${at}.reward must have an itemId or a desc`);
-        if (hasItem) require_(errors, isNonEmptyString(q.reward.itemId), `${at}.reward.itemId must be a non-empty string`);
-        if (hasDesc) require_(errors, isNonEmptyString(q.reward.desc), `${at}.reward.desc must be a non-empty string`);
+        if (hasItem)
+          require_(
+            errors,
+            isNonEmptyString(q.reward.itemId),
+            `${at}.reward.itemId must be a non-empty string`
+          );
+        if (hasDesc)
+          require_(
+            errors,
+            isNonEmptyString(q.reward.desc),
+            `${at}.reward.desc must be a non-empty string`
+          );
       }
       if (q.classes !== undefined) {
-        require_(errors, isStringArray(q.classes), `${at}.classes must be a non-empty string array when present`);
+        require_(
+          errors,
+          isStringArray(q.classes),
+          `${at}.classes must be a non-empty string array when present`
+        );
       }
       if (q.notes !== undefined) {
-        require_(errors, isNonEmptyString(q.notes), `${at}.notes must be a non-empty string when present`);
+        require_(
+          errors,
+          isNonEmptyString(q.notes),
+          `${at}.notes must be a non-empty string when present`
+        );
       }
       if (isNonEmptyString(q.id)) {
         require_(errors, !seen.has(q.id), `${at}.id "${q.id}" is duplicated`);
@@ -884,9 +1200,19 @@ export function validateGuideIndex(obj, label = 'guides/index.json') {
   const errors = [];
   if (!require_(errors, isObject(obj), `${label}: must be an object`)) return { ok: false, errors };
   if (obj.note !== undefined) {
-    require_(errors, isNonEmptyString(obj.note), `${label}: note must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.note),
+      `${label}: note must be a non-empty string when present`
+    );
   }
-  if (require_(errors, Array.isArray(obj.guides) && obj.guides.length > 0, `${label}: guides must be a non-empty array`)) {
+  if (
+    require_(
+      errors,
+      Array.isArray(obj.guides) && obj.guides.length > 0,
+      `${label}: guides must be a non-empty array`
+    )
+  ) {
     const seen = new Set();
     obj.guides.forEach((g, i) => {
       const at = `${label}: guides[${i}]`;
@@ -895,10 +1221,18 @@ export function validateGuideIndex(obj, label = 'guides/index.json') {
       require_(errors, isNonEmptyString(g.title), `${at}.title must be a non-empty string`);
       require_(errors, isNonEmptyString(g.summary), `${at}.summary must be a non-empty string`);
       if (g.class !== undefined) {
-        require_(errors, isNonEmptyString(g.class), `${at}.class must be a non-empty string when present`);
+        require_(
+          errors,
+          isNonEmptyString(g.class),
+          `${at}.class must be a non-empty string when present`
+        );
       }
       if (g.tags !== undefined) {
-        require_(errors, isStringArray(g.tags), `${at}.tags must be a non-empty string array when present`);
+        require_(
+          errors,
+          isStringArray(g.tags),
+          `${at}.tags must be a non-empty string array when present`
+        );
       }
       if (isNonEmptyString(g.slug)) {
         require_(errors, !seen.has(g.slug), `${at}.slug "${g.slug}" is duplicated`);
@@ -923,12 +1257,26 @@ export function validateGuide(obj, label = 'guide') {
   require_(errors, isNonEmptyString(obj.title), `${label}: title must be a non-empty string`);
   require_(errors, isNonEmptyString(obj.summary), `${label}: summary must be a non-empty string`);
   if (obj.class !== undefined) {
-    require_(errors, isNonEmptyString(obj.class), `${label}: class must be a non-empty string when present`);
+    require_(
+      errors,
+      isNonEmptyString(obj.class),
+      `${label}: class must be a non-empty string when present`
+    );
   }
   if (obj.tags !== undefined) {
-    require_(errors, isStringArray(obj.tags), `${label}: tags must be a non-empty string array when present`);
+    require_(
+      errors,
+      isStringArray(obj.tags),
+      `${label}: tags must be a non-empty string array when present`
+    );
   }
-  if (require_(errors, Array.isArray(obj.sections) && obj.sections.length > 0, `${label}: sections must be a non-empty array`)) {
+  if (
+    require_(
+      errors,
+      Array.isArray(obj.sections) && obj.sections.length > 0,
+      `${label}: sections must be a non-empty array`
+    )
+  ) {
     obj.sections.forEach((s, i) => {
       const at = `${label}: sections[${i}]`;
       if (!require_(errors, isObject(s), `${at} must be an object`)) return;

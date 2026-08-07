@@ -68,10 +68,22 @@ export function getState(now) {
     const eMs = end.toMillis();
     const location = dmfLocation(start);
     if (sMs <= nowMs && nowMs < eMs) {
-      return { active: true, startsInMs: 0, endsInMs: eMs - nowMs, label: 'DMF', meta: { location } };
+      return {
+        active: true,
+        startsInMs: 0,
+        endsInMs: eMs - nowMs,
+        label: 'DMF',
+        meta: { location }
+      };
     }
     if (nowMs < sMs) {
-      return { active: false, startsInMs: sMs - nowMs, endsInMs: 0, label: 'DMF', meta: { location } };
+      return {
+        active: false,
+        startsInMs: sMs - nowMs,
+        endsInMs: 0,
+        label: 'DMF',
+        meta: { location }
+      };
     }
   }
 

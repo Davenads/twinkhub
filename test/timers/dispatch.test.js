@@ -70,7 +70,12 @@ test('AGM warning: pings + DMs the enabled guild, skips disabled/unconfigured', 
   const w = makeWorld();
   const dispatch = createDispatch(w.client, { loadConfig: w.loadConfig });
 
-  await dispatch({ event: 'agm', kind: 'warning', policy: { channel: 'ping', dm: true }, state: {} });
+  await dispatch({
+    event: 'agm',
+    kind: 'warning',
+    policy: { channel: 'ping', dm: true },
+    state: {}
+  });
 
   const warn = renderMessage('agm', 'warning');
   assert.deepEqual(w.chA.sends, [
@@ -101,7 +106,12 @@ test('dmEnabled:false suppresses DMs but still delivers to the channel', async (
   const w = makeWorld({ dmEnabled: false });
   const dispatch = createDispatch(w.client, { loadConfig: w.loadConfig });
 
-  await dispatch({ event: 'stv', kind: 'warning', policy: { channel: 'ping', dm: true }, state: {} });
+  await dispatch({
+    event: 'stv',
+    kind: 'warning',
+    policy: { channel: 'ping', dm: true },
+    state: {}
+  });
 
   const warn = renderMessage('stv', 'warning');
   assert.deepEqual(w.chA.sends, [

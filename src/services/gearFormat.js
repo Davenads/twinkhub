@@ -29,7 +29,9 @@ export function itemNameMarkup(item) {
  */
 export function enchantWowheadUrl(ench) {
   const ref = ench?.wowhead;
-  return ref?.type && ref?.id != null ? `https://www.wowhead.com/classic/${ref.type}=${ref.id}` : null;
+  return ref?.type && ref?.id != null
+    ? `https://www.wowhead.com/classic/${ref.type}=${ref.id}`
+    : null;
 }
 
 /**

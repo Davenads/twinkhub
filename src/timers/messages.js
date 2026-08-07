@@ -5,8 +5,7 @@ import { formatCountdown } from '../lib/time.js';
 // side-by-side cutover verification in plans/02). The emoji prefixes are part of
 // that production copy — they are message data, not decoration.
 
-const AGM_WARNING =
-  '\u2694\uFE0F **Arena Grand Master** chest spawns in 10 minutes!';
+const AGM_WARNING = '\u2694\uFE0F **Arena Grand Master** chest spawns in 10 minutes!';
 const AGM_SPAWN =
   '\u2694\uFE0F **Arena Grand Master** chest has spawned! Grab it fast \u2014 you have 5 minutes!';
 const DMF_OPEN =

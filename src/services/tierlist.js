@@ -1,7 +1,15 @@
 import { EmbedBuilder } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { classIcon } from '../content/store.js';
-import { EMBED_COLOR, LIMITS, truncate, field, metaTitle, metaFooter, degradeEmbed } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  LIMITS,
+  truncate,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed
+} from '../lib/embed.js';
 
 // Conventional high-to-low order; any tier not listed is appended alphabetically.
 const TIER_ORDER = ['S', 'A', 'B', 'C', 'D', 'F'];
@@ -23,11 +31,17 @@ export function renderTierlist({ store, bracket }) {
   const bracketData = store?.brackets?.[bracket];
   const roster = bracketData?.classes?.index?.classes;
   if (!roster?.length) {
-    return { embeds: [degradeEmbed('Class Tier List', `No class data is loaded for bracket **${bracket}**.`)] };
+    return {
+      embeds: [
+        degradeEmbed('Class Tier List', `No class data is loaded for bracket **${bracket}**.`)
+      ]
+    };
   }
 
   const meta = bracketData.meta;
-  const embed = new EmbedBuilder().setColor(EMBED_COLOR).setTitle(metaTitle('Class Tier List', meta));
+  const embed = new EmbedBuilder()
+    .setColor(EMBED_COLOR)
+    .setTitle(metaTitle('Class Tier List', meta));
 
   if (bracketData.classes.index.tierNote) {
     embed.setDescription(truncate(bracketData.classes.index.tierNote, LIMITS.description));

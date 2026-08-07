@@ -79,9 +79,19 @@ Tracked in CLAUDE.md: `Procfile` (`worker: node src/index.js`), move
 `DISCORD_TOKEN`/guild ids to config vars, durable storage (see P2 #4), drop local
 pm2 once Heroku owns the runtime.
 
-### P4 #7 — ESLint + Prettier — `TODO`
-No linter/formatter config in the repo. Add ESLint (flat config) + Prettier and a
-`npm run lint` script; wire into CI (P2 #3).
+### P4 #7 — ESLint + Prettier — `DONE` (this change)
+Added ESLint 9 flat config (`eslint.config.js`: JS-recommended + ESM + Node
+globals, `no-unused-vars` with `^_` ignore; `eslint-config-prettier` last so lint
+owns correctness and Prettier owns style) and Prettier (`.prettierrc.json` tuned to
+the house style — printWidth 100, single quotes, semicolons, no trailing comma,
+always-parens arrows; `.prettierignore` skips `node_modules/ data/ logs/ coverage/
+package-lock.json` and all `*.md` prose docs). Scripts: `lint`, `lint:fix`,
+`format`, `format:check`. ESLint came back clean (zero real issues); `prettier
+--write` normalized the JS/test/tool/config files in one mechanical sweep
+(semantically inert — the 405-test suite passed unchanged before and after).
+Markdown is deliberately excluded so authored prose docs (README, CLAUDE.md,
+these plans) aren't reflowed. CI now gates on `npm run lint` and
+`npm run format:check` ahead of the test step.
 
 ## P5 — Security / auth
 

@@ -56,7 +56,10 @@ test('renderClass falls back to the roster entry (no stat priority) for detail-l
 
   assert.equal(e.title, 'Mage \u2014 Tier B (Warsong Gulch 19)');
   assert.equal(e.fields.find((f) => f.name === 'Roles').value, 'ranged-dps');
-  assert.equal(e.fields.find((f) => f.name === 'Stat priority'), undefined);
+  assert.equal(
+    e.fields.find((f) => f.name === 'Stat priority'),
+    undefined
+  );
 });
 
 test('renderClass degrades for a class the bracket does not list', () => {

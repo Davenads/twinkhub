@@ -22,9 +22,28 @@ const store = {
           explosive: 'Explosives share the thrown-item cooldown.'
         },
         consumables: [
-          { id: 'healing-potion', name: 'Healing Potion', type: 'potion', effect: 'Instant heal on cooldown.', faction: 'both', reqLevel: null },
-          { id: 'venomhide-poison', name: 'Venomhide Poison', type: 'poison', effect: 'Stacking DPS poison.', classes: ['rogue'] },
-          { id: 'heavy-dynamite', name: 'Heavy Dynamite', type: 'explosive', effect: 'Thrown AoE fire.', source: { type: 'profession', detail: 'Engineering (crafted)' } }
+          {
+            id: 'healing-potion',
+            name: 'Healing Potion',
+            type: 'potion',
+            effect: 'Instant heal on cooldown.',
+            faction: 'both',
+            reqLevel: null
+          },
+          {
+            id: 'venomhide-poison',
+            name: 'Venomhide Poison',
+            type: 'poison',
+            effect: 'Stacking DPS poison.',
+            classes: ['rogue']
+          },
+          {
+            id: 'heavy-dynamite',
+            name: 'Heavy Dynamite',
+            type: 'explosive',
+            effect: 'Thrown AoE fire.',
+            source: { type: 'profession', detail: 'Engineering (crafted)' }
+          }
         ]
       }
     }
@@ -58,23 +77,40 @@ test('renderConsumable filters by type', () => {
   const { embeds } = renderConsumable({ store, bracket: '19', type: 'potion' });
   const e = embeds[0].toJSON();
   assert.ok(e.description.includes('Filtered to'));
-  assert.deepEqual(fieldNames(embeds).filter((n) => n !== 'Note'), ['Healing Potion']);
+  assert.deepEqual(
+    fieldNames(embeds).filter((n) => n !== 'Note'),
+    ['Healing Potion']
+  );
 });
 
 test('renderConsumable shows a type note as a bottom field only under that type filter', () => {
-  const noteValues = (json) => (json.fields ?? []).filter((f) => f.name === 'Note').map((f) => f.value);
+  const noteValues = (json) =>
+    (json.fields ?? []).filter((f) => f.name === 'Note').map((f) => f.value);
 
   const unfiltered = renderConsumable({ store, bracket: '19' }).embeds[0].toJSON();
   assert.equal(noteValues(unfiltered).length, 0, 'type note does not leak onto the full list');
 
   const potion = renderConsumable({ store, bracket: '19', type: 'potion' }).embeds[0].toJSON();
   // The note trails the item rows (bottom footnote), not the description header.
-  assert.ok(!potion.description?.includes('Potions share a cooldown'), 'note is not in the description');
+  assert.ok(
+    !potion.description?.includes('Potions share a cooldown'),
+    'note is not in the description'
+  );
   assert.equal(potion.fields.at(-1).name, 'Note', 'the last field is the note');
-  assert.ok(noteValues(potion)[0].includes('Potions share a cooldown'), 'potion filter surfaces the potion type note');
+  assert.ok(
+    noteValues(potion)[0].includes('Potions share a cooldown'),
+    'potion filter surfaces the potion type note'
+  );
 
-  const explosive = renderConsumable({ store, bracket: '19', type: 'explosive' }).embeds[0].toJSON();
-  assert.ok(noteValues(explosive)[0].includes('Explosives share'), 'explosive filter surfaces the explosive type note');
+  const explosive = renderConsumable({
+    store,
+    bracket: '19',
+    type: 'explosive'
+  }).embeds[0].toJSON();
+  assert.ok(
+    noteValues(explosive)[0].includes('Explosives share'),
+    'explosive filter surfaces the explosive type note'
+  );
 });
 
 test('renderConsumable class filter keeps universal + class-specific consumables', () => {
@@ -84,7 +120,10 @@ test('renderConsumable class filter keeps universal + class-specific consumables
   assert.ok(rNames.includes('Healing Potion'), 'rogue also sees universal consumables');
 
   const priest = renderConsumable({ store, bracket: '19', className: 'priest' });
-  assert.ok(!fieldNames(priest.embeds).includes('Venomhide Poison'), 'priest does not see the rogue poison');
+  assert.ok(
+    !fieldNames(priest.embeds).includes('Venomhide Poison'),
+    'priest does not see the rogue poison'
+  );
 });
 
 test('renderConsumable degrades on no match and on an unloaded bracket', () => {
@@ -101,14 +140,19 @@ test('renderConsumable hides the per-row class list only under a class filter', 
   const vpUn = unfiltered.fields.find((f) => f.name === 'Venomhide Poison');
   assert.ok(vpUn.value.includes('Rogue'), 'unfiltered row shows the class list');
 
-  const filtered = renderConsumable({ store, bracket: '19', className: 'rogue' }).embeds[0].toJSON();
+  const filtered = renderConsumable({
+    store,
+    bracket: '19',
+    className: 'rogue'
+  }).embeds[0].toJSON();
   const vpF = filtered.fields.find((f) => f.name === 'Venomhide Poison');
   assert.ok(!vpF.value.includes('Rogue'), 'class-filtered row omits the redundant class list');
 });
 
 // Discord counts title + description + footer + every field name/value toward 6000.
 function totalSize(json) {
-  let n = (json.title?.length ?? 0) + (json.description?.length ?? 0) + (json.footer?.text?.length ?? 0);
+  let n =
+    (json.title?.length ?? 0) + (json.description?.length ?? 0) + (json.footer?.text?.length ?? 0);
   for (const f of json.fields ?? []) n += f.name.length + f.value.length;
   return n;
 }
@@ -117,7 +161,11 @@ test('renderConsumable never exceeds the 6000-char embed cap under a wide class 
   const bigStore = {
     brackets: {
       19: {
-        meta: { battleground: 'Warsong Gulch', levelCap: 19, gameVersion: { clientPatch: '1.15.x' } },
+        meta: {
+          battleground: 'Warsong Gulch',
+          levelCap: 19,
+          gameVersion: { clientPatch: '1.15.x' }
+        },
         consumables: {
           note: 'x'.repeat(1200),
           consumables: Array.from({ length: 30 }, (_, i) => ({
@@ -136,5 +184,9 @@ test('renderConsumable never exceeds the 6000-char embed cap under a wide class 
   const { embeds } = renderConsumable({ store: bigStore, bracket: '19', className: 'priest' });
   const e = embeds[0].toJSON();
   assert.ok(totalSize(e) <= 6000, `embed total ${totalSize(e)} must stay <= 6000`);
-  assert.equal(e.fields.at(-1).name, '\u2026', 'an overflow note is appended when entries are dropped');
+  assert.equal(
+    e.fields.at(-1).name,
+    '\u2026',
+    'an overflow note is appended when entries are dropped'
+  );
 });

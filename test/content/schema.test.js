@@ -19,7 +19,11 @@ import {
 
 const validMeta = () => ({
   bracket: '19',
-  gameVersion: { flavor: 'classic-era', contentState: 'all-pre-tbc-unlocked', clientPatch: '1.15.x' },
+  gameVersion: {
+    flavor: 'classic-era',
+    contentState: 'all-pre-tbc-unlocked',
+    clientPatch: '1.15.x'
+  },
   levelRange: [10, 19],
   levelCap: 19,
   battleground: 'Warsong Gulch',
@@ -41,7 +45,10 @@ test('validateMeta accepts the seeded 19 shape', () => {
 });
 
 test('validateMeta enforces the classic-era game-version gate', () => {
-  const sod = { ...validMeta(), gameVersion: { flavor: 'sod', contentState: 'all-pre-tbc-unlocked' } };
+  const sod = {
+    ...validMeta(),
+    gameVersion: { flavor: 'sod', contentState: 'all-pre-tbc-unlocked' }
+  };
   const res = validateMeta(sod, '19/meta.json');
   assert.equal(res.ok, false);
   assert.ok(res.errors.some((e) => e.includes('gameVersion.flavor')));
@@ -206,7 +213,10 @@ test('validateGearIndex enforces item vocabularies and unique shared ids', () =>
   const badFaction = { slots: ['head'], shared: [{ ...validItem(), faction: 'neutral' }] };
   assert.ok(validateGearIndex(badFaction).errors.some((e) => e.includes('faction')));
 
-  const badSource = { slots: ['head'], shared: [{ ...validItem(), source: { type: 'legendary', detail: 'x' } }] };
+  const badSource = {
+    slots: ['head'],
+    shared: [{ ...validItem(), source: { type: 'legendary', detail: 'x' } }]
+  };
   assert.ok(validateGearIndex(badSource).errors.some((e) => e.includes('source.type')));
 
   const badPriority = { slots: ['head'], shared: [{ ...validItem(), priority: 'godlike' }] };
@@ -224,8 +234,15 @@ test('validateGearIndex rejects a non-integer stat value', () => {
 });
 
 test('validateGearIndex accepts optional enchant + alternatives references', () => {
-  const enriched = { ...validItem(), enchant: 'minor-speed-boots', alternatives: ['lucky-fishing-hat'] };
-  assert.deepEqual(validateGearIndex({ slots: ['head'], shared: [enriched] }), { ok: true, errors: [] });
+  const enriched = {
+    ...validItem(),
+    enchant: 'minor-speed-boots',
+    alternatives: ['lucky-fishing-hat']
+  };
+  assert.deepEqual(validateGearIndex({ slots: ['head'], shared: [enriched] }), {
+    ok: true,
+    errors: []
+  });
 });
 
 test('validateGearIndex rejects a blank enchant and a non-string-array alternatives', () => {
@@ -255,7 +272,9 @@ test('validateItem forbids armorType on non-armor slots', () => {
     slots: ['trinket'],
     shared: [{ ...validItem(), slot: 'trinket', armorType: 'cloth' }]
   };
-  assert.ok(validateGearIndex(nonArmor).errors.some((e) => e.includes('armorType is only allowed')));
+  assert.ok(
+    validateGearIndex(nonArmor).errors.some((e) => e.includes('armorType is only allowed'))
+  );
 
   const okNonArmor = {
     slots: ['trinket'],
@@ -290,14 +309,19 @@ test('validateGearIndex accepts and validates an optional armorProficiency map',
 test('validateGearIndex accepts and validates an optional shoulderStrategy block', () => {
   const ok = {
     slots: ['head'],
-    shoulderStrategy: { note: 'Vessel meta.', vesselByArmorType: { mail: 'defender-spaulders', cloth: 'woolen' } },
+    shoulderStrategy: {
+      note: 'Vessel meta.',
+      vesselByArmorType: { mail: 'defender-spaulders', cloth: 'woolen' }
+    },
     shared: [validItem()]
   };
   assert.equal(validateGearIndex(ok).ok, true);
 
   // vesselByArmorType is required when the block is present.
   const noMap = { slots: ['head'], shoulderStrategy: { note: 'x' }, shared: [validItem()] };
-  assert.ok(validateGearIndex(noMap).errors.some((e) => e.includes('vesselByArmorType must be an object')));
+  assert.ok(
+    validateGearIndex(noMap).errors.some((e) => e.includes('vesselByArmorType must be an object'))
+  );
 
   // Keys must be proficiency armor types (misc is not one).
   const badKey = {
@@ -356,22 +380,38 @@ test('validateGearClass accepts optional role builds (single + array slots)', ()
 });
 
 test('validateGearClass enforces the build role/faction vocabularies', () => {
-  const badRole = { class: 'hunter', items: [validItem()], builds: [{ ...validBuild(), role: 'tank' }] };
+  const badRole = {
+    class: 'hunter',
+    items: [validItem()],
+    builds: [{ ...validBuild(), role: 'tank' }]
+  };
   assert.ok(validateGearClass(badRole).errors.some((e) => e.includes('role')));
 
-  const badFaction = { class: 'hunter', items: [validItem()], builds: [{ ...validBuild(), faction: 'neutral' }] };
+  const badFaction = {
+    class: 'hunter',
+    items: [validItem()],
+    builds: [{ ...validBuild(), faction: 'neutral' }]
+  };
   assert.ok(validateGearClass(badFaction).errors.some((e) => e.includes('faction')));
 });
 
 test('validateGearClass rejects an empty builds array and a duplicated build id', () => {
-  assert.ok(validateGearClass({ class: 'hunter', items: [validItem()], builds: [] }).errors.some((e) => e.includes('builds')));
+  assert.ok(
+    validateGearClass({ class: 'hunter', items: [validItem()], builds: [] }).errors.some((e) =>
+      e.includes('builds')
+    )
+  );
 
   const dupe = { class: 'hunter', items: [validItem()], builds: [validBuild(), validBuild()] };
   assert.ok(validateGearClass(dupe).errors.some((e) => e.includes('duplicated')));
 });
 
 test('validateGearClass flags a build with empty slots and a bad pick', () => {
-  const noSlots = { class: 'hunter', items: [validItem()], builds: [{ ...validBuild(), slots: {} }] };
+  const noSlots = {
+    class: 'hunter',
+    items: [validItem()],
+    builds: [{ ...validBuild(), slots: {} }]
+  };
   assert.ok(validateGearClass(noSlots).errors.some((e) => e.includes('slots')));
 
   const badPick = validBuild();
@@ -383,13 +423,21 @@ test('validateGearClass flags a build with empty slots and a bad pick', () => {
 
   const badArray = validBuild();
   badArray.slots.finger = [];
-  assert.ok(validateGearClass({ class: 'hunter', items: [validItem()], builds: [badArray] }).errors.some((e) => e.includes('slots.finger')));
+  assert.ok(
+    validateGearClass({ class: 'hunter', items: [validItem()], builds: [badArray] }).errors.some(
+      (e) => e.includes('slots.finger')
+    )
+  );
 });
 
 const validScaling = () => ({
   note: 'Concrete conversions at 19.',
   stats: {
-    agility: { label: 'Agility', summary: 'Armor, crit, dodge, AP.', conversions: ['1 Agility = 2 armor'] },
+    agility: {
+      label: 'Agility',
+      summary: 'Armor, crit, dodge, AP.',
+      conversions: ['1 Agility = 2 armor']
+    },
     stamina: { label: 'Stamina', summary: 'Health.', conversions: ['1 Stamina = 10 health'] }
   },
   derived: [{ name: 'DPS from AP', formula: 'DPS = AP / 14' }],
@@ -436,8 +484,23 @@ test('validateScaling flags malformed derived and hitCaps entries', () => {
 const validPets = () => ({
   class: 'hunter',
   families: [
-    { family: 'boar', exampleName: 'Great Goretusk', keyAbility: 'Charge', tameLevel: null, zone: null, notes: 'Charge utility.' },
-    { family: 'cat', exampleName: 'The Rake', keyAbility: null, attackSpeed: 1.2, tameLevel: null, zone: null, notes: 'Fast swing.' }
+    {
+      family: 'boar',
+      exampleName: 'Great Goretusk',
+      keyAbility: 'Charge',
+      tameLevel: null,
+      zone: null,
+      notes: 'Charge utility.'
+    },
+    {
+      family: 'cat',
+      exampleName: 'The Rake',
+      keyAbility: null,
+      attackSpeed: 1.2,
+      tameLevel: null,
+      zone: null,
+      notes: 'Fast swing.'
+    }
   ],
   xpNote: 'Pets need ~25% of player XP and gain none from turn-ins.',
   abilityNote: 'Ability-shop while taming.',
@@ -478,12 +541,22 @@ test('validatePets flags a duplicated family key and a bad tameLevel', () => {
 });
 
 const validSpellcoef = () => ({
-  penalty: { perLevelBelow20: 0.0375, note: 'Sub-20 penalty; coefficients are level-19-effective.' },
+  penalty: {
+    perLevelBelow20: 0.0375,
+    note: 'Sub-20 penalty; coefficients are level-19-effective.'
+  },
   byClass: {
     mage: [
       { spell: 'Frostbolt', rank: 3, coefficient: 0.463, type: 'direct-damage', confirmed: false },
       { spell: 'Fireball', rank: 4, coefficient: 0.793, type: 'direct-damage', confirmed: false },
-      { spell: 'Fireball', rank: 4, coefficient: 0, type: 'dot', confirmed: false, notes: 'DoT does not scale.' }
+      {
+        spell: 'Fireball',
+        rank: 4,
+        coefficient: 0,
+        type: 'dot',
+        confirmed: false,
+        notes: 'DoT does not scale.'
+      }
     ],
     priest: [{ spell: 'Lesser Heal', rank: 3, coefficient: 0.446, type: 'direct-heal' }]
   }
@@ -517,7 +590,12 @@ test('validateSpellCoefficients enforces the type vocabulary and numeric coeffic
 
 test('validateSpellCoefficients flags a same-type duplicate and a bad confirmed flag', () => {
   const dupe = validSpellcoef();
-  dupe.byClass.mage.push({ spell: 'Frostbolt', rank: 3, coefficient: 0.463, type: 'direct-damage' });
+  dupe.byClass.mage.push({
+    spell: 'Frostbolt',
+    rank: 3,
+    coefficient: 0.463,
+    type: 'direct-damage'
+  });
   const r1 = validateSpellCoefficients(dupe);
   assert.equal(r1.ok, false);
   assert.ok(r1.errors.some((e) => e.includes('duplicates')));
@@ -530,9 +608,28 @@ test('validateSpellCoefficients flags a same-type duplicate and a bad confirmed 
 const validConsumables = () => ({
   note: 'Seeded from verified domain notes.',
   consumables: [
-    { id: 'healing-potion', name: 'Healing Potion', type: 'potion', effect: 'Instant heal on cooldown.', faction: 'both', reqLevel: null },
-    { id: 'venomhide-poison', name: 'Venomhide Poison', type: 'poison', effect: 'Stacking DPS poison.', classes: ['rogue'] },
-    { id: 'heavy-dynamite', name: 'Heavy Dynamite', type: 'explosive', effect: 'Thrown AoE fire.', source: { type: 'profession', detail: 'Engineering (crafted)' } }
+    {
+      id: 'healing-potion',
+      name: 'Healing Potion',
+      type: 'potion',
+      effect: 'Instant heal on cooldown.',
+      faction: 'both',
+      reqLevel: null
+    },
+    {
+      id: 'venomhide-poison',
+      name: 'Venomhide Poison',
+      type: 'poison',
+      effect: 'Stacking DPS poison.',
+      classes: ['rogue']
+    },
+    {
+      id: 'heavy-dynamite',
+      name: 'Heavy Dynamite',
+      type: 'explosive',
+      effect: 'Thrown AoE fire.',
+      source: { type: 'profession', detail: 'Engineering (crafted)' }
+    }
   ]
 });
 
@@ -576,8 +673,23 @@ test('validateConsumables flags a duplicated id and a bad reqLevel', () => {
 const validQuests = () => ({
   note: 'Seeded from verified domain notes.',
   quests: [
-    { id: 'the-night-watch', name: 'The Night Watch', zone: null, faction: 'alliance', reward: { desc: 'Quiver of the Night Watch' }, xpWarning: true, classes: ['hunter'] },
-    { id: 'talbar-mantle', name: 'Talbar Mantle Quest', zone: 'Redridge', faction: 'both', reward: { itemId: 'talbar-mantle' }, xpWarning: false }
+    {
+      id: 'the-night-watch',
+      name: 'The Night Watch',
+      zone: null,
+      faction: 'alliance',
+      reward: { desc: 'Quiver of the Night Watch' },
+      xpWarning: true,
+      classes: ['hunter']
+    },
+    {
+      id: 'talbar-mantle',
+      name: 'Talbar Mantle Quest',
+      zone: 'Redridge',
+      faction: 'both',
+      reward: { itemId: 'talbar-mantle' },
+      xpWarning: false
+    }
   ]
 });
 
@@ -624,7 +736,12 @@ test('validateQuests flags a non-string zone, a bad classes array, and a duplica
 const validGuideIndex = () => ({
   note: 'Curated guides for the bracket.',
   guides: [
-    { slug: '19-twink-basics', title: '19 Twink Basics', summary: 'Start here.', tags: ['beginner', 'xp'] },
+    {
+      slug: '19-twink-basics',
+      title: '19 Twink Basics',
+      summary: 'Start here.',
+      tags: ['beginner', 'xp']
+    },
     { slug: 'hunter-pets', title: 'Hunter Pets', summary: 'Pet XP and families.', class: 'hunter' }
   ]
 });

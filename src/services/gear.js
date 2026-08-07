@@ -2,7 +2,14 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { capitalize } from '../lib/text.js';
 import { bracketGear, gearForClass, gearSlots, shoulderStrategyFor } from '../content/store.js';
 import { slotFields, itemLine, enchantNameMarkup } from './gearFormat.js';
-import { EMBED_COLOR, field, metaTitle, metaFooter, degradeEmbed, fieldsFromLines } from '../lib/embed.js';
+import {
+  EMBED_COLOR,
+  field,
+  metaTitle,
+  metaFooter,
+  degradeEmbed,
+  fieldsFromLines
+} from '../lib/embed.js';
 import { paginateFields } from '../lib/paginate.js';
 import { encodeCustomId } from './panels.js';
 
@@ -27,7 +34,15 @@ const slug = (v) => (v ? String(v).toLowerCase() : '-');
  * Buttons clamp at the ends and disable there.
  */
 function gearNav({ className, slot, faction, priority, page, pageCount }) {
-  const id = (p) => encodeCustomId('gearpage', slug(className), slug(slot), slug(faction), slug(priority), String(p));
+  const id = (p) =>
+    encodeCustomId(
+      'gearpage',
+      slug(className),
+      slug(slot),
+      slug(faction),
+      slug(priority),
+      String(p)
+    );
   const prev = new ButtonBuilder()
     .setCustomId(id(Math.max(0, page - 1)))
     .setLabel('\u25C0 Prev')
@@ -69,7 +84,15 @@ export function renderGear(args) {
  *          faction?: string|null, priority?: string|null, page?: number }} args
  * @returns {{ embeds: import('discord.js').EmbedBuilder[], components?: ActionRowBuilder[] }}
  */
-export function renderGearPage({ store, bracket, className, slot = null, faction = null, priority = null, page = 0 }) {
+export function renderGearPage({
+  store,
+  bracket,
+  className,
+  slot = null,
+  faction = null,
+  priority = null,
+  page = 0
+}) {
   const gear = bracketGear(store, bracket);
   const meta = store?.brackets?.[bracket]?.meta;
   const forClass = gearForClass(store, bracket, className);
@@ -93,7 +116,8 @@ export function renderGearPage({ store, bracket, className, slot = null, faction
   // bare item list. Falls through to the normal path when none is authored.
   if (slotKey === 'shoulder') {
     const strat = shoulderStrategyFor(store, bracket, className);
-    if (strat) return renderShoulderPage({ meta, forClass, strat, className, faction, priority, page });
+    if (strat)
+      return renderShoulderPage({ meta, forClass, strat, className, faction, priority, page });
   }
 
   const items = forClass.items.filter(
@@ -136,7 +160,9 @@ export function renderGearPage({ store, bracket, className, slot = null, faction
   const idx = Math.min(Math.max(0, Number(page) || 0), pages.length - 1);
   const payload = { embeds: [pages[idx]] };
   if (pages.length > 1) {
-    payload.components = [gearNav({ className, slot, faction, priority, page: idx, pageCount: pages.length })];
+    payload.components = [
+      gearNav({ className, slot, faction, priority, page: idx, pageCount: pages.length })
+    ];
   }
   return payload;
 }
@@ -154,7 +180,15 @@ export function renderGearPage({ store, bracket, className, slot = null, faction
  *          faction?: string|null, priority?: string|null, page?: number }} args
  * @returns {{ embeds: import('discord.js').EmbedBuilder[], components?: ActionRowBuilder[] }}
  */
-function renderShoulderPage({ meta, forClass, strat, className, faction = null, priority = null, page = 0 }) {
+function renderShoulderPage({
+  meta,
+  forClass,
+  strat,
+  className,
+  faction = null,
+  priority = null,
+  page = 0
+}) {
   const title = metaTitle(`Gear \u2014 ${capitalize(forClass.className)} shoulder`, meta);
 
   const fields = [];
@@ -172,8 +206,11 @@ function renderShoulderPage({ meta, forClass, strat, className, faction = null, 
   });
   if (inscLines.length) fields.push(...fieldsFromLines('Scourge inscription by build', inscLines));
 
-  const others = forClass.items.filter((i) => i.slot.toLowerCase() === 'shoulder' && i.id !== strat.vessel?.id);
-  if (others.length) fields.push(...fieldsFromLines('Other shoulders (not recommended)', others.map(itemLine)));
+  const others = forClass.items.filter(
+    (i) => i.slot.toLowerCase() === 'shoulder' && i.id !== strat.vessel?.id
+  );
+  if (others.length)
+    fields.push(...fieldsFromLines('Other shoulders (not recommended)', others.map(itemLine)));
 
   const pages = paginateFields({
     title,
@@ -186,7 +223,16 @@ function renderShoulderPage({ meta, forClass, strat, className, faction = null, 
   const idx = Math.min(Math.max(0, Number(page) || 0), pages.length - 1);
   const payload = { embeds: [pages[idx]] };
   if (pages.length > 1) {
-    payload.components = [gearNav({ className, slot: 'shoulder', faction, priority, page: idx, pageCount: pages.length })];
+    payload.components = [
+      gearNav({
+        className,
+        slot: 'shoulder',
+        faction,
+        priority,
+        page: idx,
+        pageCount: pages.length
+      })
+    ];
   }
   return payload;
 }

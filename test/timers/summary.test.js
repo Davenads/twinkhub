@@ -16,8 +16,20 @@ const BIG = 100 * DAY;
 /** Build a normalized state: active(ms=endsIn) or idle(ms=startsIn). */
 function st(active, ms, extra = {}) {
   return active
-    ? { active: true, startsInMs: 0, endsInMs: ms, label: extra.label ?? '', meta: extra.meta ?? {} }
-    : { active: false, startsInMs: ms, endsInMs: 0, label: extra.label ?? '', meta: extra.meta ?? {} };
+    ? {
+        active: true,
+        startsInMs: 0,
+        endsInMs: ms,
+        label: extra.label ?? '',
+        meta: extra.meta ?? {}
+      }
+    : {
+        active: false,
+        startsInMs: ms,
+        endsInMs: 0,
+        label: extra.label ?? '',
+        meta: extra.meta ?? {}
+      };
 }
 
 test('urgencyScore ranks active (by end) ahead of idle (by start)', () => {
@@ -54,7 +66,10 @@ test('renderEventLine — AGM / DMF / STV active vs idle', () => {
   assert.equal(renderEventLine('agm', st(false, 2 * HOUR + 34 * MIN)), 'Next chest in 2h 34m');
   assert.equal(renderEventLine('dmf', st(true, 3 * DAY)), 'Open \u00b7 ends in 3d 0m');
   assert.equal(renderEventLine('dmf', st(false, 10 * DAY)), 'Opens in 10d 0m');
-  assert.equal(renderEventLine('stv', st(true, 1 * HOUR + 20 * MIN)), 'Active \u00b7 ends in 1h 20m');
+  assert.equal(
+    renderEventLine('stv', st(true, 1 * HOUR + 20 * MIN)),
+    'Active \u00b7 ends in 1h 20m'
+  );
   assert.equal(renderEventLine('stv', st(false, 4 * DAY + 2 * HOUR)), 'Starts in 4d 2h 0m');
 });
 
@@ -72,16 +87,28 @@ test('renderEventLine — DMF names the Era zone when location is known', () => 
 });
 
 test('renderEventsSummary rotates the DMF icon with the Era zone', () => {
-  const store = { emoji: { events: { dmfef: { name: 'dmfef', id: '9' }, dmftb: { name: 'dmftb', id: '8' } } } };
+  const store = {
+    emoji: { events: { dmfef: { name: 'dmfef', id: '9' }, dmftb: { name: 'dmftb', id: '8' } } }
+  };
   const base = {
-    bg: st(false, 2 * HOUR, { meta: { currentBG: { shortName: 'AV' }, nextBG: { shortName: 'WSG' } } }),
+    bg: st(false, 2 * HOUR, {
+      meta: { currentBG: { shortName: 'AV' }, nextBG: { shortName: 'WSG' } }
+    }),
     agm: st(false, 2 * HOUR),
     stv: st(false, 2 * HOUR)
   };
-  const mul = { ...base, dmf: st(false, 10 * DAY, { meta: { location: { name: 'Mulgore', short: 'Mulgore' } } }) };
-  const elw = { ...base, dmf: st(true, 3 * DAY, { meta: { location: { name: 'Elwynn Forest', short: 'Elwynn' } } }) };
+  const mul = {
+    ...base,
+    dmf: st(false, 10 * DAY, { meta: { location: { name: 'Mulgore', short: 'Mulgore' } } })
+  };
+  const elw = {
+    ...base,
+    dmf: st(true, 3 * DAY, { meta: { location: { name: 'Elwynn Forest', short: 'Elwynn' } } })
+  };
   const dmfVal = (states) =>
-    render(states).embeds[0].toJSON().fields.find((f) => f.name === 'Darkmoon Faire').value;
+    render(states)
+      .embeds[0].toJSON()
+      .fields.find((f) => f.name === 'Darkmoon Faire').value;
   function render(states) {
     return renderEventsSummary(states, { store });
   }
@@ -96,7 +123,9 @@ test('eventTitle returns the display name', () => {
 
 test('renderEventsSummary builds a ranked embed with a live updated cue', () => {
   const states = {
-    bg: st(false, 2 * HOUR, { meta: { currentBG: { shortName: 'AV' }, nextBG: { shortName: 'WSG' } } }),
+    bg: st(false, 2 * HOUR, {
+      meta: { currentBG: { shortName: 'AV' }, nextBG: { shortName: 'WSG' } }
+    }),
     agm: st(true, 3 * MIN),
     dmf: st(false, 10 * DAY),
     stv: st(true, 1 * HOUR)
@@ -125,16 +154,28 @@ test('renderEventsSummary leads each field value with its event icon when a stor
     }
   };
   const states = {
-    bg: st(true, 2 * DAY, { meta: { currentBG: { shortName: 'WSG' }, nextBG: { shortName: 'AB' } } }),
+    bg: st(true, 2 * DAY, {
+      meta: { currentBG: { shortName: 'WSG' }, nextBG: { shortName: 'AB' } }
+    }),
     agm: st(true, 3 * MIN),
     dmf: st(false, 10 * DAY),
     stv: st(true, 1 * HOUR)
   };
   const byName = {};
-  for (const f of renderEventsSummary(states, { store }).embeds[0].toJSON().fields) byName[f.name] = f.value;
+  for (const f of renderEventsSummary(states, { store }).embeds[0].toJSON().fields)
+    byName[f.name] = f.value;
 
-  assert.ok(byName['BG Weekend'].startsWith('<:wsg:1> '), 'BG icon tracks the current battleground');
-  assert.ok(byName['Arena Grand Master'].startsWith('<:arena:2> '), 'AGM leads with the arena icon');
+  assert.ok(
+    byName['BG Weekend'].startsWith('<:wsg:1> '),
+    'BG icon tracks the current battleground'
+  );
+  assert.ok(
+    byName['Arena Grand Master'].startsWith('<:arena:2> '),
+    'AGM leads with the arena icon'
+  );
   assert.ok(byName['STV Fishing'].startsWith('<:fishing:3> '), 'STV leads with the fishing icon');
-  assert.ok(!byName['Darkmoon Faire'].includes('<:'), 'an unregistered event icon degrades to text-only');
+  assert.ok(
+    !byName['Darkmoon Faire'].includes('<:'),
+    'an unregistered event icon degrades to text-only'
+  );
 });

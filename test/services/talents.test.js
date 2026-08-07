@@ -16,7 +16,10 @@ const store = {
   brackets: {
     19: {
       meta: { battleground: 'Warsong Gulch', levelCap: 19, gameVersion: { clientPatch: '1.15.x' } },
-      classes: { index: { classes: [{ class: 'druid' }, { class: 'warrior' }, { class: 'priest' }] }, byClass: {} },
+      classes: {
+        index: { classes: [{ class: 'druid' }, { class: 'warrior' }, { class: 'priest' }] },
+        byClass: {}
+      },
       talents: {
         note: 'Level-19 builds.',
         credit: { source: 'Community doc', url: 'https://example.com/doc' },
@@ -56,17 +59,28 @@ test('renderTalents lists all builds with the class icon in the description', ()
   assert.ok(f, 'build field present');
   assert.ok(f.name.includes('default'), 'default build tagged');
   assert.ok(f.value.includes('<:Furor:222> 5/5 Furor'), 'filled node emoji renders in value');
-  assert.ok(f.value.includes('1/1 Nature'), "unfilled node degrades to text");
+  assert.ok(f.value.includes('1/1 Nature'), 'unfilled node degrades to text');
   assert.ok(!f.value.includes('<:NaturesGrasp:'), 'empty-id node has no broken markup');
   assert.ok(f.value.includes('Open in Wowhead'), 'wowhead link present');
 });
 
 test('renderTalents narrows to a single build with a per-node breakdown', () => {
-  const { embeds } = renderTalents({ store, bracket: '19', className: 'druid', build: 'druid-grasp-shifter' });
+  const { embeds } = renderTalents({
+    store,
+    bracket: '19',
+    className: 'druid',
+    build: 'druid-grasp-shifter'
+  });
   const fields = fieldsOf(embeds);
   assert.ok(!fields.some((f) => f.name === 'Points'), 'points folded into the nodes breakdown');
-  assert.ok(fields.some((f) => f.name === 'Summary'), 'summary field present');
-  assert.ok(fields.some((f) => f.name === 'Nodes'), 'nodes field present');
+  assert.ok(
+    fields.some((f) => f.name === 'Summary'),
+    'summary field present'
+  );
+  assert.ok(
+    fields.some((f) => f.name === 'Nodes'),
+    'nodes field present'
+  );
   assert.ok(fields.some((f) => f.name === 'Talent calculator'));
 });
 
@@ -93,7 +107,10 @@ test('renderTalents keeps a linked credit in the description, not the footer', (
   const { embeds } = renderTalents({ store, bracket: '19', className: 'druid' });
   const e = embeds[0].toJSON();
   assert.ok(e.description.includes('Community doc'), 'linked credit stays in the description');
-  assert.ok(!(e.footer?.text ?? '').includes('Community doc'), 'linked credit not duplicated in footer');
+  assert.ok(
+    !(e.footer?.text ?? '').includes('Community doc'),
+    'linked credit not duplicated in footer'
+  );
 });
 
 test('renderTalents degrades for an unknown build id', () => {

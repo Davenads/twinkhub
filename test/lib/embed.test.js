@@ -6,7 +6,8 @@ import { field, addFieldsWithinLimits, LIMITS } from '../../src/lib/embed.js';
 // Sum an embed the way Discord counts toward its 6000 total: title + description
 // + footer text + every field name/value.
 function totalSize(json) {
-  let n = (json.title?.length ?? 0) + (json.description?.length ?? 0) + (json.footer?.text?.length ?? 0);
+  let n =
+    (json.title?.length ?? 0) + (json.description?.length ?? 0) + (json.footer?.text?.length ?? 0);
   for (const f of json.fields ?? []) n += f.name.length + f.value.length;
   return n;
 }

@@ -44,7 +44,10 @@ async function atomicWrite(file, data) {
 const _locks = new Map();
 function withFileLock(file, fn) {
   const next = (_locks.get(file) ?? Promise.resolve()).then(fn, fn);
-  _locks.set(file, next.catch(() => {}));
+  _locks.set(
+    file,
+    next.catch(() => {})
+  );
   return next;
 }
 
