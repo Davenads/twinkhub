@@ -49,10 +49,12 @@ without touching call sites. (Prereq for the Heroku migration in CLAUDE.md.)
 
 ## P3 — Housekeeping
 
-### P3 #5 — Stray binary — `TODO`
-`TwinkHub-consumable-icons.zip` (~54 KB) sits untracked **and un-ignored** at repo
-root. Decide: commit it as an asset, move it out of the tree, or add to
-`.gitignore`.
+### P3 #5 — Stray binary — `DONE` (this change)
+`TwinkHub-consumable-icons.zip` (~54 KB, an emoji/icon upload bundle — one-time
+asset, not runtime source) was untracked **and un-ignored** at repo root. Added a
+`*.zip` rule to `.gitignore` so local asset archives stay out of git history and
+out of untracked-status noise, keeping the local copy intact. Reversible: drop the
+rule (or `git add -f`) if we ever want to commit it as an asset.
 
 ### P3 #6 — Route `latchStore` warn through pino — `DONE` (this change)
 `latchStore.js` now logs the corrupt-read self-heal via the shared pino `logger`
