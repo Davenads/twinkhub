@@ -34,9 +34,12 @@ and `stop()`.
 
 ## P2 — Reliability / infra
 
-### P2 #3 — CI — `TODO`
-Add `.github/workflows/ci.yml` running `npm ci && npm test` on push/PR. No CI
-today; nothing catches a broken content edit or a failing test before it lands.
+### P2 #3 — CI — `DONE` (this change)
+Added `.github/workflows/ci.yml`: on push to `main` and on `pull_request`, runs
+`actions/setup-node` (Node 20, npm cache) → `npm ci` → `npm test` on
+`ubuntu-latest`, with a per-ref concurrency group that cancels an in-flight run
+when a newer commit lands. Does **not** run `deploy`/`start` (those need
+`DISCORD_TOKEN` and hit Discord). Now every push/PR is gated on the test suite.
 
 ### P2 #4 — Storage-adapter seam — `TODO`
 Per-guild config and timer latches write to the local `data/` filesystem. For a
