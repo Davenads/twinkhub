@@ -81,9 +81,16 @@ role IDs from config, or Discord's native command permissions.
 
 ## P6 — Test coverage
 
-### P6 #10 — Command-loader silent-skip test — `TODO`
-`loadCommands` silently skips malformed command modules. Add a test asserting a
-bad module is skipped (and, ideally, logged) without taking down the loader.
+### P6 #10 — Command-loader silent-skip test — `DONE` (this change)
+`loadCommands` gained a `{ dir = __dirname }` test seam (production calls
+unchanged) and now wraps each per-module `import()` in try/catch: a module that
+throws on import is `logger.warn`'d and skipped instead of aborting the whole load
+(one broken command no longer takes the bot offline — degrade in prod). Modules
+that load but lack the `data.name`+`execute` shape are still quietly ignored.
+`test/commands/loader.test.js` drives a temp fixture dir (marked
+`{"type":"module"}` so `.js` resolves as ESM like the real scope) covering: only
+well-formed commands register; a throw-on-import module is logged once and skipped
+while the valid command still loads; empty dir → empty collection.
 
 ### P6 #11 — Guild config concurrency test — `DONE` (folded into P1 #1)
 Shipped as part of P1 #1's test suite.
