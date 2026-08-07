@@ -1,6 +1,6 @@
-import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readText, writeJson, withLock } from '../storage/fileStore.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CONFIG_DIR = path.resolve(__dirname, '../../data/config');
@@ -23,59 +23,32 @@ function fileFor(guildId, dir = CONFIG_DIR) {
 }
 
 /**
- * Write via a temp file + atomic rename so a crash mid-write can never leave a
- * truncated/zero-filled config. Unlike the regenerable latch file, this holds
- * unrecoverable wiring (alert channel/role, board + panel message ids), so a
- * partial write would permanently break a guild until manual re-setup.
+ * Load a guild's config merged over defaults. Missing file => defaults. A corrupt
+ * file fails loud (parse error propagates): unlike the regenerable latch file this
+ * holds unrecoverable wiring (alert channel/role, board + panel message ids), so a
+ * silent re-seed would permanently wipe a guild's setup — better to surface it.
  */
-async function atomicWrite(file, data) {
-  const tmp = `${file}.${process.pid}.tmp`;
-  await fs.writeFile(tmp, data);
-  await fs.rename(tmp, file);
-}
-
-/**
- * Per-file async mutex (promise chain). Serializes read-modify-write for a given
- * guild so concurrent saves — e.g. the per-tick board updater racing an admin
- * toggle — can't clobber each other's fields. In-process only, which is correct
- * for the single-fork pm2 model; a future Postgres move replaces it with a row
- * transaction. Keyed by absolute path so distinct guilds/dirs never contend.
- */
-const _locks = new Map();
-function withFileLock(file, fn) {
-  const next = (_locks.get(file) ?? Promise.resolve()).then(fn, fn);
-  _locks.set(
-    file,
-    next.catch(() => {})
-  );
-  return next;
-}
-
-/** Load a guild's config merged over defaults. Missing file => defaults. */
 export async function loadGuildConfig(guildId, { dir = CONFIG_DIR } = {}) {
-  try {
-    const raw = await fs.readFile(fileFor(guildId, dir), 'utf8');
-    return { ...DEFAULT_CONFIG, ...JSON.parse(raw) };
-  } catch (err) {
-    if (err.code === 'ENOENT') return { ...DEFAULT_CONFIG };
-    throw err;
-  }
+  const raw = await readText(fileFor(guildId, dir));
+  if (raw == null) return { ...DEFAULT_CONFIG };
+  return { ...DEFAULT_CONFIG, ...JSON.parse(raw) };
 }
 
 /**
  * Merge `patch` into a guild's config and persist atomically under the guild's
  * lock. `patch` may be an object (shallow-merged) or an updater `(current) =>
  * delta` — use the updater form to compute a merge against the fresh, under-lock
- * state (so sibling fields aren't lost). Returns the saved config.
+ * state (so sibling fields aren't lost). The lock keyed by absolute path serializes
+ * racing writers (e.g. the per-tick board updater vs an admin toggle) and the
+ * atomic write can't leave a truncated config. Returns the saved config.
  */
 export async function saveGuildConfig(guildId, patch, { dir = CONFIG_DIR } = {}) {
   const file = fileFor(guildId, dir);
-  return withFileLock(file, async () => {
-    await fs.mkdir(dir, { recursive: true });
+  return withLock(file, async () => {
     const current = await loadGuildConfig(guildId, { dir });
     const delta = typeof patch === 'function' ? patch(current) : patch;
     const next = { ...current, ...delta };
-    await atomicWrite(file, JSON.stringify(next, null, 2));
+    await writeJson(file, next);
     return next;
   });
 }

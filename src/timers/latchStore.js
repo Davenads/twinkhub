@@ -1,7 +1,7 @@
-import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { logger } from '../lib/logger.js';
+import { readText, writeJson } from '../storage/fileStore.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,13 +21,8 @@ export const LATCH_FILE = path.resolve(__dirname, '../../data/timers/latches.jso
  * so the corruption self-heals; we log once so the event is visible.
  */
 export async function loadLatches(file = LATCH_FILE) {
-  let raw;
-  try {
-    raw = await fs.readFile(file, 'utf8');
-  } catch (err) {
-    if (err.code === 'ENOENT') return {};
-    throw err;
-  }
+  const raw = await readText(file);
+  if (raw == null) return {};
   try {
     return JSON.parse(raw);
   } catch (err) {
@@ -37,14 +32,11 @@ export async function loadLatches(file = LATCH_FILE) {
 }
 
 /**
- * Persist the latch map, creating the directory if needed. Writes to a temp file
- * then atomically renames it into place (uv rename uses MOVEFILE_REPLACE_EXISTING
- * on Windows), so a crash mid-write can never leave a truncated/zero-filled
- * latch file — the on-disk file is always either the old or the new complete map.
+ * Persist the latch map, creating the directory if needed. The atomic
+ * temp-write-then-rename (see fileStore) guarantees a crash mid-write can never
+ * leave a truncated/zero-filled latch file — the on-disk file is always either
+ * the old or the new complete map.
  */
 export async function saveLatches(latches, file = LATCH_FILE) {
-  await fs.mkdir(path.dirname(file), { recursive: true });
-  const tmp = `${file}.${process.pid}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(latches, null, 2));
-  await fs.rename(tmp, file);
+  await writeJson(file, latches);
 }

@@ -52,11 +52,27 @@ optional var (`AUDIT_LOG_CHANNEL_ID`) straight from `process.env` at call time i
 the real entry points (`index.js`, `deploy-commands.js`) is untouched. Verified by
 running the audit test with `DISCORD_TOKEN`/`DISCORD_APP_ID` unset.
 
-### P2 #4 — Storage-adapter seam — `TODO`
-Per-guild config and timer latches write to the local `data/` filesystem. For a
-Heroku move (ephemeral FS) this state must go to a durable store. Introduce a
-small storage adapter interface so the file backend can be swapped for Postgres/KV
-without touching call sites. (Prereq for the Heroku migration in CLAUDE.md.)
+### P2 #4 — Storage-adapter seam — `DONE` (this change)
+Per-guild config (`config/guildConfig.js`) and timer latches (`timers/latchStore.js`)
+each embedded their own `fs` calls, atomic temp-write-then-rename, and (config only)
+a per-file promise-chain mutex. Factored the shared mechanics into one primitive —
+`src/storage/fileStore.js` exposing `readText(key)` (raw string | `null` on ENOENT,
+other IO errors throw), `writeJson(key, value)` (atomic, mkdir-p), and
+`withLock(key, fn)` (per-key mutex). Both stores now delegate all filesystem access
+through it; neither imports `node:fs` anymore. Each keeps its own path derivation
+and its own read policy: guildConfig **fails loud** on a corrupt file (parse error
+propagates — unrecoverable wiring), latchStore **self-heals** (logs + re-seeds — the
+map is regenerable). Design note: the key is an absolute file path (not a
+namespace/id), because the existing test seams pin leaf locations — guildConfig's
+`{dir}` ⇒ `<dir>/<guildId>.json` and latchStore's `file` ⇒ that exact path — so a
+root+namespace model couldn't reproduce both without rewriting those tests. A future
+Postgres/KV backend implements the same three functions keyed by an opaque string
+(keys become logical ids at cutover). All existing guildConfig/latchStore/timer tests
+pass unchanged (the behavior-preserving proof); new `test/storage/fileStore.test.js`
+covers missing-key null, verbatim (unparsed) read, atomic round-trip with no temp
+left behind, parent-dir creation, and the mutex (serializes same-key, allows
+distinct-key concurrency). 411 tests green. Unblocks the P4 Heroku durable-storage
+prereq: swap `fileStore` for a `pgStore` without touching call sites.
 
 ## P3 — Housekeeping
 
