@@ -1,7 +1,20 @@
 import { test, beforeEach, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createPool } from '../../src/stash/db.js';
-import { addItem, requestItem, approveRequest, shutdown } from '../../src/stash/store.js';
+import {
+  addItem,
+  requestItem,
+  approveRequest,
+  markSent,
+  denyRequest,
+  cancelRequest,
+  removeItem,
+  expireStaleApprovals,
+  getItem,
+  listItems,
+  listRequests,
+  shutdown
+} from '../../src/stash/store.js';
 
 const DATABASE_URL = process.env.DATABASE_URL;
 const GUILD = 'test_guild_stash';
@@ -82,5 +95,117 @@ if (!DATABASE_URL) {
       () => requestItem(GUILD, items[3].id, 'capuser', { requestCap: 3 }),
       (e) => e.code === 'CAP_REACHED'
     );
+  });
+
+  test('markSent decrements remaining and flips item to given at zero', async () => {
+    const item = await addItem(GUILD, { name: 'Sendable', quantity: 1 });
+    const req = await requestItem(GUILD, item.id, 'buyer');
+    await approveRequest(GUILD, req.id, 'mgr');
+    const sent = await markSent(GUILD, req.id, 'mgr');
+    assert.equal(sent.status, 'sent');
+
+    const after = await getItem(GUILD, item.id);
+    assert.equal(after.remaining, 0);
+    assert.equal(after.status, 'given');
+  });
+
+  test('accounting fix: after a send a fresh request can still take the 2nd unit', async () => {
+    const item = await addItem(GUILD, { name: 'TwoUnits', quantity: 2 });
+    const r1 = await requestItem(GUILD, item.id, 'first');
+    await approveRequest(GUILD, r1.id, 'mgr');
+    await markSent(GUILD, r1.id, 'mgr');
+
+    // One unit remains. A brand new request must be approvable — this is the
+    // regression that the approved-only reserved count guards against.
+    const r2 = await requestItem(GUILD, item.id, 'second');
+    const approved = await approveRequest(GUILD, r2.id, 'mgr');
+    assert.equal(approved.status, 'approved');
+
+    const after = await getItem(GUILD, item.id);
+    assert.equal(after.remaining, 1);
+    assert.equal(after.status, 'requested'); // last unit now reserved
+  });
+
+  test('denyRequest frees a reserved unit back to available', async () => {
+    const item = await addItem(GUILD, { name: 'Deniable', quantity: 1 });
+    const req = await requestItem(GUILD, item.id, 'hopeful');
+    await approveRequest(GUILD, req.id, 'mgr');
+    assert.equal((await getItem(GUILD, item.id)).status, 'requested');
+
+    const denied = await denyRequest(GUILD, req.id, 'mgr');
+    assert.equal(denied.status, 'denied');
+    assert.equal((await getItem(GUILD, item.id)).status, 'available');
+  });
+
+  test('cancelRequest is ownership-gated and frees the unit', async () => {
+    const item = await addItem(GUILD, { name: 'Cancelable', quantity: 1 });
+    const req = await requestItem(GUILD, item.id, 'owner');
+    await approveRequest(GUILD, req.id, 'mgr');
+
+    await assert.rejects(
+      () => cancelRequest(GUILD, req.id, 'someone_else'),
+      (e) => e.code === 'NOT_OWNER'
+    );
+
+    const cancelled = await cancelRequest(GUILD, req.id, 'owner');
+    assert.equal(cancelled.status, 'cancelled');
+    assert.equal((await getItem(GUILD, item.id)).status, 'available');
+  });
+
+  test('removeItem withdraws the item and cancels open requests', async () => {
+    const item = await addItem(GUILD, { name: 'Withdrawn', quantity: 3 });
+    const rPending = await requestItem(GUILD, item.id, 'p');
+    const rApproved = await requestItem(GUILD, item.id, 'a');
+    await approveRequest(GUILD, rApproved.id, 'mgr');
+
+    const removed = await removeItem(GUILD, item.id, 'mgr');
+    assert.equal(removed.status, 'withdrawn');
+
+    const reqs = await listRequests(GUILD, { itemId: item.id });
+    const byId = Object.fromEntries(reqs.map((r) => [r.id, r.status]));
+    assert.equal(byId[rPending.id], 'cancelled');
+    assert.equal(byId[rApproved.id], 'cancelled');
+  });
+
+  test('expireStaleApprovals reverts old approvals and frees the item', async () => {
+    const item = await addItem(GUILD, { name: 'Stale', quantity: 1 });
+    const req = await requestItem(GUILD, item.id, 'slowpoke');
+    await approveRequest(GUILD, req.id, 'mgr');
+    assert.equal((await getItem(GUILD, item.id)).status, 'requested');
+
+    // decided_at is now; sweep with a future clock so it counts as stale.
+    const future = new Date(Date.now() + 6 * 24 * 60 * 60 * 1000);
+    const result = await expireStaleApprovals(GUILD, { staleApprovalDays: 5, now: future });
+    assert.equal(result.reverted, 1);
+
+    const [reverted] = await listRequests(GUILD, { itemId: item.id });
+    assert.equal(reverted.status, 'pending');
+    assert.equal((await getItem(GUILD, item.id)).status, 'available');
+  });
+
+  test('expireStaleApprovals leaves fresh approvals untouched', async () => {
+    const item = await addItem(GUILD, { name: 'Fresh', quantity: 1 });
+    const req = await requestItem(GUILD, item.id, 'prompt');
+    await approveRequest(GUILD, req.id, 'mgr');
+
+    const result = await expireStaleApprovals(GUILD, { staleApprovalDays: 5 });
+    assert.equal(result.reverted, 0);
+    assert.equal((await listRequests(GUILD, { itemId: item.id }))[0].status, 'approved');
+  });
+
+  test('listItems filters by status and listRequests by user', async () => {
+    const a = await addItem(GUILD, { name: 'Active', quantity: 2 });
+    const b = await addItem(GUILD, { name: 'Gone', quantity: 1 });
+    await removeItem(GUILD, b.id, 'mgr');
+
+    const active = await listItems(GUILD, { statuses: ['available', 'requested'] });
+    const activeIds = active.map((i) => i.id);
+    assert.ok(activeIds.includes(a.id), 'active item is listed');
+    assert.ok(!activeIds.includes(b.id), 'withdrawn item is excluded');
+
+    await requestItem(GUILD, a.id, 'mine');
+    const mine = await listRequests(GUILD, { userId: 'mine' });
+    assert.equal(mine.length, 1);
+    assert.equal(mine[0].itemId, a.id);
   });
 }

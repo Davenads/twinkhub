@@ -76,6 +76,72 @@ function rowToRequest(r) {
   };
 }
 
+// Single source of truth for item status. Must run with the item row already
+// locked (FOR UPDATE) in the same transaction. Reserved = approved-but-not-sent
+// claims on the remaining units; 'sent' requests already decremented remaining so
+// they are deliberately NOT counted. Never overrides the terminal 'withdrawn'.
+async function recomputeItemStatus(client, itemId) {
+  const { rows } = await client.query(
+    `select i.remaining, i.status,
+            (select count(*) from stash_requests r
+             where r.item_id = i.id and r.status = 'approved')::int as reserved
+     from stash_items i
+     where i.id = $1`,
+    [itemId]
+  );
+  if (!rows.length) return;
+  const { remaining, status, reserved } = rows[0];
+  if (status === 'withdrawn') return;
+
+  let next;
+  if (remaining <= 0) next = 'given';
+  else if (remaining - reserved <= 0) next = 'requested';
+  else next = 'available';
+
+  if (next !== status) {
+    await client.query('update stash_items set status = $2 where id = $1', [itemId, next]);
+  }
+}
+
+// Shared transaction for request-scoped mutations: locks the request row then its
+// item row (consistent order request -> item, which is what keeps parallel
+// approvals from oversalling), runs `mutate`, then recomputes the item status and
+// commits. `mutate(client, request, item)` returns the method's result.
+async function withRequestTxn(guildId, requestId, mutate) {
+  const client = await getPool().connect();
+  try {
+    await client.query('begin');
+
+    const reqRes = await client.query(
+      `select * from stash_requests where id = $1 and guild_id = $2 for update`,
+      [requestId, guildId]
+    );
+    if (!reqRes.rows.length) {
+      throw new StashError('REQUEST_NOT_FOUND', 'request not found');
+    }
+    const request = reqRes.rows[0];
+
+    const itemRes = await client.query(
+      `select * from stash_items where id = $1 and guild_id = $2 for update`,
+      [request.item_id, guildId]
+    );
+    if (!itemRes.rows.length) {
+      throw new StashError('ITEM_NOT_FOUND', 'item not found');
+    }
+    const item = itemRes.rows[0];
+
+    const result = await mutate(client, request, item);
+    await recomputeItemStatus(client, item.id);
+    await client.query('commit');
+    return result;
+  } catch (err) {
+    await client.query('rollback').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 // Add a donated item. remaining starts equal to quantity; status 'available'.
 export async function addItem(
   guildId,
@@ -159,43 +225,22 @@ export async function requestItem(guildId, itemId, userId, { requestCap = 3 } = 
   }
 }
 
-// Manager approval — the exclusive step that must never oversell. Locks the
-// request row then the item row (consistent order: request -> item) and rechecks
-// remaining minus outstanding approvals/sends under the item lock, so parallel
-// approvals across pooled connections serialise instead of racing.
+// Manager approval — the exclusive step that must never oversell. Under the item
+// lock, reserved = approved-but-not-sent claims; approval is allowed only while
+// remaining - reserved >= 1. recomputeItemStatus then flips the item to
+// 'requested' once every remaining unit is spoken for.
 export async function approveRequest(guildId, requestId, managerId) {
-  const client = await getPool().connect();
-  try {
-    await client.query('begin');
-
-    const reqRes = await client.query(
-      `select * from stash_requests where id = $1 and guild_id = $2 for update`,
-      [requestId, guildId]
-    );
-    if (!reqRes.rows.length) {
-      throw new StashError('REQUEST_NOT_FOUND', 'request not found');
-    }
-    const request = reqRes.rows[0];
+  return withRequestTxn(guildId, requestId, async (client, request, item) => {
     if (request.status !== 'pending') {
       throw new StashError('REQUEST_NOT_PENDING', `request is ${request.status}`);
     }
 
-    const itemRes = await client.query(
-      `select * from stash_items where id = $1 and guild_id = $2 for update`,
-      [request.item_id, guildId]
-    );
-    if (!itemRes.rows.length) {
-      throw new StashError('ITEM_NOT_FOUND', 'item not found');
-    }
-    const item = itemRes.rows[0];
-
     const outRes = await client.query(
       `select count(*)::int as n from stash_requests
-       where item_id = $1 and status in ('approved', 'sent')`,
+       where item_id = $1 and status = 'approved'`,
       [item.id]
     );
-    const outstanding = outRes.rows[0].n;
-    if (item.remaining - outstanding < 1) {
+    if (item.remaining - outRes.rows[0].n < 1) {
       throw new StashError('NO_STOCK', 'no stock left to approve');
     }
 
@@ -206,19 +251,198 @@ export async function approveRequest(guildId, requestId, managerId) {
        returning *`,
       [requestId, managerId]
     );
+    return rowToRequest(upd.rows[0]);
+  });
+}
 
-    // Once every remaining unit is spoken for, reflect that on the item so the
-    // panel stops offering it.
-    if (item.remaining - (outstanding + 1) < 1 && item.status === 'available') {
-      await client.query(`update stash_items set status = 'requested' where id = $1`, [item.id]);
+// Manager marks an approved request as physically handed out. Decrements the
+// item's remaining; recomputeItemStatus flips the item to 'given' at zero.
+export async function markSent(guildId, requestId, managerId) {
+  return withRequestTxn(guildId, requestId, async (client, request, item) => {
+    if (request.status !== 'approved') {
+      throw new StashError('REQUEST_NOT_APPROVED', `request is ${request.status}`);
+    }
+    if (item.remaining < 1) {
+      throw new StashError('NO_STOCK', 'no remaining stock to send');
+    }
+    await client.query('update stash_items set remaining = remaining - 1 where id = $1', [item.id]);
+    const upd = await client.query(
+      `update stash_requests
+         set status = 'sent', decided_by = $2, decided_at = now()
+       where id = $1
+       returning *`,
+      [requestId, managerId]
+    );
+    return rowToRequest(upd.rows[0]);
+  });
+}
+
+// Manager denies an open (pending or approved) request. Freeing an approved
+// request returns its reserved unit to the pool via recomputeItemStatus.
+export async function denyRequest(guildId, requestId, managerId) {
+  return withRequestTxn(guildId, requestId, async (client, request) => {
+    if (!['pending', 'approved'].includes(request.status)) {
+      throw new StashError('REQUEST_NOT_OPEN', `request is ${request.status}`);
+    }
+    const upd = await client.query(
+      `update stash_requests
+         set status = 'denied', decided_by = $2, decided_at = now()
+       where id = $1
+       returning *`,
+      [requestId, managerId]
+    );
+    return rowToRequest(upd.rows[0]);
+  });
+}
+
+// Requester cancels their own open request. Ownership-gated; frees a reserved
+// unit when cancelling an approved request.
+export async function cancelRequest(guildId, requestId, userId) {
+  return withRequestTxn(guildId, requestId, async (client, request) => {
+    if (request.user_id !== userId) {
+      throw new StashError('NOT_OWNER', 'only the requester can cancel');
+    }
+    if (!['pending', 'approved'].includes(request.status)) {
+      throw new StashError('REQUEST_NOT_OPEN', `request is ${request.status}`);
+    }
+    const upd = await client.query(
+      `update stash_requests set status = 'cancelled' where id = $1 returning *`,
+      [requestId]
+    );
+    return rowToRequest(upd.rows[0]);
+  });
+}
+
+// Manager withdraws an item from the stash. Cascade-cancels its open (pending or
+// approved) requests; sent history is preserved. Item goes to terminal
+// 'withdrawn'.
+export async function removeItem(guildId, itemId, managerId) {
+  const client = await getPool().connect();
+  try {
+    await client.query('begin');
+    const itemRes = await client.query(
+      `select * from stash_items where id = $1 and guild_id = $2 for update`,
+      [itemId, guildId]
+    );
+    if (!itemRes.rows.length) {
+      throw new StashError('ITEM_NOT_FOUND', 'item not found');
     }
 
+    await client.query(
+      `update stash_requests
+         set status = 'cancelled', decided_by = $2, decided_at = now()
+       where item_id = $1 and status in ('pending', 'approved')`,
+      [itemId, managerId]
+    );
+    const upd = await client.query(
+      `update stash_items set status = 'withdrawn' where id = $1 returning *`,
+      [itemId]
+    );
     await client.query('commit');
-    return rowToRequest(upd.rows[0]);
+    return rowToItem(upd.rows[0]);
   } catch (err) {
     await client.query('rollback').catch(() => {});
     throw err;
   } finally {
     client.release();
   }
+}
+
+// Sweep stale approvals (a Manager approved but never sent within N days) back to
+// 'pending' so the reserved unit frees up and the queue keeps moving. Per-guild;
+// called from the 60s tick with the guild's stash.staleApprovalDays. Returns the
+// count reverted and the affected item ids (for audit/logging).
+export async function expireStaleApprovals(
+  guildId,
+  { staleApprovalDays = 5, now = new Date() } = {}
+) {
+  const cutoff = new Date(now.getTime() - staleApprovalDays * 24 * 60 * 60 * 1000);
+  const client = await getPool().connect();
+  try {
+    await client.query('begin');
+    const stale = await client.query(
+      `select id, item_id from stash_requests
+       where guild_id = $1 and status = 'approved' and decided_at < $2
+       order by item_id, id
+       for update`,
+      [guildId, cutoff.toISOString()]
+    );
+    if (!stale.rows.length) {
+      await client.query('commit');
+      return { reverted: 0, itemIds: [] };
+    }
+
+    const ids = stale.rows.map((r) => r.id);
+    await client.query(
+      `update stash_requests
+         set status = 'pending', decided_by = null, decided_at = null
+       where id = any($1::text[])`,
+      [ids]
+    );
+
+    const itemIds = [...new Set(stale.rows.map((r) => r.item_id))];
+    for (const itemId of itemIds) {
+      await client.query('select 1 from stash_items where id = $1 for update', [itemId]);
+      await recomputeItemStatus(client, itemId);
+    }
+
+    await client.query('commit');
+    return { reverted: ids.length, itemIds };
+  } catch (err) {
+    await client.query('rollback').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+// Read: item detail. Returns null when not found in this guild.
+export async function getItem(guildId, itemId) {
+  const { rows } = await getPool().query(
+    'select * from stash_items where id = $1 and guild_id = $2',
+    [itemId, guildId]
+  );
+  return rows.length ? rowToItem(rows[0]) : null;
+}
+
+// Read: items for the panel / list command. Defaults to the active statuses.
+export async function listItems(
+  guildId,
+  { statuses = ['available', 'requested'], limit = 100 } = {}
+) {
+  const { rows } = await getPool().query(
+    `select * from stash_items
+     where guild_id = $1 and status = any($2::text[])
+     order by created_at asc
+     limit $3`,
+    [guildId, statuses, limit]
+  );
+  return rows.map(rowToItem);
+}
+
+// Read: requests for the approval queue (statuses:['pending']) or a user's own
+// list (userId). All filters are optional and AND together.
+export async function listRequests(
+  guildId,
+  { itemId = null, userId = null, statuses = null } = {}
+) {
+  const clauses = ['guild_id = $1'];
+  const params = [guildId];
+  if (itemId) {
+    params.push(itemId);
+    clauses.push(`item_id = $${params.length}`);
+  }
+  if (userId) {
+    params.push(userId);
+    clauses.push(`user_id = $${params.length}`);
+  }
+  if (statuses) {
+    params.push(statuses);
+    clauses.push(`status = any($${params.length}::text[])`);
+  }
+  const { rows } = await getPool().query(
+    `select * from stash_requests where ${clauses.join(' and ')} order by created_at asc`,
+    params
+  );
+  return rows.map(rowToRequest);
 }
