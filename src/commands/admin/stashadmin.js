@@ -175,6 +175,25 @@ export const data = new SlashCommandBuilder()
           )
       )
       .addSubcommand((s) =>
+        s
+          .setName('set')
+          .setDescription('Set the request cap and/or stale-approval days.')
+          .addIntegerOption((o) =>
+            o
+              .setName('request_cap')
+              .setDescription('Max open requests one member may hold (default 3)')
+              .setMinValue(1)
+              .setMaxValue(25)
+          )
+          .addIntegerOption((o) =>
+            o
+              .setName('stale_approval_days')
+              .setDescription('Days before an un-sent approval reverts to pending (default 5)')
+              .setMinValue(1)
+              .setMaxValue(60)
+          )
+      )
+      .addSubcommand((s) =>
         s.setName('show').setDescription('Show the stash configuration and tunables.')
       )
   );
@@ -367,11 +386,32 @@ async function handleRoles(interaction, sub) {
   await interaction.editReply(`Removed <@&${role.id}> from ${label} roles.`);
 }
 
-// `/stashadmin config channel|show` — the manager notify channel + a read-only
-// view of every stash setting. Gated on Manage Server in execute (like roles).
+// `/stashadmin config channel|set|show` — the manager notify channel, the request
+// cap / stale-approval-days tunables, and a read-only view of every stash setting.
+// Gated on Manage Server in execute (like roles).
 async function handleConfig(interaction, sub) {
   const guildId = interaction.guildId;
   const cfg = await loadGuildConfig(guildId);
+
+  if (sub === 'set') {
+    // Apply only the provided option(s); Discord enforces the 1..25 / 1..60 bounds.
+    const requestCap = interaction.options.getInteger('request_cap', false);
+    const staleApprovalDays = interaction.options.getInteger('stale_approval_days', false);
+    if (requestCap == null && staleApprovalDays == null) {
+      await interaction.editReply('Provide request_cap and/or stale_approval_days to set.');
+      return;
+    }
+    const patch = {};
+    if (requestCap != null) patch.requestCap = requestCap;
+    if (staleApprovalDays != null) patch.staleApprovalDays = staleApprovalDays;
+    await setStash(guildId, patch);
+    await interaction.editReply(
+      'Updated stash tunables:\n' +
+        `\u2022 Request cap: ${patch.requestCap ?? cfg.stash?.requestCap ?? 3}\n` +
+        `\u2022 Stale-approval days: ${patch.staleApprovalDays ?? cfg.stash?.staleApprovalDays ?? 5}`
+    );
+    return;
+  }
 
   if (sub === 'show') {
     const s = cfg.stash ?? {};
