@@ -13,6 +13,7 @@
     "deploy": "node src/deploy-commands.js",
     "emojis:list": "node scripts/list-emojis.js",
     "test": "node --test",
+    "test:int": "node --test test/integration/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -22,6 +23,7 @@
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.7",
     "luxon": "^3.5.0",
+    "pg": "^8.23.0",
     "pino": "^9.6.0",
     "pino-pretty": "^13.0.0"
   },
