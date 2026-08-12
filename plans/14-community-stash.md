@@ -6,7 +6,10 @@ batch of twink gear; we want a proper intake → browse → request → approve 
 pipeline instead of ad-hoc "who wants this?" spam. Two front-ends, mirroring the rest
 of TwinkHub: **slash commands** and a **persistent panel channel**.
 
-Planning only. No implementation until this is signed off.
+**Status: shipped (2026-08-12).** The planning content below is retained as the design
+record; see **[As built](#as-built-shipped-2026-08-12)** at the end for the shipped
+command surface, store API, config keys, and where the implementation diverged from this
+plan.
 
 ---
 
@@ -543,3 +546,86 @@ repository.
 
 Built on: enduser-panels architecture (`08`), P5 #9 access model (`13`), the audit
 sink, and per-guild config (`03`).
+
+---
+
+## As built (shipped 2026-08-12)
+
+The feature shipped in vertical slices; this section records what actually landed and the
+deltas from the plan above. The plan's locked decisions all held — these are refinements
+found during build, not reversals.
+
+### Command surface (as shipped)
+
+Split into two commands, exactly as the "command shape" decision called for:
+
+- **`/stash`** (enduser): `list`, `request`, `mine`, `cancel`. Browse open to all;
+  request/mine/cancel gated on the Twink (requester) role.
+- **`/stashadmin`** (Manager; `setDefaultMemberPermissions(ManageGuild)` picker hint +
+  runtime `requireManager`): flat subcommands `add`, `list`, `queue`, `approve`, `sent`,
+  `deny`, `remove`, plus three subcommand **groups**:
+  - `panel post|refresh|remove` — manage the public `#stash` panel message.
+  - `roles add|remove|clear|show` — edit `requesterRoleIds` / `managerRoleIds`.
+  - `config channel|set|show` — manager notify channel; `set` tunes `request_cap` (1–25)
+    and `stale_approval_days` (1–60); `show` prints all stash config.
+  - The **`roles` and `config` groups additionally require Manage Server** (checked after
+    defer), tighter than the command-wide `requireManager`, so a plain Manager can't grow
+    the roster or rewire notifications (self-escalation guard).
+
+The planned **`/stash bulk`** batch-intake is **not yet shipped** — single `add` only.
+
+### Store API (as shipped) — `src/stash/store.js`
+
+Signatures that drifted from the plan's sketch:
+
+- `isEnabled()` — Boolean of `DATABASE_URL` present; every command/timer short-circuits on
+  it so the stash degrades gracefully when unconfigured.
+- `requestItem(guildId, itemId, userId, { requestCap })` — cap is passed in from guild
+  config (default 3), enforced under a per-user advisory lock.
+- `listItems(guildId, { statuses, limit })` / `listRequests(guildId, { statuses })` —
+  status **arrays**, not the single `status?/slot?/tag?` filter originally sketched.
+- `approveRequest` / `markSent` / `denyRequest` / `cancelRequest` — each returns the mapped
+  request `{ id, userId, itemId, status, … }` (the return shape backs the requester DMs).
+- `expireStaleApprovals(guildId, { staleApprovalDays = 5, now = new Date() })` →
+  `{ reverted, itemIds, requests }`, where `requests` is the reverted rows
+  `[{ id, userId, itemId }]` — added so the sweep can DM each affected requester.
+- Item statuses `available|requested|given|withdrawn`; request statuses
+  `pending|approved|sent|denied|cancelled`. Failures surface as `StashError { code }`,
+  which the commands map to friendly text.
+
+### Notifications (`src/stash/notify.js`)
+
+The plan flagged requester notifications as a gap; shipped as best-effort, fire-and-forget
+helpers that never block or fail the triggering action:
+
+- **Manager channel** — on a new request, if `stash.managerChannelId` is set, one embed
+  posts there and pings the Manager role(s). Opt-in (no channel → no notify).
+- **Requester DMs** — on `approve` / `sent` / `deny`, DM the requester the outcome.
+  Always-on best-effort (no per-guild toggle); closed DMs are logged-once and swallowed.
+- **Expiry DM** — the stale-approval sweep DMs each requester whose approval reverted to
+  pending (`kind: 'expired'`).
+
+### Panel refresh + stale sweep (`src/timers/stash.js`)
+
+Refreshes the public panel on the existing 60s tick (per-guild, isolated try/catch,
+`editOrRepost` self-heal on `UNKNOWN_MESSAGE = 10008`), but only when a **fingerprint**
+(`id:status:remaining` per item) changed since the last tick — an untouched guild is never
+edited. Trade-off: a manually-deleted panel self-heals on the next stock change or
+`/stashadmin panel refresh`, not every tick. The same tick runs the stale-approval sweep
+first, freeing reserved units before it renders.
+
+### Config keys (as shipped)
+
+The `stash` config block gained **`managerChannelId`** (manager notify channel) on top of
+the planned `channelId`, `panelMessageIds`, `requesterRoleIds`, `managerRoleIds`,
+`requestCap`, `staleApprovalDays`. Written via a functional `setStash(guildId, patch)`
+merge that preserves sibling keys; `patch === null` clears the whole block. Note this
+wiring still lives in per-guild `guildConfig` under `data/` (only the inventory/requests
+are in Postgres) — relevant to the P4 Heroku durability prereqs.
+
+### Deferred follow-ups
+
+- `/stash bulk` batch intake.
+- Optional `stash.notifyRequesters` opt-out toggle (DMs are always-on today).
+- P4 Heroku durability for the `data/`-backed stash **config** block (inventory is already
+  off-dyno on Supabase).

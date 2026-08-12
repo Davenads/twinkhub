@@ -38,6 +38,41 @@ that migration, resolve these:
 - **Durable storage:** Heroku's filesystem is *ephemeral* — anything written under
   `data/` (per-guild config, timer advance-warning latches) is wiped on every dyno
   restart/deploy. Move that mutable state to a real store (e.g. Heroku Postgres or an
-  external KV) before cutover, or timers will double-fire and `/setup` will reset.
+  external KV) before cutover, or timers will double-fire and `/setup` will reset. The
+  Community Stash *inventory* is already off-dyno on Supabase Postgres (needs no
+  re-platforming), but its *wiring* (the `stash` config block — channel, roles,
+  managerChannelId, tunables) still lives in `data/` guildConfig, so it's part of the
+  same durability move.
 - Drop the local pm2 setup once Heroku owns the runtime (don't run both against the same
   bot token).
+
+## Community Stash (Postgres/Supabase)
+
+A donated-item giveaway system (intake → browse → request → approve → hand-off). Unlike
+the read-only content store, this is **mutable, transactional, durable** state, so it
+lives in **Postgres on Supabase**, not `data/`. Full design + as-built notes in
+`plans/14-community-stash.md`.
+
+- **Storage seam:** `src/stash/store.js` is the ONLY module that touches SQL. Reached by
+  `DATABASE_URL` (in `.env`); the pool connects **lazily** and the key is **optional** —
+  absent/unreachable ⇒ `store.isEnabled()` is false and the stash disables gracefully
+  while timers/panels/reference commands keep running. Never `await` a DB connect at boot.
+- **Migrations:** schema lives in `supabase/migrations/`, applied via the **Supabase CLI**
+  (`db push`) as a deliberate deploy step — **never by the bot at boot**.
+- **Commands:** `/stash` (enduser: list/request/mine/cancel) + `/stashadmin` (Manager:
+  add/list/queue/approve/sent/deny/remove, plus `panel`/`roles`/`config` groups; the
+  `roles` and `config` groups additionally require **Manage Server**). Adding/renaming a
+  subcommand ⇒ `npm run deploy`.
+- **Access:** browsing is open; requesting gates on `stash.requesterRoleIds` (Twink role);
+  Manager actions gate on Manage Server OR `stash.managerRoleIds`. All wiring lives
+  per-guild under the `stash` config block (functional `setStash` merge), NOT in code.
+- **customId namespace:** the public panel uses **`s1|action|arg`** (separate from content
+  panels' `p1|…`); `index.js` forks stash components to `src/components/stash.js`.
+- **Notifications** (`src/stash/notify.js`): best-effort, fire-and-forget — a manager
+  channel ping on new requests (opt-in via `managerChannelId`) and requester DMs on
+  approve/sent/deny/expiry. A notify failure must never block the triggering action.
+- **Tick work** (`src/timers/stash.js`): refreshes the panel + sweeps stale approvals on
+  the existing 60s tick, throttled by a per-guild fingerprint (only edits on real change).
+- **Tests:** the default `npm test` stays **unit-only and secretless** — the DB-backed
+  integration tests under `test/integration/` **self-skip** when `DATABASE_URL` is unset,
+  so CI stays green without a Postgres or secrets.
