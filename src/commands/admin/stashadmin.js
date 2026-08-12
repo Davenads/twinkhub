@@ -100,6 +100,63 @@ export const data = new SlashCommandBuilder()
       .addSubcommand((s) =>
         s.setName('remove').setDescription('Delete and forget the stash panel.')
       )
+  )
+  .addSubcommandGroup((g) =>
+    g
+      .setName('roles')
+      .setDescription('Configure which roles can manage or request from the stash.')
+      .addSubcommand((s) =>
+        s
+          .setName('add')
+          .setDescription('Grant a role Manager or Requester access.')
+          .addStringOption((o) =>
+            o
+              .setName('kind')
+              .setDescription('Which access to grant')
+              .setRequired(true)
+              .addChoices(
+                { name: 'manager', value: 'manager' },
+                { name: 'requester', value: 'requester' }
+              )
+          )
+          .addRoleOption((o) => o.setName('role').setDescription('Role to grant').setRequired(true))
+      )
+      .addSubcommand((s) =>
+        s
+          .setName('remove')
+          .setDescription('Revoke a role\u2019s Manager or Requester access.')
+          .addStringOption((o) =>
+            o
+              .setName('kind')
+              .setDescription('Which access to revoke')
+              .setRequired(true)
+              .addChoices(
+                { name: 'manager', value: 'manager' },
+                { name: 'requester', value: 'requester' }
+              )
+          )
+          .addRoleOption((o) =>
+            o.setName('role').setDescription('Role to revoke').setRequired(true)
+          )
+      )
+      .addSubcommand((s) =>
+        s
+          .setName('clear')
+          .setDescription('Remove all roles of one kind.')
+          .addStringOption((o) =>
+            o
+              .setName('kind')
+              .setDescription('Which access to clear')
+              .setRequired(true)
+              .addChoices(
+                { name: 'manager', value: 'manager' },
+                { name: 'requester', value: 'requester' }
+              )
+          )
+      )
+      .addSubcommand((s) =>
+        s.setName('show').setDescription('Show the configured Manager and Requester roles.')
+      )
   );
 
 // Stable StashError.code -> user-facing text. Anything unmapped falls back to the
@@ -230,6 +287,66 @@ async function handlePanel(interaction, sub) {
   await interaction.editReply(`Refreshed the stash panel in <#${channel.id}>.`);
 }
 
+// `kind` option value -> stash config key + human label. Managers gate approvals;
+// requesters (Twinks) gate the request/claim flow. Both are string[] of role ids.
+const ROLE_KEYS = { manager: 'managerRoleIds', requester: 'requesterRoleIds' };
+const ROLE_LABELS = { manager: 'Manager', requester: 'Requester/Twink' };
+
+// Pure array mutators (exported for unit tests). Tolerate null/absent input,
+// dedupe on add, and always return a fresh cleaned string[].
+export function addRoleId(ids, id) {
+  const list = Array.isArray(ids) ? ids.filter(Boolean) : [];
+  return list.includes(id) ? list : [...list, id];
+}
+export function removeRoleId(ids, id) {
+  const list = Array.isArray(ids) ? ids.filter(Boolean) : [];
+  return list.filter((x) => x !== id);
+}
+
+function fmtRoleList(ids) {
+  const list = Array.isArray(ids) ? ids.filter(Boolean) : [];
+  return list.length ? list.map((id) => `<@&${id}>`).join(', ') : '_none configured_';
+}
+
+// `/stashadmin roles add|remove|clear|show` — edits the per-guild Manager/Requester
+// role allow-lists that back requireManager/requireRequester. Gated on Manage Server
+// (not just Manager) in execute, so a plain Manager can't grow the roster. Assumes
+// the caller already deferred ephemerally.
+async function handleRoles(interaction, sub) {
+  const guildId = interaction.guildId;
+  const cfg = await loadGuildConfig(guildId);
+
+  if (sub === 'show') {
+    await interaction.editReply(
+      'Stash roles for this server:\n' +
+        `\u2022 Managers: ${fmtRoleList(cfg.stash?.managerRoleIds)}\n` +
+        `\u2022 Requesters (Twink): ${fmtRoleList(cfg.stash?.requesterRoleIds)}`
+    );
+    return;
+  }
+
+  const kind = interaction.options.getString('kind', true);
+  const key = ROLE_KEYS[kind];
+  const label = ROLE_LABELS[kind];
+
+  if (sub === 'clear') {
+    await setStash(guildId, { [key]: [] });
+    await interaction.editReply(`Cleared all ${label} roles.`);
+    return;
+  }
+
+  const role = interaction.options.getRole('role', true);
+  const current = cfg.stash?.[key];
+  if (sub === 'add') {
+    await setStash(guildId, { [key]: addRoleId(current, role.id) });
+    await interaction.editReply(`Added <@&${role.id}> as a ${label} role.`);
+    return;
+  }
+  // sub === 'remove'
+  await setStash(guildId, { [key]: removeRoleId(current, role.id) });
+  await interaction.editReply(`Removed <@&${role.id}> from ${label} roles.`);
+}
+
 export async function execute(interaction) {
   if (!interaction.inGuild()) {
     await interaction.reply({
@@ -258,6 +375,18 @@ export async function execute(interaction) {
   const group = interaction.options.getSubcommandGroup(false);
 
   try {
+    if (group === 'roles') {
+      // Tighter than requireManager: editing the roster is self-escalation-
+      // sensitive, so require Manage Server, not merely a configured Manager role.
+      if (!interaction.member?.permissions?.has?.(PermissionFlagsBits.ManageGuild)) {
+        await interaction.editReply(
+          'Only members with **Manage Server** can configure stash roles.'
+        );
+        return;
+      }
+      await handleRoles(interaction, sub);
+      return;
+    }
     if (group === 'panel') {
       await handlePanel(interaction, sub);
       return;
