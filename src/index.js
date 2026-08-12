@@ -8,6 +8,7 @@ import { postAudit } from './lib/audit.js';
 import { runTimerEngine } from './timers/engine.js';
 import { createDispatch } from './timers/dispatch.js';
 import { createBoardUpdater } from './timers/board.js';
+import { createStashRefresher } from './timers/stash.js';
 import { createTickLoop } from './timers/loop.js';
 import { loadContentStore } from './content/store.js';
 
@@ -38,11 +39,20 @@ client.once(Events.ClientReady, (c) => {
   // the same state snapshot (editing in place, reposting if it was deleted).
   const dispatch = createDispatch(client);
   const updateBoards = createBoardUpdater(client);
+  const runStashRefresh = createStashRefresher(client);
   const runTick = async () => {
     const now = Date.now();
     const { fires, states } = await runTimerEngine({ now, dispatch });
     if (fires.length) logger.info(`Timer engine fired ${fires.length} trigger(s)`);
     await updateBoards({ states, now });
+    // Community Stash upkeep runs on the same tick but is fully isolated: a stash
+    // failure must never abort the timer board or trigger fan-out. No-ops when the
+    // stash store is unconfigured.
+    try {
+      await runStashRefresh({ now: new Date(now) });
+    } catch (err) {
+      logger.error({ err }, 'stash refresh failed');
+    }
   };
   // Re-entrancy guard: if a tick outruns the interval, drop the overlapping one
   // rather than double-fanning-out or racing the shared latch/board writes.
