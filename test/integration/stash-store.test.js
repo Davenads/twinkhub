@@ -1,5 +1,6 @@
 import { test, beforeEach, after } from 'node:test';
 import assert from 'node:assert/strict';
+import { readdir, readFile } from 'node:fs/promises';
 import { createPool } from '../../src/stash/db.js';
 import {
   addItem,
@@ -19,6 +20,22 @@ import {
 const DATABASE_URL = process.env.DATABASE_URL;
 const GUILD = 'test_guild_stash';
 
+const MIGRATIONS_DIR = new URL('../../supabase/migrations/', import.meta.url);
+
+// Provision the schema on an empty DB (the fresh CI Postgres container) so the
+// store tests have tables to hit. Guarded on stash_items' existence, so an
+// already-migrated dev Supabase is left untouched (non-destructive — no DROP).
+// Applies every migration in filename order; the ephemeral CI DB starts empty.
+async function ensureSchema(pool) {
+  const { rows } = await pool.query("select to_regclass('public.stash_items') as t");
+  if (rows[0].t) return;
+  const files = (await readdir(MIGRATIONS_DIR)).filter((f) => f.endsWith('.sql')).sort();
+  for (const file of files) {
+    const sql = await readFile(new URL(file, MIGRATIONS_DIR), 'utf8');
+    await pool.query(sql);
+  }
+}
+
 // Integration-only. Skipped by the default `npm test` (no DATABASE_URL); runs
 // under `npm run test:int` against the dev Supabase / an ephemeral Postgres. The
 // headline case is the oversell race: the whole reason we chose Postgres over a
@@ -29,6 +46,13 @@ if (!DATABASE_URL) {
   // Small dedicated pool for seeding/teardown; keeps the remote connection
   // footprint low alongside the store's own pool during the race tests.
   const cleanup = createPool(DATABASE_URL, { max: 2 });
+
+  // Provision the schema before any test registers. A top-level `before` hook
+  // races the first tests' beforeEach at file scope (a node:test quirk — the
+  // hook isn't awaited before the earliest subtests), which left the first
+  // handful failing with 42P01 on a cold DB. Awaiting here at module-eval time
+  // (ESM top-level await) guarantees the tables exist before the suite runs.
+  await ensureSchema(cleanup);
 
   after(async () => {
     await cleanup.query('delete from stash_items where guild_id = $1', [GUILD]);

@@ -73,6 +73,15 @@ lives in **Postgres on Supabase**, not `data/`. Full design + as-built notes in
   approve/sent/deny/expiry. A notify failure must never block the triggering action.
 - **Tick work** (`src/timers/stash.js`): refreshes the panel + sweeps stale approvals on
   the existing 60s tick, throttled by a per-guild fingerprint (only edits on real change).
-- **Tests:** the default `npm test` stays **unit-only and secretless** — the DB-backed
-  integration tests under `test/integration/` **self-skip** when `DATABASE_URL` is unset,
-  so CI stays green without a Postgres or secrets.
+- **Tests / CI (`.github/workflows/ci.yml`, two jobs):**
+  - `test` — secretless: `npm ci` → lint → format:check → `npm test`. The DB-backed
+    integration tests under `test/integration/` **self-skip** here (no `DATABASE_URL`),
+    so this job stays green without a Postgres or secrets.
+  - `integration` — runs `npm run test:int` against a throwaway `postgres:16` service
+    container (`DATABASE_URL` = local container creds, not a secret). That container
+    starts **empty**, so the harness **provisions its own schema** from
+    `supabase/migrations/` via a module-eval top-level `await` before any test
+    registers (guarded on `stash_items` existence, so an already-migrated dev DB is
+    left untouched — no `DROP`). A `before` hook is *not* enough: at file scope it
+    races the first tests' `beforeEach`, so the earliest cases would still die with
+    `relation "stash_items" does not exist` (42P01) on a cold DB.
