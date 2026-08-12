@@ -3,6 +3,7 @@ import { env } from './config/env.js';
 import { logger } from './lib/logger.js';
 import { loadCommands } from './commands/index.js';
 import { handleComponent } from './components/panels.js';
+import { isStashComponent, handleStashComponent } from './components/stash.js';
 import { postAudit } from './lib/audit.js';
 import { runTimerEngine } from './timers/engine.js';
 import { createDispatch } from './timers/dispatch.js';
@@ -70,7 +71,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
     const startedAt = Date.now();
     let outcome = { ok: true };
     try {
-      await handleComponent(interaction);
+      // Two independent component routers share this pipeline: the Community
+      // Stash (`s1`) and the content panels (`p1`). Fork on the stash codec.
+      if (isStashComponent(interaction)) await handleStashComponent(interaction);
+      else await handleComponent(interaction);
     } catch (err) {
       outcome = { ok: false, error: err };
       logger.error({ err, customId: interaction.customId }, 'component failed');

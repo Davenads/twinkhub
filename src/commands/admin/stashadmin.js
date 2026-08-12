@@ -1,7 +1,9 @@
-import { SlashCommandBuilder, MessageFlags, PermissionFlagsBits } from 'discord.js';
+import { SlashCommandBuilder, ChannelType, MessageFlags, PermissionFlagsBits } from 'discord.js';
 import { requireManager } from '../../lib/access.js';
+import { loadGuildConfig, setStash } from '../../config/guildConfig.js';
 import { logger } from '../../lib/logger.js';
 import * as store from '../../stash/store.js';
+import { buildStashPanel } from '../../services/stash.js';
 
 // Manager-only CRUD over the Community Stash. Thin wrappers around the store
 // (the only Postgres seam); this file holds NO game/DB logic beyond formatting.
@@ -75,6 +77,29 @@ export const data = new SlashCommandBuilder()
       .setName('remove')
       .setDescription('Withdraw an item and cancel its open requests.')
       .addStringOption((o) => o.setName('item_id').setDescription('Item id').setRequired(true))
+  )
+  .addSubcommandGroup((g) =>
+    g
+      .setName('panel')
+      .setDescription('Manage the public Community Stash panel.')
+      .addSubcommand((s) =>
+        s
+          .setName('post')
+          .setDescription('Post the public stash panel into a channel.')
+          .addChannelOption((o) =>
+            o
+              .setName('channel')
+              .setDescription('Channel to host the panel (recommended: read-only for @everyone)')
+              .addChannelTypes(ChannelType.GuildText)
+              .setRequired(true)
+          )
+      )
+      .addSubcommand((s) =>
+        s.setName('refresh').setDescription('Re-render the posted stash panel in place.')
+      )
+      .addSubcommand((s) =>
+        s.setName('remove').setDescription('Delete and forget the stash panel.')
+      )
   );
 
 // Stable StashError.code -> user-facing text. Anything unmapped falls back to the
@@ -119,6 +144,92 @@ function joinLines(lines, empty) {
   return out.join('\n');
 }
 
+// Never let a public panel ping anyone when it re-renders donor/requester text.
+const SEND_OPTS = { allowedMentions: { parse: [] } };
+
+// Build the public panel from live claimable/requested stock (same view the
+// s1 refresh button renders), so post/refresh stay in lockstep with the store.
+async function renderStashPanel(guildId) {
+  const items = await store.listItems(guildId, { statuses: ['available', 'requested'] });
+  return buildStashPanel({ items });
+}
+
+// Best-effort delete of the stored panel message so post/remove never orphan one.
+async function removeStashMessage(guild, stash) {
+  const messageId = stash?.panelMessageIds?.browse;
+  if (!stash?.channelId || !messageId) return;
+  const channel = await guild.channels.fetch(stash.channelId).catch(() => null);
+  if (!channel?.isTextBased?.()) return;
+  const msg = await channel.messages.fetch(messageId).catch(() => null);
+  await msg?.delete().catch(() => {});
+}
+
+// `/stashadmin panel post|refresh|remove` — mirrors the /panels post/refresh/
+// remove lifecycle but for the single public stash message. Assumes the caller
+// already deferred ephemerally; the store errors bubble to execute's catch.
+async function handlePanel(interaction, sub) {
+  const guildId = interaction.guildId;
+
+  if (sub === 'remove') {
+    const cfg = await loadGuildConfig(guildId);
+    await removeStashMessage(interaction.guild, cfg.stash);
+    await setStash(guildId, { channelId: null, panelMessageIds: null });
+    await interaction.editReply('Stash panel removed.');
+    return;
+  }
+
+  if (sub === 'post') {
+    const channel = interaction.options.getChannel('channel', true);
+    // Clear any existing panel first so we never leave an orphan behind.
+    const cfg = await loadGuildConfig(guildId);
+    await removeStashMessage(interaction.guild, cfg.stash);
+    const panel = await renderStashPanel(guildId);
+    let msg;
+    try {
+      msg = await channel.send({ ...panel, ...SEND_OPTS });
+    } catch {
+      await interaction.editReply(
+        `Couldn't post in <#${channel.id}> — check I can send messages and embeds there.`
+      );
+      return;
+    }
+    await setStash(guildId, { channelId: channel.id, panelMessageIds: { browse: msg.id } });
+    await interaction.editReply(
+      `Posted the stash panel in <#${channel.id}>. Controls work indefinitely; run \`/stashadmin panel refresh\` after stock changes.`
+    );
+    return;
+  }
+
+  // sub === 'refresh': edit the stored message in place, reposting if it's gone.
+  const cfg = await loadGuildConfig(guildId);
+  if (!cfg.stash?.channelId) {
+    await interaction.editReply(
+      'No stash panel is posted yet — run `/stashadmin panel post` first.'
+    );
+    return;
+  }
+  const channel = await interaction.guild.channels.fetch(cfg.stash.channelId).catch(() => null);
+  if (!channel?.isTextBased?.()) {
+    await interaction.editReply(
+      'The stash panel channel is gone — run `/stashadmin panel post` to place it somewhere new.'
+    );
+    return;
+  }
+  const panel = await renderStashPanel(guildId);
+  const existingId = cfg.stash.panelMessageIds?.browse;
+  const existing = existingId ? await channel.messages.fetch(existingId).catch(() => null) : null;
+  let messageId;
+  if (existing) {
+    await existing.edit({ ...panel, ...SEND_OPTS });
+    messageId = existing.id;
+  } else {
+    const msg = await channel.send({ ...panel, ...SEND_OPTS });
+    messageId = msg.id;
+  }
+  await setStash(guildId, { channelId: channel.id, panelMessageIds: { browse: messageId } });
+  await interaction.editReply(`Refreshed the stash panel in <#${channel.id}>.`);
+}
+
 export async function execute(interaction) {
   if (!interaction.inGuild()) {
     await interaction.reply({
@@ -144,7 +255,13 @@ export async function execute(interaction) {
   // interaction-token timeout, then editReply with the result.
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
+  const group = interaction.options.getSubcommandGroup(false);
+
   try {
+    if (group === 'panel') {
+      await handlePanel(interaction, sub);
+      return;
+    }
     switch (sub) {
       case 'add': {
         const tags = (interaction.options.getString('tags') ?? '')
