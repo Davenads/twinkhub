@@ -4,6 +4,7 @@ import { loadGuildConfig, setStash } from '../../config/guildConfig.js';
 import { logger } from '../../lib/logger.js';
 import * as store from '../../stash/store.js';
 import { buildStashPanel } from '../../services/stash.js';
+import { notifyRequester } from '../../stash/notify.js';
 
 // Manager-only CRUD over the Community Stash. Thin wrappers around the store
 // (the only Postgres seam); this file holds NO game/DB logic beyond formatting.
@@ -496,6 +497,8 @@ export async function execute(interaction) {
         await interaction.editReply(
           `Approved request \`${req.id}\`. Mark it \`/stashadmin sent\` once handed over.`
         );
+        // Fire-and-forget: a failed DM must never break the manager's action.
+        notifyRequester(interaction.client, guildId, { req, kind: 'approved' }).catch(() => {});
         return;
       }
       case 'sent': {
@@ -505,6 +508,7 @@ export async function execute(interaction) {
           managerId
         );
         await interaction.editReply(`Marked request \`${req.id}\` as sent.`);
+        notifyRequester(interaction.client, guildId, { req, kind: 'sent' }).catch(() => {});
         return;
       }
       case 'deny': {
@@ -514,6 +518,7 @@ export async function execute(interaction) {
           managerId
         );
         await interaction.editReply(`Denied request \`${req.id}\`.`);
+        notifyRequester(interaction.client, guildId, { req, kind: 'denied' }).catch(() => {});
         return;
       }
       case 'remove': {

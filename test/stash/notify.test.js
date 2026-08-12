@@ -1,6 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildRequestNotice, notifyNewRequest } from '../../src/stash/notify.js';
+import {
+  buildRequestNotice,
+  notifyNewRequest,
+  buildRequesterDM,
+  notifyRequester
+} from '../../src/stash/notify.js';
 
 const req = { id: 'req_1', itemId: 'itm_a' };
 
@@ -114,4 +119,95 @@ test('notifyNewRequest swallows a getItem failure and still sends with fallback'
   );
   const item = captured.embeds[0].data.fields.find((f) => f.name === 'Item').value;
   assert.match(item, /itm_a/);
+});
+
+test('buildRequesterDM writes decision copy with item name and request id', () => {
+  const item = { name: 'Whipper Root Tuber' };
+  const approved = buildRequesterDM({ kind: 'approved', item, req });
+  assert.match(approved.content, /Whipper Root Tuber/);
+  assert.match(approved.content, /approved/);
+  assert.match(approved.content, /req_1/);
+  assert.deepEqual(approved.allowedMentions, { parse: [] });
+
+  const sent = buildRequesterDM({ kind: 'sent', item, req });
+  assert.match(sent.content, /sent/);
+  const denied = buildRequesterDM({ kind: 'denied', item, req });
+  assert.match(denied.content, /denied/);
+});
+
+test('buildRequesterDM falls back to the item id when item is null', () => {
+  const p = buildRequesterDM({ kind: 'approved', item: null, req });
+  assert.match(p.content, /itm_a/);
+});
+
+test('buildRequesterDM returns null for an unknown kind', () => {
+  assert.equal(buildRequesterDM({ kind: 'nope', item: null, req }), null);
+});
+
+test('notifyRequester DMs the request owner with the built payload', async () => {
+  let captured = null;
+  await notifyRequester(
+    {},
+    'g1',
+    { req: { ...req, userId: 'u7' }, kind: 'approved' },
+    {
+      getItem: async () => ({ name: 'Lung Juice Cocktail' }),
+      dmUser: async (userId, payload) => {
+        captured = { userId, payload };
+      }
+    }
+  );
+  assert.equal(captured.userId, 'u7');
+  assert.match(captured.payload.content, /Lung Juice Cocktail/);
+  assert.match(captured.payload.content, /approved/);
+});
+
+test('notifyRequester no-ops for an unknown kind', async () => {
+  let called = false;
+  await notifyRequester(
+    {},
+    'g1',
+    { req: { ...req, userId: 'u7' }, kind: 'nope' },
+    {
+      getItem: async () => ({ name: 'X' }),
+      dmUser: async () => {
+        called = true;
+      }
+    }
+  );
+  assert.equal(called, false);
+});
+
+test('notifyRequester swallows a DM failure (never throws)', async () => {
+  await assert.doesNotReject(
+    notifyRequester(
+      {},
+      'g1',
+      { req: { ...req, userId: 'u7' }, kind: 'denied' },
+      {
+        getItem: async () => null,
+        dmUser: async () => {
+          throw new Error('cannot send to this user');
+        }
+      }
+    )
+  );
+});
+
+test('notifyRequester swallows a getItem failure and still DMs with fallback', async () => {
+  let captured = null;
+  await notifyRequester(
+    {},
+    'g1',
+    { req: { ...req, userId: 'u7' }, kind: 'sent' },
+    {
+      getItem: async () => {
+        throw new Error('db blip');
+      },
+      dmUser: async (userId, payload) => {
+        captured = payload;
+      }
+    }
+  );
+  assert.match(captured.content, /itm_a/);
 });

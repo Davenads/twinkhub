@@ -37,6 +37,65 @@ export function buildRequestNotice({ item, req, requesterId, managerRoleIds = []
   return { content, embeds: [embed], allowedMentions: { roles } };
 }
 
+// Requester-facing DM copy per decision kind. Pure so it unit-tests without a
+// client. Unknown kinds return null so the caller can skip silently. `item` may
+// be null (deleted/racy) — we fall back to the raw item id.
+const DM_LINES = {
+  approved: (name, req) =>
+    `Your stash request for ${name} was **approved** \u2014 a manager will hand it over soon. (request \`${req.id}\`)`,
+  sent: (name, req) =>
+    `Your stash request for ${name} was marked **sent** \u2014 enjoy! (request \`${req.id}\`)`,
+  denied: (name, req) => `Your stash request for ${name} was **denied**. (request \`${req.id}\`)`
+};
+
+/**
+ * Pure builder for the requester DM payload on a request decision. Returns
+ * `{ content, allowedMentions: { parse: [] } }` or `null` for an unknown kind.
+ */
+export function buildRequesterDM({ kind, item, req }) {
+  const line = DM_LINES[kind];
+  if (!line) return null;
+  const name = item?.name ? `**${item.name}**` : `item \`${req.itemId}\``;
+  return { content: truncate(line(name, req), LIMITS.description), allowedMentions: { parse: [] } };
+}
+
+async function dmUserDefault(client, userId, payload) {
+  const user = await client.users.fetch(userId);
+  await user.send(payload);
+}
+
+/**
+ * DM the requester about a decision on their request. No-op for an unknown kind.
+ * Never throws — closed DMs / left-server are logged and swallowed so the
+ * manager's action path stays unaffected.
+ *
+ * `getItem` and `dmUser(userId, payload)` are injectable for secretless tests.
+ *
+ * @param {import('discord.js').Client} client
+ */
+export async function notifyRequester(
+  client,
+  guildId,
+  { req, kind },
+  { getItem = store.getItem, dmUser } = {}
+) {
+  if (!DM_LINES[kind]) return;
+  let item = null;
+  try {
+    item = await getItem(guildId, req.itemId);
+  } catch {
+    // fall back to the raw item id in the DM
+  }
+  const payload = buildRequesterDM({ kind, item, req });
+  if (!payload) return;
+  const sink = dmUser ?? ((uid, p) => dmUserDefault(client, uid, p));
+  try {
+    await sink(req.userId, payload);
+  } catch (err) {
+    logger.warn({ err, guildId, userId: req.userId, kind }, 'stash notify: requester DM failed');
+  }
+}
+
 async function sendToChannel(client, channelId, payload) {
   const channel = await client.channels.fetch(channelId);
   if (!channel?.isTextBased?.() || typeof channel.send !== 'function') {
