@@ -157,6 +157,25 @@ export const data = new SlashCommandBuilder()
       .addSubcommand((s) =>
         s.setName('show').setDescription('Show the configured Manager and Requester roles.')
       )
+  )
+  .addSubcommandGroup((g) =>
+    g
+      .setName('config')
+      .setDescription('Configure stash notifications and view tunables.')
+      .addSubcommand((s) =>
+        s
+          .setName('channel')
+          .setDescription('Set (or clear) the channel where new-request notifications post.')
+          .addChannelOption((o) =>
+            o
+              .setName('channel')
+              .setDescription('Manager notify channel; omit to clear')
+              .addChannelTypes(ChannelType.GuildText)
+          )
+      )
+      .addSubcommand((s) =>
+        s.setName('show').setDescription('Show the stash configuration and tunables.')
+      )
   );
 
 // Stable StashError.code -> user-facing text. Anything unmapped falls back to the
@@ -347,6 +366,39 @@ async function handleRoles(interaction, sub) {
   await interaction.editReply(`Removed <@&${role.id}> from ${label} roles.`);
 }
 
+// `/stashadmin config channel|show` — the manager notify channel + a read-only
+// view of every stash setting. Gated on Manage Server in execute (like roles).
+async function handleConfig(interaction, sub) {
+  const guildId = interaction.guildId;
+  const cfg = await loadGuildConfig(guildId);
+
+  if (sub === 'show') {
+    const s = cfg.stash ?? {};
+    const channel = s.managerChannelId ? `<#${s.managerChannelId}>` : '_none configured_';
+    await interaction.editReply(
+      'Stash configuration:\n' +
+        `\u2022 Manager notify channel: ${channel}\n` +
+        `\u2022 Request cap: ${s.requestCap ?? 3}\n` +
+        `\u2022 Stale-approval days: ${s.staleApprovalDays ?? 5}\n` +
+        `\u2022 Managers: ${fmtRoleList(s.managerRoleIds)}\n` +
+        `\u2022 Requesters (Twink): ${fmtRoleList(s.requesterRoleIds)}`
+    );
+    return;
+  }
+
+  // sub === 'channel': set when provided, clear when omitted.
+  const channel = interaction.options.getChannel('channel', false);
+  if (!channel) {
+    await setStash(guildId, { managerChannelId: null });
+    await interaction.editReply('Cleared the manager notification channel.');
+    return;
+  }
+  await setStash(guildId, { managerChannelId: channel.id });
+  await interaction.editReply(
+    `New-request notifications will post to <#${channel.id}> and ping the Manager role(s).`
+  );
+}
+
 export async function execute(interaction) {
   if (!interaction.inGuild()) {
     await interaction.reply({
@@ -375,16 +427,16 @@ export async function execute(interaction) {
   const group = interaction.options.getSubcommandGroup(false);
 
   try {
-    if (group === 'roles') {
-      // Tighter than requireManager: editing the roster is self-escalation-
-      // sensitive, so require Manage Server, not merely a configured Manager role.
+    if (group === 'roles' || group === 'config') {
+      // Tighter than requireManager: editing the roster / notify wiring is
+      // self-escalation-sensitive, so require Manage Server, not merely a
+      // configured Manager role.
       if (!interaction.member?.permissions?.has?.(PermissionFlagsBits.ManageGuild)) {
-        await interaction.editReply(
-          'Only members with **Manage Server** can configure stash roles.'
-        );
+        await interaction.editReply('Only members with **Manage Server** can configure the stash.');
         return;
       }
-      await handleRoles(interaction, sub);
+      if (group === 'roles') await handleRoles(interaction, sub);
+      else await handleConfig(interaction, sub);
       return;
     }
     if (group === 'panel') {

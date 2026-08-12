@@ -4,6 +4,7 @@ import { loadGuildConfig } from '../config/guildConfig.js';
 import { logger } from '../lib/logger.js';
 import * as store from '../stash/store.js';
 import { parseStashCustomId, buildStashPanel } from '../services/stash.js';
+import { notifyNewRequest } from '../stash/notify.js';
 
 // Component router for the public Community Stash panel (`s1|` ids). Runs in
 // parallel to components/panels.js (the `p1` content panels); index.js forks on
@@ -84,6 +85,11 @@ async function handleRequest(interaction) {
     await interaction.editReply(
       `Requested \`${req.itemId}\` \u2014 request id \`${req.id}\`. A manager will review it.`
     );
+    // Fire-and-forget: never block or fail the requester's confirm on notify.
+    notifyNewRequest(interaction.client, interaction.guildId, {
+      req,
+      requesterId: interaction.user.id
+    }).catch(() => {});
   } catch (err) {
     await editStoreError(interaction, err, 'stash panel request failed');
   }

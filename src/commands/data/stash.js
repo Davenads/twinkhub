@@ -3,6 +3,7 @@ import { requireRequester } from '../../lib/access.js';
 import { loadGuildConfig } from '../../config/guildConfig.js';
 import { logger } from '../../lib/logger.js';
 import * as store from '../../stash/store.js';
+import { notifyNewRequest } from '../../stash/notify.js';
 
 // Enduser side of the Community Stash. Browsing is open to everyone in the
 // server; requesting/cancelling is gated on requireRequester (Twink role, or a
@@ -121,6 +122,8 @@ export async function execute(interaction) {
         await interaction.editReply(
           `Requested \`${req.itemId}\` — request id \`${req.id}\`. A manager will review it.`
         );
+        // Fire-and-forget: never block or fail the requester's confirm on notify.
+        notifyNewRequest(interaction.client, guildId, { req, requesterId: userId }).catch(() => {});
         return;
       }
       case 'mine': {
