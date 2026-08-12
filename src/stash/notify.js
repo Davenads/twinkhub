@@ -45,7 +45,9 @@ const DM_LINES = {
     `Your stash request for ${name} was **approved** \u2014 a manager will hand it over soon. (request \`${req.id}\`)`,
   sent: (name, req) =>
     `Your stash request for ${name} was marked **sent** \u2014 enjoy! (request \`${req.id}\`)`,
-  denied: (name, req) => `Your stash request for ${name} was **denied**. (request \`${req.id}\`)`
+  denied: (name, req) => `Your stash request for ${name} was **denied**. (request \`${req.id}\`)`,
+  expired: (name, req) =>
+    `Your approved stash request for ${name} wasn't picked up in time and was returned to the pending queue \u2014 a manager can re-approve it. (request \`${req.id}\`)`
 };
 
 /**

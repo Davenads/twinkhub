@@ -103,6 +103,54 @@ test('sweeps stale approvals then edits the panel when state changed', async () 
   assert.equal(results[0].action, 'edited');
 });
 
+test('DMs each requester whose stale approval reverted to pending', async () => {
+  const dmed = [];
+  const refresh = createStashRefresher(fakeClient([fakeGuild('g1', fakeChannel())]), {
+    loadConfig: async () => ({
+      stash: { channelId: 'c1', panelMessageIds: { browse: 'msg-existing' } }
+    }),
+    expire: async () => ({
+      reverted: 2,
+      itemIds: ['itm_a'],
+      requests: [
+        { id: 'r1', userId: 'u1', itemId: 'itm_a' },
+        { id: 'r2', userId: 'u2', itemId: 'itm_a' }
+      ]
+    }),
+    listItems: async () => [{ id: 'itm_a', status: 'available', remaining: 3 }],
+    build,
+    isEnabled: enabled,
+    notify: async (_client, guildId, { req, kind }) => {
+      dmed.push({ guildId, userId: req.userId, kind });
+    }
+  });
+
+  await refresh({ now: new Date() });
+  assert.deepEqual(dmed, [
+    { guildId: 'g1', userId: 'u1', kind: 'expired' },
+    { guildId: 'g1', userId: 'u2', kind: 'expired' }
+  ]);
+});
+
+test('does not DM anyone when nothing reverted', async () => {
+  let notified = 0;
+  const refresh = createStashRefresher(fakeClient([fakeGuild('g1', fakeChannel())]), {
+    loadConfig: async () => ({
+      stash: { channelId: 'c1', panelMessageIds: { browse: 'msg-existing' } }
+    }),
+    expire: noExpire,
+    listItems: async () => [{ id: 'itm_a', status: 'available', remaining: 3 }],
+    build,
+    isEnabled: enabled,
+    notify: async () => {
+      notified += 1;
+    }
+  });
+
+  await refresh({ now: new Date() });
+  assert.equal(notified, 0);
+});
+
 test('skips the edit when the fingerprint is unchanged (throttle)', async () => {
   const channel = fakeChannel();
   const items = [{ id: 'itm_a', status: 'available', remaining: 3 }];

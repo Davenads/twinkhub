@@ -177,6 +177,7 @@ if (!DATABASE_URL) {
     const future = new Date(Date.now() + 6 * 24 * 60 * 60 * 1000);
     const result = await expireStaleApprovals(GUILD, { staleApprovalDays: 5, now: future });
     assert.equal(result.reverted, 1);
+    assert.deepEqual(result.requests, [{ id: req.id, userId: 'slowpoke', itemId: item.id }]);
 
     const [reverted] = await listRequests(GUILD, { itemId: item.id });
     assert.equal(reverted.status, 'pending');

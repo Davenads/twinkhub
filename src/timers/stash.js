@@ -1,6 +1,7 @@
 import { loadGuildConfig, setStash } from '../config/guildConfig.js';
 import * as store from '../stash/store.js';
 import { buildStashPanel } from '../services/stash.js';
+import { notifyRequester } from '../stash/notify.js';
 import { logger } from '../lib/logger.js';
 
 // Discord API code for "Unknown Message" — the stored panel was deleted, so we
@@ -31,8 +32,8 @@ export function stashFingerprint(items) {
  * self-heals on the next stock change (or a manual `/stashadmin panel refresh`),
  * not every tick — the deliberate cost of not editing when nothing changed.
  *
- * `loadConfig`, `saveStash`, `expire`, `listItems`, `build`, and `isEnabled`
- * are injectable for secretless unit tests.
+ * `loadConfig`, `saveStash`, `expire`, `listItems`, `build`, `isEnabled`, and
+ * `notify` are injectable for secretless unit tests.
  *
  * @param {import('discord.js').Client} client
  */
@@ -44,7 +45,8 @@ export function createStashRefresher(
     expire = store.expireStaleApprovals,
     listItems = store.listItems,
     build = buildStashPanel,
-    isEnabled = store.isEnabled
+    isEnabled = store.isEnabled,
+    notify = notifyRequester
   } = {}
 ) {
   // Per-process memo of the last rendered fingerprint per guild. Lost on restart
@@ -70,12 +72,17 @@ export function createStashRefresher(
       try {
         // Sweep first: revert approvals a manager never handed over within N days
         // so the reserved unit frees up before we render the (now-updated) stock.
-        const { reverted } = await expire(guild.id, {
+        const { reverted, requests } = await expire(guild.id, {
           staleApprovalDays: stash.staleApprovalDays ?? 5,
           now
         });
         if (reverted) {
           logger.info({ guild: guild.id, reverted }, 'stash: reverted stale approvals');
+          // Heads-up DM to each requester whose approval lapsed back to pending.
+          // Fire-and-forget: a DM failure must never stall the panel refresh.
+          for (const req of requests ?? []) {
+            notify(client, guild.id, { req, kind: 'expired' }).catch(() => {});
+          }
         }
 
         const items = await listItems(guild.id, { statuses: STASH_STATUSES });

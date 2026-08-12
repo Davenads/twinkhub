@@ -351,7 +351,8 @@ export async function removeItem(guildId, itemId, managerId) {
 // Sweep stale approvals (a Manager approved but never sent within N days) back to
 // 'pending' so the reserved unit frees up and the queue keeps moving. Per-guild;
 // called from the 60s tick with the guild's stash.staleApprovalDays. Returns the
-// count reverted and the affected item ids (for audit/logging).
+// count reverted, the affected item ids (for audit/logging), and the reverted
+// requests ({ id, userId, itemId }) so the tick can DM each requester.
 export async function expireStaleApprovals(
   guildId,
   { staleApprovalDays = 5, now = new Date() } = {}
@@ -361,7 +362,7 @@ export async function expireStaleApprovals(
   try {
     await client.query('begin');
     const stale = await client.query(
-      `select id, item_id from stash_requests
+      `select id, item_id, user_id from stash_requests
        where guild_id = $1 and status = 'approved' and decided_at < $2
        order by item_id, id
        for update`,
@@ -369,7 +370,7 @@ export async function expireStaleApprovals(
     );
     if (!stale.rows.length) {
       await client.query('commit');
-      return { reverted: 0, itemIds: [] };
+      return { reverted: 0, itemIds: [], requests: [] };
     }
 
     const ids = stale.rows.map((r) => r.id);
@@ -386,8 +387,13 @@ export async function expireStaleApprovals(
       await recomputeItemStatus(client, itemId);
     }
 
+    const requests = stale.rows.map((r) => ({
+      id: r.id,
+      userId: r.user_id,
+      itemId: r.item_id
+    }));
     await client.query('commit');
-    return { reverted: ids.length, itemIds };
+    return { reverted: ids.length, itemIds, requests };
   } catch (err) {
     await client.query('rollback').catch(() => {});
     throw err;

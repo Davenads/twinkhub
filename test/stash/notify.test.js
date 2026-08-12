@@ -133,6 +133,11 @@ test('buildRequesterDM writes decision copy with item name and request id', () =
   assert.match(sent.content, /sent/);
   const denied = buildRequesterDM({ kind: 'denied', item, req });
   assert.match(denied.content, /denied/);
+
+  const expired = buildRequesterDM({ kind: 'expired', item, req });
+  assert.match(expired.content, /Whipper Root Tuber/);
+  assert.match(expired.content, /queue/);
+  assert.match(expired.content, /req_1/);
 });
 
 test('buildRequesterDM falls back to the item id when item is null', () => {
@@ -160,6 +165,24 @@ test('notifyRequester DMs the request owner with the built payload', async () =>
   assert.equal(captured.userId, 'u7');
   assert.match(captured.payload.content, /Lung Juice Cocktail/);
   assert.match(captured.payload.content, /approved/);
+});
+
+test('notifyRequester DMs the owner on an expired (reverted) approval', async () => {
+  let captured = null;
+  await notifyRequester(
+    {},
+    'g1',
+    { req: { ...req, userId: 'u3' }, kind: 'expired' },
+    {
+      getItem: async () => ({ name: 'Whipper Root Tuber' }),
+      dmUser: async (userId, payload) => {
+        captured = { userId, payload };
+      }
+    }
+  );
+  assert.equal(captured.userId, 'u3');
+  assert.match(captured.payload.content, /Whipper Root Tuber/);
+  assert.match(captured.payload.content, /queue/);
 });
 
 test('notifyRequester no-ops for an unknown kind', async () => {
