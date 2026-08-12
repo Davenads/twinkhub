@@ -1,7 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PermissionFlagsBits } from 'discord.js';
-import { hasAdminAccess, requireAdmin } from '../../src/lib/access.js';
+import {
+  hasAdminAccess,
+  requireAdmin,
+  hasManagerAccess,
+  hasRequesterAccess,
+  requireManager,
+  requireRequester
+} from '../../src/lib/access.js';
 
 /**
  * Minimal GuildMember stand-in. `perms` is an array of PermissionFlagsBits the
@@ -97,4 +104,109 @@ test('requireAdmin: replies ephemerally and returns false when denied', async ()
     // Ephemeral flag (1 << 6 = 64) must be set so the denial is private.
     assert.equal(Boolean(payload.flags & 64), true, 'denial reply is ephemeral');
   });
+});
+
+// --- Stash Manager / Requester gates -------------------------------------------
+// These read per-guild *config* (not env), so the pure predicates take a `cfg`
+// object and the require* wrappers accept an injected `loadConfig` — no secrets,
+// no real files, no DB.
+
+const cfgWith = (stash) => ({ stash: stash ?? null });
+
+test('hasManagerAccess: Manage Server qualifies regardless of config', () => {
+  const m = member({ perms: [PermissionFlagsBits.ManageGuild] });
+  assert.equal(hasManagerAccess(m, cfgWith(null)), true);
+});
+
+test('hasManagerAccess: a configured manager role ID grants access', () => {
+  const m = member({ roles: [{ id: 'mgr1', name: 'Stash Manager' }] });
+  assert.equal(hasManagerAccess(m, cfgWith({ managerRoleIds: ['mgr1', 'mgr2'] })), true);
+});
+
+test('hasManagerAccess: no perm + no matching role is denied', () => {
+  const m = member({ roles: [{ id: 'other', name: 'member' }] });
+  assert.equal(hasManagerAccess(m, cfgWith({ managerRoleIds: ['mgr1'] })), false);
+});
+
+test('hasManagerAccess: null stash config => only Manage Server passes', () => {
+  assert.equal(hasManagerAccess(member({ roles: [{ id: 'x' }] }), cfgWith(null)), false);
+  assert.equal(
+    hasManagerAccess(member({ perms: [PermissionFlagsBits.ManageGuild] }), cfgWith(null)),
+    true
+  );
+});
+
+test('hasManagerAccess: null member is denied', () => {
+  assert.equal(hasManagerAccess(null, cfgWith({ managerRoleIds: ['mgr1'] })), false);
+});
+
+test('hasRequesterAccess: a configured requester (Twink) role grants access', () => {
+  const m = member({ roles: [{ id: 'twink', name: 'Twink' }] });
+  assert.equal(hasRequesterAccess(m, cfgWith({ requesterRoleIds: ['twink'] })), true);
+});
+
+test('hasRequesterAccess: managers pass even without a requester role', () => {
+  const m = member({ perms: [PermissionFlagsBits.ManageGuild] });
+  assert.equal(hasRequesterAccess(m, cfgWith({ requesterRoleIds: ['twink'] })), true);
+  const byRole = member({ roles: [{ id: 'mgr1' }] });
+  assert.equal(
+    hasRequesterAccess(byRole, cfgWith({ managerRoleIds: ['mgr1'], requesterRoleIds: ['twink'] })),
+    true
+  );
+});
+
+test('hasRequesterAccess: non-twink non-manager is denied', () => {
+  const m = member({ roles: [{ id: 'other' }] });
+  assert.equal(hasRequesterAccess(m, cfgWith({ requesterRoleIds: ['twink'] })), false);
+});
+
+test('requireManager: returns true and does not reply when granted', async () => {
+  let replied = false;
+  const interaction = {
+    guildId: 'g1',
+    member: member({ perms: [PermissionFlagsBits.ManageGuild] }),
+    reply: async () => {
+      replied = true;
+    }
+  };
+  const loadConfig = async () => cfgWith(null);
+  assert.equal(await requireManager(interaction, { loadConfig }), true);
+  assert.equal(replied, false, 'no denial reply on success');
+});
+
+test('requireManager: replies ephemerally and returns false when denied', async () => {
+  let payload = null;
+  const interaction = {
+    guildId: 'g1',
+    member: member({ roles: [{ id: 'other' }] }),
+    reply: async (p) => {
+      payload = p;
+    }
+  };
+  const loadConfig = async () => cfgWith({ managerRoleIds: ['mgr1'] });
+  assert.equal(await requireManager(interaction, { loadConfig }), false);
+  assert.ok(payload, 'should reply on denial');
+  assert.equal(Boolean(payload.flags & 64), true, 'denial reply is ephemeral');
+});
+
+test('requireRequester: passes a configured twink role, denies others ephemerally', async () => {
+  const loadConfig = async () => cfgWith({ requesterRoleIds: ['twink'] });
+
+  const ok = {
+    guildId: 'g1',
+    member: member({ roles: [{ id: 'twink' }] }),
+    reply: async () => assert.fail('should not reply on success')
+  };
+  assert.equal(await requireRequester(ok, { loadConfig }), true);
+
+  let payload = null;
+  const denied = {
+    guildId: 'g1',
+    member: member({ roles: [{ id: 'other' }] }),
+    reply: async (p) => {
+      payload = p;
+    }
+  };
+  assert.equal(await requireRequester(denied, { loadConfig }), false);
+  assert.equal(Boolean(payload.flags & 64), true, 'denial reply is ephemeral');
 });

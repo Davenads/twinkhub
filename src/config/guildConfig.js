@@ -15,7 +15,10 @@ export const DEFAULT_CONFIG = {
   // Persistent auto-updating dashboard message; null until /timerboard is run.
   timerBoard: null, // { channelId, messageId }
   // Persistent interactive enduser panels; null until /panels post is run.
-  panels: null // { channelId, messageIds: { <panelKey>: messageId } }
+  panels: null, // { channelId, messageIds: { <panelKey>: messageId } }
+  // Community Stash wiring; null until configured. Holds only role/channel wiring
+  // and tunables — inventory + requests live in Postgres, not here.
+  stash: null // { channelId, panelMessageIds, requesterRoleIds, managerRoleIds, requestCap, staleApprovalDays }
 };
 
 function fileFor(guildId, dir = CONFIG_DIR) {
