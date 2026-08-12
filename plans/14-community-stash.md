@@ -34,6 +34,36 @@ Planning only. No implementation until this is signed off.
 - **Terminology:** the user-facing verb is **Request** (record type = `request`, table
   `stash_requests`). "Claim" is retired to avoid the WoW loot-claim connotation.
 
+### Build decisions (from the code review)
+
+- **Driver + connection:** `pg` (node-postgres), small pool (`max: 5`), against
+  Supabase's **Session pooler (IPv4, port 5432)** with `sslmode=require` — the direct
+  host is IPv6-only; session pooling suits a single long-lived process and keeps
+  prepared statements.
+- **Failure isolation:** the pool connects **lazily** and `DATABASE_URL` is **optional**
+  (read outside `env.js`'s fail-fast). Absent/unreachable → the stash disables
+  gracefully; timers, panels, and reference commands keep running.
+- **Tests:** `npm test` stays unit-only and secretless; a new `npm run test:int` runs
+  SQL/concurrency tests against an ephemeral Postgres (CI `services:` container / a local
+  dev project). Integration tests **skip** when `DATABASE_URL` is unset, so the default
+  run stays green in a secretless CI.
+- **Local + migrations:** a **separate free Supabase dev project** for local/tests (the
+  paid prod project stays clean); schema via **Supabase CLI migrations**
+  (`supabase/migrations/`, applied with `db push` as a deliberate deploy step — never by
+  the bot at boot).
+- **Command shape:** split **`/stash`** (enduser, public) + **`/stashadmin`** (Manager,
+  `setDefaultMemberPermissions(ManageGuild)` to hide it from non-managers), with the
+  config-based runtime gates layered on top.
+- **Panel refresh:** reuse `board.js`'s edit/repost on the existing **60s tick**; the
+  public message is a compact category/counts board, the full list is always ephemeral.
+- **Request-cap enforcement:** a **per-user advisory lock**
+  (`pg_advisory_xact_lock(hash(guildId+userId))`) inside the insert transaction — exact,
+  no schema change, per-user contention only.
+- **Requester gate:** `requireRequester` passes on **Twink role OR Manager OR Manage
+  Server** (managers are guildies too, and can self-add/approve anyway).
+- **`bulk` intake:** one row per line (no auto-merge of duplicate names), with a
+  confirm-count step (`about to add N items`) as the double-paste guard.
+
 ---
 
 ## Name
@@ -419,12 +449,14 @@ noted.
    disables prepared statements (`postgres.js` needs `prepare:false`; `pg` mostly fine);
    `sslmode=require`. The multi-statement `FOR UPDATE` txn is fine under transaction
    pooling on one checked-out connection.
-   **Resolution (decide):** connection string + driver + SSL/prepare settings.
+   **Resolved:** `pg` + Supabase **Session pooler** (IPv4, 5432) + `sslmode=require`,
+   small pool.
 
 4. **Migration authority + local DB.** Never run migrations from the bot at boot — apply
    via the Supabase CLI (`db push`) manually/CI. "Dev branch/schema for local" is heavier
    than needed; a separate free dev **project** or a `_dev` schema is simpler.
-   **Resolution (decide):** local DB mechanism + who runs migrations.
+   **Resolved:** separate free Supabase **dev project** for local/tests; migrations via
+   Supabase CLI `db push` (human/CI), never bot-on-boot.
 
 ### Significant gaps (decide now, build during)
 
@@ -479,10 +511,12 @@ role gating works. `board.js` (edit/repost self-heal) and `loop.js` (`createTick
 are reusable for the panel refresh and the stale-approval sweep — piggyback the sweep on
 the existing 60s tick rather than a second interval.
 
-### Still needs a decision before build
+### All resolved
 
-B1 test split · B3 connection string/driver · B4 local DB + migration runner ·
-command split vs runtime gating · panel tick-refresh vs debounce.
+Every review item is now settled in **Build decisions** above (test split, driver +
+connection, local DB + migration runner, command split, panel tick-refresh, cap race,
+requester gate, bulk intake). Ready to start with the test harness → migration →
+repository.
 
 ---
 
