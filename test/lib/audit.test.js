@@ -71,6 +71,18 @@ test('describePanel reports a stale/foreign id instead of dropping it', () => {
   assert.equal(out.args, 'zz|foo|bar');
 });
 
+test('describePanel decodes a stash s1 id to a Stash label', () => {
+  assert.deepEqual(describePanel({ customId: 's1|refresh' }), {
+    title: 'Stash: Refresh',
+    args: ''
+  });
+});
+
+test('describePanel appends the chosen item on a stash request select', () => {
+  const i = { customId: 's1|req', values: ['itm_abc'] };
+  assert.deepEqual(describePanel(i), { title: 'Stash: Request', args: '\u2192 itm_abc' });
+});
+
 test('formatAuditEntry builds a success embed with brand color and OK outcome', () => {
   const i = {
     commandName: 'talents',

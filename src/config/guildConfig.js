@@ -82,3 +82,19 @@ export async function setTimerBoard(guildId, board) {
 export async function setPanels(guildId, panels) {
   return saveGuildConfig(guildId, { panels: panels ?? null });
 }
+
+/**
+ * Merge a patch into a guild's stash config block, preserving sibling fields.
+ * Unlike setPanels (which replaces wholesale), the stash block holds several
+ * independent concerns — role wiring (manager/requester ids), the panel record
+ * (channel/message ids), and tunables (cap/staleDays) — set by different flows.
+ * A functional patch merged against the under-lock state means posting a panel
+ * can't wipe a future role config, and vice versa. Pass `null` to clear the whole
+ * block. The functional form reads the fresh `cfg.stash` so concurrent writers
+ * (e.g. a panel post vs a role edit) don't drop each other's fields.
+ */
+export async function setStash(guildId, patch, { dir } = {}) {
+  const opts = dir ? { dir } : {};
+  if (patch === null) return saveGuildConfig(guildId, { stash: null }, opts);
+  return saveGuildConfig(guildId, (cfg) => ({ stash: { ...cfg.stash, ...patch } }), opts);
+}

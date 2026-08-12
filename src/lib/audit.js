@@ -2,6 +2,7 @@ import { EmbedBuilder } from 'discord.js';
 import { EMBED_COLOR, truncate, field, LIMITS } from './embed.js';
 import { logger } from './logger.js';
 import { parseCustomId } from '../services/panels.js';
+import { parseStashCustomId } from '../services/stash.js';
 
 // Audit logging (P?). Every executed slash command and every panel button/select
 // click is posted as one embed to a configured log channel so admins can see who
@@ -40,6 +41,15 @@ const PANEL_ACTION_LABELS = {
   gearpage: 'Gear page nav'
 };
 
+// Friendly labels for the Community Stash `s1|` component ids (mirrors the
+// HANDLERS map in components/stash.js) so a click reads as "Stash: Request"
+// rather than the raw action code.
+const STASH_ACTION_LABELS = {
+  req: 'Request',
+  mine: 'My requests',
+  refresh: 'Refresh'
+};
+
 function fmtVal(v) {
   if (v === null || v === undefined) return '';
   return String(v);
@@ -75,14 +85,27 @@ export function describeChatInput(interaction) {
  * values. Stale/foreign ids are reported rather than dropped.
  */
 export function describePanel(interaction) {
-  const parsed = parseCustomId(interaction.customId);
-  if (!parsed) {
-    return { title: 'Panel: unknown control', args: fmtVal(interaction.customId) };
+  // Two independent versioned codecs share the button/select pipeline: content
+  // panels (`p1`) and the Community Stash (`s1`). Try each so a stash click reads
+  // "Stash: Request" instead of "unknown control".
+  const panel = parseCustomId(interaction.customId);
+  if (panel) {
+    const label = PANEL_ACTION_LABELS[panel.action] ?? panel.action;
+    return { title: `Panel: ${label}`, args: describeArgs(panel, interaction) };
   }
-  const label = PANEL_ACTION_LABELS[parsed.action] ?? parsed.action;
+  const stash = parseStashCustomId(interaction.customId);
+  if (stash) {
+    const label = STASH_ACTION_LABELS[stash.action] ?? stash.action;
+    return { title: `Stash: ${label}`, args: describeArgs(stash, interaction) };
+  }
+  return { title: 'Panel: unknown control', args: fmtVal(interaction.customId) };
+}
+
+/** Join a parsed id's args with any chosen select values (`\u2192 value`). */
+function describeArgs(parsed, interaction) {
   const parts = [...parsed.args];
   for (const v of interaction.values ?? []) parts.push(`\u2192 ${v}`);
-  return { title: `Panel: ${label}`, args: parts.filter(Boolean).join(' ') };
+  return parts.filter(Boolean).join(' ');
 }
 
 /**

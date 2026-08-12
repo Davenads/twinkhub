@@ -7,6 +7,7 @@ import {
   mergeTimers,
   loadGuildConfig,
   saveGuildConfig,
+  setStash,
   DEFAULT_CONFIG
 } from '../../src/config/guildConfig.js';
 
@@ -88,6 +89,35 @@ test('concurrent functional-patch merges read fresh under-lock state (no lost to
     assert.equal(cfg.timers.stv, false, 'stv toggle survived');
     assert.equal(cfg.timers.agm, true, 'untouched sibling preserved');
     assert.equal(cfg.timers.dmf, true, 'untouched sibling preserved');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('setStash merges into the stash block without clobbering sibling fields', async () => {
+  const dir = tmpDir();
+  try {
+    // Role wiring set by one flow...
+    await setStash('g1', { managerRoleIds: ['mgr1'] }, { dir });
+    // ...then the panel record set by a different flow must not wipe the roles.
+    await setStash('g1', { channelId: 'chan-1', panelMessageIds: { browse: 'm1' } }, { dir });
+
+    const cfg = await loadGuildConfig('g1', { dir });
+    assert.deepEqual(cfg.stash.managerRoleIds, ['mgr1'], 'role wiring survived the panel write');
+    assert.equal(cfg.stash.channelId, 'chan-1', 'panel channel merged in');
+    assert.equal(cfg.stash.panelMessageIds.browse, 'm1', 'panel message id merged in');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('setStash(null) clears the whole stash block', async () => {
+  const dir = tmpDir();
+  try {
+    await setStash('g1', { managerRoleIds: ['mgr1'] }, { dir });
+    await setStash('g1', null, { dir });
+    const cfg = await loadGuildConfig('g1', { dir });
+    assert.equal(cfg.stash, null, 'stash block cleared');
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
