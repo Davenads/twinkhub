@@ -6,6 +6,7 @@ import {
   parseStashCustomId,
   buildStashPanel,
   normalizeWowheadId,
+  normalizeSlot,
   STASH_SLOTS
 } from '../../src/services/stash.js';
 
@@ -142,4 +143,61 @@ test('STASH_SLOTS: well-formed choice list within Discord limits', () => {
     assert.ok(s.label.length > 0 && s.label.length <= 100, 'label length in range');
   }
   assert.ok(values.includes('shield') && values.includes('ranged'), 'shield + ranged present');
+});
+
+test('normalizeSlot: canonical passes, legacy synonyms fold, unknown/empty null', () => {
+  assert.equal(normalizeSlot('hands'), 'hands', 'canonical value passes through');
+  assert.equal(normalizeSlot('HANDS'), 'hands', 'case-insensitive');
+  assert.equal(normalizeSlot('  feet  '), 'feet', 'trims whitespace');
+  assert.equal(normalizeSlot('gloves'), 'hands', 'legacy synonym folds');
+  assert.equal(normalizeSlot('boots'), 'feet', 'legacy synonym folds');
+  assert.equal(normalizeSlot('cloak'), 'back', 'legacy synonym folds');
+  assert.equal(normalizeSlot('mainhand'), 'weapon', 'legacy synonym folds');
+  assert.equal(normalizeSlot('mystery'), null, 'unknown free text is ungrouped');
+  assert.equal(normalizeSlot(''), null, 'empty is ungrouped');
+  assert.equal(normalizeSlot(null), null, 'null is ungrouped');
+});
+
+test('buildStashPanel: items group under slot subheaders in paper-doll order', () => {
+  const items = [
+    item({ id: 'a', name: 'Boots', slot: 'feet' }),
+    item({ id: 'b', name: 'Helm', slot: 'head' }),
+    item({ id: 'c', name: 'Cape', slot: 'cloak' }) // legacy synonym -> back
+  ];
+  const desc = description(buildStashPanel({ items }));
+  assert.ok(desc.includes('**Head**'), 'head subheader present');
+  assert.ok(desc.includes('**Back (Cloak)**'), 'back subheader present (via synonym)');
+  assert.ok(desc.includes('**Feet**'), 'feet subheader present');
+  // Head precedes Back precedes Feet in paper-doll order.
+  assert.ok(desc.indexOf('**Head**') < desc.indexOf('**Back (Cloak)**'), 'head before back');
+  assert.ok(desc.indexOf('**Back (Cloak)**') < desc.indexOf('**Feet**'), 'back before feet');
+});
+
+test('buildStashPanel: slotless items land in a trailing Ungrouped section', () => {
+  const items = [
+    item({ id: 'a', name: 'Helm', slot: 'head' }),
+    item({ id: 'b', name: 'Potion' }) // no slot
+  ];
+  const desc = description(buildStashPanel({ items }));
+  assert.ok(desc.includes('**Ungrouped**'), 'ungrouped subheader present');
+  assert.ok(desc.indexOf('**Head**') < desc.indexOf('**Ungrouped**'), 'ungrouped is last');
+});
+
+test('buildStashPanel: items sort by name within a slot group', () => {
+  const items = [
+    item({ id: 'a', name: 'Zephyr Cap', slot: 'head' }),
+    item({ id: 'b', name: 'Aegis Helm', slot: 'head' })
+  ];
+  const desc = description(buildStashPanel({ items }));
+  assert.ok(desc.indexOf('Aegis Helm') < desc.indexOf('Zephyr Cap'), 'alphabetical within group');
+});
+
+test('buildStashPanel: request select order matches the grouped display', () => {
+  const items = [
+    item({ id: 'a', name: 'Potion' }), // ungrouped -> last
+    item({ id: 'b', name: 'Helm', slot: 'head' }), // first
+    item({ id: 'c', name: 'Boots', slot: 'feet' }) // middle
+  ];
+  const values = requestSelect(buildStashPanel({ items })).options.map((o) => o.value);
+  assert.deepEqual(values, ['itm_b', 'itm_c', 'itm_a'], 'head, feet, then ungrouped');
 });

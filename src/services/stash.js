@@ -82,13 +82,78 @@ export function normalizeWowheadId(raw) {
   return m ? m[1] : null;
 }
 
-/** One display line per item: name, remaining count, slot, and claimed marker. */
+// Canonical value -> display label, and value -> paper-doll order, derived once
+// from STASH_SLOTS so grouping never drifts from the add-command choices.
+const SLOT_LABEL = new Map(STASH_SLOTS.map((s) => [s.value, s.label]));
+
+// Legacy free-text slot -> canonical value. Pre-dropdown donations were typed by
+// hand, so fold the common synonyms into a canonical bucket; anything unresolved
+// falls through to Ungrouped rather than spawning a one-off section.
+const SLOT_ALIASES = {
+  gloves: 'hands',
+  glove: 'hands',
+  boots: 'feet',
+  boot: 'feet',
+  bracer: 'wrist',
+  bracers: 'wrist',
+  cloak: 'back',
+  ring: 'finger',
+  mainhand: 'weapon',
+  'main hand': 'weapon',
+  '2h-weapon': 'weapon',
+  '2h': 'weapon',
+  'off-hand': 'offhand',
+  'off hand': 'offhand'
+};
+
+/**
+ * Normalize a slot value to its canonical STASH_SLOTS id, or null (=> Ungrouped).
+ * Accepts a canonical id as-is, folds a known legacy synonym, and rejects unknown
+ * free text so a typo can't fragment the grouping.
+ */
+export function normalizeSlot(raw) {
+  if (raw == null) return null;
+  const s = String(raw).trim().toLowerCase();
+  if (!s) return null;
+  if (SLOT_LABEL.has(s)) return s;
+  return SLOT_ALIASES[s] ?? null;
+}
+
+/** One display line per item: name, remaining count, and claimed marker. Slot is
+ * carried by the group subheader, so it is intentionally omitted here. */
 function itemLine(item) {
   const name = itemNameMarkup({ name: item.name, wowheadId: normalizeWowheadId(item.wowheadId) });
   const bits = [`${name} \u00d7${item.remaining}`];
-  if (item.slot) bits.push(`(${item.slot})`);
   if (item.status === 'requested' || item.remaining < 1) bits.push('\u2014 _all claimed_');
   return `\u2022 ${bits.join(' ')}`;
+}
+
+/**
+ * Group items by canonical slot in paper-doll order, sorted by name within each
+ * group, with a trailing "Ungrouped" bucket for slotless/unresolved donations.
+ * Returns an ordered array of `{ label, items }` — the shared ordering used by
+ * both the description subheaders and the request select.
+ */
+function groupBySlot(items) {
+  const groups = new Map();
+  const ungrouped = [];
+  for (const it of items) {
+    const slot = normalizeSlot(it.slot);
+    if (slot) {
+      if (!groups.has(slot)) groups.set(slot, []);
+      groups.get(slot).push(it);
+    } else {
+      ungrouped.push(it);
+    }
+  }
+  const byName = (a, b) => String(a.name).localeCompare(String(b.name));
+  const out = [];
+  for (const { value, label } of STASH_SLOTS) {
+    const arr = groups.get(value);
+    if (arr && arr.length) out.push({ label, items: arr.slice().sort(byName) });
+  }
+  if (ungrouped.length) out.push({ label: 'Ungrouped', items: ungrouped.slice().sort(byName) });
+  return out;
 }
 
 /** Only items a requester can actually claim right now populate the dropdown. */
@@ -109,8 +174,13 @@ export function buildStashPanel({ items = [] } = {}) {
   const hasAny = items.length > 0;
 
   const description = hasAny
-    ? items.map(itemLine).join('\n')
+    ? groupBySlot(items)
+        .map((g) => `**${g.label}**\n${g.items.map(itemLine).join('\n')}`)
+        .join('\n\n')
     : 'The stash is empty right now. Check back after the next donation drop.';
+
+  // Order the request select to match the grouped description.
+  const orderedOpen = groupBySlot(open).flatMap((g) => g.items);
 
   const embed = new EmbedBuilder()
     .setColor(hasAny ? EMBED_COLOR : DEGRADE_COLOR)
@@ -123,9 +193,10 @@ export function buildStashPanel({ items = [] } = {}) {
       .setCustomId(encodeStashId('req'))
       .setPlaceholder('Request an item\u2026')
       .addOptions(
-        open.slice(0, SELECT_LIMIT).map((it) => {
+        orderedOpen.slice(0, SELECT_LIMIT).map((it) => {
           const opt = { label: truncate(it.name, 100), value: it.id };
-          const desc = [it.slot, `\u00d7${it.remaining} left`].filter(Boolean).join(' \u00b7 ');
+          const slotLabel = SLOT_LABEL.get(normalizeSlot(it.slot)) || it.slot;
+          const desc = [slotLabel, `\u00d7${it.remaining} left`].filter(Boolean).join(' \u00b7 ');
           if (desc) opt.description = truncate(desc, 100);
           return opt;
         })

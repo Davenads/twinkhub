@@ -696,18 +696,26 @@ non-gear items go slot-less into Ungrouped instead.)
 - **Deploy:** the option definition changes, so this needs `npm run deploy` (same as the
   wowhead option), then a `pm2 reload`.
 
-### Slice B - panel grouping + sort (was Q1 + Q2)
+### Slice B - panel grouping + sort (was Q1 + Q2) - shipped 2026-08-13
 
 - Group the panel **description** by slot in canonical order (Ungrouped last); sort items
   **by name** within each group.
-- Use **in-description bold subheaders** (e.g. `__**Hands**__`), NOT embed fields - one
-  truncation point (the existing 4096-char cap), degrades gracefully, and dodges the
-  per-field 1024-char limit.
+- Use **in-description bold subheaders** (`**Hands**`), NOT embed fields - one truncation
+  point (the existing 4096-char cap), degrades gracefully, and dodges the per-field
+  1024-char limit.
 - Only render non-empty groups; keep the empty-stash degrade state untouched.
 - Order the **request select** the same way (slot -> name) so the dropdown matches the
   visual list.
 - **Pure render change** in `buildStashPanel` - fully unit-testable, no deploy, `pm2 reload`
   only.
+- **As built:** `groupBySlot()` produces the shared ordered `{ label, items }[]` consumed by
+  both the description subheaders and `orderedOpen` (the select). The redundant per-line
+  `(slot)` annotation was dropped since the subheader now carries it. A `normalizeSlot()`
+  export folds canonical ids as-is plus legacy free-text synonyms (`gloves->hands`,
+  `boots->feet`, `bracer(s)->wrist`, `cloak->back`, `ring->finger`, `mainhand`/`2h`/
+  `2h-weapon`->`weapon`, `off hand`/`off-hand`->`offhand`); unknown text falls to Ungrouped
+  so a typo can't fragment the layout. The select-option description reuses the canonical
+  slot label via `SLOT_LABEL`.
 
 ### Sequencing
 
