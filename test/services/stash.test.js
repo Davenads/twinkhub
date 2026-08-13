@@ -4,7 +4,8 @@ import {
   STASH_VERSION,
   encodeStashId,
   parseStashCustomId,
-  buildStashPanel
+  buildStashPanel,
+  normalizeWowheadId
 } from '../../src/services/stash.js';
 
 // Build N item stand-ins. Each defaults to a claimable available unit. `id` is
@@ -83,4 +84,48 @@ test('buildStashPanel: default (no args) is safe and renders the empty state', (
   const panel = buildStashPanel();
   assert.equal(requestSelect(panel), null);
   assert.ok(panel.embeds.length === 1, 'one embed');
+});
+
+// Description helper: the panel's single embed description string.
+function description(panel) {
+  return panel.embeds[0].data.description;
+}
+
+test('normalizeWowheadId: bare id, Wowhead URL, or null; junk yields null', () => {
+  assert.equal(normalizeWowheadId('12977'), '12977', 'bare id');
+  assert.equal(normalizeWowheadId('  12977  '), '12977', 'trims whitespace');
+  assert.equal(
+    normalizeWowheadId('https://www.wowhead.com/classic/item=12977/magefist-gloves'),
+    '12977',
+    'extracts item id from a Classic URL'
+  );
+  assert.equal(normalizeWowheadId(12977), '12977', 'coerces a number');
+  assert.equal(normalizeWowheadId(null), null, 'null passes through');
+  assert.equal(normalizeWowheadId(undefined), null, 'undefined passes through');
+  assert.equal(normalizeWowheadId('magefist'), null, 'a bare name is not an id');
+  assert.equal(normalizeWowheadId(''), null, 'empty string is not an id');
+});
+
+test('buildStashPanel: a numeric wowheadId links the item name to Wowhead', () => {
+  const desc = description(
+    buildStashPanel({ items: [item({ name: 'Magefist Gloves', wowheadId: '12977' })] })
+  );
+  assert.ok(
+    desc.includes('**[Magefist Gloves](https://www.wowhead.com/classic/item=12977)**'),
+    'name is a masked Wowhead link'
+  );
+});
+
+test('buildStashPanel: no wowheadId renders a plain bold name (no link)', () => {
+  const desc = description(buildStashPanel({ items: [item({ name: 'Mystery Item' })] }));
+  assert.ok(desc.includes('**Mystery Item**'), 'plain bold name');
+  assert.ok(!desc.includes(']('), 'no masked link emitted');
+});
+
+test('buildStashPanel: a non-numeric wowheadId degrades to plain (never a broken link)', () => {
+  const desc = description(
+    buildStashPanel({ items: [item({ name: 'Junky', wowheadId: 'not-an-id' })] })
+  );
+  assert.ok(desc.includes('**Junky**'), 'plain bold name');
+  assert.ok(!desc.includes('wowhead.com'), 'no link built from junk');
 });

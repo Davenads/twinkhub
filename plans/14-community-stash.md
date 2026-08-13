@@ -623,6 +623,20 @@ merge that preserves sibling keys; `patch === null` clears the whole block. Note
 wiring still lives in per-guild `guildConfig` under `data/` (only the inventory/requests
 are in Postgres) — relevant to the P4 Heroku durability prereqs.
 
+### Wowhead item links (shipped 2026-08-13)
+
+Items added with a `wowhead_id` render their name as a masked Wowhead Classic link in
+the public panel description (`**[name](https://www.wowhead.com/classic/item=<id>)**`),
+reusing `itemNameMarkup` / `wowheadItemUrl` from `services/gearFormat.js` so the look
+matches `/bis`, `/gear`, `/item`. Because the `add` option is free text, a new
+`normalizeWowheadId` (in `services/stash.js`) guards both ends: it accepts a bare id or a
+pasted Classic URL (extracts `item=(\d+)`) and yields null for anything else, so the
+render **never emits a broken link**. Applied at intake (canonical id stored) and again at
+render (defends legacy rows). The request select, `/stashadmin list`, and DMs stay plain —
+masked links don't render in select-option labels, and the manager list leads with the
+copyable id. Render-only + handler-only, but the `wowhead_id` option description changed
+("id or URL") so it needed a `deploy`.
+
 ### Deferred follow-ups
 
 - `/stash bulk` batch intake.

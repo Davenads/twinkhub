@@ -3,7 +3,7 @@ import { requireManager } from '../../lib/access.js';
 import { loadGuildConfig, setStash } from '../../config/guildConfig.js';
 import { logger } from '../../lib/logger.js';
 import * as store from '../../stash/store.js';
-import { buildStashPanel } from '../../services/stash.js';
+import { buildStashPanel, normalizeWowheadId } from '../../services/stash.js';
 import { notifyRequester } from '../../stash/notify.js';
 
 // Manager-only CRUD over the Community Stash. Thin wrappers around the store
@@ -28,7 +28,9 @@ export const data = new SlashCommandBuilder()
       )
       .addStringOption((o) => o.setName('slot').setDescription('Gear slot (e.g. head, weapon)'))
       .addStringOption((o) => o.setName('donor').setDescription('Who donated it'))
-      .addStringOption((o) => o.setName('wowhead_id').setDescription('Wowhead item id'))
+      .addStringOption((o) =>
+        o.setName('wowhead_id').setDescription('Wowhead item id or URL (links the name)')
+      )
       .addStringOption((o) => o.setName('tags').setDescription('Comma-separated tags'))
       .addStringOption((o) => o.setName('notes').setDescription('Free-text notes'))
   )
@@ -495,7 +497,7 @@ export async function execute(interaction) {
           quantity: interaction.options.getInteger('quantity') ?? 1,
           slot: interaction.options.getString('slot'),
           donor: interaction.options.getString('donor'),
-          wowheadId: interaction.options.getString('wowhead_id'),
+          wowheadId: normalizeWowheadId(interaction.options.getString('wowhead_id')),
           notes: interaction.options.getString('notes'),
           tags
         });

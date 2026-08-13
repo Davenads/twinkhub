@@ -6,6 +6,7 @@ import {
   StringSelectMenuBuilder
 } from 'discord.js';
 import { EMBED_COLOR, DEGRADE_COLOR, truncate, LIMITS } from '../lib/embed.js';
+import { itemNameMarkup } from './gearFormat.js';
 
 // Community Stash panel layer — the public `#stash` message and its versioned
 // component-id contract. Mirrors services/panels.js but for a DYNAMIC inventory:
@@ -42,9 +43,25 @@ export function parseStashCustomId(customId) {
 
 const row = (...components) => new ActionRowBuilder().addComponents(...components);
 
+/**
+ * Normalize a free-text Wowhead item id into a bare positive-integer string, or
+ * null. Accepts a plain id (`"12977"`) or a pasted Classic URL
+ * (`".../classic/item=12977/slug"`) \u2014 anything else (a name, junk, empty)
+ * yields null so the render never emits a broken link. Shared by `/stashadmin
+ * add` (intake) and the panel (render), since the `add` option is free text.
+ */
+export function normalizeWowheadId(raw) {
+  if (raw == null) return null;
+  const s = String(raw).trim();
+  if (/^\d+$/.test(s)) return s;
+  const m = s.match(/item=(\d+)/i);
+  return m ? m[1] : null;
+}
+
 /** One display line per item: name, remaining count, slot, and claimed marker. */
 function itemLine(item) {
-  const bits = [`**${item.name}** \u00d7${item.remaining}`];
+  const name = itemNameMarkup({ name: item.name, wowheadId: normalizeWowheadId(item.wowheadId) });
+  const bits = [`${name} \u00d7${item.remaining}`];
   if (item.slot) bits.push(`(${item.slot})`);
   if (item.status === 'requested' || item.remaining < 1) bits.push('\u2014 _all claimed_');
   return `\u2022 ${bits.join(' ')}`;
