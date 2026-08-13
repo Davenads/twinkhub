@@ -5,7 +5,8 @@ import {
   encodeStashId,
   parseStashCustomId,
   buildStashPanel,
-  normalizeWowheadId
+  normalizeWowheadId,
+  STASH_SLOTS
 } from '../../src/services/stash.js';
 
 // Build N item stand-ins. Each defaults to a claimable available unit. `id` is
@@ -128,4 +129,17 @@ test('buildStashPanel: a non-numeric wowheadId degrades to plain (never a broken
   );
   assert.ok(desc.includes('**Junky**'), 'plain bold name');
   assert.ok(!desc.includes('wowhead.com'), 'no link built from junk');
+});
+
+test('STASH_SLOTS: well-formed choice list within Discord limits', () => {
+  assert.ok(STASH_SLOTS.length > 0 && STASH_SLOTS.length <= 25, 'within the 25-choice cap');
+  const values = STASH_SLOTS.map((s) => s.value);
+  assert.equal(new Set(values).size, values.length, 'values are unique');
+  for (const s of STASH_SLOTS) {
+    assert.equal(typeof s.value, 'string');
+    assert.ok(s.value.length > 0 && s.value.length <= 100, 'value length in range');
+    assert.equal(typeof s.label, 'string');
+    assert.ok(s.label.length > 0 && s.label.length <= 100, 'label length in range');
+  }
+  assert.ok(values.includes('shield') && values.includes('ranged'), 'shield + ranged present');
 });

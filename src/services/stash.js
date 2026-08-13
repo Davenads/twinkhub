@@ -24,6 +24,30 @@ const SEP = '|';
 // Discord allows at most 25 options in a select menu.
 const SELECT_LIMIT = 25;
 
+// Canonical equipment-slot taxonomy for the stash, in paper-doll order. value is
+// the stored id; label is the dropdown/section display. Single source of truth so
+// the add-command choices and (later) the panel grouping never drift; non-gear
+// donations omit slot and render under Ungrouped.
+export const STASH_SLOTS = [
+  { value: 'head', label: 'Head' },
+  { value: 'neck', label: 'Neck' },
+  { value: 'shoulder', label: 'Shoulder' },
+  { value: 'back', label: 'Back (Cloak)' },
+  { value: 'shirt', label: 'Shirt' },
+  { value: 'chest', label: 'Chest' },
+  { value: 'wrist', label: 'Wrist' },
+  { value: 'hands', label: 'Hands' },
+  { value: 'waist', label: 'Waist' },
+  { value: 'legs', label: 'Legs' },
+  { value: 'feet', label: 'Feet' },
+  { value: 'finger', label: 'Finger' },
+  { value: 'trinket', label: 'Trinket' },
+  { value: 'weapon', label: 'Weapon' },
+  { value: 'offhand', label: 'Held In Off-hand' },
+  { value: 'shield', label: 'Shield' },
+  { value: 'ranged', label: 'Ranged' }
+];
+
 /** Encode a stash component id: `s1|action|arg...`. */
 export function encodeStashId(action, ...args) {
   return [STASH_VERSION, action, ...args].join(SEP);

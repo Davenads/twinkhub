@@ -643,3 +643,74 @@ copyable id. Render-only + handler-only, but the `wowhead_id` option description
 - Optional `stash.notifyRequesters` opt-out toggle (DMs are always-on today).
 - P4 Heroku durability for the `data/`-backed stash **config** block (inventory is already
   off-dyno on Supabase).
+
+## Planned: item-slot taxonomy + panel grouping (2026-08-13)
+
+Refines the earlier slot review (Q1-Q3) to the **preferred item-slot set** taken from the
+in-game equipment-slot dropdown (screenshots) - pure WoW *equipment* slots, since the guild
+stash is primarily gear. Non-gear donations (consumables, mats) simply omit `slot` and fall
+under a trailing **Ungrouped** bucket at render, so the taxonomy stays clean without losing
+the donation-pile flexibility.
+
+### Canonical slot vocabulary
+
+Exactly the slots shown in the dropdown, plus **Weapon** (added per request). `value` is the
+stored canonical id; `label` is the choice / section display. Rendered and ordered in
+paper-doll order, Ungrouped last.
+
+| value | label |
+|---|---|
+| head | Head |
+| neck | Neck |
+| shoulder | Shoulder |
+| back | Back (Cloak) |
+| shirt | Shirt |
+| chest | Chest |
+| wrist | Wrist |
+| hands | Hands |
+| waist | Waist |
+| legs | Legs |
+| feet | Feet |
+| finger | Finger |
+| trinket | Trinket |
+| weapon | Weapon |
+| offhand | Held In Off-hand |
+| shield | Shield |
+| ranged | Ranged |
+
+17 values - well under Discord's 25-choice cap. `shield` (Shield) and `ranged` (Ranged / Wand)
+are **added** (confirmed) on top of the screenshot set; `tabard` (Tabard) is intentionally
+omitted as cosmetic. (Superseded my earlier draft's Consumable/Material/Other buckets -
+non-gear items go slot-less into Ungrouped instead.)
+
+### Slice A - `/stashadmin add slot` becomes a dropdown (was Q3) - shipped 2026-08-13
+
+- Convert the free-text `slot` option to `.addChoices(...)` over the table above.
+- **Keep it optional** - a no-slot donation renders under Ungrouped; that is how
+  consumables/mats live inside a gear-slot taxonomy.
+- **No DB migration** - the `slot` column already exists; this only constrains new intake.
+- **Legacy rows** (free-text `slot` from before) are tolerated: unknown slots fall to
+  Ungrouped. Optional `normalizeSlot()` alias map folds common legacy strings in
+  (`gloves` -> hands, `boots` -> feet, `bracer` -> wrist, `cloak` -> back,
+  `mainhand`/`2h-weapon` -> weapon).
+- **Deploy:** the option definition changes, so this needs `npm run deploy` (same as the
+  wowhead option), then a `pm2 reload`.
+
+### Slice B - panel grouping + sort (was Q1 + Q2)
+
+- Group the panel **description** by slot in canonical order (Ungrouped last); sort items
+  **by name** within each group.
+- Use **in-description bold subheaders** (e.g. `__**Hands**__`), NOT embed fields - one
+  truncation point (the existing 4096-char cap), degrades gracefully, and dodges the
+  per-field 1024-char limit.
+- Only render non-empty groups; keep the empty-stash degrade state untouched.
+- Order the **request select** the same way (slot -> name) so the dropdown matches the
+  visual list.
+- **Pure render change** in `buildStashPanel` - fully unit-testable, no deploy, `pm2 reload`
+  only.
+
+### Sequencing
+
+Slice A first (clean data + drives manager adoption), Slice B second (presentation rides on
+normalized slots). Both low-risk; B only pays off once managers actually fill slot, which the
+A dropdown encourages by removing free-text friction.

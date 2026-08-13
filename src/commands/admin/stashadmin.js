@@ -3,7 +3,7 @@ import { requireManager } from '../../lib/access.js';
 import { loadGuildConfig, setStash } from '../../config/guildConfig.js';
 import { logger } from '../../lib/logger.js';
 import * as store from '../../stash/store.js';
-import { buildStashPanel, normalizeWowheadId } from '../../services/stash.js';
+import { buildStashPanel, normalizeWowheadId, STASH_SLOTS } from '../../services/stash.js';
 import { notifyRequester } from '../../stash/notify.js';
 
 // Manager-only CRUD over the Community Stash. Thin wrappers around the store
@@ -26,7 +26,12 @@ export const data = new SlashCommandBuilder()
       .addIntegerOption((o) =>
         o.setName('quantity').setDescription('How many (default 1)').setMinValue(1)
       )
-      .addStringOption((o) => o.setName('slot').setDescription('Gear slot (e.g. head, weapon)'))
+      .addStringOption((o) =>
+        o
+          .setName('slot')
+          .setDescription('Equipment slot')
+          .addChoices(...STASH_SLOTS.map((s) => ({ name: s.label, value: s.value })))
+      )
       .addStringOption((o) => o.setName('donor').setDescription('Who donated it'))
       .addStringOption((o) =>
         o.setName('wowhead_id').setDescription('Wowhead item id or URL (links the name)')
