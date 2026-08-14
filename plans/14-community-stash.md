@@ -919,13 +919,17 @@ needed:
 - Deliver as a `/stashadmin` maintenance action or a scripted one-off via the Supabase CLI —
   **never at boot**. Dry-run / report first.
 
-### Optional DB-level guard (defense in depth)
+### DB-level guard (defense in depth) — **shipped 2026-08-14**
 
 A **partial unique index** `unique (guild_id, wowhead_id) where wowhead_id is not null and
 status in ('available','requested','given')` stops future id-keyed dupes at the DB. Name
 uniqueness can't be safely enforced (case/whitespace + legit same-name variants), so name dedup
 stays app-side. The index **fails to build while id-keyed dupes exist**, so it runs **after**
-consolidation, via CLI `db push` — not at boot.
+consolidation, via CLI `db push` — not at boot. Migration:
+`supabase/migrations/20260814120000_stash_wowhead_unique.sql` (index
+`stash_items_guild_wowhead_active_idx`; the in-file header spells out the
+consolidate-first apply order). **Not yet `db push`ed** — operator applies it after a clean
+consolidation run per guild.
 
 ### Store surface (new)
 
@@ -949,8 +953,9 @@ the modal:
    — **shipped `d8dba3b`** (console **Add Item** button `madd` → modal `madds`; the modal-submit
    fork in `index.js` now exists — reuse it for any future modal).
 4. **Consolidation** of existing dupes (maintenance op / CLI) — **shipped 2026-08-14** as a store
-   seam + operator script (below). The **optional** partial unique index *(migration via CLI, not
-   boot)* is the remaining follow-up, run **after** the script reports clean. See also the
+   seam + operator script (below). The partial unique index *(migration via CLI, not boot)* is
+   **shipped 2026-08-14** too (`20260814120000_stash_wowhead_unique.sql`), applied by the operator
+   **after** the script reports clean. See also the
    edit/rename pipeline below: renaming a typo can surface a name collision that consolidation
    then merges.
 
@@ -978,8 +983,9 @@ cancelled — consolidation needed its own path.
 - **Tests:** integration `consolidateItems` case — open requests re-pointed & still
   pending/approved (not cancelled), `denied` history left on the withdrawn dupe, qty/remaining
   summed, null id/slot backfilled, dupe `withdrawn` with `remaining=0`.
-- *(store/script/tests ⇒ reload-only, NO deploy. The partial unique index remains the one
-  deferred follow-up — a CLI `db push` migration after a clean consolidation run.)*
+- *(store/script/tests ⇒ reload-only, NO deploy. The partial unique index migration
+  `20260814120000_stash_wowhead_unique.sql` is committed but inert — operator `db push`es it
+  after a clean consolidation run; it never runs at boot.)*
 
 ## Planned: item edit / rename pipeline + the "Seet" typo (2026-08-14)
 
