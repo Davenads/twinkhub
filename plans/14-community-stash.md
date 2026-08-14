@@ -1099,3 +1099,44 @@ wizard primitives:
     `store.editItem` (present-key patch; donor added only when a member was picked) + collision
     note. `collisionNote` moved to `services/stash.js` (shared by the slash `edit` path).
   *(components/services ⇒ reload, NO deploy.)*
+
+## Planned: missing-wowheadId data-quality surfacing (2026-08-14)
+
+**Symptom (manager report):** an item added without a `wowheadId` renders as plain **non-blue**
+text in the panels, looking "messed up" next to its linked neighbours.
+
+**Root cause — not a bug, a data gap.** `itemNameMarkup` (`services/gearFormat.js`) renders
+`**[name](wowheadUrl)**` (bold + linked ⇒ blue) when `wowheadId != null`, else `**name**` (bold,
+unlinked). The unlinked render is deliberate and correct; the real problem is that the gap is
+**invisible to managers** (nothing tells them *which* rows lack a link) even though the fix tool
+already ships.
+
+### Resolve the existing item now — no code
+The just-shipped **manage-item console** is the remediation path: manager panel → `mitem`
+"Manage an item…" → pick the item → **Edit** → fill the `wowhead` field → submit.
+`normalizeWowheadId` already accepts either a bare numeric id (`12977`) or a full Wowhead URL
+(`item=12977`), so a manager can paste straight from the tooltip. No SQL, no redeploy.
+
+### Decision — keep wowheadId OPTIONAL, make gaps visible instead
+Rejected: hard-requiring the wowhead input at intake (`setRequired(true)`). Genuine no-link items
+exist (custom/quest/unlisted gear), and a forced field just breeds junk sentinels (`0`, `n/a`) that
+are worse than an honest blank and would poison the dedup match key. Chosen approach: leave intake
+optional and turn the gap into a **manager-only, one-click-fixable** flag that routes into the
+existing Edit wizard.
+
+### Slice (pending greenlight) — manager-only surfacing + intake nudge
+- **`mitem` select:** for rows with `wowheadId == null`, prefix the option description with a
+  `\u26a0` marker (e.g. `⚠ no link · <slot> · <status> · ×<n>`) so gaps are scannable in the picker.
+- **`buildItemAction` console:** when the selected item lacks a link, add a one-line
+  `\u26a0 No Wowhead link — add one below.` hint above the Edit/Withdraw buttons.
+- **Panel counts (optional):** fold a `N missing a Wowhead link` figure into the manager panel
+  header so the backlog is quantified at a glance.
+- **Intake nudge:** when `handleAddSubmit` (and the edit confirmation) completes with no
+  `wowheadId`, append a soft tip (`Tip: no Wowhead link set — Manage → Edit to add one.`) to the
+  ephemeral result. Reinforces the habit without blocking.
+- **Public panel unchanged** — it keeps rendering the clean bold name; the ⚠ surfacing is
+  manager-scoped only.
+- **Tests:** `mitem` description carries `⚠ no link` for a null-wowheadId row and omits it for a
+  linked one; `buildItemAction` hint present/absent by wowheadId; add-confirmation nudge
+  present/absent.
+- *(components/services ⇒ reload, NO deploy.)*
