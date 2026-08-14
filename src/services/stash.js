@@ -96,6 +96,7 @@ const SLOT_ALIASES = {
   boot: 'feet',
   bracer: 'wrist',
   bracers: 'wrist',
+  belt: 'waist',
   cloak: 'back',
   ring: 'finger',
   mainhand: 'weapon',

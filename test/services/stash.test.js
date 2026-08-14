@@ -151,6 +151,7 @@ test('normalizeSlot: canonical passes, legacy synonyms fold, unknown/empty null'
   assert.equal(normalizeSlot('  feet  '), 'feet', 'trims whitespace');
   assert.equal(normalizeSlot('gloves'), 'hands', 'legacy synonym folds');
   assert.equal(normalizeSlot('boots'), 'feet', 'legacy synonym folds');
+  assert.equal(normalizeSlot('belt'), 'waist', 'legacy synonym folds');
   assert.equal(normalizeSlot('cloak'), 'back', 'legacy synonym folds');
   assert.equal(normalizeSlot('mainhand'), 'weapon', 'legacy synonym folds');
   assert.equal(normalizeSlot('mystery'), null, 'unknown free text is ungrouped');
