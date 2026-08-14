@@ -54,7 +54,19 @@ export const data = new SlashCommandBuilder()
       )
   )
   .addSubcommand((s) =>
-    s.setName('queue').setDescription('Show pending requests awaiting approval.')
+    s
+      .setName('queue')
+      .setDescription('Show open requests (pending by default).')
+      .addStringOption((o) =>
+        o
+          .setName('status')
+          .setDescription('Which requests (default pending)')
+          .addChoices(
+            { name: 'pending (awaiting approval)', value: 'pending' },
+            { name: 'approved (awaiting hand-off)', value: 'approved' },
+            { name: 'active (pending + approved)', value: 'active' }
+          )
+      )
   )
   .addSubcommand((s) =>
     s
@@ -521,16 +533,38 @@ export async function execute(interaction) {
         return;
       }
       case 'queue': {
-        const reqs = await store.listRequests(guildId, { statuses: ['pending'] });
+        const choice = interaction.options.getString('status') ?? 'pending';
+        const statuses = choice === 'active' ? ['pending', 'approved'] : [choice];
+        const reqs = await store.listRequests(guildId, { statuses });
         const names = new Map();
         for (const id of new Set(reqs.map((r) => r.itemId))) {
           const item = await store.getItem(guildId, id);
           if (item) names.set(id, item.name);
         }
+        if (choice === 'active') {
+          // Two sections so approved-but-unsent requests aren't lost after leaving
+          // the pending queue.
+          const lines = [];
+          for (const [label, st] of [
+            ['Pending', 'pending'],
+            ['Approved', 'approved']
+          ]) {
+            const rows = reqs.filter((r) => r.status === st);
+            if (!rows.length) continue;
+            lines.push(`**${label}**`);
+            for (const r of rows) lines.push(fmtRequest(r, names.get(r.itemId)));
+          }
+          await interaction.editReply(joinLines(lines, 'No active requests.'));
+          return;
+        }
+        const empty =
+          choice === 'approved'
+            ? 'No approved requests awaiting hand-off.'
+            : 'No pending requests.';
         await interaction.editReply(
           joinLines(
             reqs.map((r) => fmtRequest(r, names.get(r.itemId))),
-            'No pending requests.'
+            empty
           )
         );
         return;
