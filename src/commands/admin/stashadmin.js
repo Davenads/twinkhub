@@ -57,6 +57,11 @@ export const data = new SlashCommandBuilder()
       )
       .addStringOption((o) => o.setName('tags').setDescription('Comma-separated tags'))
       .addStringOption((o) => o.setName('notes').setDescription('Free-text notes'))
+      .addBooleanOption((o) =>
+        o
+          .setName('force_new')
+          .setDescription('Add as a separate entry even if a matching item exists')
+      )
   )
   .addSubcommand((s) =>
     s
@@ -258,6 +263,15 @@ const ERROR_MESSAGES = {
   NO_STOCK: 'No stock left for that item.',
   NOT_OWNER: 'Only the requester can do that.'
 };
+
+// Decide whether an `add` merges into an existing item (restock) or inserts a
+// fresh row. `matches` is store.findItemMatch's active-item list (earliest
+// first); with force_new set we always insert. Returns the restock target or
+// null for a new insert. Pure/exported for unit tests.
+export function pickRestockTarget(matches, forceNew) {
+  if (forceNew) return null;
+  return Array.isArray(matches) && matches.length ? matches[0] : null;
+}
 
 function fmtItem(item) {
   const bits = [`\`${item.id}\` — **${item.name}** \u00d7${item.remaining}/${item.quantity}`];
@@ -586,12 +600,36 @@ export async function execute(interaction) {
           .split(',')
           .map((t) => t.trim())
           .filter(Boolean);
+        const name = interaction.options.getString('name', true);
+        const quantity = interaction.options.getInteger('quantity') ?? 1;
+        const slot = interaction.options.getString('slot');
+        const wowheadId = normalizeWowheadId(interaction.options.getString('wowhead_id'));
+        const forceNew = interaction.options.getBoolean('force_new') ?? false;
+
+        // Dedup: unless force_new, merge into the earliest active item matching by
+        // wowhead id (canonical) or normalized name — restock bumps qty+remaining
+        // and backfills a missing wowhead id/slot. Otherwise insert a fresh row.
+        let target = null;
+        if (!forceNew) {
+          const matches = await store.findItemMatch(guildId, { wowheadId, name });
+          target = pickRestockTarget(matches, forceNew);
+        }
+        if (target) {
+          const updated = await store.restockItem(guildId, target.id, quantity, {
+            wowheadId,
+            slot
+          });
+          await interaction.editReply(
+            `Restocked **${updated.name}** +${quantity} \u2192 \u00d7${updated.remaining}/${updated.quantity} (id \`${updated.id}\`). Pass \`force_new:true\` to add a separate entry instead.`
+          );
+          return;
+        }
         const item = await store.addItem(guildId, {
-          name: interaction.options.getString('name', true),
-          quantity: interaction.options.getInteger('quantity') ?? 1,
-          slot: interaction.options.getString('slot'),
+          name,
+          quantity,
+          slot,
           donor: interaction.options.getString('donor'),
-          wowheadId: normalizeWowheadId(interaction.options.getString('wowhead_id')),
+          wowheadId,
           notes: interaction.options.getString('notes'),
           tags
         });
