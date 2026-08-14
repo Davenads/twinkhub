@@ -10,6 +10,7 @@ import {
   denyRequest,
   cancelRequest,
   removeItem,
+  consolidateItems,
   restockItem,
   editItem,
   findItemMatch,
@@ -204,6 +205,50 @@ if (!DATABASE_URL) {
     const byId = Object.fromEntries(reqs.map((r) => [r.id, r.status]));
     assert.equal(byId[rPending.id], 'cancelled');
     assert.equal(byId[rApproved.id], 'cancelled');
+  });
+
+  test('consolidateItems folds a dupe into the survivor without cancelling requests', async () => {
+    const survivor = await addItem(GUILD, { name: 'Magefist Gloves', quantity: 2 });
+    const dupe = await addItem(GUILD, {
+      name: 'Magefist Gloves',
+      quantity: 3,
+      wowheadId: '12977',
+      slot: 'hands'
+    });
+    const rPending = await requestItem(GUILD, dupe.id, 'p');
+    const rApproved = await requestItem(GUILD, dupe.id, 'a');
+    await approveRequest(GUILD, rApproved.id, 'mgr');
+    const rDenied = await requestItem(GUILD, dupe.id, 'd');
+    await denyRequest(GUILD, rDenied.id, 'mgr');
+
+    const res = await consolidateItems(GUILD, survivor.id, [dupe.id]);
+
+    assert.equal(res.survivor.quantity, 5, 'quantity summed');
+    assert.equal(res.survivor.remaining, 5, 'remaining summed');
+    assert.equal(res.survivor.wowheadId, '12977', 'null id backfilled from the dupe');
+    assert.equal(res.survivor.slot, 'hands', 'null slot backfilled from the dupe');
+    assert.deepEqual(
+      res.movedRequests.map((r) => r.id).sort(),
+      [rPending.id, rApproved.id].sort(),
+      'only the open (pending/approved) requests moved'
+    );
+
+    // Moved requests now hang off the survivor, still pending/approved (NOT cancelled).
+    const onSurvivor = await listRequests(GUILD, { itemId: survivor.id });
+    const survStatus = Object.fromEntries(onSurvivor.map((r) => [r.id, r.status]));
+    assert.equal(survStatus[rPending.id], 'pending');
+    assert.equal(survStatus[rApproved.id], 'approved');
+
+    // Terminal history stays on the (now withdrawn) dupe row.
+    const onDupe = await listRequests(GUILD, { itemId: dupe.id });
+    assert.deepEqual(
+      onDupe.map((r) => r.id),
+      [rDenied.id],
+      'only the denied history remains on the dupe'
+    );
+    const withdrawn = await getItem(GUILD, dupe.id);
+    assert.equal(withdrawn.status, 'withdrawn');
+    assert.equal(withdrawn.remaining, 0);
   });
 
   test('expireStaleApprovals reverts old approvals and frees the item', async () => {

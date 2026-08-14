@@ -948,9 +948,38 @@ the modal:
    fork), `buildAddModal` (5 inputs), submit reuses the same match→restock path. *(reload-only)*
    — **shipped `d8dba3b`** (console **Add Item** button `madd` → modal `madds`; the modal-submit
    fork in `index.js` now exists — reuse it for any future modal).
-4. **Consolidation** of existing dupes (maintenance op / CLI), then the **optional** partial
-   unique index. *(migration via CLI, not boot)* — **still planned.** See also the edit/rename
-   pipeline below: renaming a typo can surface a name collision that consolidation then merges.
+4. **Consolidation** of existing dupes (maintenance op / CLI) — **shipped 2026-08-14** as a store
+   seam + operator script (below). The **optional** partial unique index *(migration via CLI, not
+   boot)* is the remaining follow-up, run **after** the script reports clean. See also the
+   edit/rename pipeline below: renaming a typo can surface a name collision that consolidation
+   then merges.
+
+### Consolidation — as built (shipped 2026-08-14)
+
+Why now: `removeItem` cascade-cancels open requests **and DMs** each requester "cancelled". So
+hand-withdrawing a dupe would fire wrong cancellation DMs at people who should be *migrated*, not
+cancelled — consolidation needed its own path.
+
+- **Store seam — `consolidateItems(guildId, survivorId, dupeIds[])`** (`src/stash/store.js`). One
+  txn, `FOR UPDATE` on survivor + dupes (ids sorted → stable lock order). Re-points the dupes'
+  **open (pending/approved)** requests to the survivor (`update stash_requests set item_id=…`);
+  their `sent`/`denied`/`cancelled` history stays on the dupe row (provenance). Sums
+  `quantity`+`remaining` onto the survivor; COALESCE-backfills the survivor's null `wowhead_id`/
+  `slot` from a dupe. Marks each dupe `withdrawn` **directly (not `removeItem`)** so the moved
+  requests are NOT cancelled and **no DMs fire**. `recomputeItemStatus(survivor)`; returns
+  `{ survivor, movedRequests, mergedQuantity, mergedRemaining, dupeIds }`.
+- **Operator script — `scripts/consolidate-stash.js`** (`npm run stash:consolidate`, run under
+  `-r dotenv/config`). SQL stays in the store seam; the script only discovers + reports + calls
+  `consolidateItems`. **Dry-run by default**; `--apply` executes. `--guild <id>` required.
+  Auto-discovery is conservative: groups by exact `wowhead_id`, and null-id rows by normalized
+  name **among null-id rows only** — never glues two distinct-id same-name items, never
+  auto-merges a null-id row into an id-bearing one. The explicit `--survivor <id> --dupes a,b,c`
+  form covers those null-id ↔ id-bearing backfill merges under operator judgement.
+- **Tests:** integration `consolidateItems` case — open requests re-pointed & still
+  pending/approved (not cancelled), `denied` history left on the withdrawn dupe, qty/remaining
+  summed, null id/slot backfilled, dupe `withdrawn` with `remaining=0`.
+- *(store/script/tests ⇒ reload-only, NO deploy. The partial unique index remains the one
+  deferred follow-up — a CLI `db push` migration after a clean consolidation run.)*
 
 ## Planned: item edit / rename pipeline + the "Seet" typo (2026-08-14)
 

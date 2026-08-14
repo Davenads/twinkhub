@@ -507,6 +507,86 @@ export async function removeItem(guildId, itemId, managerId) {
   }
 }
 
+// One-time consolidation: fold each dupe row into the survivor. Re-points the
+// dupes' OPEN (pending/approved) requests onto the survivor (their sent/denied/
+// cancelled history stays on the dupe row, preserving provenance), sums
+// quantity+remaining onto the survivor, COALESCE-backfills the survivor's null
+// wowhead_id/slot from a dupe, then marks each dupe 'withdrawn' DIRECTLY — not
+// via removeItem — so the moved requests are NOT cancelled and no cancellation
+// DMs fire (the requester still wants the same item; the row swap is invisible).
+// One txn, FOR UPDATE on all rows (ids sorted to keep the lock order stable).
+// Returns { survivor, movedRequests, mergedQuantity, mergedRemaining, dupeIds }.
+export async function consolidateItems(guildId, survivorId, dupeIds) {
+  if (!survivorId) throw new StashError('INVALID_INPUT', 'survivorId is required');
+  const dupes = [...new Set((dupeIds ?? []).filter((id) => id && id !== survivorId))];
+  if (!dupes.length) throw new StashError('INVALID_INPUT', 'at least one dupe id is required');
+
+  const client = await getPool().connect();
+  try {
+    await client.query('begin');
+    const allIds = [survivorId, ...dupes].sort();
+    const locked = await client.query(
+      `select * from stash_items where guild_id = $1 and id = any($2::text[]) for update`,
+      [guildId, allIds]
+    );
+    const byId = new Map(locked.rows.map((r) => [r.id, r]));
+    const survivor = byId.get(survivorId);
+    if (!survivor) throw new StashError('ITEM_NOT_FOUND', `survivor not found: ${survivorId}`);
+    if (survivor.status === 'withdrawn') {
+      throw new StashError('ITEM_WITHDRAWN', 'cannot consolidate into a withdrawn survivor');
+    }
+    for (const id of dupes) {
+      const d = byId.get(id);
+      if (!d) throw new StashError('ITEM_NOT_FOUND', `dupe not found: ${id}`);
+      if (d.status === 'withdrawn') {
+        throw new StashError('ITEM_WITHDRAWN', `dupe is already withdrawn: ${id}`);
+      }
+    }
+
+    const moved = await client.query(
+      `update stash_requests set item_id = $1
+       where guild_id = $2 and item_id = any($3::text[]) and status in ('pending', 'approved')
+       returning id, user_id, item_id`,
+      [survivorId, guildId, dupes]
+    );
+
+    const addQty = dupes.reduce((s, id) => s + byId.get(id).quantity, 0);
+    const addRem = dupes.reduce((s, id) => s + byId.get(id).remaining, 0);
+    const fillId = dupes.map((id) => byId.get(id).wowhead_id).find((v) => v != null) ?? null;
+    const fillSlot = dupes.map((id) => byId.get(id).slot).find((v) => v != null) ?? null;
+    await client.query(
+      `update stash_items
+         set quantity = quantity + $2,
+             remaining = remaining + $3,
+             wowhead_id = coalesce(wowhead_id, $4),
+             slot = coalesce(slot, $5)
+       where id = $1`,
+      [survivorId, addQty, addRem, fillId, fillSlot]
+    );
+
+    await client.query(
+      `update stash_items set status = 'withdrawn', remaining = 0 where id = any($1::text[])`,
+      [dupes]
+    );
+
+    await recomputeItemStatus(client, survivorId);
+    const { rows } = await client.query('select * from stash_items where id = $1', [survivorId]);
+    await client.query('commit');
+    return {
+      survivor: rowToItem(rows[0]),
+      movedRequests: moved.rows.map((r) => ({ id: r.id, userId: r.user_id, itemId: r.item_id })),
+      mergedQuantity: addQty,
+      mergedRemaining: addRem,
+      dupeIds: dupes
+    };
+  } catch (err) {
+    await client.query('rollback').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 // Sweep stale approvals (a Manager approved but never sent within N days) back to
 // 'pending' so the reserved unit frees up and the queue keeps moving. Per-guild;
 // called from the 60s tick with the guild's stash.staleApprovalDays. Returns the

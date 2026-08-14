@@ -12,6 +12,7 @@
     "start": "node src/index.js",
     "deploy": "node src/deploy-commands.js",
     "emojis:list": "node scripts/list-emojis.js",
+    "stash:consolidate": "node -r dotenv/config scripts/consolidate-stash.js",
     "test": "node --test",
     "test:int": "node -r dotenv/config --test --test-concurrency=1 test/integration/",
     "lint": "eslint .",
