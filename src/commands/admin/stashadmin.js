@@ -66,6 +66,24 @@ export const data = new SlashCommandBuilder()
   )
   .addSubcommand((s) =>
     s
+      .setName('edit')
+      .setDescription('Correct an item\u2019s attributes (name, slot, etc.).')
+      .addStringOption((o) =>
+        o.setName('item_id').setDescription('Item id (from list)').setRequired(true)
+      )
+      .addStringOption((o) => o.setName('name').setDescription('New item name').setMaxLength(200))
+      .addStringOption((o) =>
+        o
+          .setName('slot')
+          .setDescription('New equipment slot')
+          .addChoices(...STASH_SLOTS.map((s) => ({ name: s.label, value: s.value })))
+      )
+      .addStringOption((o) => o.setName('wowhead_id').setDescription('New Wowhead item id or URL'))
+      .addStringOption((o) => o.setName('donor').setDescription('New donor'))
+      .addStringOption((o) => o.setName('notes').setDescription('New free-text notes'))
+  )
+  .addSubcommand((s) =>
+    s
       .setName('list')
       .setDescription('List stash items.')
       .addStringOption((o) =>
@@ -256,6 +274,7 @@ export const data = new SlashCommandBuilder()
 const ERROR_MESSAGES = {
   INVALID_INPUT: 'That input is invalid — check the values and try again.',
   ITEM_NOT_FOUND: 'No item with that id in this server.',
+  ITEM_WITHDRAWN: 'That item was withdrawn and can\u2019t be edited.',
   REQUEST_NOT_FOUND: 'No request with that id in this server.',
   ITEM_NOT_AVAILABLE: 'That item is not available.',
   REQUEST_NOT_PENDING: 'That request is not pending approval.',
@@ -264,6 +283,17 @@ const ERROR_MESSAGES = {
   NO_STOCK: 'No stock left for that item.',
   NOT_OWNER: 'Only the requester can do that.'
 };
+
+// Given the just-edited item id and findItemMatch results (active items sharing
+// the item's new normalized name/id), return a soft consolidation hint naming the
+// OTHER item, or null when the only match is the item itself (or none). Pure/
+// exported for unit tests. Editing never merges — this just flags the collision a
+// rename can create so a manager can consolidate deliberately.
+export function collisionNote(itemId, matches) {
+  const other = (Array.isArray(matches) ? matches : []).find((m) => m.id !== itemId);
+  if (!other) return null;
+  return `\u26a0 Now matches \`${other.id}\` (**${other.name}**) — consider consolidating.`;
+}
 
 function fmtItem(item) {
   const bits = [`\`${item.id}\` — **${item.name}** \u00d7${item.remaining}/${item.quantity}`];
@@ -628,6 +658,34 @@ export async function execute(interaction) {
         await interaction.editReply(
           `Added **${item.name}** \u00d7${item.quantity} — id \`${item.id}\`.`
         );
+        return;
+      }
+      case 'edit': {
+        const itemId = interaction.options.getString('item_id', true);
+        // Set-only: an omitted option is left unchanged (a provided one is applied;
+        // an invalid wowhead normalizes to null, which clears it, same as `add`).
+        const patch = {};
+        const name = interaction.options.getString('name');
+        if (name != null) patch.name = name;
+        const slot = interaction.options.getString('slot');
+        if (slot != null) patch.slot = slot;
+        const wowheadRaw = interaction.options.getString('wowhead_id');
+        if (wowheadRaw != null) patch.wowheadId = normalizeWowheadId(wowheadRaw);
+        const donor = interaction.options.getString('donor');
+        if (donor != null) patch.donor = donor;
+        const notes = interaction.options.getString('notes');
+        if (notes != null) patch.notes = notes;
+
+        const item = await store.editItem(guildId, itemId, patch);
+        let reply = `Updated \`${item.id}\` — **${item.name}**${item.slot ? ` (${item.slot})` : ''}.`;
+        // A rename can collide with another active item; editItem never merges, so
+        // flag it for deliberate consolidation.
+        if ('name' in patch) {
+          const matches = await store.findItemMatch(guildId, { name: item.name });
+          const note = collisionNote(item.id, matches);
+          if (note) reply += `\n${note}`;
+        }
+        await interaction.editReply(reply);
         return;
       }
       case 'list': {
