@@ -537,6 +537,8 @@ async function handleEditSubmit(interaction, parsed) {
     const matches = await store.findItemMatch(interaction.guildId, { name: item.name });
     const note = collisionNote(item.id, matches);
     if (note) reply += `\n${note}`;
+    if (!patch.wowheadId)
+      reply += '\nTip: no Wowhead link set \u2014 Manage \u2192 Edit to add one.';
     await interaction.editReply({ content: reply, embeds: [], components: [] });
   } catch (err) {
     await editStoreErrorUpdate(interaction, err, 'stash edit submit failed');
@@ -653,11 +655,9 @@ async function handleAddSubmit(interaction, parsed) {
       return;
     }
     const item = await store.addItem(guildId, { name, quantity, slot, donor, wowheadId, notes });
-    await interaction.editReply({
-      content: `Added **${item.name}** \u00d7${item.quantity} \u2014 id \`${item.id}\`.`,
-      embeds: [],
-      components: []
-    });
+    let content = `Added **${item.name}** \u00d7${item.quantity} \u2014 id \`${item.id}\`.`;
+    if (!wowheadId) content += '\nTip: no Wowhead link set \u2014 Manage \u2192 Edit to add one.';
+    await interaction.editReply({ content, embeds: [], components: [] });
   } catch (err) {
     await editStoreErrorUpdate(interaction, err, 'stash add-modal submit failed');
   }

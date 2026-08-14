@@ -403,7 +403,8 @@ export function buildManagerPanel({ items = [], pending = [], approved = [], nam
             manageable.slice(0, SELECT_LIMIT).map((it) => {
               const opt = { label: truncate(it.name, 100), value: it.id };
               const slotLabel = SLOT_LABEL.get(normalizeSlot(it.slot)) || it.slot;
-              const desc = [slotLabel, it.status, `\u00d7${it.remaining}`]
+              const noLink = normalizeWowheadId(it.wowheadId) == null ? '\u26a0 no link' : null;
+              const desc = [noLink, slotLabel, it.status, `\u00d7${it.remaining}`]
                 .filter(Boolean)
                 .join(' \u00b7 ');
               if (desc) opt.description = truncate(desc, 100);
@@ -567,7 +568,8 @@ export function collisionNote(itemId, matches) {
  * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
  */
 export function buildItemAction({ item } = {}) {
-  const name = itemNameMarkup({ name: item.name, wowheadId: normalizeWowheadId(item.wowheadId) });
+  const wowheadId = normalizeWowheadId(item.wowheadId);
+  const name = itemNameMarkup({ name: item.name, wowheadId });
   const slotLabel = SLOT_LABEL.get(normalizeSlot(item.slot)) || item.slot || '\u2014';
   const embed = new EmbedBuilder()
     .setColor(EMBED_COLOR)
@@ -575,10 +577,13 @@ export function buildItemAction({ item } = {}) {
     .setDescription(
       [
         `${name} \u00d7${item.remaining}/${item.quantity} [${item.status}]`,
+        wowheadId == null ? '\u26a0 No Wowhead link \u2014 add one via Edit.' : null,
         `Slot: ${slotLabel}`,
         `Donor: ${item.donor || '\u2014'}`,
         `Item id: \`${item.id}\``
-      ].join('\n')
+      ]
+        .filter(Boolean)
+        .join('\n')
     );
   return {
     embeds: [embed],

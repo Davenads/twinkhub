@@ -336,10 +336,29 @@ test('buildManagerPanel: manage-item select spans available/requested/given, act
   assert.equal(selectByAction(empty, 'mitem'), null, 'no select when nothing is manageable');
 });
 
+test('buildManagerPanel: manage-item select flags rows missing a Wowhead link', () => {
+  const panel = buildManagerPanel({
+    items: [item({ id: 'a', name: 'Alpha' }), item({ id: 'b', name: 'Bravo', wowheadId: '12977' })]
+  });
+  const opts = selectByAction(panel, 'mitem').options;
+  const desc = (v) => opts.find((o) => o.value === v).description;
+  assert.ok(desc('itm_a').includes('no link'), 'linkless row flagged');
+  assert.ok(!desc('itm_b').includes('no link'), 'linked row not flagged');
+});
+
 test('buildItemAction: offers Edit and Withdraw carrying the item id', () => {
   const ids = buttonIds(buildItemAction({ item: item({ id: 'a', name: 'Alpha' }) }));
   assert.ok(ids.includes(encodeStashId('medit', 'itm_a')), 'Edit routes medit|itm_a');
   assert.ok(ids.includes(encodeStashId('wdp', 'itm_a')), 'Withdraw routes wdp|itm_a');
+});
+
+test('buildItemAction: warns when the item lacks a Wowhead link, silent when it has one', () => {
+  const missing = description(buildItemAction({ item: item({ id: 'a', name: 'Alpha' }) }));
+  assert.ok(missing.includes('No Wowhead link'), 'linkless item warned');
+  const linked = description(
+    buildItemAction({ item: item({ id: 'b', name: 'Bravo', wowheadId: '12977' }) })
+  );
+  assert.ok(!linked.includes('No Wowhead link'), 'linked item not warned');
 });
 
 test('buildEditWizard: prefills the current slot and carries the item id in every control', () => {
