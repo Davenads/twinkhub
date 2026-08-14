@@ -809,14 +809,26 @@ The 60s tick already fingerprint-refreshes the browse panel. Add a parallel fing
 the manager panel (pending + approved request sets, plus item counts) and refresh it on the
 same tick when it changes. Same isolated try/catch + `editOrRepost` self-heal.
 
-### Add Item via modal — caveat
+### Add Item via modal — decision (updated 2026-08-14, greenlit)
 
-An **Add Item** button could open a modal to capture name/quantity/donor/notes without a
-slash command. But **Discord modals support only text inputs — no select menus** — so `slot`
-would regress to free text, undoing Slice A's dropdown. Options: (a) omit `slot` from the
-modal (defaults to Ungrouped, set later), or (b) keep **Add on the `/stashadmin add` slash
-command** (recommended) so the slot dropdown is preserved. Lean (b); the modal is a
-convenience-only nicety, not worth the taxonomy regression.
+Superseded the earlier "lean (b), skip the modal" caveat. The old worry was that modals are
+text-input-only so `slot` would regress from Slice A's dropdown — but `normalizeSlot` already
+folds free-text slots (`bracer -> wrist`, unknown -> Ungrouped), so a free-text slot input is
+acceptable and **loses no taxonomy**. Plan: an **Add Item** button (shares the Refresh button
+row — the panel is at 4/5 rows worst-case, so new *actions* must be buttons that share a row,
+never new selects) opens a modal with **5 text inputs** — name (required), quantity, slot,
+wowhead id/link (`normalizeWowheadId` accepts a bare id or a pasted Classic URL), donor;
+`tags`/`notes` stay on the slash command (Discord caps a modal at 5 inputs).
+
+**Prereq — modal-submit routing.** `index.js` currently forks only
+`isButton() || isAnySelectMenu()` to the stash router; a `ModalSubmitInteraction` falls
+through to the command guard and is **silently dropped**. Add an `isModalSubmit()` branch that
+forks `s1|`-prefixed submits into `handleStashComponent` (the `parseStashCustomId` codec
+already handles any `s1|` id, so the router needs only a new action handler). Reload-only —
+modals/buttons are not command definitions, so no `deploy`.
+
+**Submit runs the add-time dedup path (below)** — the modal and the slash command share one
+match->restock code path.
 
 ### Concurrency + stale controls (already safe)
 
@@ -838,3 +850,100 @@ same guard — no corruption possible.
 
 Deploy/reload: Phase 1 needs one `deploy` (the `panel kind` option); everything else is
 component routing -> reload-only.
+
+> **Status (2026-08-14):** Phase 1 (interactive approve/deny/sent console) and Phase 2
+> (withdraw) are **shipped**. As-built customIds drifted from the sketch above: withdraw is
+> `s1|wdc|<itemId>` / `s1|wdcx|<itemId>` (not `wdrw`/`wdrwc`), and the console adds an
+> in-panel Withdraw select `s1|mwd`. Panel row budget is now pending (`mq`) + approved
+> (`maq`) + withdraw (`mwd`) selects + a Refresh (`mref`) button row = **4 of 5 rows**.
+
+## Planned: add-time dedup + wowhead inheritance (2026-08-14)
+
+Problem (observed): re-adding an item that already exists — exact name, e.g. "Staff of the
+Blessed Seer" — creates a **duplicate row**, and you must re-type the `wowhead_id` you already
+entered once. Root cause: `store.addItem` unconditionally `insert`s a fresh `itm_…` row; it
+never looks for an existing match. Two asks, one fix: make add **match-and-restock** instead
+of blind-insert, and inherit the existing wowhead id on a match.
+
+### Identity / match key
+
+- **Tier 1 — `wowhead_id`** (canonical) when the incoming add supplies one. Exact identity.
+- **Tier 2 — normalized name** `lower(btrim(name))` for id-less items.
+- **Scope: active rows only** — `status in ('available','requested','given')`. **Never match a
+  `withdrawn` row** (it was deliberately pulled; add a fresh row instead of resurrecting it).
+- **Conflict rule:** a name match only merges when there is **no wowhead-id conflict** — if the
+  add carries id `W`, a candidate must have `wowhead_id` null or `= W`. Differing ids ⇒ distinct
+  same-name variants ⇒ insert new. A no-id add matches any name candidate, and **prefers one
+  that already has an id** so we inherit it.
+
+### Behavior on match — restock, don't duplicate
+
+When a compatible active candidate exists, **restock the earliest** instead of inserting:
+
+- `quantity += N, remaining += N` together — keeps the `remaining_within_quantity` and
+  `quantity > 0` checks satisfied; a `given`/exhausted row flips back to `available` via
+  `recomputeItemStatus`.
+- **COALESCE-backfill** `wowhead_id` and `slot` (fill only when the existing row is null), so
+  the id entered on the first donation is inherited and never re-typed.
+- Keep existing `donor`/`notes` — a restock shouldn't overwrite provenance. *Decision to
+  confirm:* silently keep vs. append the new donor to `notes`. Recommend keep + log.
+- Report exactly what happened: "Restocked **Staff of the Blessed Seer** → ×N (`itm_…`)."
+
+No match ⇒ insert as today.
+
+### UX shape — recommend auto-restock + report + a `force_new` escape (stateless)
+
+"Same normalized name, no id conflict" almost always **is** the same WoW item, so act
+immediately and report rather than gating every add behind a confirm click:
+
+- **Default:** exact-key match ⇒ restock + a clear, reversible report (wrong? withdraw +
+  re-add). Fully stateless — no in-memory pending-add collector to die on `pm2 reload`.
+- **Escape hatch:** a `force_new:true` boolean on `/stashadmin add` (and an "Add as separate
+  entry" affordance in the modal) for the rare genuinely-distinct same-name case.
+- *Alternative considered — button confirm (Restock / Add new / Cancel):* safer against an
+  accidental name collision, but "Add as new" needs the full free-text payload, which can't
+  ride a ≤100-char customId, forcing a short-lived in-memory pending-add token (a deliberate
+  exception to the stateless rule; graceful loss on reload). Deferred as optional polish;
+  auto-restock is simpler and stays stateless.
+
+### Legacy dupes already in the DB (the screenshot)
+
+Going-forward dedup won't retro-merge existing duplicate rows — a one-time **consolidation** is
+needed:
+
+- Merge same-key active rows into the earliest: sum `quantity`/`remaining`; **re-point open
+  (`pending`/`approved`) requests** to the survivor (`update stash_requests set item_id = …`)
+  **before** retiring the dupe; mark the emptied dupe `withdrawn` — do **not** `delete` it (the
+  `stash_requests` FK is `on delete cascade`, so a delete would nuke that row's `sent`/`denied`
+  history too).
+- Deliver as a `/stashadmin` maintenance action or a scripted one-off via the Supabase CLI —
+  **never at boot**. Dry-run / report first.
+
+### Optional DB-level guard (defense in depth)
+
+A **partial unique index** `unique (guild_id, wowhead_id) where wowhead_id is not null and
+status in ('available','requested','given')` stops future id-keyed dupes at the DB. Name
+uniqueness can't be safely enforced (case/whitespace + legit same-name variants), so name dedup
+stays app-side. The index **fails to build while id-keyed dupes exist**, so it runs **after**
+consolidation, via CLI `db push` — not at boot.
+
+### Store surface (new)
+
+- `findItemMatch(guildId, { wowheadId, name })` → compatible active candidate(s), `created_at
+  asc`.
+- `restockItem(guildId, itemId, addQty, { wowheadId, slot } = {})` → txn + `FOR UPDATE`; bump
+  qty + remaining; COALESCE-backfill id/slot; `recomputeItemStatus`. Keep `addItem` as the pure
+  insert for the no-match / `force_new` path.
+
+### Sequencing (folds into the greenlit Add-Item modal)
+
+The match+restock logic is entry-point-agnostic — one code path serves the slash command and
+the modal:
+
+1. **Store:** `findItemMatch` + `restockItem` (+ tests). *(reload-only)*
+2. **Slash `/stashadmin add`:** route through match→restock; add a `force_new` boolean.
+   *(definition change ⇒ `deploy`)*
+3. **Add-Item modal:** modal-submit routing prereq in `index.js` (`isModalSubmit` → stash
+   fork), `buildAddModal` (5 inputs), submit reuses the same match→restock path. *(reload-only)*
+4. **Consolidation** of existing dupes (maintenance op / CLI), then the **optional** partial
+   unique index. *(migration via CLI, not boot)*
