@@ -3,8 +3,15 @@ import { requireRequester, requireManager } from '../lib/access.js';
 import { loadGuildConfig } from '../config/guildConfig.js';
 import { logger } from '../lib/logger.js';
 import * as store from '../stash/store.js';
-import { parseStashCustomId, buildStashPanel, buildManagerPanel } from '../services/stash.js';
-import { notifyNewRequest } from '../stash/notify.js';
+import {
+  parseStashCustomId,
+  buildStashPanel,
+  buildManagerPanel,
+  buildRequestAction,
+  buildDenyConfirm,
+  itemNames
+} from '../services/stash.js';
+import { notifyNewRequest, notifyRequester } from '../stash/notify.js';
 
 // Component router for the public Community Stash panel (`s1|` ids). Runs in
 // parallel to components/panels.js (the `p1` content panels); index.js forks on
@@ -151,7 +158,7 @@ async function handleManagerRefresh(interaction) {
       store.listRequests(interaction.guildId, { statuses: ['approved'] })
     ]);
     await interaction.editReply({
-      ...buildManagerPanel({ items, pending, approved }),
+      ...buildManagerPanel({ items, pending, approved, names: itemNames(items) }),
       ...SEND_OPTS
     });
   } catch (err) {
@@ -162,11 +169,185 @@ async function handleManagerRefresh(interaction) {
   }
 }
 
+// Stable StashError.code -> manager-facing text for the action console. A racy
+// click (someone else already handled it, or stock ran out) resolves to a clear
+// reason instead of a thrown error.
+const MANAGER_ERROR_MESSAGES = {
+  REQUEST_NOT_FOUND: 'That request no longer exists.',
+  REQUEST_NOT_PENDING: 'That request is no longer pending \u2014 someone may have handled it.',
+  REQUEST_NOT_APPROVED: 'That request is not in the approved state anymore.',
+  REQUEST_NOT_OPEN: 'That request is already closed.',
+  NO_STOCK: 'No stock is left to fulfil that request.',
+  ITEM_NOT_FOUND: 'That item is no longer in the stash.'
+};
+
+// Collapse the ephemeral action console into the store's stable reason (or a
+// generic line) when an action can't proceed. Falls back to a followUp if the
+// interaction was already acknowledged.
+async function updateActionError(interaction, err, label) {
+  const text =
+    err instanceof store.StashError
+      ? (MANAGER_ERROR_MESSAGES[err.code] ?? err.message)
+      : 'Something went wrong talking to the stash. Try again.';
+  if (!(err instanceof store.StashError)) logger.error({ err }, label);
+  try {
+    await interaction.update({ content: text, embeds: [], components: [] });
+  } catch {
+    await interaction.followUp({ content: text, flags: MessageFlags.Ephemeral }).catch(() => {});
+  }
+}
+
+// Collapse the console into a plain confirmation (no buttons) after a decision,
+// then DM the requester. The DM is fire-and-forget so a closed DM never fails the
+// manager's action.
+async function finishAction(interaction, req, kind, text) {
+  await interaction.update({ content: text, embeds: [], components: [] });
+  notifyRequester(interaction.client, interaction.guildId, { req, kind }).catch(() => {});
+}
+
+// Manager console select (pending `mq` / approved `maq`) -> spawn an EPHEMERAL
+// per-request action console. Never edits the shared panel message, so two
+// managers can act at once without stomping each other. Reads authoritative
+// state so a stale option (already handled) surfaces cleanly.
+async function handleConsoleSelect(interaction) {
+  if (!(await requireManager(interaction))) return;
+  const reqId = interaction.values?.[0];
+  if (!reqId) {
+    await interaction.reply({ content: 'No request selected.', flags: MessageFlags.Ephemeral });
+    return;
+  }
+  try {
+    const req = await store.getRequest(interaction.guildId, reqId);
+    if (!req) {
+      await interaction.reply({
+        content: MANAGER_ERROR_MESSAGES.REQUEST_NOT_FOUND,
+        flags: MessageFlags.Ephemeral
+      });
+      return;
+    }
+    const item = await store.getItem(interaction.guildId, req.itemId).catch(() => null);
+    await interaction.reply({
+      ...buildRequestAction({ req, itemName: item?.name }),
+      flags: MessageFlags.Ephemeral,
+      ...SEND_OPTS
+    });
+  } catch (err) {
+    logger.error({ err }, 'stash manager console open failed');
+    await interaction
+      .reply({ content: 'Could not open that request.', flags: MessageFlags.Ephemeral })
+      .catch(() => {});
+  }
+}
+
+// Approve button (`aprv`) on the ephemeral console -> approve the request.
+async function handleApprove(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  try {
+    const req = await store.approveRequest(
+      interaction.guildId,
+      parsed.args[0],
+      interaction.user.id
+    );
+    await finishAction(
+      interaction,
+      req,
+      'approved',
+      `Approved request \`${req.id}\`. The requester has been notified.`
+    );
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash approve failed');
+  }
+}
+
+// Mark Sent button (`sent`) on the ephemeral console -> mark an approved request
+// handed over (decrements stock).
+async function handleSent(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  try {
+    const req = await store.markSent(interaction.guildId, parsed.args[0], interaction.user.id);
+    await finishAction(
+      interaction,
+      req,
+      'sent',
+      `Marked request \`${req.id}\` as sent. The requester has been notified.`
+    );
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash mark-sent failed');
+  }
+}
+
+// Deny button (`deny`), step 1 -> replace the console with a Yes/No confirm so a
+// mis-click can't free a reserved unit and fire a requester DM.
+async function handleDenyPrompt(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  try {
+    const req = await store.getRequest(interaction.guildId, parsed.args[0]);
+    if (!req) {
+      await interaction.update({
+        content: MANAGER_ERROR_MESSAGES.REQUEST_NOT_FOUND,
+        embeds: [],
+        components: []
+      });
+      return;
+    }
+    const item = await store.getItem(interaction.guildId, req.itemId).catch(() => null);
+    await interaction.update({ ...buildDenyConfirm({ req, itemName: item?.name }), ...SEND_OPTS });
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash deny prompt failed');
+  }
+}
+
+// Deny confirm (`denyc`), step 2 -> deny the request for real.
+async function handleDenyConfirm(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  try {
+    const req = await store.denyRequest(interaction.guildId, parsed.args[0], interaction.user.id);
+    await finishAction(
+      interaction,
+      req,
+      'denied',
+      `Denied request \`${req.id}\`. The requester has been notified.`
+    );
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash deny failed');
+  }
+}
+
+// Deny cancel (`dcxl`) -> back out of the confirm to the action console.
+async function handleDenyCancel(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  try {
+    const req = await store.getRequest(interaction.guildId, parsed.args[0]);
+    if (!req) {
+      await interaction.update({
+        content: MANAGER_ERROR_MESSAGES.REQUEST_NOT_FOUND,
+        embeds: [],
+        components: []
+      });
+      return;
+    }
+    const item = await store.getItem(interaction.guildId, req.itemId).catch(() => null);
+    await interaction.update({
+      ...buildRequestAction({ req, itemName: item?.name }),
+      ...SEND_OPTS
+    });
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash deny cancel failed');
+  }
+}
+
 const HANDLERS = {
   req: handleRequest,
   mine: handleMine,
   refresh: handleRefresh,
-  mref: handleManagerRefresh
+  mref: handleManagerRefresh,
+  mq: handleConsoleSelect,
+  maq: handleConsoleSelect,
+  aprv: handleApprove,
+  sent: handleSent,
+  deny: handleDenyPrompt,
+  denyc: handleDenyConfirm,
+  dcxl: handleDenyCancel
 };
 
 /** True when a component interaction targets a stash control (current `s1` id). */
@@ -197,5 +378,5 @@ export async function handleStashComponent(interaction) {
     });
     return;
   }
-  await handler(interaction);
+  await handler(interaction, parsed);
 }

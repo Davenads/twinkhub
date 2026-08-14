@@ -6,6 +6,7 @@ import * as store from '../../stash/store.js';
 import {
   buildStashPanel,
   buildManagerPanel,
+  itemNames,
   normalizeWowheadId,
   STASH_SLOTS
 } from '../../services/stash.js';
@@ -304,7 +305,7 @@ async function renderManagerPanel(guildId) {
     store.listRequests(guildId, { statuses: ['pending'] }),
     store.listRequests(guildId, { statuses: ['approved'] })
   ]);
-  return buildManagerPanel({ items, pending, approved });
+  return buildManagerPanel({ items, pending, approved, names: itemNames(items) });
 }
 
 // Per-kind panel wiring: which stash config keys hold the host channel + message

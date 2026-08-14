@@ -411,6 +411,16 @@ export async function getItem(guildId, itemId) {
   return rows.length ? rowToItem(rows[0]) : null;
 }
 
+// Read: a single request by id (guild-scoped). Null when not found. Used by the
+// manager console to re-read authoritative state before rendering an action.
+export async function getRequest(guildId, requestId) {
+  const { rows } = await getPool().query(
+    'select * from stash_requests where id = $1 and guild_id = $2',
+    [requestId, guildId]
+  );
+  return rows.length ? rowToRequest(rows[0]) : null;
+}
+
 // Read: items for the panel / list command. Defaults to the active statuses.
 export async function listItems(
   guildId,

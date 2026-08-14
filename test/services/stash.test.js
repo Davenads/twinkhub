@@ -6,6 +6,8 @@ import {
   parseStashCustomId,
   buildStashPanel,
   buildManagerPanel,
+  buildRequestAction,
+  buildDenyConfirm,
   normalizeWowheadId,
   normalizeSlot,
   STASH_SLOTS
@@ -36,6 +38,15 @@ function requestSelect(panel) {
 
 function buttonIds(panel) {
   return panel.components.flatMap((row) => row.toJSON().components.map((c) => c.custom_id));
+}
+
+// The select row (or null) whose custom_id matches the given action.
+function selectByAction(panel, action) {
+  for (const row of panel.components) {
+    const c = row.toJSON().components[0];
+    if (c.custom_id === encodeStashId(action)) return c;
+  }
+  return null;
 }
 
 test('encodeStashId / parseStashCustomId round-trip a versioned id', () => {
@@ -226,4 +237,75 @@ test('buildManagerPanel: default (no args) renders zeroed counts safely', () => 
   const desc = description(buildManagerPanel());
   assert.ok(desc.includes('**Pending** (awaiting approval): **0**'), 'zero pending');
   assert.ok(desc.includes('**Available items**: **0** (0 units)'), 'zero stock, plural unit');
+});
+
+test('buildManagerPanel: no open requests omits both console selects', () => {
+  const panel = buildManagerPanel({ items: [item({ id: 'a' })] });
+  assert.equal(selectByAction(panel, 'mq'), null, 'no pending select');
+  assert.equal(selectByAction(panel, 'maq'), null, 'no approved select');
+  assert.ok(buttonIds(panel).includes(encodeStashId('mref')), 'Refresh still present');
+});
+
+test('buildManagerPanel: pending/approved selects label by item and value by request id', () => {
+  const panel = buildManagerPanel({
+    items: [item({ id: 'a' })],
+    pending: [{ id: 'r1', itemId: 'itm_a', userId: 'u1', status: 'pending' }],
+    approved: [{ id: 'r2', itemId: 'itm_a', userId: 'u2', status: 'approved' }],
+    names: { itm_a: 'Alpha' }
+  });
+  const mq = selectByAction(panel, 'mq');
+  const maq = selectByAction(panel, 'maq');
+  assert.ok(mq, 'pending select present');
+  assert.ok(maq, 'approved select present');
+  assert.equal(mq.options[0].label, 'Alpha', 'pending option labelled by item name');
+  assert.equal(mq.options[0].value, 'r1', 'pending option value is the request id');
+  assert.equal(maq.options[0].value, 'r2', 'approved option value is the request id');
+});
+
+test('buildManagerPanel: caps each console select at 25 options', () => {
+  const pending = Array.from({ length: 40 }, (_, i) => ({
+    id: `r${i}`,
+    itemId: 'itm_a',
+    userId: 'u',
+    status: 'pending'
+  }));
+  const mq = selectByAction(buildManagerPanel({ pending }), 'mq');
+  assert.equal(mq.options.length, 25, 'select capped at Discord max of 25');
+});
+
+test('buildRequestAction: a pending request offers Approve + Deny', () => {
+  const panel = buildRequestAction({
+    req: { id: 'r1', itemId: 'itm_a', userId: 'u1', status: 'pending' },
+    itemName: 'Alpha'
+  });
+  const ids = buttonIds(panel);
+  assert.ok(ids.includes(encodeStashId('aprv', 'r1')), 'Approve carries the request id');
+  assert.ok(ids.includes(encodeStashId('deny', 'r1')), 'Deny carries the request id');
+  assert.ok(!ids.includes(encodeStashId('sent', 'r1')), 'no Mark Sent while pending');
+});
+
+test('buildRequestAction: an approved request offers only Mark Sent', () => {
+  const panel = buildRequestAction({
+    req: { id: 'r2', itemId: 'itm_a', userId: 'u2', status: 'approved' },
+    itemName: 'Alpha'
+  });
+  const ids = buttonIds(panel);
+  assert.deepEqual(ids, [encodeStashId('sent', 'r2')], 'only Mark Sent');
+});
+
+test('buildRequestAction: a null itemName falls back to the raw item id', () => {
+  const desc = description(
+    buildRequestAction({ req: { id: 'r1', itemId: 'itm_a', userId: 'u1', status: 'pending' } })
+  );
+  assert.ok(desc.includes('`itm_a`'), 'raw item id shown when name is unknown');
+});
+
+test('buildDenyConfirm: two-click confirm carries the request id on both buttons', () => {
+  const panel = buildDenyConfirm({
+    req: { id: 'r1', itemId: 'itm_a', userId: 'u1', status: 'pending' },
+    itemName: 'Alpha'
+  });
+  const ids = buttonIds(panel);
+  assert.ok(ids.includes(encodeStashId('denyc', 'r1')), 'Confirm deny routes denyc|r1');
+  assert.ok(ids.includes(encodeStashId('dcxl', 'r1')), 'Cancel routes dcxl|r1');
 });

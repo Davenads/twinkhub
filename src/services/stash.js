@@ -162,6 +162,25 @@ function claimable(items) {
   return items.filter((it) => it.status === 'available' && it.remaining > 0);
 }
 
+/** itemId -> display name lookup, for labelling request selects by item. */
+export function itemNames(items = []) {
+  return Object.fromEntries(items.map((it) => [it.id, it.name]));
+}
+
+/**
+ * Build up-to-25 select options for a request list. The label carries the item
+ * name (falling back to the raw item id) so managers act by item, not opaque
+ * request id; the option value is the request id the handler routes on. `names`
+ * maps itemId -> display name (see itemNames).
+ */
+function requestOptions(requests, names = {}) {
+  return requests.slice(0, SELECT_LIMIT).map((req) => ({
+    label: truncate(names[req.itemId] || `item ${req.itemId}`, 100),
+    value: req.id,
+    description: truncate(`request ${req.id}`, 100)
+  }));
+}
+
 /**
  * Build the public stash panel message from a live items array. Returns
  * `{ embeds, components }`. When nothing is claimable the request select is
@@ -223,14 +242,15 @@ export function buildStashPanel({ items = [] } = {}) {
 
 /**
  * Build the Manager Console panel — a manager-only dashboard posted in a
- * restricted channel. Read-only for now (request/stock counts + a Refresh
- * button); the interactive approve/deny/sent selects are a later slice, so this
- * intentionally exposes no per-request controls yet.
+ * restricted channel. Shows request/stock counts plus Pending/Approved selects:
+ * picking a request spawns an ephemeral per-request action console (buildRequest
+ * Action) so managers never edit this shared message. Each select is omitted
+ * when its list is empty; a Refresh button re-renders the counts in place.
  *
- * @param {{ items?: Array, pending?: Array, approved?: Array }} args
+ * @param {{ items?: Array, pending?: Array, approved?: Array, names?: object }} args
  * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
  */
-export function buildManagerPanel({ items = [], pending = [], approved = [] } = {}) {
+export function buildManagerPanel({ items = [], pending = [], approved = [], names = {} } = {}) {
   const inStock = items.filter((it) => it.status === 'available' && it.remaining > 0);
   const availableUnits = inStock.reduce((n, it) => n + it.remaining, 0);
 
@@ -244,16 +264,114 @@ export function buildManagerPanel({ items = [], pending = [], approved = [] } = 
         `**Available items**: **${inStock.length}** (${availableUnits} unit${availableUnits === 1 ? '' : 's'})`
       ].join('\n')
     )
-    .setFooter({ text: 'Act on requests with /stashadmin queue.' });
+    .setFooter({ text: 'Pick a request below to approve, deny, or mark it sent.' });
 
-  const components = [
+  const components = [];
+  if (pending.length) {
+    components.push(
+      row(
+        new StringSelectMenuBuilder()
+          .setCustomId(encodeStashId('mq'))
+          .setPlaceholder('Review a pending request\u2026')
+          .addOptions(requestOptions(pending, names))
+      )
+    );
+  }
+  if (approved.length) {
+    components.push(
+      row(
+        new StringSelectMenuBuilder()
+          .setCustomId(encodeStashId('maq'))
+          .setPlaceholder('Hand off an approved request\u2026')
+          .addOptions(requestOptions(approved, names))
+      )
+    );
+  }
+  components.push(
     row(
       new ButtonBuilder()
         .setCustomId(encodeStashId('mref'))
         .setLabel('Refresh')
         .setStyle(ButtonStyle.Secondary)
     )
-  ];
+  );
 
   return { embeds: [embed], components };
+}
+
+/**
+ * Build the ephemeral per-request action console spawned when a manager picks a
+ * request from a console select. A pending request offers Approve + Deny; an
+ * already-approved one offers Mark Sent. `itemName` may be null (deleted/racy) —
+ * we fall back to the raw item id. Ephemeral + allowedMentions:{parse:[]} at the
+ * send site keep the `<@user>` line from pinging.
+ *
+ * @param {{ req: object, itemName?: string|null }} args
+ * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
+ */
+export function buildRequestAction({ req, itemName } = {}) {
+  const name = itemName ? `**${itemName}**` : `item \`${req.itemId}\``;
+  const embed = new EmbedBuilder()
+    .setColor(EMBED_COLOR)
+    .setTitle('Stash request')
+    .setDescription(
+      [
+        name,
+        `Requester: <@${req.userId}>`,
+        `Status: ${req.status}`,
+        `Request id: \`${req.id}\``
+      ].join('\n')
+    );
+
+  const buttons =
+    req.status === 'approved'
+      ? [
+          new ButtonBuilder()
+            .setCustomId(encodeStashId('sent', req.id))
+            .setLabel('Mark Sent')
+            .setStyle(ButtonStyle.Success)
+        ]
+      : [
+          new ButtonBuilder()
+            .setCustomId(encodeStashId('aprv', req.id))
+            .setLabel('Approve')
+            .setStyle(ButtonStyle.Success),
+          new ButtonBuilder()
+            .setCustomId(encodeStashId('deny', req.id))
+            .setLabel('Deny')
+            .setStyle(ButtonStyle.Danger)
+        ];
+
+  return { embeds: [embed], components: [row(...buttons)] };
+}
+
+/**
+ * Build the two-click deny confirmation that replaces the action console when a
+ * manager clicks Deny — a guard so a mis-click can't free a reserved unit and
+ * fire a requester DM. Confirm routes `denyc`; Cancel routes `dcxl`.
+ *
+ * @param {{ req: object, itemName?: string|null }} args
+ * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
+ */
+export function buildDenyConfirm({ req, itemName } = {}) {
+  const name = itemName ? `**${itemName}**` : `item \`${req.itemId}\``;
+  const embed = new EmbedBuilder()
+    .setColor(DEGRADE_COLOR)
+    .setTitle('Deny this request?')
+    .setDescription(`${name} \u2014 <@${req.userId}> will be notified. This can't be undone.`);
+  return {
+    embeds: [embed],
+    components: [
+      row(
+        new ButtonBuilder()
+          .setCustomId(encodeStashId('denyc', req.id))
+          .setLabel('Confirm deny')
+          .setStyle(ButtonStyle.Danger),
+        new ButtonBuilder()
+          .setCustomId(encodeStashId('dcxl', req.id))
+          .setLabel('Cancel')
+          .setStyle(ButtonStyle.Secondary)
+      )
+    ]
+  };
 }
