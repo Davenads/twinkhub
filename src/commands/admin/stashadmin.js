@@ -8,6 +8,7 @@ import {
   buildManagerPanel,
   itemNames,
   normalizeWowheadId,
+  pickRestockTarget,
   STASH_SLOTS
 } from '../../services/stash.js';
 import { notifyRequester } from '../../stash/notify.js';
@@ -263,15 +264,6 @@ const ERROR_MESSAGES = {
   NO_STOCK: 'No stock left for that item.',
   NOT_OWNER: 'Only the requester can do that.'
 };
-
-// Decide whether an `add` merges into an existing item (restock) or inserts a
-// fresh row. `matches` is store.findItemMatch's active-item list (earliest
-// first); with force_new set we always insert. Returns the restock target or
-// null for a new insert. Pure/exported for unit tests.
-export function pickRestockTarget(matches, forceNew) {
-  if (forceNew) return null;
-  return Array.isArray(matches) && matches.length ? matches[0] : null;
-}
 
 function fmtItem(item) {
   const bits = [`\`${item.id}\` — **${item.name}** \u00d7${item.remaining}/${item.quantity}`];

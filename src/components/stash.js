@@ -10,6 +10,9 @@ import {
   buildRequestAction,
   buildDenyConfirm,
   buildWithdrawConfirm,
+  buildAddModal,
+  normalizeWowheadId,
+  pickRestockTarget,
   itemNames
 } from '../services/stash.js';
 import { notifyNewRequest, notifyRequester } from '../stash/notify.js';
@@ -399,6 +402,54 @@ async function handleWithdrawCancel(interaction) {
   });
 }
 
+// Add Item button (`madd`) on the manager console -> pop the Add-Item modal.
+// Manager-gated. showModal MUST be the first ack, so requireManager (which only
+// replies on denial, never acks on success) runs first and nothing defers.
+async function handleAddOpen(interaction) {
+  if (!(await requireManager(interaction))) return;
+  await interaction.showModal(buildAddModal());
+}
+
+// Add-Item modal submit (`madds`) -> intake through the same dedup path as
+// `/stashadmin add` (no force_new here, so a match always restocks). Manager-
+// gated again (a fresh interaction), then defer + editReply ephemerally.
+async function handleAddSubmit(interaction) {
+  if (!(await requireManager(interaction))) return;
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+  try {
+    const f = interaction.fields;
+    const name = f.getTextInputValue('name').trim();
+    if (!name) {
+      await interaction.editReply('An item name is required.');
+      return;
+    }
+    const rawQty = f.getTextInputValue('quantity').trim();
+    const parsedQty = Number.parseInt(rawQty, 10);
+    const quantity = Number.isInteger(parsedQty) && parsedQty >= 1 ? parsedQty : 1;
+    const rawSlot = f.getTextInputValue('slot').trim();
+    const slot = rawSlot || null;
+    const wowheadId = normalizeWowheadId(f.getTextInputValue('wowhead'));
+    const donor = f.getTextInputValue('donor').trim() || null;
+
+    const guildId = interaction.guildId;
+    const matches = await store.findItemMatch(guildId, { wowheadId, name });
+    const target = pickRestockTarget(matches, false);
+    if (target) {
+      const updated = await store.restockItem(guildId, target.id, quantity, { wowheadId, slot });
+      await interaction.editReply(
+        `Restocked **${updated.name}** +${quantity} \u2192 \u00d7${updated.remaining}/${updated.quantity} (id \`${updated.id}\`). Use \`/stashadmin add force_new:true\` for a separate entry.`
+      );
+      return;
+    }
+    const item = await store.addItem(guildId, { name, quantity, slot, donor, wowheadId });
+    await interaction.editReply(
+      `Added **${item.name}** \u00d7${item.quantity} — id \`${item.id}\`.`
+    );
+  } catch (err) {
+    await editStoreError(interaction, err, 'stash add-modal submit failed');
+  }
+}
+
 const HANDLERS = {
   req: handleRequest,
   mine: handleMine,
@@ -413,7 +464,9 @@ const HANDLERS = {
   dcxl: handleDenyCancel,
   mwd: handleWithdrawSelect,
   wdc: handleWithdrawConfirm,
-  wdcx: handleWithdrawCancel
+  wdcx: handleWithdrawCancel,
+  madd: handleAddOpen,
+  madds: handleAddSubmit
 };
 
 /** True when a component interaction targets a stash control (current `s1` id). */

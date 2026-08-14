@@ -9,6 +9,7 @@ import {
   buildRequestAction,
   buildDenyConfirm,
   buildWithdrawConfirm,
+  buildAddModal,
   normalizeWowheadId,
   normalizeSlot,
   STASH_SLOTS
@@ -318,6 +319,25 @@ test('buildManagerPanel: in-stock items add a Withdraw select, empty stock omits
   assert.equal(mwd.options[0].value, 'itm_a', 'option value is the item id');
   const empty = buildManagerPanel({ items: [item({ id: 'b', status: 'given', remaining: 0 })] });
   assert.equal(selectByAction(empty, 'mwd'), null, 'no withdraw select when nothing in stock');
+});
+
+test('buildManagerPanel: always offers an Add Item button', () => {
+  const ids = buttonIds(buildManagerPanel());
+  assert.ok(ids.includes(encodeStashId('madd')), 'Add Item button present even when empty');
+});
+
+test('buildAddModal: routes madds with the five intake fields, name required', () => {
+  const json = buildAddModal().toJSON();
+  assert.equal(json.custom_id, encodeStashId('madds'), 'submit routes madds');
+  const inputs = json.components.map((r) => r.components[0]);
+  assert.deepEqual(
+    inputs.map((c) => c.custom_id),
+    ['name', 'quantity', 'slot', 'wowhead', 'donor'],
+    'five intake fields in order'
+  );
+  const name = inputs.find((c) => c.custom_id === 'name');
+  assert.equal(name.required, true, 'name is required');
+  assert.equal(inputs.find((c) => c.custom_id === 'donor').required, false, 'donor is optional');
 });
 
 test('buildWithdrawConfirm: both buttons carry the item id; warns on open requests', () => {

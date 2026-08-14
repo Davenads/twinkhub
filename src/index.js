@@ -103,6 +103,33 @@ client.on(Events.InteractionCreate, async (interaction) => {
     return;
   }
 
+  // Modal submits arrive as their own interaction type. Only the stash uses
+  // modals today (the Add-Item console modal), so fork stash ids to its router
+  // and drop anything else — content panels have no modals.
+  if (interaction.isModalSubmit()) {
+    if (!isStashComponent(interaction)) return;
+    const startedAt = Date.now();
+    let outcome = { ok: true };
+    try {
+      await handleStashComponent(interaction);
+    } catch (err) {
+      outcome = { ok: false, error: err };
+      logger.error({ err, customId: interaction.customId }, 'modal failed');
+      const payload = {
+        content: 'Something went wrong with that form.',
+        flags: MessageFlags.Ephemeral
+      };
+      if (interaction.deferred || interaction.replied) {
+        await interaction.followUp(payload).catch(() => {});
+      } else {
+        await interaction.reply(payload).catch(() => {});
+      }
+    } finally {
+      postAudit(client, { kind: 'panel', interaction, outcome, ms: Date.now() - startedAt });
+    }
+    return;
+  }
+
   if (!interaction.isChatInputCommand()) return;
   const command = client.commands.get(interaction.commandName);
   if (!command) {

@@ -3,7 +3,10 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  StringSelectMenuBuilder
+  StringSelectMenuBuilder,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle
 } from 'discord.js';
 import { EMBED_COLOR, DEGRADE_COLOR, truncate, LIMITS } from '../lib/embed.js';
 import { itemNameMarkup } from './gearFormat.js';
@@ -168,6 +171,46 @@ export function itemNames(items = []) {
 }
 
 /**
+ * Decide whether an add merges into an existing item (restock) or inserts a
+ * fresh row. `matches` is store.findItemMatch's active-item list (earliest
+ * first); with force_new set we always insert. Returns the restock target or
+ * null for a new insert. Pure so both `/stashadmin add` and the Add-Item modal
+ * share one tested decision; the callers run the store side-effects.
+ */
+export function pickRestockTarget(matches, forceNew) {
+  if (forceNew) return null;
+  return Array.isArray(matches) && matches.length ? matches[0] : null;
+}
+
+/**
+ * Build the Add-Item modal opened by the manager console's Add Item button.
+ * Discord caps a modal at 5 text inputs (and forbids selects), so slot is free
+ * text (folded by normalizeSlot at intake) and tags/notes stay slash-only. There
+ * is no force_new here, so a modal add always dedup-merges. Submits route
+ * `madds`; the handler reads fields by these customIds.
+ *
+ * @returns {ModalBuilder}
+ */
+export function buildAddModal() {
+  const input = (id, label, { style = TextInputStyle.Short, required = false, max } = {}) => {
+    const b = new TextInputBuilder().setCustomId(id).setLabel(label).setStyle(style);
+    b.setRequired(required);
+    if (max) b.setMaxLength(max);
+    return new ActionRowBuilder().addComponents(b);
+  };
+  return new ModalBuilder()
+    .setCustomId(encodeStashId('madds'))
+    .setTitle('Add stash item')
+    .addComponents(
+      input('name', 'Item name', { required: true, max: 200 }),
+      input('quantity', 'Quantity (default 1)', { max: 6 }),
+      input('slot', 'Slot (e.g. head, weapon) \u2014 optional', { max: 40 }),
+      input('wowhead', 'Wowhead item id or URL \u2014 optional', { max: 200 }),
+      input('donor', 'Donor \u2014 optional', { max: 100 })
+    );
+}
+
+/**
  * Build up-to-25 select options for a request list. The label carries the item
  * name (falling back to the raw item id) so managers act by item, not opaque
  * request id; the option value is the request id the handler routes on. `names`
@@ -309,6 +352,10 @@ export function buildManagerPanel({ items = [], pending = [], approved = [], nam
   }
   components.push(
     row(
+      new ButtonBuilder()
+        .setCustomId(encodeStashId('madd'))
+        .setLabel('Add Item')
+        .setStyle(ButtonStyle.Primary),
       new ButtonBuilder()
         .setCustomId(encodeStashId('mref'))
         .setLabel('Refresh')

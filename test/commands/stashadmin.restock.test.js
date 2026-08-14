@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { pickRestockTarget } from '../../src/commands/admin/stashadmin.js';
+import { pickRestockTarget } from '../../src/services/stash.js';
 
 test('pickRestockTarget returns the earliest match when not forcing new', () => {
   const matches = [{ id: 'a' }, { id: 'b' }];
