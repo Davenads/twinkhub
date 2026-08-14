@@ -940,10 +940,105 @@ consolidation, via CLI `db push` — not at boot.
 The match+restock logic is entry-point-agnostic — one code path serves the slash command and
 the modal:
 
-1. **Store:** `findItemMatch` + `restockItem` (+ tests). *(reload-only)*
+1. **Store:** `findItemMatch` + `restockItem` (+ tests). *(reload-only)* — **shipped `ef56c16`.**
 2. **Slash `/stashadmin add`:** route through match→restock; add a `force_new` boolean.
-   *(definition change ⇒ `deploy`)*
+   *(definition change ⇒ `deploy`)* — **shipped `1c8b420`** (decision helper `pickRestockTarget`,
+   later moved to `services/stash.js`).
 3. **Add-Item modal:** modal-submit routing prereq in `index.js` (`isModalSubmit` → stash
    fork), `buildAddModal` (5 inputs), submit reuses the same match→restock path. *(reload-only)*
+   — **shipped `d8dba3b`** (console **Add Item** button `madd` → modal `madds`; the modal-submit
+   fork in `index.js` now exists — reuse it for any future modal).
 4. **Consolidation** of existing dupes (maintenance op / CLI), then the **optional** partial
-   unique index. *(migration via CLI, not boot)*
+   unique index. *(migration via CLI, not boot)* — **still planned.** See also the edit/rename
+   pipeline below: renaming a typo can surface a name collision that consolidation then merges.
+
+## Planned: item edit / rename pipeline + the "Seet" typo (2026-08-14)
+
+Problem (observed): an item was saved as **"Staff of the Blessed Seet"** — a name typo for
+**"…Seer"**. There is no way to correct an existing row's attributes short of withdraw+re-add
+(which loses the id, provenance, and open-request history). We need an **edit** capability, and
+the typo is the first customer.
+
+### Why the typo is also a dedup bug (not just cosmetic)
+
+Add-time dedup matches on normalized name, so `Seet` ≠ `Seer`: a correct "…Seer" add will **not**
+restock the typo row — it inserts a *fresh duplicate*. Fixing the name is therefore also a dedup
+fix. Two caveats: (a) if the rows share a `wowhead_id`, the id-tier still merges them on the
+*next* add (never retroactively); (b) if a correct "…Seer" row already exists, renaming the typo
+produces two active "…Seer" rows → a **consolidation** case (the dupe step above), not an edit case.
+
+### Store seam — `editItem` (new, `src/stash/store.js`)
+
+`editItem(guildId, itemId, patch)` — a partial **attribute** update over
+`name` / `slot` / `wowheadId` / `donor` / `notes`.
+
+- **Patch contract:** a key **present** in `patch` is applied (value may be `null` ⇒ **clear**);
+  an **absent** key is left unchanged. `name`, when present, must be non-empty after trim
+  (`INVALID_INPUT`).
+- **Does NOT touch `quantity` / `remaining` / `status`.** Those stay owned by the request
+  lifecycle + `restockItem` / `removeItem` — editing quantity risks the `remaining <= quantity`
+  and reserved-count invariants. A guarded **quantity-correction** path (reserved-aware) is a
+  deferred follow-up, not part of this seam.
+- **Locks `FOR UPDATE`;** refuses a `withdrawn` row (`ITEM_WITHDRAWN`); `ITEM_NOT_FOUND` when
+  missing. No `recomputeItemStatus` needed (status inputs unchanged).
+- **Does NOT dedup/merge.** Renaming into a collision is allowed; **consolidation** owns merges.
+  The *caller* may `findItemMatch` after an edit and surface a soft "heads up, this now matches
+  `itm_…`" note — optional polish.
+- Returns `rowToItem`.
+
+### Fixing the "Seet" row now — through the seam, not ad-hoc SQL
+
+Do **not** hand-run `update stash_items …` against prod: it bypasses the only SQL seam and can
+desync open requests. Instead land `editItem` (tested), then correct the row with it. Since a
+slash button can't be pressed by the agent, the one-off is a tiny **maintenance script**
+(`scripts/`, dry-run print first, single `itm_…` id, prod `DATABASE_URL` from `.env`) that calls
+`editItem` once. Going forward the same seam is reached by `/stashadmin edit` and the panel.
+
+### Manager-panel pipeline — the 5-row cap forces consolidation (recommended)
+
+The console is already 4 rows worst case (`mq`+`maq`+`mwd` selects + button row). Options:
+
+- **Opt 1 — slash only** (`/stashadmin edit item_id …`): fastest, full field set incl.
+  notes/tags, **zero** panel real estate — but not "in the panel."
+- **Opt 2 — add an `medit` select → prefilled modal:** a 4th select ⇒ **5 rows** worst case,
+  exactly at Discord's cap, **zero headroom**. Works but boxes us in.
+- **Opt 3 — consolidated "Manage an item…" console (RECOMMENDED):** replace the standalone
+  `mwd` withdraw select with one **`mitem`** select that spawns an ephemeral per-item action
+  console carrying **[Edit] [Withdraw]** buttons (mirrors the request console's Approve/Deny).
+  Worst case stays **4 rows** with headroom; becomes the scalable per-item hub.
+  - **Edit** button (`medit|<itemId>`) → `showModal(buildEditModal(item))`. A button interaction
+    can `showModal` as its first ack; the handler fetches `getItem` for prefill first. Modal
+    `s1|medits|<itemId>`, **5 prefilled inputs**: `name`(req) / `slot` / `wowhead` / `donor` /
+    `notes`(Paragraph). **Empty optional field = clear** (the modal is prefilled, so blanking a
+    field is an intentional clear). Submit → `editItem`.
+  - **Withdraw** button reuses the existing two-click confirm (`buildWithdrawConfirm` → `wdc` /
+    `wdcx`). Tradeoff: withdraw gains **one extra click** (select → console → Withdraw → confirm)
+    vs. today's select → confirm. Acceptable for the unified hub; `mwd` is retired.
+
+### customId additions
+
+- Opt 3: `mitem` (manage-item select) · `medit|<itemId>` (Edit button → modal) · `medits|<itemId>`
+  (edit modal submit). Withdraw stays `wdc` / `wdcx`; `mwd` retired. All under the `s1|` codec;
+  `medits` rides the existing `isModalSubmit` fork.
+
+### Tests
+
+- **Integration (`editItem`):** applies name/slot/wowhead/donor/notes; **absent key leaves
+  unchanged**; **null clears**; rejects empty name; `ITEM_NOT_FOUND`; `ITEM_WITHDRAWN`; asserts
+  `quantity`/`remaining`/`status` untouched.
+- **Unit (services):** `buildEditModal(item)` prefills the five inputs and routes `medits|<id>`;
+  the manager console renders the `mitem` select and no longer renders `mwd`.
+
+### Sequencing
+
+1. **Store:** `editItem` (+ integration tests). *(reload-only — store only)*
+2. **Data fix:** correct the "Seet" row via a one-off maintenance script calling `editItem`
+   (dry-run first). *(data)*
+3. **Slash `/stashadmin edit`:** full-field editor (name/slot/wowhead/donor/notes/tags),
+   immediately usable. *(definition change ⇒ `deploy` + reload)*
+4. **Panel pipeline (Opt 3):** `mitem` manage-item console + `buildEditModal` prefilled editor;
+   retire the `mwd` withdraw select. *(components ⇒ reload)*
+
+Relationship to the dupe **consolidation** step: edit fixes **one** row's attributes;
+consolidation **merges** duplicate rows. Do the edit pipeline first (unblocks the typo), then
+consolidation.
