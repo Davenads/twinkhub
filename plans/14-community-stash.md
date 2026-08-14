@@ -722,3 +722,119 @@ non-gear items go slot-less into Ungrouped instead.)
 Slice A first (clean data + drives manager adoption), Slice B second (presentation rides on
 normalized slots). Both low-risk; B only pays off once managers actually fill slot, which the
 A dropdown encourages by removing free-text friction.
+
+## Planned: interactive controls + a separate Manager Panel (2026-08-14)
+
+Goal: kill the last id-typing friction (`approve`/`sent`/`deny`/`remove` all still take a
+copy-pasted id) with button/select controls, and give managers a persistent console instead
+of re-running slash commands. Reframe first, because half the ask is already done and half
+was aimed at the wrong surface.
+
+### What already exists (don't rebuild)
+
+- **Requesting is already id-free.** The public panel emits an `s1|req` select of claimable
+  items (Slice B orders it by slot -> name). Requesters pick from a list; no id entry.
+- **`/stashadmin queue status:<pending|approved|active>`** (shipped 2026-08-14) is the
+  text-only precursor to the manager console below — it surfaces the previously invisible
+  approved-but-unsent queue. The interactive panel just puts buttons on that same data.
+
+The real friction is manager-side (`approve`/`sent`/`deny` need a `request_id`, `remove`
+needs an `item_id`). That is what these controls remove.
+
+### Key decision: manager controls go on a SEPARATE panel in a manager-only channel
+
+Do **not** put manager buttons on the public browse panel — it's a single shared message the
+whole guild sees, so manager tooling there is both a visual-clutter and a
+information-leak problem (even with click-time gating). Instead post a **second persistent
+panel** (the *Manager Panel*) into a **manager-only channel**. Channel permissions are the
+primary gate; click-time `requireManager` is defense-in-depth (never trust the channel
+alone). This cleanly separates: public panel = requester controls; manager panel = manager
+controls.
+
+### Manager Panel layout
+
+A persistent, tick-refreshed message with:
+
+- **Dashboard embed** — counts: N pending, N approved-awaiting-hand-off, N available items,
+  low-stock flags. At-a-glance state without running a command.
+- **Row 1 — Pending select** (`s1|mq`): options = pending requests (<=25), label
+  `user -> item`. The chosen value is the `reqId`.
+- **Row 2 — Approved select** (`s1|maq`): options = approved-awaiting-hand-off requests.
+- **Row 3 — buttons**: **Refresh** (`s1|mref`); optional **Add Item** (modal, see caveat).
+
+**Critical interaction rule — spawn ephemeral, never edit the shared message.** Because the
+Manager Panel is shared across managers, a select/button must NOT edit it in place (that
+would stomp other managers' views and race the tick refresh). Instead, selecting a request
+**spawns an ephemeral action message** for just that manager: a summary + **Approve** /
+**Deny** buttons (for pending) or **Mark Sent** (for approved), each with the `reqId` encoded
+in its customId. The shared panel stays stable; per-manager actions are isolated. This is the
+same ephemeral-console pattern the interactive `/stashadmin queue` can reuse, so both entry
+points (panel select OR slash queue) lead to identical action handlers.
+
+### customId grammar (extends the `s1|` namespace)
+
+- `s1|mq` — manager Pending select (chosen value = `reqId`)
+- `s1|maq` — manager Approved select (chosen value = `reqId`)
+- `s1|mref` — manager panel Refresh
+- `s1|aprv|<reqId>` — approve (ephemeral button)
+- `s1|deny|<reqId>` — deny, step 1: re-renders a **Confirm deny?** Yes/No (destructive
+  actions require a second click)
+- `s1|denyc|<reqId>` — deny, confirmed
+- `s1|sent|<reqId>` — mark sent
+- `s1|wdrw|<itemId>` / `s1|wdrwc|<itemId>` — withdraw item + confirm (Phase 2)
+
+customId must stay <=100 chars; `reqId`/`itemId` are short prefixed ids, so ample headroom.
+All handlers are **stateless** (id rides in the customId) — no in-memory collectors that die
+on `pm2 reload`, matching the existing `s1|action|arg` routing in `components/stash.js`.
+
+### Config + storage
+
+Extend the `stash` guildConfig block:
+
+- Add `panelMessageIds.manager` alongside the existing `panelMessageIds.browse`.
+- Add a distinct **`managerPanelChannelId`** (do NOT overload `managerChannelId`, which is the
+  *notify* channel — they may differ, though often the same). Still `data/`-backed, so this
+  is part of the P4 Heroku durability move.
+
+### Admin surface to manage it
+
+Extend the existing `panel` subcommand group rather than inventing a new one. Add a
+`kind:<browse|manager>` choice option to `panel post|refresh|remove` (default `browse` to
+preserve today's behavior). Command-definition change -> needs `npm run deploy`. The
+`renderStashPanel`/`removeStashMessage` helpers generalize to a `kind` arg.
+
+### Tick refresh
+
+The 60s tick already fingerprint-refreshes the browse panel. Add a parallel fingerprint for
+the manager panel (pending + approved request sets, plus item counts) and refresh it on the
+same tick when it changes. Same isolated try/catch + `editOrRepost` self-heal.
+
+### Add Item via modal — caveat
+
+An **Add Item** button could open a modal to capture name/quantity/donor/notes without a
+slash command. But **Discord modals support only text inputs — no select menus** — so `slot`
+would regress to free text, undoing Slice A's dropdown. Options: (a) omit `slot` from the
+modal (defaults to Ungrouped, set later), or (b) keep **Add on the `/stashadmin add` slash
+command** (recommended) so the slot dropdown is preserved. Lean (b); the modal is a
+convenience-only nicety, not worth the taxonomy regression.
+
+### Concurrency + stale controls (already safe)
+
+Store guards (`REQUEST_NOT_PENDING`, `REQUEST_NOT_APPROVED`) mean two managers racing the same
+request get a clean `StashError`; the handler surfaces it and re-renders current state rather
+than erroring hard. A stale panel select (referencing an already-decided request) hits the
+same guard — no corruption possible.
+
+### Phasing
+
+1. **Phase 1 — Manager Panel MVP**: dashboard embed + Pending/Approved selects, each spawning
+   an ephemeral Approve/Deny/Mark-Sent console. Kills `approve`/`sent`/`deny` id entry.
+   Needs: `panel kind:manager` subcommand option (deploy), new component routes (reload),
+   config shape extension, tick refresh.
+2. **Phase 2 — Withdraw flow**: item select (on manager panel or `/stashadmin list`) ->
+   ephemeral Withdraw confirm. Kills `remove item_id`.
+3. **Phase 3 (defer)** — slot-first requester navigation on the public panel (slot select ->
+   item select) to beat the 25-option cap once inventory routinely exceeds ~20 items.
+
+Deploy/reload: Phase 1 needs one `deploy` (the `panel kind` option); everything else is
+component routing -> reload-only.
