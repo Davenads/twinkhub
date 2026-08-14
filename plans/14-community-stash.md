@@ -845,8 +845,15 @@ same guard — no corruption possible.
    config shape extension, tick refresh.
 2. **Phase 2 — Withdraw flow**: item select (on manager panel or `/stashadmin list`) ->
    ephemeral Withdraw confirm. Kills `remove item_id`.
-3. **Phase 3 (defer)** — slot-first requester navigation on the public panel (slot select ->
-   item select) to beat the 25-option cap once inventory routinely exceeds ~20 items.
+3. **Phase 3 — slot-first requester navigation** on the public panel (slot select -> item
+   select) to beat the 25-option cap once inventory routinely exceeds ~20 items. **Shipped
+   2026-08-14.** The flat request select silently dropped items 26+ (still shown in the embed
+   description but **un-requestable**). Now: ≤25 claimable keeps the flat `req` select; >25 swaps
+   it for a `reqslot` slot picker (per-populated-slot, with `N available` counts). Picking a slot
+   opens an **ephemeral** request select scoped to that slot (`buildSlotRequestPrompt` -> normal
+   `req` select), mirroring the manager-console pick->ephemeral pattern so one shopper's drill-down
+   never mutates the shared public panel. `groupBySlot` now also carries the canonical slot
+   `value`; `UNGROUPED_SLOT = 'ungrouped'` routes the slotless bucket. Reload-only, no deploy.
 
 Deploy/reload: Phase 1 needs one `deploy` (the `panel kind` option); everything else is
 component routing -> reload-only.

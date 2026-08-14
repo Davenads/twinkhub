@@ -5,6 +5,7 @@ import {
   encodeStashId,
   parseStashCustomId,
   buildStashPanel,
+  buildSlotRequestPrompt,
   buildManagerPanel,
   buildRequestAction,
   buildDenyConfirm,
@@ -92,12 +93,64 @@ test('buildStashPanel: only available, in-stock items populate the request selec
   assert.deepEqual(values, ['itm_a'], 'only the claimable item is offered');
 });
 
-test('buildStashPanel: caps the request select at 25 options', () => {
-  const items = Array.from({ length: 40 }, (_, i) =>
-    item({ id: `i${i}`, name: `Item ${i}`, remaining: 1, status: 'available' })
+test('buildStashPanel: 25 or fewer claimable items keep the flat request select', () => {
+  const items = Array.from({ length: 25 }, (_, i) =>
+    item({ id: `i${i}`, name: `Item ${i}`, slot: 'head', remaining: 1, status: 'available' })
   );
-  const select = requestSelect(buildStashPanel({ items }));
-  assert.equal(select.options.length, 25, 'select is capped at Discord max of 25');
+  const panel = buildStashPanel({ items });
+  assert.ok(requestSelect(panel), 'flat req select present at the 25-item boundary');
+  assert.equal(selectByAction(panel, 'reqslot'), null, 'no slot picker while it still fits');
+});
+
+test('buildStashPanel: more than 25 claimable items swap to a slot picker (no dropped items)', () => {
+  const items = [
+    ...Array.from({ length: 20 }, (_, i) => item({ id: `h${i}`, name: `Helm ${i}`, slot: 'head' })),
+    ...Array.from({ length: 10 }, (_, i) => item({ id: `f${i}`, name: `Boot ${i}`, slot: 'feet' }))
+  ];
+  const panel = buildStashPanel({ items }); // 30 claimable > 25
+  assert.equal(requestSelect(panel), null, 'flat req select is gone (would silently drop items)');
+  const picker = selectByAction(panel, 'reqslot');
+  assert.ok(picker, 'slot picker present');
+  const byValue = Object.fromEntries(picker.options.map((o) => [o.value, o]));
+  assert.deepEqual(Object.keys(byValue), ['head', 'feet'], 'a slot per populated group, in order');
+  assert.ok(byValue.head.description.includes('20 available'), 'head count shown');
+  assert.ok(byValue.feet.description.includes('10 available'), 'feet count shown');
+});
+
+test('buildSlotRequestPrompt: scopes a request select to one slot, capped at 25', () => {
+  const items = [
+    ...Array.from({ length: 30 }, (_, i) => item({ id: `h${i}`, name: `Helm ${i}`, slot: 'head' })),
+    item({ id: 'f0', name: 'Boots', slot: 'feet' })
+  ];
+  const prompt = buildSlotRequestPrompt({ items, slot: 'head' });
+  const select = prompt.components[0].toJSON().components[0];
+  assert.equal(select.custom_id, encodeStashId('req'), 'the scoped select is a normal req select');
+  assert.equal(select.options.length, 25, 'capped at Discord max of 25');
+  assert.ok(
+    select.options.every((o) => o.value.startsWith('itm_h')),
+    'only the chosen slot is offered'
+  );
+  assert.ok(prompt.content.includes('Showing the first 25'), 'notes the overflow');
+});
+
+test('buildSlotRequestPrompt: ungrouped sentinel scopes to slotless items', () => {
+  const items = [
+    item({ id: 'a', name: 'Potion' }), // slotless
+    item({ id: 'b', name: 'Helm', slot: 'head' })
+  ];
+  const select = buildSlotRequestPrompt({ items, slot: 'ungrouped' }).components[0].toJSON()
+    .components[0];
+  assert.deepEqual(
+    select.options.map((o) => o.value),
+    ['itm_a'],
+    'only the slotless item is offered'
+  );
+});
+
+test('buildSlotRequestPrompt: an empty slot yields a hint and no select', () => {
+  const prompt = buildSlotRequestPrompt({ items: [item({ id: 'a', slot: 'head' })], slot: 'feet' });
+  assert.deepEqual(prompt.components, [], 'no select when nothing is claimable in that slot');
+  assert.ok(prompt.content.includes('No **Feet** items'), 'names the empty slot');
 });
 
 test('buildStashPanel: default (no args) is safe and renders the empty state', () => {

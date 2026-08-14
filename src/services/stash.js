@@ -155,10 +155,28 @@ function groupBySlot(items) {
   const out = [];
   for (const { value, label } of STASH_SLOTS) {
     const arr = groups.get(value);
-    if (arr && arr.length) out.push({ label, items: arr.slice().sort(byName) });
+    if (arr && arr.length) out.push({ value, label, items: arr.slice().sort(byName) });
   }
-  if (ungrouped.length) out.push({ label: 'Ungrouped', items: ungrouped.slice().sort(byName) });
+  if (ungrouped.length)
+    out.push({ value: 'ungrouped', label: 'Ungrouped', items: ungrouped.slice().sort(byName) });
   return out;
+}
+
+// The canonical slot id used to route an Ungrouped (slotless) bucket's request
+// select \u2014 kept distinct from every STASH_SLOTS value so it can't collide.
+const UNGROUPED_SLOT = 'ungrouped';
+
+// One request-select option per claimable item: label is the item name, value is
+// the item id the request handler routes on, description carries slot + remaining.
+// Capped at SELECT_LIMIT so a caller can pass an oversized list safely.
+function claimOptions(items) {
+  return items.slice(0, SELECT_LIMIT).map((it) => {
+    const opt = { label: truncate(it.name, 100), value: it.id };
+    const slotLabel = SLOT_LABEL.get(normalizeSlot(it.slot)) || it.slot;
+    const desc = [slotLabel, `\u00d7${it.remaining} left`].filter(Boolean).join(' \u00b7 ');
+    if (desc) opt.description = truncate(desc, 100);
+    return opt;
+  });
 }
 
 /** Only items a requester can actually claim right now populate the dropdown. */
@@ -304,18 +322,29 @@ export function buildStashPanel({ items = [] } = {}) {
     .setDescription(truncate(description, LIMITS.description));
 
   const components = [];
-  if (open.length) {
+  if (open.length && open.length <= SELECT_LIMIT) {
+    // Small stash: one flat request select of every claimable item.
     const select = new StringSelectMenuBuilder()
       .setCustomId(encodeStashId('req'))
       .setPlaceholder('Request an item\u2026')
+      .addOptions(claimOptions(orderedOpen));
+    components.push(row(select));
+  } else if (open.length) {
+    // More claimable items than a select can hold: a flat list would silently
+    // drop items 26+ (un-requestable). Offer a slot picker instead; picking a
+    // slot opens an ephemeral request select scoped to that slot (handleRequest
+    // Slot -> buildSlotRequestPrompt), so every item stays claimable.
+    const select = new StringSelectMenuBuilder()
+      .setCustomId(encodeStashId('reqslot'))
+      .setPlaceholder('Browse by slot to request\u2026')
       .addOptions(
-        orderedOpen.slice(0, SELECT_LIMIT).map((it) => {
-          const opt = { label: truncate(it.name, 100), value: it.id };
-          const slotLabel = SLOT_LABEL.get(normalizeSlot(it.slot)) || it.slot;
-          const desc = [slotLabel, `\u00d7${it.remaining} left`].filter(Boolean).join(' \u00b7 ');
-          if (desc) opt.description = truncate(desc, 100);
-          return opt;
-        })
+        groupBySlot(open)
+          .slice(0, SELECT_LIMIT)
+          .map((g) => ({
+            label: truncate(g.label, 100),
+            value: g.value,
+            description: truncate(`${g.items.length} available`, 100)
+          }))
       );
     components.push(row(select));
   }
@@ -334,6 +363,43 @@ export function buildStashPanel({ items = [] } = {}) {
   );
 
   return { embeds: [embed], components };
+}
+
+/**
+ * Build the EPHEMERAL request select scoped to a single slot, opened when a big
+ * stash's public panel routes a shopper through the slot picker (buildStashPanel
+ * -> reqslot). Ephemeral so drilling in never mutates the shared public message.
+ * `slot` is a canonical STASH_SLOTS value or the UNGROUPED_SLOT sentinel; only
+ * claimable items in that slot are offered. Returns a `{ content, components }`
+ * message (no embed) — an empty slot yields a plain refresh hint, no select.
+ *
+ * @param {{ items?: Array, slot?: string }} args
+ * @returns {{ content: string, components: ActionRowBuilder[] }}
+ */
+export function buildSlotRequestPrompt({ items = [], slot } = {}) {
+  const wanted = slot === UNGROUPED_SLOT ? null : slot;
+  const label = slot === UNGROUPED_SLOT ? 'Ungrouped' : SLOT_LABEL.get(slot) || String(slot);
+  const inSlot = claimable(items)
+    .filter((it) => normalizeSlot(it.slot) === wanted)
+    .sort((a, b) => String(a.name).localeCompare(String(b.name)));
+
+  if (!inSlot.length) {
+    return {
+      content: `No **${label}** items are claimable right now \u2014 hit Refresh on the stash.`,
+      components: []
+    };
+  }
+
+  const select = new StringSelectMenuBuilder()
+    .setCustomId(encodeStashId('req'))
+    .setPlaceholder(`Request a ${label} item\u2026`)
+    .addOptions(claimOptions(inSlot));
+
+  let content = `**${label}** \u2014 pick an item to request:`;
+  if (inSlot.length > SELECT_LIMIT) {
+    content += `\n_Showing the first ${SELECT_LIMIT}; claim some to see the rest._`;
+  }
+  return { content, components: [row(select)] };
 }
 
 /**

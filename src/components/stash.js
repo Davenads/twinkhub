@@ -6,6 +6,7 @@ import * as store from '../stash/store.js';
 import {
   parseStashCustomId,
   buildStashPanel,
+  buildSlotRequestPrompt,
   buildManagerPanel,
   buildRequestAction,
   buildDenyConfirm,
@@ -122,6 +123,28 @@ async function handleRequest(interaction) {
     }).catch(() => {});
   } catch (err) {
     await editStoreError(interaction, err, 'stash panel request failed');
+  }
+}
+
+// Slot picker (big-stash panel) -> open an EPHEMERAL request select scoped to the
+// chosen slot. The public panel offers this instead of a flat select once there
+// are more claimable items than a select can hold, so no item is un-requestable.
+// Ephemeral so one shopper's drill-down never edits the shared public message.
+async function handleRequestSlot(interaction) {
+  if (!(await requireRequester(interaction))) return;
+  const slot = interaction.values?.[0];
+  if (!slot) {
+    await interaction.reply({ content: 'No slot selected.', flags: MessageFlags.Ephemeral });
+    return;
+  }
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+  try {
+    const items = await store.listItems(interaction.guildId, {
+      statuses: ['available', 'requested']
+    });
+    await interaction.editReply({ ...buildSlotRequestPrompt({ items, slot }), ...SEND_OPTS });
+  } catch (err) {
+    await editStoreError(interaction, err, 'stash panel slot browse failed');
   }
 }
 
@@ -674,6 +697,7 @@ async function handleAddSubmit(interaction, parsed) {
 
 const HANDLERS = {
   req: handleRequest,
+  reqslot: handleRequestSlot,
   mine: handleMine,
   refresh: handleRefresh,
   mref: handleManagerRefresh,
