@@ -134,6 +134,12 @@ test('buildRequesterDM writes decision copy with item name and request id', () =
   const denied = buildRequesterDM({ kind: 'denied', item, req });
   assert.match(denied.content, /denied/);
 
+  const cancelled = buildRequesterDM({ kind: 'cancelled', item, req });
+  assert.match(cancelled.content, /Whipper Root Tuber/);
+  assert.match(cancelled.content, /cancelled/);
+  assert.match(cancelled.content, /withdrawn/);
+  assert.match(cancelled.content, /req_1/);
+
   const expired = buildRequesterDM({ kind: 'expired', item, req });
   assert.match(expired.content, /Whipper Root Tuber/);
   assert.match(expired.content, /queue/);

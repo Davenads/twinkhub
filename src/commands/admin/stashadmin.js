@@ -758,7 +758,7 @@ export async function execute(interaction) {
         return;
       }
       case 'remove': {
-        const item = await store.removeItem(
+        const { item, cancelled } = await store.removeItem(
           guildId,
           interaction.options.getString('item_id', true),
           managerId
@@ -766,6 +766,9 @@ export async function execute(interaction) {
         await interaction.editReply(
           `Withdrew \`${item.id}\` (**${item.name}**) and cancelled its open requests.`
         );
+        for (const req of cancelled) {
+          notifyRequester(interaction.client, guildId, { req, kind: 'cancelled' }).catch(() => {});
+        }
         return;
       }
       default:

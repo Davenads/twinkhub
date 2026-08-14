@@ -185,8 +185,20 @@ if (!DATABASE_URL) {
     const rApproved = await requestItem(GUILD, item.id, 'a');
     await approveRequest(GUILD, rApproved.id, 'mgr');
 
-    const removed = await removeItem(GUILD, item.id, 'mgr');
+    const { item: removed, cancelled } = await removeItem(GUILD, item.id, 'mgr');
     assert.equal(removed.status, 'withdrawn');
+
+    const cancelledById = Object.fromEntries(cancelled.map((r) => [r.id, r]));
+    assert.deepEqual(cancelledById[rPending.id], {
+      id: rPending.id,
+      userId: 'p',
+      itemId: item.id
+    });
+    assert.deepEqual(cancelledById[rApproved.id], {
+      id: rApproved.id,
+      userId: 'a',
+      itemId: item.id
+    });
 
     const reqs = await listRequests(GUILD, { itemId: item.id });
     const byId = Object.fromEntries(reqs.map((r) => [r.id, r.status]));

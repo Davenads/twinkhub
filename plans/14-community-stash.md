@@ -1124,19 +1124,40 @@ are worse than an honest blank and would poison the dedup match key. Chosen appr
 optional and turn the gap into a **manager-only, one-click-fixable** flag that routes into the
 existing Edit wizard.
 
-### Slice (pending greenlight) — manager-only surfacing + intake nudge
-- **`mitem` select:** for rows with `wowheadId == null`, prefix the option description with a
-  `\u26a0` marker (e.g. `⚠ no link · <slot> · <status> · ×<n>`) so gaps are scannable in the picker.
-- **`buildItemAction` console:** when the selected item lacks a link, add a one-line
-  `\u26a0 No Wowhead link — add one below.` hint above the Edit/Withdraw buttons.
-- **Panel counts (optional):** fold a `N missing a Wowhead link` figure into the manager panel
-  header so the backlog is quantified at a glance.
+### Slice (shipped 2026-08-14) — manager-only surfacing + intake nudge
+- **`mitem` select:** for rows with `wowheadId == null`, the option description leads with a
+  `⚠ no link` marker (`⚠ no link · <slot> · <status> · ×<n>`) so gaps are scannable in the picker.
+- **`buildItemAction` console:** when the selected item lacks a link, a one-line
+  `⚠ No Wowhead link — add one via Edit.` hint sits above the Edit/Withdraw buttons.
 - **Intake nudge:** when `handleAddSubmit` (and the edit confirmation) completes with no
-  `wowheadId`, append a soft tip (`Tip: no Wowhead link set — Manage → Edit to add one.`) to the
+  `wowheadId`, a soft `Tip: no Wowhead link set — Manage → Edit to add one.` appends to the
   ephemeral result. Reinforces the habit without blocking.
 - **Public panel unchanged** — it keeps rendering the clean bold name; the ⚠ surfacing is
   manager-scoped only.
+- **Deferred:** a `N missing a Wowhead link` panel-header count (nice-to-have, not shipped).
 - **Tests:** `mitem` description carries `⚠ no link` for a null-wowheadId row and omits it for a
-  linked one; `buildItemAction` hint present/absent by wowheadId; add-confirmation nudge
-  present/absent.
+  linked one; `buildItemAction` hint present/absent by wowheadId.
 - *(components/services ⇒ reload, NO deploy.)*
+
+## Planned: withdraw-cancel DM (shipped 2026-08-14)
+
+Closes the last silent status transition. Approve/sent/deny/expiry all DM the requester; a manager
+withdrawing an item cascade-cancels its open requests (§Remove-with-active-requests) but sent
+**nothing** — a pending requester lost their spot invisibly.
+
+**Store seam.** `removeItem` returned only the item, discarding which requests it cancelled. It now
+`returning id, user_id, item_id` from the cascade UPDATE and returns `{ item, cancelled }` (mirrors
+`expireStaleApprovals`'s `requests` shape) so callers have the affected requesters in hand.
+
+**Notify.** New `cancelled` kind in `DM_LINES`: _"Your stash request for **X** was cancelled — the
+item was withdrawn from the stash."_ `buildRequesterDM`/`notifyRequester` already dispatch any keyed
+kind (item lookup falls back to the raw id; the row still exists as `withdrawn`).
+
+**Callers.** `handleWithdrawConfirm` (panel `wdc`) and `/stashadmin remove` both destructure
+`{ item, cancelled }`, keep their success copy off `item`, then fire-and-forget one
+`notifyRequester({ req, kind: 'cancelled' })` per cancelled req — best-effort, never blocks the
+withdraw. `wdcx` (backing out of a withdrawal) still sends nothing (correct — no requests changed).
+
+**Tests.** `buildRequesterDM({ kind: 'cancelled' })` copy (unit); the `removeItem` integration test
+asserts `cancelled` carries both the pending + approved requests (`{ id, userId, itemId }`).
+*(store/components/services ⇒ reload, NO deploy.)*

@@ -550,12 +550,21 @@ async function handleEditSubmit(interaction, parsed) {
 async function handleWithdrawConfirm(interaction, parsed) {
   if (!(await requireManager(interaction))) return;
   try {
-    const item = await store.removeItem(interaction.guildId, parsed.args[0], interaction.user.id);
+    const { item, cancelled } = await store.removeItem(
+      interaction.guildId,
+      parsed.args[0],
+      interaction.user.id
+    );
     await interaction.update({
       content: `Withdrew **${item.name}** from the stash.`,
       embeds: [],
       components: []
     });
+    for (const req of cancelled) {
+      notifyRequester(interaction.client, interaction.guildId, { req, kind: 'cancelled' }).catch(
+        () => {}
+      );
+    }
   } catch (err) {
     await updateActionError(interaction, err, 'stash withdraw failed');
   }

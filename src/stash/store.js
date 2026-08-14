@@ -467,7 +467,8 @@ export async function cancelRequest(guildId, requestId, userId) {
 
 // Manager withdraws an item from the stash. Cascade-cancels its open (pending or
 // approved) requests; sent history is preserved. Item goes to terminal
-// 'withdrawn'.
+// 'withdrawn'. Returns { item, cancelled } where cancelled is the list of
+// affected requests ({ id, userId, itemId }) so the caller can DM each requester.
 export async function removeItem(guildId, itemId, managerId) {
   const client = await getPool().connect();
   try {
@@ -480,10 +481,11 @@ export async function removeItem(guildId, itemId, managerId) {
       throw new StashError('ITEM_NOT_FOUND', 'item not found');
     }
 
-    await client.query(
+    const cancelledRes = await client.query(
       `update stash_requests
          set status = 'cancelled', decided_by = $2, decided_at = now()
-       where item_id = $1 and status in ('pending', 'approved')`,
+       where item_id = $1 and status in ('pending', 'approved')
+       returning id, user_id, item_id`,
       [itemId, managerId]
     );
     const upd = await client.query(
@@ -491,7 +493,12 @@ export async function removeItem(guildId, itemId, managerId) {
       [itemId]
     );
     await client.query('commit');
-    return rowToItem(upd.rows[0]);
+    const cancelled = cancelledRes.rows.map((r) => ({
+      id: r.id,
+      userId: r.user_id,
+      itemId: r.item_id
+    }));
+    return { item: rowToItem(upd.rows[0]), cancelled };
   } catch (err) {
     await client.query('rollback').catch(() => {});
     throw err;
