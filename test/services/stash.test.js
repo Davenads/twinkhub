@@ -8,6 +8,7 @@ import {
   buildManagerPanel,
   buildRequestAction,
   buildDenyConfirm,
+  buildWithdrawConfirm,
   normalizeWowheadId,
   normalizeSlot,
   STASH_SLOTS
@@ -308,4 +309,31 @@ test('buildDenyConfirm: two-click confirm carries the request id on both buttons
   const ids = buttonIds(panel);
   assert.ok(ids.includes(encodeStashId('denyc', 'r1')), 'Confirm deny routes denyc|r1');
   assert.ok(ids.includes(encodeStashId('dcxl', 'r1')), 'Cancel routes dcxl|r1');
+});
+
+test('buildManagerPanel: in-stock items add a Withdraw select, empty stock omits it', () => {
+  const stocked = buildManagerPanel({ items: [item({ id: 'a', name: 'Alpha' })] });
+  const mwd = selectByAction(stocked, 'mwd');
+  assert.ok(mwd, 'withdraw select present with stock');
+  assert.equal(mwd.options[0].value, 'itm_a', 'option value is the item id');
+  const empty = buildManagerPanel({ items: [item({ id: 'b', status: 'given', remaining: 0 })] });
+  assert.equal(selectByAction(empty, 'mwd'), null, 'no withdraw select when nothing in stock');
+});
+
+test('buildWithdrawConfirm: both buttons carry the item id; warns on open requests', () => {
+  const panel = buildWithdrawConfirm({
+    item: { id: 'itm_a', name: 'Alpha', remaining: 2 },
+    openCount: 3
+  });
+  const ids = buttonIds(panel);
+  assert.ok(ids.includes(encodeStashId('wdc', 'itm_a')), 'Confirm routes wdc|itm_a');
+  assert.ok(ids.includes(encodeStashId('wdcx', 'itm_a')), 'Cancel routes wdcx|itm_a');
+  assert.ok(description(panel).includes('3 open requests will be cancelled'), 'plural warning');
+});
+
+test('buildWithdrawConfirm: no open requests omits the cancellation warning', () => {
+  const desc = description(
+    buildWithdrawConfirm({ item: { id: 'itm_a', name: 'Alpha', remaining: 1 } })
+  );
+  assert.ok(!desc.includes('will be cancelled'), 'no warning when nothing is open');
 });

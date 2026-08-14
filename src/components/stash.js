@@ -9,6 +9,7 @@ import {
   buildManagerPanel,
   buildRequestAction,
   buildDenyConfirm,
+  buildWithdrawConfirm,
   itemNames
 } from '../services/stash.js';
 import { notifyNewRequest, notifyRequester } from '../stash/notify.js';
@@ -336,6 +337,68 @@ async function handleDenyCancel(interaction, parsed) {
   }
 }
 
+// Withdraw select (`mwd`) -> spawn an ephemeral withdraw confirm for the picked
+// item. Counts the item's open requests so the confirm can warn they'll be
+// cascade-cancelled by removeItem.
+async function handleWithdrawSelect(interaction) {
+  if (!(await requireManager(interaction))) return;
+  const itemId = interaction.values?.[0];
+  if (!itemId) {
+    await interaction.reply({ content: 'No item selected.', flags: MessageFlags.Ephemeral });
+    return;
+  }
+  try {
+    const item = await store.getItem(interaction.guildId, itemId);
+    if (!item) {
+      await interaction.reply({
+        content: MANAGER_ERROR_MESSAGES.ITEM_NOT_FOUND,
+        flags: MessageFlags.Ephemeral
+      });
+      return;
+    }
+    const open = await store.listRequests(interaction.guildId, {
+      itemId,
+      statuses: ['pending', 'approved']
+    });
+    await interaction.reply({
+      ...buildWithdrawConfirm({ item, openCount: open.length }),
+      flags: MessageFlags.Ephemeral,
+      ...SEND_OPTS
+    });
+  } catch (err) {
+    logger.error({ err }, 'stash withdraw open failed');
+    await interaction
+      .reply({ content: 'Could not open that item.', flags: MessageFlags.Ephemeral })
+      .catch(() => {});
+  }
+}
+
+// Withdraw confirm (`wdc`) -> withdraw the item (cascade-cancels its open
+// requests). Collapses the ephemeral console on success.
+async function handleWithdrawConfirm(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  try {
+    const item = await store.removeItem(interaction.guildId, parsed.args[0], interaction.user.id);
+    await interaction.update({
+      content: `Withdrew **${item.name}** from the stash.`,
+      embeds: [],
+      components: []
+    });
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash withdraw failed');
+  }
+}
+
+// Withdraw cancel (`wdcx`) -> back out, leaving the item in place.
+async function handleWithdrawCancel(interaction) {
+  if (!(await requireManager(interaction))) return;
+  await interaction.update({
+    content: 'Cancelled \u2014 the item is still in the stash.',
+    embeds: [],
+    components: []
+  });
+}
+
 const HANDLERS = {
   req: handleRequest,
   mine: handleMine,
@@ -347,7 +410,10 @@ const HANDLERS = {
   sent: handleSent,
   deny: handleDenyPrompt,
   denyc: handleDenyConfirm,
-  dcxl: handleDenyCancel
+  dcxl: handleDenyCancel,
+  mwd: handleWithdrawSelect,
+  wdc: handleWithdrawConfirm,
+  wdcx: handleWithdrawCancel
 };
 
 /** True when a component interaction targets a stash control (current `s1` id). */

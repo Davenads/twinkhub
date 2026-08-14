@@ -287,6 +287,26 @@ export function buildManagerPanel({ items = [], pending = [], approved = [], nam
       )
     );
   }
+  if (inStock.length) {
+    components.push(
+      row(
+        new StringSelectMenuBuilder()
+          .setCustomId(encodeStashId('mwd'))
+          .setPlaceholder('Withdraw an item\u2026')
+          .addOptions(
+            inStock.slice(0, SELECT_LIMIT).map((it) => {
+              const opt = { label: truncate(it.name, 100), value: it.id };
+              const slotLabel = SLOT_LABEL.get(normalizeSlot(it.slot)) || it.slot;
+              const desc = [slotLabel, `\u00d7${it.remaining} left`]
+                .filter(Boolean)
+                .join(' \u00b7 ');
+              if (desc) opt.description = truncate(desc, 100);
+              return opt;
+            })
+          )
+      )
+    );
+  }
   components.push(
     row(
       new ButtonBuilder()
@@ -369,6 +389,44 @@ export function buildDenyConfirm({ req, itemName } = {}) {
           .setStyle(ButtonStyle.Danger),
         new ButtonBuilder()
           .setCustomId(encodeStashId('dcxl', req.id))
+          .setLabel('Cancel')
+          .setStyle(ButtonStyle.Secondary)
+      )
+    ]
+  };
+}
+
+/**
+ * Build the ephemeral two-click confirm spawned when a manager picks an item from
+ * the console's Withdraw select. removeItem is destructive (cascade-cancels the
+ * item's open pending/approved requests), so `openCount` surfaces how many will
+ * be cancelled. Confirm routes `wdc`; Cancel routes `wdcx`.
+ *
+ * @param {{ item: object, openCount?: number }} args
+ * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
+ */
+export function buildWithdrawConfirm({ item, openCount = 0 } = {}) {
+  const lines = [
+    `**${item.name}** \u2014 \u00d7${item.remaining} in stock`,
+    "Withdrawing pulls it from the stash. This can't be undone."
+  ];
+  if (openCount > 0) {
+    lines.push(`Note: ${openCount} open request${openCount === 1 ? '' : 's'} will be cancelled.`);
+  }
+  const embed = new EmbedBuilder()
+    .setColor(DEGRADE_COLOR)
+    .setTitle('Withdraw this item?')
+    .setDescription(lines.join('\n'));
+  return {
+    embeds: [embed],
+    components: [
+      row(
+        new ButtonBuilder()
+          .setCustomId(encodeStashId('wdc', item.id))
+          .setLabel('Confirm withdraw')
+          .setStyle(ButtonStyle.Danger),
+        new ButtonBuilder()
+          .setCustomId(encodeStashId('wdcx', item.id))
           .setLabel('Cancel')
           .setStyle(ButtonStyle.Secondary)
       )
