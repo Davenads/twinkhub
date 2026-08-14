@@ -1,9 +1,9 @@
 import { MessageFlags } from 'discord.js';
-import { requireRequester } from '../lib/access.js';
+import { requireRequester, requireManager } from '../lib/access.js';
 import { loadGuildConfig } from '../config/guildConfig.js';
 import { logger } from '../lib/logger.js';
 import * as store from '../stash/store.js';
-import { parseStashCustomId, buildStashPanel } from '../services/stash.js';
+import { parseStashCustomId, buildStashPanel, buildManagerPanel } from '../services/stash.js';
 import { notifyNewRequest } from '../stash/notify.js';
 
 // Component router for the public Community Stash panel (`s1|` ids). Runs in
@@ -137,10 +137,36 @@ async function handleRefresh(interaction) {
   }
 }
 
+// Manager Console Refresh -> re-render the manager panel in place from live
+// counts. Manager-gated (the panel lives in a manager-only channel, but never
+// trust the channel alone). requireManager replies on denial, so it runs BEFORE
+// deferUpdate.
+async function handleManagerRefresh(interaction) {
+  if (!(await requireManager(interaction))) return;
+  await interaction.deferUpdate();
+  try {
+    const [items, pending, approved] = await Promise.all([
+      store.listItems(interaction.guildId, { statuses: ['available', 'requested'] }),
+      store.listRequests(interaction.guildId, { statuses: ['pending'] }),
+      store.listRequests(interaction.guildId, { statuses: ['approved'] })
+    ]);
+    await interaction.editReply({
+      ...buildManagerPanel({ items, pending, approved }),
+      ...SEND_OPTS
+    });
+  } catch (err) {
+    logger.error({ err }, 'stash manager panel refresh failed');
+    await interaction
+      .followUp({ content: 'Could not refresh the manager panel.', flags: MessageFlags.Ephemeral })
+      .catch(() => {});
+  }
+}
+
 const HANDLERS = {
   req: handleRequest,
   mine: handleMine,
-  refresh: handleRefresh
+  refresh: handleRefresh,
+  mref: handleManagerRefresh
 };
 
 /** True when a component interaction targets a stash control (current `s1` id). */

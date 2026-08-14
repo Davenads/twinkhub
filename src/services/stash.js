@@ -220,3 +220,40 @@ export function buildStashPanel({ items = [] } = {}) {
 
   return { embeds: [embed], components };
 }
+
+/**
+ * Build the Manager Console panel — a manager-only dashboard posted in a
+ * restricted channel. Read-only for now (request/stock counts + a Refresh
+ * button); the interactive approve/deny/sent selects are a later slice, so this
+ * intentionally exposes no per-request controls yet.
+ *
+ * @param {{ items?: Array, pending?: Array, approved?: Array }} args
+ * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
+ */
+export function buildManagerPanel({ items = [], pending = [], approved = [] } = {}) {
+  const inStock = items.filter((it) => it.status === 'available' && it.remaining > 0);
+  const availableUnits = inStock.reduce((n, it) => n + it.remaining, 0);
+
+  const embed = new EmbedBuilder()
+    .setColor(EMBED_COLOR)
+    .setTitle('Community Stash \u2014 Manager Console')
+    .setDescription(
+      [
+        `**Pending** (awaiting approval): **${pending.length}**`,
+        `**Approved** (awaiting hand-off): **${approved.length}**`,
+        `**Available items**: **${inStock.length}** (${availableUnits} unit${availableUnits === 1 ? '' : 's'})`
+      ].join('\n')
+    )
+    .setFooter({ text: 'Act on requests with /stashadmin queue.' });
+
+  const components = [
+    row(
+      new ButtonBuilder()
+        .setCustomId(encodeStashId('mref'))
+        .setLabel('Refresh')
+        .setStyle(ButtonStyle.Secondary)
+    )
+  ];
+
+  return { embeds: [embed], components };
+}

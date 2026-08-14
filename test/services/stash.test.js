@@ -5,6 +5,7 @@ import {
   encodeStashId,
   parseStashCustomId,
   buildStashPanel,
+  buildManagerPanel,
   normalizeWowheadId,
   normalizeSlot,
   STASH_SLOTS
@@ -201,4 +202,28 @@ test('buildStashPanel: request select order matches the grouped display', () => 
   ];
   const values = requestSelect(buildStashPanel({ items })).options.map((o) => o.value);
   assert.deepEqual(values, ['itm_b', 'itm_c', 'itm_a'], 'head, feet, then ungrouped');
+});
+
+test('buildManagerPanel: renders request + stock counts and a Refresh button', () => {
+  const panel = buildManagerPanel({
+    items: [
+      item({ id: 'a', remaining: 2, status: 'available' }),
+      item({ id: 'b', remaining: 1, status: 'available' }),
+      item({ id: 'c', remaining: 0, status: 'given' }) // out of stock, not counted
+    ],
+    pending: [{ id: 'r1' }, { id: 'r2' }],
+    approved: [{ id: 'r3' }]
+  });
+  const desc = description(panel);
+  assert.ok(desc.includes('**Pending** (awaiting approval): **2**'), 'pending count');
+  assert.ok(desc.includes('**Approved** (awaiting hand-off): **1**'), 'approved count');
+  assert.ok(desc.includes('**Available items**: **2** (3 units)'), 'stock counts');
+  const ids = buttonIds(panel);
+  assert.ok(ids.includes(encodeStashId('mref')), 'manager Refresh button present');
+});
+
+test('buildManagerPanel: default (no args) renders zeroed counts safely', () => {
+  const desc = description(buildManagerPanel());
+  assert.ok(desc.includes('**Pending** (awaiting approval): **0**'), 'zero pending');
+  assert.ok(desc.includes('**Available items**: **0** (0 units)'), 'zero stock, plural unit');
 });

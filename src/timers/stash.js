@@ -107,7 +107,11 @@ export function createStashRefresher(
         const payload = { ...build({ items }), ...SEND_OPTS };
         const outcome = await editOrRepost(channel, stash.panelMessageIds?.browse, payload);
         if (outcome.action === 'reposted') {
-          await saveStash(guild.id, { panelMessageIds: { browse: outcome.messageId } });
+          // Spread the existing ids so a browse repost never wipes the manager
+          // panel's id (both live under the shared panelMessageIds map).
+          await saveStash(guild.id, {
+            panelMessageIds: { ...stash.panelMessageIds, browse: outcome.messageId }
+          });
         }
         // Only memoize once the edit/repost actually landed, so a failed edit
         // retries next tick rather than being masked by a stored fingerprint.

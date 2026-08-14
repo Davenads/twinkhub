@@ -3,7 +3,12 @@ import { requireManager } from '../../lib/access.js';
 import { loadGuildConfig, setStash } from '../../config/guildConfig.js';
 import { logger } from '../../lib/logger.js';
 import * as store from '../../stash/store.js';
-import { buildStashPanel, normalizeWowheadId, STASH_SLOTS } from '../../services/stash.js';
+import {
+  buildStashPanel,
+  buildManagerPanel,
+  normalizeWowheadId,
+  STASH_SLOTS
+} from '../../services/stash.js';
 import { notifyRequester } from '../../stash/notify.js';
 
 // Manager-only CRUD over the Community Stash. Thin wrappers around the store
@@ -11,6 +16,19 @@ import { notifyRequester } from '../../stash/notify.js';
 // setDefaultMemberPermissions(ManageGuild) hides it from non-managers in the
 // picker, but the real gate is requireManager at runtime (per-guild Manager role
 // OR Manage Server), since default-member-perms is only a client-side hint.
+
+// Shared `kind` option for the panel subcommands: which panel to act on. Default
+// browse preserves the original single-panel behavior. Hoisted so `data` (a
+// module-load const) can reference it.
+function panelKindOption(o) {
+  return o
+    .setName('kind')
+    .setDescription('Which panel (default browse)')
+    .addChoices(
+      { name: 'browse (public)', value: 'browse' },
+      { name: 'manager (manager-only channel)', value: 'manager' }
+    );
+}
 
 export const data = new SlashCommandBuilder()
   .setName('stashadmin')
@@ -101,24 +119,33 @@ export const data = new SlashCommandBuilder()
   .addSubcommandGroup((g) =>
     g
       .setName('panel')
-      .setDescription('Manage the public Community Stash panel.')
+      .setDescription('Manage the Community Stash panels (public browse + manager console).')
       .addSubcommand((s) =>
         s
           .setName('post')
-          .setDescription('Post the public stash panel into a channel.')
+          .setDescription('Post a stash panel into a channel.')
           .addChannelOption((o) =>
             o
               .setName('channel')
-              .setDescription('Channel to host the panel (recommended: read-only for @everyone)')
+              .setDescription(
+                'Channel to host the panel (browse: read-only; manager: manager-only)'
+              )
               .addChannelTypes(ChannelType.GuildText)
               .setRequired(true)
           )
+          .addStringOption(panelKindOption)
       )
       .addSubcommand((s) =>
-        s.setName('refresh').setDescription('Re-render the posted stash panel in place.')
+        s
+          .setName('refresh')
+          .setDescription('Re-render a posted stash panel in place.')
+          .addStringOption(panelKindOption)
       )
       .addSubcommand((s) =>
-        s.setName('remove').setDescription('Delete and forget the stash panel.')
+        s
+          .setName('remove')
+          .setDescription('Delete and forget a stash panel.')
+          .addStringOption(panelKindOption)
       )
   )
   .addSubcommandGroup((g) =>
@@ -269,36 +296,84 @@ async function renderStashPanel(guildId) {
   return buildStashPanel({ items });
 }
 
-// Best-effort delete of the stored panel message so post/remove never orphan one.
-async function removeStashMessage(guild, stash) {
-  const messageId = stash?.panelMessageIds?.browse;
-  if (!stash?.channelId || !messageId) return;
-  const channel = await guild.channels.fetch(stash.channelId).catch(() => null);
+// Build the manager console from live stock + open requests. Same view the
+// s1|mref button renders, so post/refresh stay in lockstep.
+async function renderManagerPanel(guildId) {
+  const [items, pending, approved] = await Promise.all([
+    store.listItems(guildId, { statuses: ['available', 'requested'] }),
+    store.listRequests(guildId, { statuses: ['pending'] }),
+    store.listRequests(guildId, { statuses: ['approved'] })
+  ]);
+  return buildManagerPanel({ items, pending, approved });
+}
+
+// Per-kind panel wiring: which stash config keys hold the host channel + message
+// id, and how to render. browse = the public panel; manager = the manager-only
+// console. Keeping the two message ids under the shared panelMessageIds map means
+// writes MUST merge (below) so posting one never wipes the other.
+const PANEL_KINDS = {
+  browse: {
+    channelKey: 'channelId',
+    msgKey: 'browse',
+    render: renderStashPanel,
+    label: 'stash',
+    postHint: 'Controls work indefinitely; run `/stashadmin panel refresh` after stock changes.'
+  },
+  manager: {
+    channelKey: 'managerPanelChannelId',
+    msgKey: 'manager',
+    render: renderManagerPanel,
+    label: 'manager',
+    postHint:
+      'Place this in a **manager-only** channel; run `/stashadmin panel refresh kind:manager` after changes.'
+  }
+};
+
+// Merge one panel's channel + message id into the stash config WITHOUT clobbering
+// the sibling panel's id (panelMessageIds is a shared map). Reads the just-loaded
+// stash so the spread preserves the other kind's message id.
+async function savePanelRecord(guildId, stash, kind, channelId, messageId) {
+  const { channelKey, msgKey } = PANEL_KINDS[kind];
+  await setStash(guildId, {
+    [channelKey]: channelId,
+    panelMessageIds: { ...stash?.panelMessageIds, [msgKey]: messageId }
+  });
+}
+
+// Best-effort delete of a stored panel message so post/remove never orphan one.
+async function removeStashMessage(guild, stash, kind) {
+  const { channelKey, msgKey } = PANEL_KINDS[kind];
+  const channelId = stash?.[channelKey];
+  const messageId = stash?.panelMessageIds?.[msgKey];
+  if (!channelId || !messageId) return;
+  const channel = await guild.channels.fetch(channelId).catch(() => null);
   if (!channel?.isTextBased?.()) return;
   const msg = await channel.messages.fetch(messageId).catch(() => null);
   await msg?.delete().catch(() => {});
 }
 
-// `/stashadmin panel post|refresh|remove` — mirrors the /panels post/refresh/
-// remove lifecycle but for the single public stash message. Assumes the caller
-// already deferred ephemerally; the store errors bubble to execute's catch.
+// `/stashadmin panel post|refresh|remove [kind]` — mirrors the /panels lifecycle
+// for the browse panel and the manager console. Assumes the caller already
+// deferred ephemerally; store errors bubble to execute's catch.
 async function handlePanel(interaction, sub) {
   const guildId = interaction.guildId;
+  const kind = interaction.options.getString('kind') ?? 'browse';
+  const spec = PANEL_KINDS[kind];
 
   if (sub === 'remove') {
     const cfg = await loadGuildConfig(guildId);
-    await removeStashMessage(interaction.guild, cfg.stash);
-    await setStash(guildId, { channelId: null, panelMessageIds: null });
-    await interaction.editReply('Stash panel removed.');
+    await removeStashMessage(interaction.guild, cfg.stash, kind);
+    await savePanelRecord(guildId, cfg.stash, kind, null, null);
+    await interaction.editReply(`${kind === 'manager' ? 'Manager' : 'Stash'} panel removed.`);
     return;
   }
 
   if (sub === 'post') {
     const channel = interaction.options.getChannel('channel', true);
-    // Clear any existing panel first so we never leave an orphan behind.
+    // Clear any existing panel of this kind first so we never leave an orphan.
     const cfg = await loadGuildConfig(guildId);
-    await removeStashMessage(interaction.guild, cfg.stash);
-    const panel = await renderStashPanel(guildId);
+    await removeStashMessage(interaction.guild, cfg.stash, kind);
+    const panel = await spec.render(guildId);
     let msg;
     try {
       msg = await channel.send({ ...panel, ...SEND_OPTS });
@@ -308,30 +383,31 @@ async function handlePanel(interaction, sub) {
       );
       return;
     }
-    await setStash(guildId, { channelId: channel.id, panelMessageIds: { browse: msg.id } });
+    await savePanelRecord(guildId, cfg.stash, kind, channel.id, msg.id);
     await interaction.editReply(
-      `Posted the stash panel in <#${channel.id}>. Controls work indefinitely; run \`/stashadmin panel refresh\` after stock changes.`
+      `Posted the ${spec.label} panel in <#${channel.id}>. ${spec.postHint}`
     );
     return;
   }
 
   // sub === 'refresh': edit the stored message in place, reposting if it's gone.
   const cfg = await loadGuildConfig(guildId);
-  if (!cfg.stash?.channelId) {
-    await interaction.editReply(
-      'No stash panel is posted yet — run `/stashadmin panel post` first.'
-    );
+  const channelId = cfg.stash?.[spec.channelKey];
+  const postCmd =
+    kind === 'manager' ? '/stashadmin panel post kind:manager' : '/stashadmin panel post';
+  if (!channelId) {
+    await interaction.editReply(`No ${spec.label} panel is posted yet — run \`${postCmd}\` first.`);
     return;
   }
-  const channel = await interaction.guild.channels.fetch(cfg.stash.channelId).catch(() => null);
+  const channel = await interaction.guild.channels.fetch(channelId).catch(() => null);
   if (!channel?.isTextBased?.()) {
     await interaction.editReply(
-      'The stash panel channel is gone — run `/stashadmin panel post` to place it somewhere new.'
+      `The ${spec.label} panel channel is gone — run \`${postCmd}\` to place it somewhere new.`
     );
     return;
   }
-  const panel = await renderStashPanel(guildId);
-  const existingId = cfg.stash.panelMessageIds?.browse;
+  const panel = await spec.render(guildId);
+  const existingId = cfg.stash?.panelMessageIds?.[spec.msgKey];
   const existing = existingId ? await channel.messages.fetch(existingId).catch(() => null) : null;
   let messageId;
   if (existing) {
@@ -341,8 +417,8 @@ async function handlePanel(interaction, sub) {
     const msg = await channel.send({ ...panel, ...SEND_OPTS });
     messageId = msg.id;
   }
-  await setStash(guildId, { channelId: channel.id, panelMessageIds: { browse: messageId } });
-  await interaction.editReply(`Refreshed the stash panel in <#${channel.id}>.`);
+  await savePanelRecord(guildId, cfg.stash, kind, channel.id, messageId);
+  await interaction.editReply(`Refreshed the ${spec.label} panel in <#${channel.id}>.`);
 }
 
 // `kind` option value -> stash config key + human label. Managers gate approvals;

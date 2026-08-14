@@ -18,7 +18,7 @@ export const DEFAULT_CONFIG = {
   panels: null, // { channelId, messageIds: { <panelKey>: messageId } }
   // Community Stash wiring; null until configured. Holds only role/channel wiring
   // and tunables — inventory + requests live in Postgres, not here.
-  stash: null // { channelId, panelMessageIds, requesterRoleIds, managerRoleIds, requestCap, staleApprovalDays }
+  stash: null // { channelId, managerPanelChannelId, panelMessageIds: { browse, manager }, requesterRoleIds, managerRoleIds, managerChannelId, requestCap, staleApprovalDays }
 };
 
 function fileFor(guildId, dir = CONFIG_DIR) {
