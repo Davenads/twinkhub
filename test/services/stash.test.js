@@ -9,6 +9,7 @@ import {
   buildRequestAction,
   buildDenyConfirm,
   buildWithdrawConfirm,
+  buildAddWizard,
   buildAddModal,
   normalizeWowheadId,
   normalizeSlot,
@@ -326,18 +327,67 @@ test('buildManagerPanel: always offers an Add Item button', () => {
   assert.ok(ids.includes(encodeStashId('madd')), 'Add Item button present even when empty');
 });
 
-test('buildAddModal: routes madds with the five intake fields, name required', () => {
-  const json = buildAddModal().toJSON();
-  assert.equal(json.custom_id, encodeStashId('madds'), 'submit routes madds');
+test('buildAddModal: routes madds with slot+donor in its id and free-text fields', () => {
+  const json = buildAddModal('head', '42').toJSON();
+  assert.equal(
+    json.custom_id,
+    encodeStashId('madds', 'head', '42'),
+    'submit id carries slot + donor'
+  );
   const inputs = json.components.map((r) => r.components[0]);
   assert.deepEqual(
     inputs.map((c) => c.custom_id),
-    ['name', 'quantity', 'slot', 'wowhead', 'donor'],
-    'five intake fields in order'
+    ['name', 'quantity', 'wowhead', 'notes'],
+    'four free-text fields in order (slot/donor moved to the wizard)'
   );
   const name = inputs.find((c) => c.custom_id === 'name');
   assert.equal(name.required, true, 'name is required');
-  assert.equal(inputs.find((c) => c.custom_id === 'donor').required, false, 'donor is optional');
+  assert.equal(inputs.find((c) => c.custom_id === 'notes').required, false, 'notes is optional');
+});
+
+test('buildAddModal: default (no picks) yields empty slot/donor id segments', () => {
+  const json = buildAddModal().toJSON();
+  assert.equal(json.custom_id, encodeStashId('madds', '', ''), 'empty segments when unset');
+  assert.deepEqual(parseStashCustomId(json.custom_id), { action: 'madds', args: ['', ''] });
+});
+
+test('buildAddWizard: default renders a slot select, a donor user-picker, and Next', () => {
+  const rows = buildAddWizard().components.map((r) => r.toJSON().components[0]);
+  const slot = rows.find((c) => c.custom_id === encodeStashId('awslot', ''));
+  const donor = rows.find((c) => c.custom_id === encodeStashId('awdon', ''));
+  const next = rows.find((c) => c.custom_id === encodeStashId('awnx', '', ''));
+  assert.ok(slot, 'slot select present, carrying an empty donor');
+  assert.equal(slot.type, 3, 'component type 3 is a string select');
+  assert.equal(slot.options.length, STASH_SLOTS.length, 'all slots offered');
+  assert.equal(slot.min_values, 0, 'slot is optional');
+  assert.ok(donor, 'donor user-select present, carrying an empty slot');
+  assert.equal(donor.type, 5, 'component type 5 is a user select');
+  assert.equal(donor.min_values, 0, 'donor is optional');
+  assert.ok(next, 'Next button present');
+});
+
+test('buildAddWizard: a partial pick rides into the other controls ids and marks the slot', () => {
+  const rows = buildAddWizard({ slot: 'head', donorId: '42' }).components.map(
+    (r) => r.toJSON().components[0]
+  );
+  assert.ok(
+    rows.some((c) => c.custom_id === encodeStashId('awslot', '42')),
+    'slot select carries the chosen donor'
+  );
+  assert.ok(
+    rows.some((c) => c.custom_id === encodeStashId('awdon', 'head')),
+    'donor select carries the chosen slot'
+  );
+  assert.ok(
+    rows.some((c) => c.custom_id === encodeStashId('awnx', 'head', '42')),
+    'Next carries both picks'
+  );
+  const slot = rows.find((c) => c.custom_id === encodeStashId('awslot', '42'));
+  assert.equal(
+    slot.options.find((o) => o.value === 'head').default,
+    true,
+    'chosen slot is marked default'
+  );
 });
 
 test('buildWithdrawConfirm: both buttons carry the item id; warns on open requests', () => {

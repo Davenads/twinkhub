@@ -4,6 +4,7 @@ import {
   ButtonBuilder,
   ButtonStyle,
   StringSelectMenuBuilder,
+  UserSelectMenuBuilder,
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle
@@ -183,15 +184,68 @@ export function pickRestockTarget(matches, forceNew) {
 }
 
 /**
- * Build the Add-Item modal opened by the manager console's Add Item button.
- * Discord caps a modal at 5 text inputs (and forbids selects), so slot is free
- * text (folded by normalizeSlot at intake) and tags/notes stay slash-only. There
- * is no force_new here, so a modal add always dedup-merges. Submits route
- * `madds`; the handler reads fields by these customIds.
+ * Build the Add-Item wizard opened by the manager console's Add Item button.
+ * Discord modals can't hold selects or user-pickers, so the guardrailed fields
+ * are picked FIRST as components — slot via a StringSelect (mirrors the slash
+ * choices) and donor via a UserSelect (the native member picker) — and their
+ * compact values (canonical slot id, donor snowflake) ride the component ids so
+ * the flow stays STATELESS across a restart. Each pick re-renders in place; the
+ * `Next: details` button (awnx) then opens buildAddModal for the free text. Both
+ * picks are optional (min 0) — clearing a StringSelect leaves the slot unset.
  *
+ * @param {{ slot?: string|null, donorId?: string|null }} [state]
+ * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
+ */
+export function buildAddWizard({ slot = null, donorId = null } = {}) {
+  const embed = new EmbedBuilder()
+    .setColor(EMBED_COLOR)
+    .setTitle('Add stash item')
+    .setDescription(
+      [
+        'Pick the slot and donor below (both optional), then **Next: details** to enter the name, quantity, Wowhead id, and notes.',
+        '',
+        `Slot: **${SLOT_LABEL.get(slot) || '\u2014'}**`,
+        `Donor: ${donorId ? `<@${donorId}>` : '**\u2014**'}`
+      ].join('\n')
+    );
+
+  const slotSelect = new StringSelectMenuBuilder()
+    .setCustomId(encodeStashId('awslot', donorId ?? ''))
+    .setPlaceholder('Slot (optional)\u2026')
+    .setMinValues(0)
+    .setMaxValues(1)
+    .addOptions(
+      STASH_SLOTS.map((s) => ({ label: s.label, value: s.value, default: s.value === slot }))
+    );
+
+  const donorSelect = new UserSelectMenuBuilder()
+    .setCustomId(encodeStashId('awdon', slot ?? ''))
+    .setPlaceholder('Donor (optional)\u2026')
+    .setMinValues(0)
+    .setMaxValues(1);
+  if (donorId) donorSelect.setDefaultUsers([donorId]);
+
+  const next = new ButtonBuilder()
+    .setCustomId(encodeStashId('awnx', slot ?? '', donorId ?? ''))
+    .setLabel('Next: details')
+    .setStyle(ButtonStyle.Primary);
+
+  return { embeds: [embed], components: [row(slotSelect), row(donorSelect), row(next)] };
+}
+
+/**
+ * Build the Add-Item details modal opened by the wizard's Next button. Slot and
+ * donor were already captured as guardrailed components and ride the submit id
+ * (`madds|<slot>|<donorId>`, empty segment = unset), so this modal holds only the
+ * free text: name (required), quantity, Wowhead id, and notes. There is no
+ * force_new here, so a modal add always dedup-merges. The handler reads fields by
+ * these customIds and slot/donor from the id args.
+ *
+ * @param {string|null} [slot] canonical slot id captured by the wizard
+ * @param {string|null} [donorId] donor snowflake captured by the wizard
  * @returns {ModalBuilder}
  */
-export function buildAddModal() {
+export function buildAddModal(slot = null, donorId = null) {
   const input = (id, label, { style = TextInputStyle.Short, required = false, max } = {}) => {
     const b = new TextInputBuilder().setCustomId(id).setLabel(label).setStyle(style);
     b.setRequired(required);
@@ -199,14 +253,13 @@ export function buildAddModal() {
     return new ActionRowBuilder().addComponents(b);
   };
   return new ModalBuilder()
-    .setCustomId(encodeStashId('madds'))
+    .setCustomId(encodeStashId('madds', slot ?? '', donorId ?? ''))
     .setTitle('Add stash item')
     .addComponents(
       input('name', 'Item name', { required: true, max: 200 }),
       input('quantity', 'Quantity (default 1)', { max: 6 }),
-      input('slot', 'Slot (e.g. head, weapon) \u2014 optional', { max: 40 }),
       input('wowhead', 'Wowhead item id or URL \u2014 optional', { max: 200 }),
-      input('donor', 'Donor \u2014 optional', { max: 100 })
+      input('notes', 'Notes \u2014 optional', { style: TextInputStyle.Paragraph, max: 500 })
     );
 }
 

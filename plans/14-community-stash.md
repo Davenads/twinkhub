@@ -1042,3 +1042,50 @@ The console is already 4 rows worst case (`mq`+`maq`+`mwd` selects + button row)
 Relationship to the dupe **consolidation** step: edit fixes **one** row's attributes;
 consolidation **merges** duplicate rows. Do the edit pipeline first (unblocks the typo), then
 consolidation.
+
+## Planned: Add-Item wizard — guardrailed slot + donor (2026-08-14, greenlit)
+
+The manager-panel Add-Item **modal** exposed `slot` and `donor` as open text fields, unlike
+the slash command (slot is an `addChoices` dropdown; donor rides Discord's native @-mention
+autocomplete). A Discord `ModalBuilder` can hold **only** text inputs (no selects, no
+user-pickers, no @-autocomplete), so guardrails require moving those two fields **out of the
+modal** into component interactions, picked BEFORE the modal opens.
+
+### Architecture (stateless wizard, picks-first / modal-last)
+- **slot →** `StringSelectMenuBuilder` (`awslot`), the 17 `STASH_SLOTS`, `min 0` (clearing
+  leaves it unset). Buttons rejected — 17 slots blow the 5-row/5-button cap; a select mirrors
+  the slash choices.
+- **donor →** `UserSelectMenuBuilder` (`awdon`), `min 0` — the component-context equivalent of
+  the @-autopop member picker.
+- The compact picks (canonical slot id ≤8 chars; donor snowflake ~18) ride the component ids,
+  so the flow is **stateless** (survives `pm2 reload` — no in-memory pending-add token). Each
+  pick `interaction.update()`s the wizard in place, re-encoding the *other* pick into every
+  control's id: `awslot|<donorId>`, `awdon|<slot>`, `awnx|<slot>|<donorId>`.
+- **Next: details** (`awnx`) → `showModal(buildAddModal(slot, donorId))`. The modal now holds
+  only the unbounded free text — **name (req), quantity, wowhead, notes** — and its submit id
+  carries the picks: `madds|<slot>|<donorId>` (empty segment = unset). Freeing the two
+  guardrailed rows let **notes** finally reach the panel intake.
+- **Submit** (`madds`) → resolve `donorId` to the member **display name** (fallback `<@id>`)
+  for the text `donor` column (no schema change; exports stay readable), then the same
+  `findItemMatch` → `pickRestockTarget` → restock/add dedup path. `deferUpdate()` +
+  `editReply` collapses the wizard message into the result.
+
+### Decisions locked
+- Donor stored as **display-name text** (not a raw snowflake) — keeps the column human-readable;
+  tradeoff: the Edit donor picker can't prefill from a name (empty = keep in the edit wizard).
+- Arbitrary / anonymous donors (non-members, "Anonymous", ex-members) are **panel-dropped** —
+  they remain available via `/stashadmin add`'s free-text `donor`.
+- **notes** added to the panel modal (was slash-only).
+
+### Revised sequencing (supersedes the modal-shaped parts of Opt 3's Step 4)
+Splits the greenlit Step 4 so the modal-independent parts still land and Edit reuses the Add
+wizard primitives:
+- **Phase A — Add-Item wizard (shipped 2026-08-14):** `buildAddWizard` + slimmed
+  `buildAddModal(slot, donorId)`; handlers `awslot`/`awdon`/`awnx`; `handleAddSubmit` reads
+  picks from the submit id. *(components/services ⇒ reload, NO deploy.)*
+- **Phase B — manage-item console (Opt 3 Step 4a, modal-independent):** replace `mwd` withdraw
+  select with `mitem` "Manage an item…" over all active items; `buildItemAction`
+  (Edit `medit|<id>` / Withdraw `wdp|<id>`); move `collisionNote` to services. *(reload.)*
+- **Phase C — Edit wizard (Opt 3 Step 4b):** `medit` → `buildEditWizard(item)` reusing Phase A's
+  slot/donor components (slot default prefilled; donor empty = keep) → modal for
+  name/wowhead/notes → `medits` → `editItem` + collision note. *(reload.)*

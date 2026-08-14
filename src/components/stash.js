@@ -10,6 +10,7 @@ import {
   buildRequestAction,
   buildDenyConfirm,
   buildWithdrawConfirm,
+  buildAddWizard,
   buildAddModal,
   normalizeWowheadId,
   pickRestockTarget,
@@ -76,6 +77,20 @@ async function editStoreError(interaction, err, label) {
   }
   logger.error({ err }, label);
   await interaction.editReply('Something went wrong talking to the stash. Try again.');
+}
+
+// Like editStoreError but for a deferred UPDATE of a component message (the Add
+// wizard): also clears the wizard embed/components so only the result text
+// remains where the selects used to be.
+async function editStoreErrorUpdate(interaction, err, label) {
+  let text;
+  if (err instanceof store.StashError) {
+    text = ERROR_MESSAGES[err.code] ?? err.message;
+  } else {
+    logger.error({ err }, label);
+    text = 'Something went wrong talking to the stash. Try again.';
+  }
+  await interaction.editReply({ content: text, embeds: [], components: [] });
 }
 
 // Request select -> claim the chosen item for the clicker.
@@ -402,51 +417,97 @@ async function handleWithdrawCancel(interaction) {
   });
 }
 
-// Add Item button (`madd`) on the manager console -> pop the Add-Item modal.
-// Manager-gated. showModal MUST be the first ack, so requireManager (which only
-// replies on denial, never acks on success) runs first and nothing defers.
+// Add Item button (`madd`) on the manager console -> open the ephemeral Add-Item
+// wizard. Manager-gated; a button interaction can reply, so nothing defers before
+// the gate (requireManager only replies on denial).
 async function handleAddOpen(interaction) {
   if (!(await requireManager(interaction))) return;
-  await interaction.showModal(buildAddModal());
+  await interaction.reply({
+    ...buildAddWizard(),
+    flags: MessageFlags.Ephemeral,
+    ...SEND_OPTS
+  });
 }
 
-// Add-Item modal submit (`madds`) -> intake through the same dedup path as
-// `/stashadmin add` (no force_new here, so a match always restocks). Manager-
-// gated again (a fresh interaction), then defer + editReply ephemerally.
-async function handleAddSubmit(interaction) {
+// Add-Item wizard slot pick (`awslot|<donorId>`) -> re-render the wizard carrying
+// the donor already chosen (in the select's id) plus the new slot. Stateless: all
+// running state rides the component ids, so a restart never orphans a half add.
+async function handleWizardSlot(interaction, parsed) {
   if (!(await requireManager(interaction))) return;
-  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+  const slot = interaction.values?.[0] || null;
+  const donorId = parsed.args[0] || null;
+  await interaction.update({ ...buildAddWizard({ slot, donorId }), ...SEND_OPTS });
+}
+
+// Add-Item wizard donor pick (`awdon|<slot>`) -> re-render carrying the slot
+// already chosen (in the select's id) plus the new donor.
+async function handleWizardDonor(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  const donorId = interaction.values?.[0] || null;
+  const slot = parsed.args[0] || null;
+  await interaction.update({ ...buildAddWizard({ slot, donorId }), ...SEND_OPTS });
+}
+
+// Add-Item wizard Next (`awnx|<slot>|<donorId>`) -> open the free-text modal,
+// carrying the captured slot/donor in its submit id. showModal MUST be the first
+// ack, so requireManager (replies only on denial) runs first and nothing defers.
+async function handleWizardNext(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  await interaction.showModal(buildAddModal(parsed.args[0] || null, parsed.args[1] || null));
+}
+
+// Add-Item modal submit (`madds|<slot>|<donorId>`) -> combine the modal free text
+// with the wizard's captured slot/donor, then intake through the same dedup path
+// as `/stashadmin add` (no force_new here, so a match always restocks). The donor
+// snowflake resolves to a display name for the text donor column. Edits the
+// wizard message in place with the result.
+async function handleAddSubmit(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  await interaction.deferUpdate();
   try {
+    const slot = parsed.args[0] || null;
+    const donorId = parsed.args[1] || null;
+    let donor = null;
+    if (donorId) {
+      const member = await interaction.guild.members.fetch(donorId).catch(() => null);
+      donor = member ? member.displayName : `<@${donorId}>`;
+    }
     const f = interaction.fields;
     const name = f.getTextInputValue('name').trim();
     if (!name) {
-      await interaction.editReply('An item name is required.');
+      await interaction.editReply({
+        content: 'An item name is required.',
+        embeds: [],
+        components: []
+      });
       return;
     }
     const rawQty = f.getTextInputValue('quantity').trim();
     const parsedQty = Number.parseInt(rawQty, 10);
     const quantity = Number.isInteger(parsedQty) && parsedQty >= 1 ? parsedQty : 1;
-    const rawSlot = f.getTextInputValue('slot').trim();
-    const slot = rawSlot || null;
     const wowheadId = normalizeWowheadId(f.getTextInputValue('wowhead'));
-    const donor = f.getTextInputValue('donor').trim() || null;
+    const notes = f.getTextInputValue('notes').trim() || null;
 
     const guildId = interaction.guildId;
     const matches = await store.findItemMatch(guildId, { wowheadId, name });
     const target = pickRestockTarget(matches, false);
     if (target) {
       const updated = await store.restockItem(guildId, target.id, quantity, { wowheadId, slot });
-      await interaction.editReply(
-        `Restocked **${updated.name}** +${quantity} \u2192 \u00d7${updated.remaining}/${updated.quantity} (id \`${updated.id}\`). Use \`/stashadmin add force_new:true\` for a separate entry.`
-      );
+      await interaction.editReply({
+        content: `Restocked **${updated.name}** +${quantity} \u2192 \u00d7${updated.remaining}/${updated.quantity} (id \`${updated.id}\`). Use \`/stashadmin add force_new:true\` for a separate entry.`,
+        embeds: [],
+        components: []
+      });
       return;
     }
-    const item = await store.addItem(guildId, { name, quantity, slot, donor, wowheadId });
-    await interaction.editReply(
-      `Added **${item.name}** \u00d7${item.quantity} — id \`${item.id}\`.`
-    );
+    const item = await store.addItem(guildId, { name, quantity, slot, donor, wowheadId, notes });
+    await interaction.editReply({
+      content: `Added **${item.name}** \u00d7${item.quantity} \u2014 id \`${item.id}\`.`,
+      embeds: [],
+      components: []
+    });
   } catch (err) {
-    await editStoreError(interaction, err, 'stash add-modal submit failed');
+    await editStoreErrorUpdate(interaction, err, 'stash add-modal submit failed');
   }
 }
 
@@ -466,6 +527,9 @@ const HANDLERS = {
   wdc: handleWithdrawConfirm,
   wdcx: handleWithdrawCancel,
   madd: handleAddOpen,
+  awslot: handleWizardSlot,
+  awdon: handleWizardDonor,
+  awnx: handleWizardNext,
   madds: handleAddSubmit
 };
 
