@@ -10,6 +10,8 @@ import {
   denyRequest,
   cancelRequest,
   removeItem,
+  restockItem,
+  findItemMatch,
   expireStaleApprovals,
   getItem,
   listItems,
@@ -232,5 +234,91 @@ if (!DATABASE_URL) {
     const mine = await listRequests(GUILD, { userId: 'mine' });
     assert.equal(mine.length, 1);
     assert.equal(mine[0].itemId, a.id);
+  });
+
+  test('findItemMatch: exact wowhead_id match wins regardless of name', async () => {
+    const item = await addItem(GUILD, { name: 'Magefist Gloves', wowheadId: '12977' });
+    const matches = await findItemMatch(GUILD, { wowheadId: '12977', name: 'totally different' });
+    assert.equal(matches.length, 1);
+    assert.equal(matches[0].id, item.id);
+  });
+
+  test('findItemMatch: normalized name match ignores case and outer whitespace', async () => {
+    const item = await addItem(GUILD, { name: 'Staff of the Blessed Seer' });
+    const matches = await findItemMatch(GUILD, { name: '  staff of the blessed seer ' });
+    assert.equal(matches.length, 1);
+    assert.equal(matches[0].id, item.id);
+  });
+
+  test('findItemMatch: a wowhead add excludes a different-id same-name row', async () => {
+    await addItem(GUILD, { name: 'Ring', wowheadId: '111' });
+    const conflict = await findItemMatch(GUILD, { wowheadId: '222', name: 'Ring' });
+    assert.equal(conflict.length, 0, 'different id + same name is a distinct item');
+  });
+
+  test('findItemMatch: a wowhead add matches a null-id same-name row (backfill)', async () => {
+    const item = await addItem(GUILD, { name: 'Cloak' });
+    const matches = await findItemMatch(GUILD, { wowheadId: '333', name: 'Cloak' });
+    assert.equal(matches.length, 1);
+    assert.equal(matches[0].id, item.id);
+  });
+
+  test('findItemMatch: never matches a withdrawn row, and [] with no key', async () => {
+    const item = await addItem(GUILD, { name: 'Gone', wowheadId: '999' });
+    await removeItem(GUILD, item.id, 'mgr');
+    assert.equal((await findItemMatch(GUILD, { name: 'Gone' })).length, 0);
+    assert.equal((await findItemMatch(GUILD, { wowheadId: '999' })).length, 0);
+    assert.equal((await findItemMatch(GUILD, {})).length, 0);
+  });
+
+  test('restockItem: bumps quantity + remaining and backfills a null id/slot', async () => {
+    const item = await addItem(GUILD, { name: 'Refill', quantity: 1 });
+    const out = await restockItem(GUILD, item.id, 2, { wowheadId: '4242', slot: 'waist' });
+    assert.equal(out.quantity, 3);
+    assert.equal(out.remaining, 3);
+    assert.equal(out.wowheadId, '4242');
+    assert.equal(out.slot, 'waist');
+  });
+
+  test('restockItem: never overwrites an existing id/slot (coalesce keeps them)', async () => {
+    const item = await addItem(GUILD, {
+      name: 'Keep',
+      quantity: 1,
+      wowheadId: '111',
+      slot: 'head'
+    });
+    const out = await restockItem(GUILD, item.id, 1, { wowheadId: '222', slot: 'feet' });
+    assert.equal(out.wowheadId, '111', 'existing id is retained');
+    assert.equal(out.slot, 'head', 'existing slot is retained');
+  });
+
+  test('restockItem: reactivates an exhausted (given) item', async () => {
+    const item = await addItem(GUILD, { name: 'Exhausted', quantity: 1 });
+    const req = await requestItem(GUILD, item.id, 'taker');
+    await approveRequest(GUILD, req.id, 'mgr');
+    await markSent(GUILD, req.id, 'mgr');
+    assert.equal((await getItem(GUILD, item.id)).status, 'given');
+
+    const out = await restockItem(GUILD, item.id, 1);
+    assert.equal(out.remaining, 1);
+    assert.equal(out.status, 'available');
+  });
+
+  test('restockItem: rejects a withdrawn item, a missing item, and a bad quantity', async () => {
+    const item = await addItem(GUILD, { name: 'Pulled', quantity: 1 });
+    await removeItem(GUILD, item.id, 'mgr');
+    await assert.rejects(
+      () => restockItem(GUILD, item.id, 1),
+      (e) => e.code === 'ITEM_WITHDRAWN'
+    );
+    await assert.rejects(
+      () => restockItem(GUILD, 'itm_nope', 1),
+      (e) => e.code === 'ITEM_NOT_FOUND'
+    );
+    const live = await addItem(GUILD, { name: 'Live', quantity: 1 });
+    await assert.rejects(
+      () => restockItem(GUILD, live.id, 0),
+      (e) => e.code === 'INVALID_INPUT'
+    );
   });
 }

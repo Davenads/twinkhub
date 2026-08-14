@@ -166,6 +166,89 @@ export async function addItem(
   return rowToItem(rows[0]);
 }
 
+// Find active items a new add would merge into (dedup). Identity is tiered: an
+// exact wowhead_id match (canonical, any name), else a normalized-name match
+// (lower + trim). When the add carries a wowhead_id, a name match qualifies only
+// when the candidate has no id yet (a null-id row we can backfill) — a row
+// bearing a DIFFERENT id is a distinct same-name item and is excluded. Withdrawn
+// rows are never matched (deliberately pulled). Ordered created_at asc so the
+// caller restocks the earliest. Returns [] when neither key is usable.
+export async function findItemMatch(guildId, { wowheadId = null, name = null } = {}) {
+  const trimmedName = name != null && String(name).trim() ? String(name).trim() : null;
+  if (!wowheadId && !trimmedName) return [];
+
+  const params = [guildId];
+  const ors = [];
+  if (wowheadId) {
+    params.push(wowheadId);
+    ors.push(`wowhead_id = $${params.length}`);
+  }
+  if (trimmedName) {
+    params.push(trimmedName);
+    const p = params.length;
+    ors.push(
+      wowheadId
+        ? `(wowhead_id is null and lower(btrim(name)) = lower(btrim($${p})))`
+        : `lower(btrim(name)) = lower(btrim($${p}))`
+    );
+  }
+
+  const { rows } = await getPool().query(
+    `select * from stash_items
+     where guild_id = $1
+       and status in ('available', 'requested', 'given')
+       and (${ors.join(' or ')})
+     order by created_at asc`,
+    params
+  );
+  return rows.map(rowToItem);
+}
+
+// Restock an existing item instead of inserting a duplicate: bump quantity AND
+// remaining by addQty together (so the remaining_within_quantity check holds),
+// and COALESCE-backfill wowhead_id/slot so a first-donation id is inherited and
+// never re-typed. recomputeItemStatus reactivates a 'given' (exhausted) row.
+// Refuses a withdrawn item; FOR UPDATE serialises against concurrent
+// approvals/sends on the same row.
+export async function restockItem(guildId, itemId, addQty, { wowheadId = null, slot = null } = {}) {
+  const n = Number(addQty);
+  if (!Number.isInteger(n) || n < 1) {
+    throw new StashError('INVALID_INPUT', 'restock quantity must be an integer >= 1');
+  }
+  const client = await getPool().connect();
+  try {
+    await client.query('begin');
+    const cur = await client.query(
+      'select status from stash_items where id = $1 and guild_id = $2 for update',
+      [itemId, guildId]
+    );
+    if (!cur.rows.length) {
+      throw new StashError('ITEM_NOT_FOUND', 'item not found');
+    }
+    if (cur.rows[0].status === 'withdrawn') {
+      throw new StashError('ITEM_WITHDRAWN', 'cannot restock a withdrawn item');
+    }
+    await client.query(
+      `update stash_items
+         set quantity = quantity + $2,
+             remaining = remaining + $2,
+             wowhead_id = coalesce(wowhead_id, $3),
+             slot = coalesce(slot, $4)
+       where id = $1`,
+      [itemId, n, wowheadId, slot]
+    );
+    await recomputeItemStatus(client, itemId);
+    const { rows } = await client.query('select * from stash_items where id = $1', [itemId]);
+    await client.query('commit');
+    return rowToItem(rows[0]);
+  } catch (err) {
+    await client.query('rollback').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 // End-user "Request" action. Non-exclusive: it never touches remaining (only a
 // later markSent does). Serialised per (guild,user) with an advisory xact lock so
 // a single user's rapid double-clicks can't slip past the per-user cap. Returns
