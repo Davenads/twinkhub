@@ -11,6 +11,7 @@ import {
   cancelRequest,
   removeItem,
   restockItem,
+  editItem,
   findItemMatch,
   expireStaleApprovals,
   getItem,
@@ -319,6 +320,68 @@ if (!DATABASE_URL) {
     await assert.rejects(
       () => restockItem(GUILD, live.id, 0),
       (e) => e.code === 'INVALID_INPUT'
+    );
+  });
+
+  test('editItem: renames an item (the Seet -> Seer typo case)', async () => {
+    const item = await addItem(GUILD, { name: 'Staff of the Blessed Seet', slot: 'weapon' });
+    const out = await editItem(GUILD, item.id, { name: 'Staff of the Blessed Seer' });
+    assert.equal(out.name, 'Staff of the Blessed Seer');
+    assert.equal(out.slot, 'weapon', 'an absent key is left unchanged');
+  });
+
+  test('editItem: applies only present keys and leaves quantity/remaining/status untouched', async () => {
+    const item = await addItem(GUILD, { name: 'Attrs', quantity: 4, donor: 'old' });
+    const out = await editItem(GUILD, item.id, {
+      slot: 'head',
+      wowheadId: '5150',
+      donor: 'new'
+    });
+    assert.equal(out.slot, 'head');
+    assert.equal(out.wowheadId, '5150');
+    assert.equal(out.donor, 'new');
+    assert.equal(out.name, 'Attrs', 'absent name key untouched');
+    assert.equal(out.quantity, 4, 'quantity is not editable here');
+    assert.equal(out.remaining, 4, 'remaining is not editable here');
+    assert.equal(out.status, 'available', 'status is not editable here');
+  });
+
+  test('editItem: a null or blank value clears the column', async () => {
+    const item = await addItem(GUILD, {
+      name: 'Clearable',
+      slot: 'head',
+      wowheadId: '77',
+      notes: 'keep me?'
+    });
+    const out = await editItem(GUILD, item.id, { slot: null, wowheadId: '  ', notes: '' });
+    assert.equal(out.slot, null, 'null clears slot');
+    assert.equal(out.wowheadId, null, 'blank string clears wowhead id');
+    assert.equal(out.notes, null, 'empty string clears notes');
+  });
+
+  test('editItem: rejects a blank name and an empty patch', async () => {
+    const item = await addItem(GUILD, { name: 'Named', quantity: 1 });
+    await assert.rejects(
+      () => editItem(GUILD, item.id, { name: '   ' }),
+      (e) => e.code === 'INVALID_INPUT'
+    );
+    await assert.rejects(
+      () => editItem(GUILD, item.id, {}),
+      (e) => e.code === 'INVALID_INPUT'
+    );
+    assert.equal((await getItem(GUILD, item.id)).name, 'Named', 'a rejected edit changes nothing');
+  });
+
+  test('editItem: rejects a withdrawn item and a missing item', async () => {
+    const item = await addItem(GUILD, { name: 'Pulled', quantity: 1 });
+    await removeItem(GUILD, item.id, 'mgr');
+    await assert.rejects(
+      () => editItem(GUILD, item.id, { name: 'Nope' }),
+      (e) => e.code === 'ITEM_WITHDRAWN'
+    );
+    await assert.rejects(
+      () => editItem(GUILD, 'itm_nope', { name: 'Ghost' }),
+      (e) => e.code === 'ITEM_NOT_FOUND'
     );
   });
 }

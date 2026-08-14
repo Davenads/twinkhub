@@ -249,6 +249,75 @@ export async function restockItem(guildId, itemId, addQty, { wowheadId = null, s
   }
 }
 
+// Editable attribute keys -> their column. Deliberately excludes
+// quantity/remaining/status: those stay owned by restock/withdraw and the request
+// lifecycle, since editing them here would risk the remaining_within_quantity and
+// reserved-count invariants (a guarded quantity-correction path is a follow-up).
+const EDITABLE_COLUMNS = {
+  name: 'name',
+  slot: 'slot',
+  wowheadId: 'wowhead_id',
+  donor: 'donor',
+  notes: 'notes'
+};
+
+// Correct an existing item's ATTRIBUTES (name/slot/wowheadId/donor/notes) — e.g.
+// a name typo. Partial patch: a key PRESENT is applied (null, or a blank string,
+// CLEARS the column); an ABSENT key is left untouched. `name` is required if
+// present (blank rejected). Refuses a withdrawn row; FOR UPDATE serialises against
+// a concurrent restock/approve on the same row. Does NOT dedup — renaming into a
+// name/id collision is allowed (consolidation owns merges), so the caller may
+// findItemMatch afterwards to warn.
+export async function editItem(guildId, itemId, patch = {}) {
+  const params = [itemId, guildId];
+  const sets = [];
+  for (const [key, column] of Object.entries(EDITABLE_COLUMNS)) {
+    if (!(key in patch)) continue;
+    let value = patch[key];
+    if (key === 'name') {
+      if (value == null || !String(value).trim()) {
+        throw new StashError('INVALID_INPUT', 'name cannot be blank');
+      }
+      value = String(value).trim();
+    } else if (typeof value === 'string') {
+      const trimmed = value.trim();
+      value = trimmed === '' ? null : trimmed;
+    }
+    params.push(value);
+    sets.push(`${column} = $${params.length}`);
+  }
+  if (!sets.length) {
+    throw new StashError('INVALID_INPUT', 'no fields to update');
+  }
+
+  const client = await getPool().connect();
+  try {
+    await client.query('begin');
+    const cur = await client.query(
+      'select status from stash_items where id = $1 and guild_id = $2 for update',
+      [itemId, guildId]
+    );
+    if (!cur.rows.length) {
+      throw new StashError('ITEM_NOT_FOUND', 'item not found');
+    }
+    if (cur.rows[0].status === 'withdrawn') {
+      throw new StashError('ITEM_WITHDRAWN', 'cannot edit a withdrawn item');
+    }
+    await client.query(
+      `update stash_items set ${sets.join(', ')} where id = $1 and guild_id = $2`,
+      params
+    );
+    const { rows } = await client.query('select * from stash_items where id = $1', [itemId]);
+    await client.query('commit');
+    return rowToItem(rows[0]);
+  } catch (err) {
+    await client.query('rollback').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 // End-user "Request" action. Non-exclusive: it never touches remaining (only a
 // later markSent does). Serialised per (guild,user) with an advisory xact lock so
 // a single user's rapid double-clicks can't slip past the per-user cap. Returns
