@@ -11,6 +11,9 @@ import {
   buildWithdrawConfirm,
   buildAddWizard,
   buildAddModal,
+  buildItemAction,
+  buildEditWizard,
+  buildEditModal,
   normalizeWowheadId,
   normalizeSlot,
   STASH_SLOTS
@@ -313,13 +316,80 @@ test('buildDenyConfirm: two-click confirm carries the request id on both buttons
   assert.ok(ids.includes(encodeStashId('dcxl', 'r1')), 'Cancel routes dcxl|r1');
 });
 
-test('buildManagerPanel: in-stock items add a Withdraw select, empty stock omits it', () => {
-  const stocked = buildManagerPanel({ items: [item({ id: 'a', name: 'Alpha' })] });
-  const mwd = selectByAction(stocked, 'mwd');
-  assert.ok(mwd, 'withdraw select present with stock');
-  assert.equal(mwd.options[0].value, 'itm_a', 'option value is the item id');
-  const empty = buildManagerPanel({ items: [item({ id: 'b', status: 'given', remaining: 0 })] });
-  assert.equal(selectByAction(empty, 'mwd'), null, 'no withdraw select when nothing in stock');
+test('buildManagerPanel: manage-item select spans available/requested/given, active-first', () => {
+  const panel = buildManagerPanel({
+    items: [
+      item({ id: 'a', name: 'Alpha' }),
+      item({ id: 'b', name: 'Bravo', status: 'given', remaining: 0 }),
+      item({ id: 'c', name: 'Charlie', status: 'requested' }),
+      item({ id: 'd', name: 'Delta', status: 'withdrawn' })
+    ]
+  });
+  const mitem = selectByAction(panel, 'mitem');
+  assert.ok(mitem, 'manage-item select present');
+  assert.deepEqual(
+    mitem.options.map((o) => o.value),
+    ['itm_a', 'itm_c', 'itm_b'],
+    'available + requested before given; withdrawn excluded'
+  );
+  const empty = buildManagerPanel({ items: [item({ id: 'e', status: 'withdrawn' })] });
+  assert.equal(selectByAction(empty, 'mitem'), null, 'no select when nothing is manageable');
+});
+
+test('buildItemAction: offers Edit and Withdraw carrying the item id', () => {
+  const ids = buttonIds(buildItemAction({ item: item({ id: 'a', name: 'Alpha' }) }));
+  assert.ok(ids.includes(encodeStashId('medit', 'itm_a')), 'Edit routes medit|itm_a');
+  assert.ok(ids.includes(encodeStashId('wdp', 'itm_a')), 'Withdraw routes wdp|itm_a');
+});
+
+test('buildEditWizard: prefills the current slot and carries the item id in every control', () => {
+  const it = item({ id: 'a', name: 'Alpha', slot: 'head' });
+  const rows = buildEditWizard(it).components.map((r) => r.toJSON().components[0]);
+  const slot = rows.find((c) => c.custom_id === encodeStashId('ewslot', 'itm_a', ''));
+  const donor = rows.find((c) => c.custom_id === encodeStashId('ewdon', 'itm_a', 'head'));
+  const next = rows.find((c) => c.custom_id === encodeStashId('ewnx', 'itm_a', 'head', ''));
+  assert.ok(slot, 'slot select carries the item id + empty donor');
+  assert.equal(
+    slot.options.find((o) => o.value === 'head').default,
+    true,
+    'current slot marked default'
+  );
+  assert.ok(donor, 'donor select carries the item id + current slot');
+  assert.equal(donor.type, 5, 'donor is a user select');
+  assert.ok(next, 'Next carries id + slot + empty donor');
+});
+
+test('buildEditWizard: a cleared slot + fresh donor pick ride the ids with no default', () => {
+  const it = item({ id: 'a', name: 'Alpha', slot: 'head' });
+  const rows = buildEditWizard(it, { slot: null, donorId: '42' }).components.map(
+    (r) => r.toJSON().components[0]
+  );
+  assert.ok(
+    rows.some((c) => c.custom_id === encodeStashId('ewnx', 'itm_a', '', '42')),
+    'Next carries cleared slot + chosen donor'
+  );
+  const slot = rows.find((c) => c.custom_id === encodeStashId('ewslot', 'itm_a', '42'));
+  assert.ok(slot, 'slot select carries the chosen donor');
+  assert.ok(!slot.options.some((o) => o.default), 'no slot marked default when cleared');
+});
+
+test('buildEditModal: prefills free text and routes edits with id + slot + donor', () => {
+  const it = item({ id: 'a', name: 'Alpha', wowheadId: '12977', notes: 'mint' });
+  const json = buildEditModal(it, { slot: 'head', donorId: '42' }).toJSON();
+  assert.equal(
+    json.custom_id,
+    encodeStashId('edits', 'itm_a', 'head', '42'),
+    'submit id carries id + slot + donor'
+  );
+  const inputs = json.components.map((r) => r.components[0]);
+  assert.deepEqual(
+    inputs.map((c) => c.custom_id),
+    ['name', 'wowhead', 'notes'],
+    'three free-text fields, no quantity'
+  );
+  assert.equal(inputs.find((c) => c.custom_id === 'name').value, 'Alpha', 'name prefilled');
+  assert.equal(inputs.find((c) => c.custom_id === 'wowhead').value, '12977', 'wowhead prefilled');
+  assert.equal(inputs.find((c) => c.custom_id === 'notes').value, 'mint', 'notes prefilled');
 });
 
 test('buildManagerPanel: always offers an Add Item button', () => {

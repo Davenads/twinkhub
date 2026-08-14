@@ -9,6 +9,7 @@ import {
   itemNames,
   normalizeWowheadId,
   pickRestockTarget,
+  collisionNote,
   STASH_SLOTS
 } from '../../services/stash.js';
 import { notifyRequester } from '../../stash/notify.js';
@@ -284,17 +285,6 @@ const ERROR_MESSAGES = {
   NOT_OWNER: 'Only the requester can do that.'
 };
 
-// Given the just-edited item id and findItemMatch results (active items sharing
-// the item's new normalized name/id), return a soft consolidation hint naming the
-// OTHER item, or null when the only match is the item itself (or none). Pure/
-// exported for unit tests. Editing never merges — this just flags the collision a
-// rename can create so a manager can consolidate deliberately.
-export function collisionNote(itemId, matches) {
-  const other = (Array.isArray(matches) ? matches : []).find((m) => m.id !== itemId);
-  if (!other) return null;
-  return `\u26a0 Now matches \`${other.id}\` (**${other.name}**) — consider consolidating.`;
-}
-
 function fmtItem(item) {
   const bits = [`\`${item.id}\` — **${item.name}** \u00d7${item.remaining}/${item.quantity}`];
   bits.push(`[${item.status}]`);
@@ -337,7 +327,7 @@ async function renderStashPanel(guildId) {
 // s1|mref button renders, so post/refresh stay in lockstep.
 async function renderManagerPanel(guildId) {
   const [items, pending, approved] = await Promise.all([
-    store.listItems(guildId, { statuses: ['available', 'requested'] }),
+    store.listItems(guildId, { statuses: ['available', 'requested', 'given'] }),
     store.listRequests(guildId, { statuses: ['pending'] }),
     store.listRequests(guildId, { statuses: ['approved'] })
   ]);

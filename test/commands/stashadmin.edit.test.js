@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { collisionNote } from '../../src/commands/admin/stashadmin.js';
+import { collisionNote } from '../../src/services/stash.js';
 
 test('collisionNote returns null when no other item matches', () => {
   assert.equal(collisionNote('itm_a', []), null);

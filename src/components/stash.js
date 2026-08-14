@@ -12,6 +12,10 @@ import {
   buildWithdrawConfirm,
   buildAddWizard,
   buildAddModal,
+  buildItemAction,
+  buildEditWizard,
+  buildEditModal,
+  collisionNote,
   normalizeWowheadId,
   pickRestockTarget,
   itemNames
@@ -172,7 +176,7 @@ async function handleManagerRefresh(interaction) {
   await interaction.deferUpdate();
   try {
     const [items, pending, approved] = await Promise.all([
-      store.listItems(interaction.guildId, { statuses: ['available', 'requested'] }),
+      store.listItems(interaction.guildId, { statuses: ['available', 'requested', 'given'] }),
       store.listRequests(interaction.guildId, { statuses: ['pending'] }),
       store.listRequests(interaction.guildId, { statuses: ['approved'] })
     ]);
@@ -355,10 +359,10 @@ async function handleDenyCancel(interaction, parsed) {
   }
 }
 
-// Withdraw select (`mwd`) -> spawn an ephemeral withdraw confirm for the picked
-// item. Counts the item's open requests so the confirm can warn they'll be
-// cascade-cancelled by removeItem.
-async function handleWithdrawSelect(interaction) {
+// Manage-item select (`mitem`) -> spawn the ephemeral manage-item console (Edit /
+// Withdraw) for the picked item. Reads authoritative state so a stale option
+// (already withdrawn) surfaces cleanly.
+async function handleManageSelect(interaction) {
   if (!(await requireManager(interaction))) return;
   const itemId = interaction.values?.[0];
   if (!itemId) {
@@ -374,20 +378,168 @@ async function handleWithdrawSelect(interaction) {
       });
       return;
     }
-    const open = await store.listRequests(interaction.guildId, {
-      itemId,
-      statuses: ['pending', 'approved']
-    });
     await interaction.reply({
-      ...buildWithdrawConfirm({ item, openCount: open.length }),
+      ...buildItemAction({ item }),
       flags: MessageFlags.Ephemeral,
       ...SEND_OPTS
     });
   } catch (err) {
-    logger.error({ err }, 'stash withdraw open failed');
+    logger.error({ err }, 'stash manage-item open failed');
     await interaction
       .reply({ content: 'Could not open that item.', flags: MessageFlags.Ephemeral })
       .catch(() => {});
+  }
+}
+
+// Edit button (`medit|<id>`) on the manage-item console -> replace it with the
+// edit wizard (slot prefilled). A button can update the ephemeral console.
+async function handleEditOpen(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  try {
+    const item = await store.getItem(interaction.guildId, parsed.args[0]);
+    if (!item) {
+      await interaction.update({
+        content: MANAGER_ERROR_MESSAGES.ITEM_NOT_FOUND,
+        embeds: [],
+        components: []
+      });
+      return;
+    }
+    await interaction.update({ ...buildEditWizard(item), ...SEND_OPTS });
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash edit open failed');
+  }
+}
+
+// Withdraw button (`wdp|<id>`) on the manage-item console -> replace it with the
+// withdraw confirm, warning how many open requests will cascade-cancel.
+async function handleWithdrawPrompt(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  try {
+    const item = await store.getItem(interaction.guildId, parsed.args[0]);
+    if (!item) {
+      await interaction.update({
+        content: MANAGER_ERROR_MESSAGES.ITEM_NOT_FOUND,
+        embeds: [],
+        components: []
+      });
+      return;
+    }
+    const open = await store.listRequests(interaction.guildId, {
+      itemId: item.id,
+      statuses: ['pending', 'approved']
+    });
+    await interaction.update({
+      ...buildWithdrawConfirm({ item, openCount: open.length }),
+      ...SEND_OPTS
+    });
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash withdraw prompt failed');
+  }
+}
+
+// Edit wizard slot pick (`ewslot|<id>|<donorId>`) -> re-render the edit wizard
+// carrying the donor already chosen plus the new slot (empty = cleared).
+async function handleEditWizardSlot(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  const [itemId, donorArg] = parsed.args;
+  const slot = interaction.values?.[0] || null;
+  const donorId = donorArg || null;
+  try {
+    const item = await store.getItem(interaction.guildId, itemId);
+    if (!item) {
+      await interaction.update({
+        content: MANAGER_ERROR_MESSAGES.ITEM_NOT_FOUND,
+        embeds: [],
+        components: []
+      });
+      return;
+    }
+    await interaction.update({ ...buildEditWizard(item, { slot, donorId }), ...SEND_OPTS });
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash edit slot pick failed');
+  }
+}
+
+// Edit wizard donor pick (`ewdon|<id>|<slot>`) -> re-render carrying the slot
+// already chosen plus the new donor.
+async function handleEditWizardDonor(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  const [itemId, slotArg] = parsed.args;
+  const donorId = interaction.values?.[0] || null;
+  const slot = slotArg || null;
+  try {
+    const item = await store.getItem(interaction.guildId, itemId);
+    if (!item) {
+      await interaction.update({
+        content: MANAGER_ERROR_MESSAGES.ITEM_NOT_FOUND,
+        embeds: [],
+        components: []
+      });
+      return;
+    }
+    await interaction.update({ ...buildEditWizard(item, { slot, donorId }), ...SEND_OPTS });
+  } catch (err) {
+    await updateActionError(interaction, err, 'stash edit donor pick failed');
+  }
+}
+
+// Edit wizard Next (`ewnx|<id>|<slot>|<donorId>`) -> open the edit modal, prefilled
+// from the current item, carrying the captured slot/donor in its submit id.
+// showModal MUST be the first ack; getItem doesn't ack, so it runs first.
+async function handleEditWizardNext(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  const [itemId, slotArg, donorArg] = parsed.args;
+  const item = await store.getItem(interaction.guildId, itemId).catch(() => null);
+  if (!item) {
+    await interaction.reply({
+      content: MANAGER_ERROR_MESSAGES.ITEM_NOT_FOUND,
+      flags: MessageFlags.Ephemeral
+    });
+    return;
+  }
+  await interaction.showModal(
+    buildEditModal(item, { slot: slotArg || null, donorId: donorArg || null })
+  );
+}
+
+// Edit modal submit (`edits|<id>|<slot>|<donorId>`) -> apply the patch through
+// store.editItem (name required; an emptied optional clears; donor changes only
+// when a member was picked), then flag any rename collision. Edits the wizard
+// message in place with the result.
+async function handleEditSubmit(interaction, parsed) {
+  if (!(await requireManager(interaction))) return;
+  await interaction.deferUpdate();
+  try {
+    const [itemId, slotArg, donorArg] = parsed.args;
+    const f = interaction.fields;
+    const name = f.getTextInputValue('name').trim();
+    if (!name) {
+      await interaction.editReply({
+        content: 'An item name is required.',
+        embeds: [],
+        components: []
+      });
+      return;
+    }
+    const patch = {
+      name,
+      slot: slotArg || null,
+      wowheadId: normalizeWowheadId(f.getTextInputValue('wowhead')),
+      notes: f.getTextInputValue('notes').trim() || null
+    };
+    if (donorArg) {
+      const member = await interaction.guild.members.fetch(donorArg).catch(() => null);
+      patch.donor = member ? member.displayName : `<@${donorArg}>`;
+    }
+    const item = await store.editItem(interaction.guildId, itemId, patch);
+    let reply = `Updated \`${item.id}\` \u2014 **${item.name}**${item.slot ? ` (${item.slot})` : ''}.`;
+    const matches = await store.findItemMatch(interaction.guildId, { name: item.name });
+    const note = collisionNote(item.id, matches);
+    if (note) reply += `\n${note}`;
+    await interaction.editReply({ content: reply, embeds: [], components: [] });
+  } catch (err) {
+    await editStoreErrorUpdate(interaction, err, 'stash edit submit failed');
   }
 }
 
@@ -523,14 +675,20 @@ const HANDLERS = {
   deny: handleDenyPrompt,
   denyc: handleDenyConfirm,
   dcxl: handleDenyCancel,
-  mwd: handleWithdrawSelect,
+  mitem: handleManageSelect,
+  medit: handleEditOpen,
+  wdp: handleWithdrawPrompt,
   wdc: handleWithdrawConfirm,
   wdcx: handleWithdrawCancel,
   madd: handleAddOpen,
   awslot: handleWizardSlot,
   awdon: handleWizardDonor,
   awnx: handleWizardNext,
-  madds: handleAddSubmit
+  madds: handleAddSubmit,
+  ewslot: handleEditWizardSlot,
+  ewdon: handleEditWizardDonor,
+  ewnx: handleEditWizardNext,
+  edits: handleEditSubmit
 };
 
 /** True when a component interaction targets a stash control (current `s1` id). */

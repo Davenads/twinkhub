@@ -383,17 +383,27 @@ export function buildManagerPanel({ items = [], pending = [], approved = [], nam
       )
     );
   }
-  if (inStock.length) {
+  // Manage-item console: every non-withdrawn item (available/requested/given) is
+  // editable or withdrawable. Order active stock first so a long given-history
+  // never crowds live items out of the 25-option cap.
+  const MANAGE_ORDER = { available: 0, requested: 1, given: 2 };
+  const manageable = items
+    .filter((it) => it.status in MANAGE_ORDER)
+    .sort((a, b) => {
+      const d = MANAGE_ORDER[a.status] - MANAGE_ORDER[b.status];
+      return d !== 0 ? d : String(a.name).localeCompare(String(b.name));
+    });
+  if (manageable.length) {
     components.push(
       row(
         new StringSelectMenuBuilder()
-          .setCustomId(encodeStashId('mwd'))
-          .setPlaceholder('Withdraw an item\u2026')
+          .setCustomId(encodeStashId('mitem'))
+          .setPlaceholder('Manage an item\u2026')
           .addOptions(
-            inStock.slice(0, SELECT_LIMIT).map((it) => {
+            manageable.slice(0, SELECT_LIMIT).map((it) => {
               const opt = { label: truncate(it.name, 100), value: it.id };
               const slotLabel = SLOT_LABEL.get(normalizeSlot(it.slot)) || it.slot;
-              const desc = [slotLabel, `\u00d7${it.remaining} left`]
+              const desc = [slotLabel, it.status, `\u00d7${it.remaining}`]
                 .filter(Boolean)
                 .join(' \u00b7 ');
               if (desc) opt.description = truncate(desc, 100);
@@ -532,4 +542,150 @@ export function buildWithdrawConfirm({ item, openCount = 0 } = {}) {
       )
     ]
   };
+}
+
+/**
+ * Given the just-edited item id and findItemMatch results (active items sharing
+ * the item's new normalized name/id), return a soft consolidation hint naming the
+ * OTHER item, or null when the only match is the item itself (or none). Editing
+ * never merges — this just flags the collision a rename can create so a manager
+ * can consolidate deliberately. Pure/exported for the slash + panel edit paths.
+ */
+export function collisionNote(itemId, matches) {
+  const other = (Array.isArray(matches) ? matches : []).find((m) => m.id !== itemId);
+  if (!other) return null;
+  return `\u26a0 Now matches \`${other.id}\` (**${other.name}**) \u2014 consider consolidating.`;
+}
+
+/**
+ * Build the ephemeral manage-item console spawned when a manager picks an item
+ * from the console's `mitem` select. Offers Edit (opens the edit wizard, `medit`)
+ * and Withdraw (opens the withdraw confirm, `wdp`), both carrying the item id.
+ * Detail mirrors `/stashadmin list`.
+ *
+ * @param {{ item: object }} args
+ * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
+ */
+export function buildItemAction({ item } = {}) {
+  const name = itemNameMarkup({ name: item.name, wowheadId: normalizeWowheadId(item.wowheadId) });
+  const slotLabel = SLOT_LABEL.get(normalizeSlot(item.slot)) || item.slot || '\u2014';
+  const embed = new EmbedBuilder()
+    .setColor(EMBED_COLOR)
+    .setTitle('Manage item')
+    .setDescription(
+      [
+        `${name} \u00d7${item.remaining}/${item.quantity} [${item.status}]`,
+        `Slot: ${slotLabel}`,
+        `Donor: ${item.donor || '\u2014'}`,
+        `Item id: \`${item.id}\``
+      ].join('\n')
+    );
+  return {
+    embeds: [embed],
+    components: [
+      row(
+        new ButtonBuilder()
+          .setCustomId(encodeStashId('medit', item.id))
+          .setLabel('Edit')
+          .setStyle(ButtonStyle.Primary),
+        new ButtonBuilder()
+          .setCustomId(encodeStashId('wdp', item.id))
+          .setLabel('Withdraw')
+          .setStyle(ButtonStyle.Danger)
+      )
+    ]
+  };
+}
+
+/**
+ * Build the ephemeral Edit wizard opened from the manage-item console's Edit
+ * button. Mirrors the Add wizard's stateless picks-first shape but carries the
+ * item id, and slot is PREFILLED to the item's current slot (deselect to clear).
+ * The donor picker starts empty — the stored donor is free text, not a snowflake,
+ * so it can't seed a member picker; leaving it empty keeps the current donor,
+ * picking a member overwrites it. `Next: edit details` (ewnx) opens buildEditModal.
+ *
+ * @param {object} item the item being edited
+ * @param {{ slot?: string|null, donorId?: string|null }} [state]
+ * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
+ */
+export function buildEditWizard(item, { slot = normalizeSlot(item.slot), donorId = null } = {}) {
+  const embed = new EmbedBuilder()
+    .setColor(EMBED_COLOR)
+    .setTitle(`Edit ${item.name}`)
+    .setDescription(
+      [
+        'Adjust the slot and/or donor below, then **Next: edit details** for the name, Wowhead id, and notes.',
+        '',
+        `Slot: **${SLOT_LABEL.get(slot) || '\u2014'}**`,
+        donorId ? `Donor \u2192 <@${donorId}>` : `Donor: ${item.donor || '\u2014'} _(unchanged)_`
+      ].join('\n')
+    );
+
+  const slotSelect = new StringSelectMenuBuilder()
+    .setCustomId(encodeStashId('ewslot', item.id, donorId ?? ''))
+    .setPlaceholder('Slot (deselect to clear)\u2026')
+    .setMinValues(0)
+    .setMaxValues(1)
+    .addOptions(
+      STASH_SLOTS.map((s) => ({ label: s.label, value: s.value, default: s.value === slot }))
+    );
+
+  const donorSelect = new UserSelectMenuBuilder()
+    .setCustomId(encodeStashId('ewdon', item.id, slot ?? ''))
+    .setPlaceholder('Change donor (leave to keep)\u2026')
+    .setMinValues(0)
+    .setMaxValues(1);
+  if (donorId) donorSelect.setDefaultUsers([donorId]);
+
+  const next = new ButtonBuilder()
+    .setCustomId(encodeStashId('ewnx', item.id, slot ?? '', donorId ?? ''))
+    .setLabel('Next: edit details')
+    .setStyle(ButtonStyle.Primary);
+
+  return { embeds: [embed], components: [row(slotSelect), row(donorSelect), row(next)] };
+}
+
+/**
+ * Build the Edit details modal opened by the edit wizard's Next button. Slot and
+ * donor ride the submit id (`edits|<id>|<slot>|<donorId>`); this modal prefills
+ * the free text — name (required), Wowhead id, notes — from the current item, and
+ * an emptied optional field CLEARS that column (per store.editItem's contract).
+ * Quantity is intentionally absent (editItem never touches stock counts).
+ *
+ * @param {object} item the item being edited (for prefill)
+ * @param {{ slot?: string|null, donorId?: string|null }} [state]
+ * @returns {ModalBuilder}
+ */
+export function buildEditModal(item, { slot = null, donorId = null } = {}) {
+  const input = (
+    id,
+    label,
+    value,
+    { style = TextInputStyle.Short, required = false, max } = {}
+  ) => {
+    const b = new TextInputBuilder().setCustomId(id).setLabel(label).setStyle(style);
+    b.setRequired(required);
+    if (max) b.setMaxLength(max);
+    if (value) b.setValue(String(value));
+    return new ActionRowBuilder().addComponents(b);
+  };
+  return new ModalBuilder()
+    .setCustomId(encodeStashId('edits', item.id, slot ?? '', donorId ?? ''))
+    .setTitle('Edit stash item')
+    .addComponents(
+      input('name', 'Item name', item.name, { required: true, max: 200 }),
+      input(
+        'wowhead',
+        'Wowhead item id or URL \u2014 empty clears',
+        normalizeWowheadId(item.wowheadId),
+        {
+          max: 200
+        }
+      ),
+      input('notes', 'Notes \u2014 empty clears', item.notes, {
+        style: TextInputStyle.Paragraph,
+        max: 500
+      })
+    );
 }

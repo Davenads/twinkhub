@@ -1083,9 +1083,19 @@ wizard primitives:
 - **Phase A — Add-Item wizard (shipped 2026-08-14):** `buildAddWizard` + slimmed
   `buildAddModal(slot, donorId)`; handlers `awslot`/`awdon`/`awnx`; `handleAddSubmit` reads
   picks from the submit id. *(components/services ⇒ reload, NO deploy.)*
-- **Phase B — manage-item console (Opt 3 Step 4a, modal-independent):** replace `mwd` withdraw
-  select with `mitem` "Manage an item…" over all active items; `buildItemAction`
-  (Edit `medit|<id>` / Withdraw `wdp|<id>`); move `collisionNote` to services. *(reload.)*
-- **Phase C — Edit wizard (Opt 3 Step 4b):** `medit` → `buildEditWizard(item)` reusing Phase A's
-  slot/donor components (slot default prefilled; donor empty = keep) → modal for
-  name/wowhead/notes → `medits` → `editItem` + collision note. *(reload.)*
+- **Phase B + C — manage-item console (shipped 2026-08-14, folded into one slice):** Phase B
+  alone was a strictly-worse intermediate (extra withdraw click + a dead Edit button), so B and C
+  landed together.
+  - `mitem` "Manage an item…" select replaces the `mwd` withdraw select — spans
+    available/requested/given (active-first sort, `given` last, cap 25 so live stock is never
+    crowded out; withdrawn excluded). `handleManagerRefresh` + `renderManagerPanel` broaden their
+    item fetch to include `given`.
+  - `buildItemAction` renders the per-item ephemeral console: Edit `medit|<id>` / Withdraw
+    `wdp|<id>`, retiring the standalone `mwd` path.
+  - `buildEditWizard(item)` reuses Phase A's slot/donor components, carrying the item id in every
+    control (`ewslot|<id>|<donorId>`, `ewdon|<id>|<slot>`, `ewnx|<id>|<slot>|<donorId>`); slot is
+    prefilled to current (deselect to clear), donor starts empty (empty = keep).
+  - `buildEditModal` (name/wowhead/notes) submits `edits|<id>|<slot>|<donorId>` →
+    `store.editItem` (present-key patch; donor added only when a member was picked) + collision
+    note. `collisionNote` moved to `services/stash.js` (shared by the slash `edit` path).
+  *(components/services ⇒ reload, NO deploy.)*
