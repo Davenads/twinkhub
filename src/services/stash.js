@@ -86,6 +86,17 @@ export function normalizeWowheadId(raw) {
   return m ? m[1] : null;
 }
 
+// Parse a comma-separated tags string into a trimmed, blank-stripped array. An
+// empty/absent input yields [] — the same shape `add` has always produced and the
+// value `editItem` writes to clear the not-null text[] column. No dedup (the store
+// stores as given); order is preserved.
+export function parseTags(raw) {
+  return String(raw ?? '')
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean);
+}
+
 // Canonical value -> display label, and value -> paper-doll order, derived once
 // from STASH_SLOTS so grouping never drifts from the add-command choices.
 const SLOT_LABEL = new Map(STASH_SLOTS.map((s) => [s.value, s.label]));
@@ -715,6 +726,7 @@ export function buildItemAction({ item } = {}) {
         wowheadId == null ? '\u26a0 No Wowhead link \u2014 add one via Edit.' : null,
         `Slot: ${slotLabel}`,
         `Donor: ${item.donor || '\u2014'}`,
+        item.tags?.length ? `Tags: ${item.tags.join(', ')}` : null,
         `Item id: \`${item.id}\``
       ]
         .filter(Boolean)

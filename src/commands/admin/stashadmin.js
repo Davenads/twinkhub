@@ -8,6 +8,7 @@ import {
   buildManagerPanel,
   itemNames,
   normalizeWowheadId,
+  parseTags,
   pickRestockTarget,
   collisionNote,
   STASH_SLOTS
@@ -82,6 +83,9 @@ export const data = new SlashCommandBuilder()
       .addStringOption((o) => o.setName('wowhead_id').setDescription('New Wowhead item id or URL'))
       .addStringOption((o) => o.setName('donor').setDescription('New donor'))
       .addStringOption((o) => o.setName('notes').setDescription('New free-text notes'))
+      .addStringOption((o) =>
+        o.setName('tags').setDescription('Comma-separated tags (empty clears)')
+      )
   )
   .addSubcommand((s) =>
     s
@@ -289,6 +293,7 @@ function fmtItem(item) {
   const bits = [`\`${item.id}\` — **${item.name}** \u00d7${item.remaining}/${item.quantity}`];
   bits.push(`[${item.status}]`);
   if (item.slot) bits.push(`(${item.slot})`);
+  if (item.tags?.length) bits.push(`{${item.tags.join(', ')}}`);
   return bits.join(' ');
 }
 
@@ -608,10 +613,7 @@ export async function execute(interaction) {
     }
     switch (sub) {
       case 'add': {
-        const tags = (interaction.options.getString('tags') ?? '')
-          .split(',')
-          .map((t) => t.trim())
-          .filter(Boolean);
+        const tags = parseTags(interaction.options.getString('tags'));
         const name = interaction.options.getString('name', true);
         const quantity = interaction.options.getInteger('quantity') ?? 1;
         const slot = interaction.options.getString('slot');
@@ -665,6 +667,9 @@ export async function execute(interaction) {
         if (donor != null) patch.donor = donor;
         const notes = interaction.options.getString('notes');
         if (notes != null) patch.notes = notes;
+        // A provided (even empty) tags string replaces the tag set; empty clears it.
+        const tagsRaw = interaction.options.getString('tags');
+        if (tagsRaw != null) patch.tags = parseTags(tagsRaw);
 
         const item = await store.editItem(guildId, itemId, patch);
         let reply = `Updated \`${item.id}\` — **${item.name}**${item.slot ? ` (${item.slot})` : ''}.`;

@@ -17,6 +17,7 @@ import {
   buildEditWizard,
   buildEditModal,
   normalizeWowheadId,
+  parseTags,
   normalizeSlot,
   STASH_SLOTS
 } from '../../src/services/stash.js';
@@ -178,6 +179,14 @@ test('normalizeWowheadId: bare id, Wowhead URL, or null; junk yields null', () =
   assert.equal(normalizeWowheadId(undefined), null, 'undefined passes through');
   assert.equal(normalizeWowheadId('magefist'), null, 'a bare name is not an id');
   assert.equal(normalizeWowheadId(''), null, 'empty string is not an id');
+});
+
+test('parseTags: splits, trims, drops blanks; empty/absent yields []', () => {
+  assert.deepEqual(parseTags('engineering, caster'), ['engineering', 'caster'], 'splits + trims');
+  assert.deepEqual(parseTags(' a ,, b , '), ['a', 'b'], 'drops empty segments');
+  assert.deepEqual(parseTags(''), [], 'empty string clears to []');
+  assert.deepEqual(parseTags(null), [], 'null yields []');
+  assert.deepEqual(parseTags(undefined), [], 'undefined yields []');
 });
 
 test('buildStashPanel: a numeric wowheadId links the item name to Wowhead', () => {
@@ -499,6 +508,15 @@ test('buildItemAction: warns when the item lacks a Wowhead link, silent when it 
     buildItemAction({ item: item({ id: 'b', name: 'Bravo', wowheadId: '12977' }) })
   );
   assert.ok(!linked.includes('No Wowhead link'), 'linked item not warned');
+});
+
+test('buildItemAction: renders a Tags line only when the item has tags', () => {
+  const tagged = description(
+    buildItemAction({ item: item({ id: 'a', name: 'Alpha', tags: ['engineering', 'caster'] }) })
+  );
+  assert.ok(tagged.includes('Tags: engineering, caster'), 'tags listed when present');
+  const untagged = description(buildItemAction({ item: item({ id: 'b', name: 'Bravo' }) }));
+  assert.ok(!untagged.includes('Tags:'), 'no Tags line when there are none');
 });
 
 test('buildEditWizard: prefills the current slot and carries the item id in every control', () => {

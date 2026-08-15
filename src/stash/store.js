@@ -258,12 +258,14 @@ const EDITABLE_COLUMNS = {
   slot: 'slot',
   wowheadId: 'wowhead_id',
   donor: 'donor',
-  notes: 'notes'
+  notes: 'notes',
+  tags: 'tags'
 };
 
-// Correct an existing item's ATTRIBUTES (name/slot/wowheadId/donor/notes) — e.g.
-// a name typo. Partial patch: a key PRESENT is applied (null, or a blank string,
-// CLEARS the column); an ABSENT key is left untouched. `name` is required if
+// Correct an existing item's ATTRIBUTES (name/slot/wowheadId/donor/notes/tags) —
+// e.g. a name typo. Partial patch: a key PRESENT is applied (null, or a blank
+// string, CLEARS the column; `tags` is a text[] so present replaces it and an
+// empty array clears it); an ABSENT key is left untouched. `name` is required if
 // present (blank rejected). Refuses a withdrawn row; FOR UPDATE serialises against
 // a concurrent restock/approve on the same row. Does NOT dedup — renaming into a
 // name/id collision is allowed (consolidation owns merges), so the caller may
@@ -279,6 +281,10 @@ export async function editItem(guildId, itemId, patch = {}) {
         throw new StashError('INVALID_INPUT', 'name cannot be blank');
       }
       value = String(value).trim();
+    } else if (key === 'tags') {
+      // tags is text[] not null: replace with the given array; a non-array
+      // (null/undefined) clears to an empty array rather than violating not-null.
+      value = Array.isArray(value) ? value : [];
     } else if (typeof value === 'string') {
       const trimmed = value.trim();
       value = trimmed === '' ? null : trimmed;

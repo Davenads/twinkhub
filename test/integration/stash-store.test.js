@@ -441,4 +441,25 @@ if (!DATABASE_URL) {
       (e) => e.code === 'ITEM_NOT_FOUND'
     );
   });
+
+  test('editItem: sets and replaces tags (text[]), leaving other columns untouched', async () => {
+    const item = await addItem(GUILD, { name: 'Tagged', slot: 'hands', tags: ['old'] });
+    const set = await editItem(GUILD, item.id, { tags: ['engineering', 'caster'] });
+    assert.deepEqual(set.tags, ['engineering', 'caster'], 'present array replaces the tags');
+    assert.equal(set.slot, 'hands', 'an absent key is left unchanged');
+    assert.equal(set.name, 'Tagged', 'name untouched');
+  });
+
+  test('editItem: a non-array tags value clears to an empty array (never null)', async () => {
+    const item = await addItem(GUILD, { name: 'Clearable', tags: ['drop', 'me'] });
+    const cleared = await editItem(GUILD, item.id, { tags: null });
+    assert.deepEqual(cleared.tags, [], 'null clears to [] under the not-null constraint');
+  });
+
+  test('editItem: an absent tags key leaves existing tags untouched', async () => {
+    const item = await addItem(GUILD, { name: 'Keep', tags: ['stay'] });
+    const out = await editItem(GUILD, item.id, { name: 'Keep2' });
+    assert.deepEqual(out.tags, ['stay'], 'absent tags key is not applied');
+    assert.equal(out.name, 'Keep2');
+  });
 }
