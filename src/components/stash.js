@@ -580,8 +580,7 @@ async function handleEditSubmit(interaction, parsed) {
       notes: f.getTextInputValue('notes').trim() || null
     };
     if (donorArg) {
-      const member = await interaction.guild.members.fetch(donorArg).catch(() => null);
-      patch.donor = member ? member.displayName : `<@${donorArg}>`;
+      patch.donor = `<@${donorArg}>`;
     }
     const item = await store.editItem(interaction.guildId, itemId, patch);
     let reply = `Updated \`${item.id}\` \u2014 **${item.name}**${item.slot ? ` (${item.slot})` : ''}.`;
@@ -673,7 +672,8 @@ async function handleWizardNext(interaction, parsed) {
 // Add-Item modal submit (`madds|<slot>|<donorId>`) -> combine the modal free text
 // with the wizard's captured slot/donor, then intake through the same dedup path
 // as `/stashadmin add` (no force_new here, so a match always restocks). The donor
-// snowflake resolves to a display name for the text donor column. Edits the
+// snowflake is stored as a `<@id>` mention -- a stable identity that groups in the
+// Top Donors ledger (Discord renders it as the member's name). Edits the
 // wizard message in place with the result.
 async function handleAddSubmit(interaction, parsed) {
   if (!(await requireManager(interaction))) return;
@@ -681,11 +681,7 @@ async function handleAddSubmit(interaction, parsed) {
   try {
     const slot = parsed.args[0] || null;
     const donorId = parsed.args[1] || null;
-    let donor = null;
-    if (donorId) {
-      const member = await interaction.guild.members.fetch(donorId).catch(() => null);
-      donor = member ? member.displayName : `<@${donorId}>`;
-    }
+    const donor = donorId ? `<@${donorId}>` : null;
     const f = interaction.fields;
     const name = f.getTextInputValue('name').trim();
     if (!name) {
@@ -706,7 +702,11 @@ async function handleAddSubmit(interaction, parsed) {
     const matches = await store.findItemMatch(guildId, { wowheadId, name });
     const target = pickRestockTarget(matches, false);
     if (target) {
-      const updated = await store.restockItem(guildId, target.id, quantity, { wowheadId, slot });
+      const updated = await store.restockItem(guildId, target.id, quantity, {
+        wowheadId,
+        slot,
+        donor
+      });
       await interaction.editReply({
         content: `Restocked **${updated.name}** +${quantity} \u2192 \u00d7${updated.remaining}/${updated.quantity} (id \`${updated.id}\`). Use \`/stashadmin add force_new:true\` for a separate entry.`,
         embeds: [],
