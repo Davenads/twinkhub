@@ -127,7 +127,8 @@ test('a save leaves no temp file behind', async () => {
   const dir = tmpDir();
   try {
     await saveGuildConfig('g1', { alertChannelId: 'chan-1' }, { dir });
-    const entries = readdirSync(dir);
+    // The logical key `config/g1` resolves under the base dir's `config/` folder.
+    const entries = readdirSync(nodePath.join(dir, 'config'));
     assert.deepEqual(entries, ['g1.json'], 'only the final file remains, no .tmp');
   } finally {
     rmSync(dir, { recursive: true, force: true });

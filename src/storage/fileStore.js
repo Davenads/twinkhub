@@ -2,10 +2,12 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 /**
- * File-backed persistence primitive — the single place the app touches the
- * filesystem for mutable state. Both `guildConfig` and `latchStore` funnel their
- * reads/writes/locking through here so the storage backend can be swapped without
- * editing call sites (the prereq for a Heroku move off the ephemeral FS).
+ * File-backed persistence primitive — the file *backend* behind the storage seam
+ * (storage/kv.js). It is the single place the app touches the filesystem for
+ * mutable state; `guildConfig` and `latchStore` reach it only via kv.js (which
+ * resolves their logical keys to paths), so the backend can be swapped for a
+ * Postgres/KV adapter without editing call sites (the prereq for a Heroku move off
+ * the ephemeral FS).
  *
  * The seam is a small key/value contract:
  *   - `readText(key)`   → raw string, or `null` when absent

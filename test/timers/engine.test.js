@@ -20,11 +20,15 @@ function memStore(initial = {}) {
 }
 
 test('latchStore round-trips through a real file and seeds on missing', async () => {
-  const file = path.join(os.tmpdir(), `twinkhub-latches-${process.pid}-${Date.now()}.json`);
-  assert.deepEqual(await loadLatches(file), {}); // missing => empty seed
-  await saveLatches({ agm: { wasActive: false, warnedStartMs: 123 } }, file);
-  assert.deepEqual(await loadLatches(file), { agm: { wasActive: false, warnedStartMs: 123 } });
-  await fs.rm(file, { force: true });
+  // Isolate on a temp storage base dir so the real data/timers/latches.json is
+  // never read or written by the test.
+  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), 'twinkhub-engine-latch-'));
+  assert.deepEqual(await loadLatches({ baseDir }), {}); // missing => empty seed
+  await saveLatches({ agm: { wasActive: false, warnedStartMs: 123 } }, { baseDir });
+  assert.deepEqual(await loadLatches({ baseDir }), {
+    agm: { wasActive: false, warnedStartMs: 123 }
+  });
+  await fs.rm(baseDir, { recursive: true, force: true });
 });
 
 test('engine walks a real AGM window: exactly one warning + one occurrence', async () => {

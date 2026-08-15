@@ -642,7 +642,38 @@ copyable id. Render-only + handler-only, but the `wowhead_id` option description
 - `/stash bulk` batch intake.
 - Optional `stash.notifyRequesters` opt-out toggle (DMs are always-on today).
 - P4 Heroku durability for the `data/`-backed stash **config** block (inventory is already
-  off-dyno on Supabase).
+  off-dyno on Supabase). See **Storage durability (Heroku prereq)** below for the plan.
+
+## Storage durability (Heroku prereq) — the `data/` move off the ephemeral FS
+
+Everything under `data/` is wiped on every Heroku dyno restart/deploy. Two blobs matter:
+per-guild config `data/config/<id>.json` (`guildConfig.js` — alert wiring, panels, **the whole
+`stash` config block**: channel/roles/managerChannelId/tunables) and the global timer latch map
+`data/timers/latches.json` (`latchStore.js`). Losing config resets `/setup` and un-configures the
+stash; losing latches makes timers **double-fire** (re-ping an already-warned event). The Stash
+*inventory* is already safe on Supabase; only the *wiring* + *latches* die.
+
+**Design:** a logical key/value seam whose backend is swappable. Callers address state by a
+logical key (`config/<guildId>`, `timers/latches`), never a path, so a Postgres/KV backend can
+be dropped in without touching call sites. Backend selection must be a **separate opt-in** (e.g.
+`STORAGE_BACKEND=postgres`, default `file`) — NOT keyed off `DATABASE_URL`, or the live local bot
+(which already has `DATABASE_URL` for the stash) would silently migrate config+latches to Postgres
+on its next reload.
+
+**Slices (one at a time):**
+1. **Logical-key seam** — **shipped 2026-08-14.** New `src/storage/kv.js` (`readKey`/`writeKey`/
+   `lockKey`, logical keys) over the existing file backend (`storage/fileStore.js`, unchanged).
+   `guildConfig.js` uses key `config/<guildId>`; `latchStore.js` uses `timers/latches`. Production
+   paths are byte-identical (`data/config/<id>.json`, `data/timers/latches.json`) — a no-op on
+   disk. Tests inject a `baseDir` override to isolate. Zero behavior change; reload-only.
+2. **Postgres KV adapter + migration** — `app_kv (key text pk, value jsonb, updated_at)` table
+   (`supabase/migrations/`), adapter implementing the same three fns keyed by the logical string
+   (`lockKey` via a row transaction/advisory lock), selected by `STORAGE_BACKEND`. Integration
+   test under the existing `postgres:16` harness. Migration `db push`ed by operator; reload-only.
+3. **One-time copy script** (`npm run storage:migrate`) — read every `data/config/*.json` +
+   `latches.json`, upsert into `app_kv`. Dry-run default, `--apply`. Run once before cutover.
+4. **Heroku cutover** (separate/later) — `Procfile` (`worker: node src/index.js`), token/guild
+   ids → config vars, `STORAGE_BACKEND=postgres`, drop local pm2.
 
 ## Planned: item-slot taxonomy + panel grouping (2026-08-13)
 

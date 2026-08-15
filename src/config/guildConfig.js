@@ -1,9 +1,4 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { readText, writeJson, withLock } from '../storage/fileStore.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CONFIG_DIR = path.resolve(__dirname, '../../data/config');
+import { readKey, writeKey, lockKey } from '../storage/kv.js';
 
 /** Defaults applied on read; new keys added here are backfilled automatically. */
 export const DEFAULT_CONFIG = {
@@ -21,18 +16,20 @@ export const DEFAULT_CONFIG = {
   stash: null // { channelId, managerPanelChannelId, panelMessageIds: { browse, manager }, requesterRoleIds, managerRoleIds, managerChannelId, requestCap, staleApprovalDays }
 };
 
-function fileFor(guildId, dir = CONFIG_DIR) {
-  return path.join(dir, `${guildId}.json`);
+/** Logical storage key for a guild's config blob (resolves to data/config/<id>.json). */
+function keyFor(guildId) {
+  return `config/${guildId}`;
 }
 
 /**
- * Load a guild's config merged over defaults. Missing file => defaults. A corrupt
- * file fails loud (parse error propagates): unlike the regenerable latch file this
- * holds unrecoverable wiring (alert channel/role, board + panel message ids), so a
+ * Load a guild's config merged over defaults. Missing => defaults. A corrupt blob
+ * fails loud (parse error propagates): unlike the regenerable latch map this holds
+ * unrecoverable wiring (alert channel/role, board + panel message ids), so a
  * silent re-seed would permanently wipe a guild's setup — better to surface it.
+ * `dir` overrides the storage base dir (tests only).
  */
-export async function loadGuildConfig(guildId, { dir = CONFIG_DIR } = {}) {
-  const raw = await readText(fileFor(guildId, dir));
+export async function loadGuildConfig(guildId, { dir } = {}) {
+  const raw = await readKey(keyFor(guildId), { baseDir: dir });
   if (raw == null) return { ...DEFAULT_CONFIG };
   return { ...DEFAULT_CONFIG, ...JSON.parse(raw) };
 }
@@ -41,17 +38,18 @@ export async function loadGuildConfig(guildId, { dir = CONFIG_DIR } = {}) {
  * Merge `patch` into a guild's config and persist atomically under the guild's
  * lock. `patch` may be an object (shallow-merged) or an updater `(current) =>
  * delta` — use the updater form to compute a merge against the fresh, under-lock
- * state (so sibling fields aren't lost). The lock keyed by absolute path serializes
- * racing writers (e.g. the per-tick board updater vs an admin toggle) and the
- * atomic write can't leave a truncated config. Returns the saved config.
+ * state (so sibling fields aren't lost). The lock keyed by the guild's logical
+ * storage key serializes racing writers (e.g. the per-tick board updater vs an
+ * admin toggle) and the atomic write can't leave a truncated config. Returns the
+ * saved config. `dir` overrides the storage base dir (tests only).
  */
-export async function saveGuildConfig(guildId, patch, { dir = CONFIG_DIR } = {}) {
-  const file = fileFor(guildId, dir);
-  return withLock(file, async () => {
+export async function saveGuildConfig(guildId, patch, { dir } = {}) {
+  const key = keyFor(guildId);
+  return lockKey(key, async () => {
     const current = await loadGuildConfig(guildId, { dir });
     const delta = typeof patch === 'function' ? patch(current) : patch;
     const next = { ...current, ...delta };
-    await writeJson(file, next);
+    await writeKey(key, next, { baseDir: dir });
     return next;
   });
 }
