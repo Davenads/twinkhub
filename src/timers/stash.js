@@ -44,6 +44,7 @@ export function createStashRefresher(
     saveStash = setStash,
     expire = store.expireStaleApprovals,
     listItems = store.listItems,
+    getTopDonors = store.topDonors,
     build = buildStashPanel,
     isEnabled = store.isEnabled,
     notify = notifyRequester
@@ -104,7 +105,18 @@ export function createStashRefresher(
           continue;
         }
 
-        const payload = { ...build({ items }), ...SEND_OPTS };
+        // Lifetime Top Donors leaderboard (default on). Best-effort: a fetch
+        // failure must never stall the panel refresh, so fall back to no board.
+        let topDonors = [];
+        if (stash.showTopDonors !== false) {
+          try {
+            topDonors = await getTopDonors(guild.id, { limit: stash.topDonorsCount ?? 5 });
+          } catch (err) {
+            logger.warn({ err, guild: guild.id }, 'stash refresh: top donors fetch failed');
+          }
+        }
+
+        const payload = { ...build({ items, topDonors }), ...SEND_OPTS };
         const outcome = await editOrRepost(channel, stash.panelMessageIds?.browse, payload);
         if (outcome.action === 'reposted') {
           // Spread the existing ids so a browse repost never wipes the manager

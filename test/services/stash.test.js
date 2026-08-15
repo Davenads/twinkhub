@@ -199,6 +199,30 @@ test('buildStashPanel: a numeric wowheadId links the item name to Wowhead', () =
   );
 });
 
+test('buildStashPanel: a non-empty topDonors adds a second Top Donors embed', () => {
+  const panel = buildStashPanel({
+    items: [item({ name: 'Thing' })],
+    topDonors: [
+      { donor: 'Dave', units: 12 },
+      { donor: 'Sara', units: 9 }
+    ]
+  });
+  assert.equal(panel.embeds.length, 2, 'stash embed + donors embed');
+  const donors = panel.embeds[1].data;
+  assert.equal(donors.title, 'Top Donors');
+  assert.ok(donors.description.includes('1. Dave \u2014 12'), 'ranked line one');
+  assert.ok(donors.description.includes('2. Sara \u2014 9'), 'ranked line two');
+  assert.ok(
+    donors.description.indexOf('Dave') < donors.description.indexOf('Sara'),
+    'order preserved (highest first)'
+  );
+});
+
+test('buildStashPanel: an empty topDonors omits the second embed', () => {
+  const panel = buildStashPanel({ items: [item({ name: 'Thing' })] });
+  assert.equal(panel.embeds.length, 1, 'no Top Donors embed when there are none');
+});
+
 test('buildStashPanel: no wowheadId renders a plain bold name (no link)', () => {
   const desc = description(buildStashPanel({ items: [item({ name: 'Mystery Item' })] }));
   assert.ok(desc.includes('**Mystery Item**'), 'plain bold name');

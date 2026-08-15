@@ -18,6 +18,7 @@ import {
   getItem,
   listItems,
   listRequests,
+  topDonors,
   shutdown
 } from '../../src/stash/store.js';
 
@@ -59,13 +60,16 @@ if (!DATABASE_URL) {
   await ensureSchema(cleanup);
 
   after(async () => {
+    await cleanup.query('delete from stash_donations where guild_id = $1', [GUILD]);
     await cleanup.query('delete from stash_items where guild_id = $1', [GUILD]);
     await cleanup.end();
     await shutdown();
   });
 
   beforeEach(async () => {
-    // stash_requests cascades from stash_items on delete.
+    // stash_requests cascades from stash_items on delete; the ledger uses
+    // ON DELETE SET NULL (it's permanent), so clear it explicitly.
+    await cleanup.query('delete from stash_donations where guild_id = $1', [GUILD]);
     await cleanup.query('delete from stash_items where guild_id = $1', [GUILD]);
   });
 
@@ -461,5 +465,59 @@ if (!DATABASE_URL) {
     const out = await editItem(GUILD, item.id, { name: 'Keep2' });
     assert.deepEqual(out.tags, ['stay'], 'absent tags key is not applied');
     assert.equal(out.name, 'Keep2');
+  });
+
+  test('topDonors: addItem logs a donation; a blank/absent donor logs none', async () => {
+    await addItem(GUILD, { name: 'Gift', quantity: 3, donor: 'Alice' });
+    await addItem(GUILD, { name: 'Anon', quantity: 5 }); // no donor
+    await addItem(GUILD, { name: 'Blank', quantity: 2, donor: '   ' }); // blank donor
+    const top = await topDonors(GUILD, { limit: 5 });
+    assert.deepEqual(top, [{ donor: 'Alice', units: 3 }], 'only the attributable donation counts');
+  });
+
+  test('topDonors: sums per donor, folding case and whitespace', async () => {
+    await addItem(GUILD, { name: 'A', quantity: 2, donor: 'Dave' });
+    await addItem(GUILD, { name: 'B', quantity: 3, donor: ' dave ' });
+    await addItem(GUILD, { name: 'C', quantity: 4, donor: 'Sara' });
+    const top = await topDonors(GUILD, { limit: 5 });
+    assert.equal(top.length, 2, 'Dave/dave fold into one donor');
+    const dave = top.find((t) => t.donor.toLowerCase().trim() === 'dave');
+    assert.equal(dave.units, 5, 'summed across case/space variants');
+    assert.equal(top[0].donor.toLowerCase().trim(), 'dave', 'Dave (5) outranks Sara (4)');
+  });
+
+  test('topDonors: restock credits the topping-up donor, not the first donor', async () => {
+    const item = await addItem(GUILD, { name: 'Shared', quantity: 1, donor: 'Alice' });
+    await restockItem(GUILD, item.id, 4, { donor: 'Bob' });
+    const top = await topDonors(GUILD, { limit: 5 });
+    const byDonor = Object.fromEntries(top.map((t) => [t.donor, t.units]));
+    assert.equal(byDonor.Alice, 1, 'Alice keeps only her original unit');
+    assert.equal(byDonor.Bob, 4, 'Bob is credited for his restock units');
+  });
+
+  test('topDonors: give-away, withdrawal, and consolidation never change a count', async () => {
+    const a = await addItem(GUILD, { name: 'Consumed', quantity: 1, donor: 'Alice' });
+    const dupe = await addItem(GUILD, { name: 'Consumed', quantity: 2, donor: 'Bob' });
+    // Hand out Alice's unit (given), then consolidate Bob's dupe into it.
+    const req = await requestItem(GUILD, a.id, 'taker');
+    await approveRequest(GUILD, req.id, 'mgr');
+    await markSent(GUILD, req.id, 'mgr');
+    await consolidateItems(GUILD, a.id, [dupe.id]);
+    const top = await topDonors(GUILD, { limit: 5 });
+    const byDonor = Object.fromEntries(top.map((t) => [t.donor, t.units]));
+    assert.equal(byDonor.Alice, 1, 'a given-away donation still counts');
+    assert.equal(byDonor.Bob, 2, 'a consolidated-away donation still counts (no double count)');
+  });
+
+  test('topDonors: orders by units desc and honors the limit', async () => {
+    await addItem(GUILD, { name: 'x', quantity: 1, donor: 'Low' });
+    await addItem(GUILD, { name: 'y', quantity: 9, donor: 'High' });
+    await addItem(GUILD, { name: 'z', quantity: 5, donor: 'Mid' });
+    const top2 = await topDonors(GUILD, { limit: 2 });
+    assert.deepEqual(
+      top2.map((t) => t.donor),
+      ['High', 'Mid'],
+      'top 2 by units, Low excluded'
+    );
   });
 }

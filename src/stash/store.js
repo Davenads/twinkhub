@@ -142,7 +142,22 @@ async function withRequestTxn(guildId, requestId, mutate) {
   }
 }
 
+// Append a permanent donation-ledger row for an attributable donation. Rows are
+// immutable and survive give-away/withdraw/consolidate, so the Top Donors
+// leaderboard reflects lifetime totals. No-ops on a blank/absent donor (an
+// unattributable donation credits no one). MUST run on the caller's transaction
+// client so the item and its donation commit atomically.
+async function logDonation(client, { guildId, donor, units, itemId = null, kind = 'add' }) {
+  if (donor == null || !String(donor).trim()) return;
+  await client.query(
+    `insert into stash_donations (id, guild_id, donor, units, item_id, kind)
+     values ($1, $2, $3, $4, $5, $6)`,
+    [newId('don'), guildId, String(donor).trim(), units, itemId, kind]
+  );
+}
+
 // Add a donated item. remaining starts equal to quantity; status 'available'.
+// Wrapped in a txn so the item insert and its donation-ledger row land together.
 export async function addItem(
   guildId,
   { name, wowheadId = null, slot = null, quantity = 1, donor = null, tags = [], notes = null }
@@ -156,14 +171,44 @@ export async function addItem(
   }
 
   const id = newId('itm');
+  const client = await getPool().connect();
+  try {
+    await client.query('begin');
+    const { rows } = await client.query(
+      `insert into stash_items
+         (id, guild_id, name, wowhead_id, slot, quantity, remaining, donor, tags, notes)
+       values ($1, $2, $3, $4, $5, $6, $6, $7, $8, $9)
+       returning *`,
+      [id, guildId, String(name).trim(), wowheadId, slot, qty, donor, tags, notes]
+    );
+    await logDonation(client, { guildId, donor, units: qty, itemId: id, kind: 'add' });
+    await client.query('commit');
+    return rowToItem(rows[0]);
+  } catch (err) {
+    await client.query('rollback').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+// Lifetime top donors by total units donated, off the permanent ledger (so a
+// give-away/withdraw/consolidate never changes a count). Groups case/space-
+// insensitively via donor_key, picks a representative display casing with
+// max(donor), and breaks ties deterministically by donor_key. Returns
+// [{ donor, units }], highest first.
+export async function topDonors(guildId, { limit = 5 } = {}) {
+  const n = Number.isInteger(limit) && limit > 0 ? Math.min(limit, 25) : 5;
   const { rows } = await getPool().query(
-    `insert into stash_items
-       (id, guild_id, name, wowhead_id, slot, quantity, remaining, donor, tags, notes)
-     values ($1, $2, $3, $4, $5, $6, $6, $7, $8, $9)
-     returning *`,
-    [id, guildId, String(name).trim(), wowheadId, slot, qty, donor, tags, notes]
+    `select max(donor) as donor, sum(units)::int as units
+       from stash_donations
+      where guild_id = $1
+      group by donor_key
+      order by units desc, donor_key asc
+      limit $2`,
+    [guildId, n]
   );
-  return rowToItem(rows[0]);
+  return rows.map((r) => ({ donor: r.donor, units: r.units }));
 }
 
 // Find active items a new add would merge into (dedup). Identity is tiered: an
@@ -210,7 +255,12 @@ export async function findItemMatch(guildId, { wowheadId = null, name = null } =
 // never re-typed. recomputeItemStatus reactivates a 'given' (exhausted) row.
 // Refuses a withdrawn item; FOR UPDATE serialises against concurrent
 // approvals/sends on the same row.
-export async function restockItem(guildId, itemId, addQty, { wowheadId = null, slot = null } = {}) {
+export async function restockItem(
+  guildId,
+  itemId,
+  addQty,
+  { wowheadId = null, slot = null, donor = null } = {}
+) {
   const n = Number(addQty);
   if (!Number.isInteger(n) || n < 1) {
     throw new StashError('INVALID_INPUT', 'restock quantity must be an integer >= 1');
@@ -237,6 +287,9 @@ export async function restockItem(guildId, itemId, addQty, { wowheadId = null, s
        where id = $1`,
       [itemId, n, wowheadId, slot]
     );
+    // Credit the topping-up donor (not the item's stored first-donor) for these
+    // units — the ledger captures every contributor to a merged row.
+    await logDonation(client, { guildId, donor, units: n, itemId, kind: 'restock' });
     await recomputeItemStatus(client, itemId);
     const { rows } = await client.query('select * from stash_items where id = $1', [itemId]);
     await client.query('commit');

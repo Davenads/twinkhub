@@ -268,6 +268,18 @@ export const data = new SlashCommandBuilder()
               .setMinValue(1)
               .setMaxValue(60)
           )
+          .addBooleanOption((o) =>
+            o
+              .setName('show_top_donors')
+              .setDescription('Show the Top Donors leaderboard on the panel (default on)')
+          )
+          .addIntegerOption((o) =>
+            o
+              .setName('top_donors_count')
+              .setDescription('How many donors to list (default 5)')
+              .setMinValue(1)
+              .setMaxValue(25)
+          )
       )
       .addSubcommand((s) =>
         s.setName('show').setDescription('Show the stash configuration and tunables.')
@@ -324,8 +336,13 @@ const SEND_OPTS = { allowedMentions: { parse: [] } };
 // Build the public panel from live claimable/requested stock (same view the
 // s1 refresh button renders), so post/refresh stay in lockstep with the store.
 async function renderStashPanel(guildId) {
+  const cfg = await loadGuildConfig(guildId);
   const items = await store.listItems(guildId, { statuses: ['available', 'requested'] });
-  return buildStashPanel({ items });
+  const topDonors =
+    cfg.stash?.showTopDonors === false
+      ? []
+      : await store.topDonors(guildId, { limit: cfg.stash?.topDonorsCount ?? 5 });
+  return buildStashPanel({ items, topDonors });
 }
 
 // Build the manager console from live stock + open requests. Same view the
@@ -524,18 +541,31 @@ async function handleConfig(interaction, sub) {
     // Apply only the provided option(s); Discord enforces the 1..25 / 1..60 bounds.
     const requestCap = interaction.options.getInteger('request_cap', false);
     const staleApprovalDays = interaction.options.getInteger('stale_approval_days', false);
-    if (requestCap == null && staleApprovalDays == null) {
-      await interaction.editReply('Provide request_cap and/or stale_approval_days to set.');
+    const showTopDonors = interaction.options.getBoolean('show_top_donors', false);
+    const topDonorsCount = interaction.options.getInteger('top_donors_count', false);
+    if (
+      requestCap == null &&
+      staleApprovalDays == null &&
+      showTopDonors == null &&
+      topDonorsCount == null
+    ) {
+      await interaction.editReply(
+        'Provide request_cap, stale_approval_days, show_top_donors, and/or top_donors_count to set.'
+      );
       return;
     }
     const patch = {};
     if (requestCap != null) patch.requestCap = requestCap;
     if (staleApprovalDays != null) patch.staleApprovalDays = staleApprovalDays;
+    if (showTopDonors != null) patch.showTopDonors = showTopDonors;
+    if (topDonorsCount != null) patch.topDonorsCount = topDonorsCount;
     await setStash(guildId, patch);
     await interaction.editReply(
       'Updated stash tunables:\n' +
         `\u2022 Request cap: ${patch.requestCap ?? cfg.stash?.requestCap ?? 3}\n` +
-        `\u2022 Stale-approval days: ${patch.staleApprovalDays ?? cfg.stash?.staleApprovalDays ?? 5}`
+        `\u2022 Stale-approval days: ${patch.staleApprovalDays ?? cfg.stash?.staleApprovalDays ?? 5}\n` +
+        `\u2022 Top Donors board: ${(patch.showTopDonors ?? cfg.stash?.showTopDonors) === false ? 'off' : 'on'}\n` +
+        `\u2022 Top Donors count: ${patch.topDonorsCount ?? cfg.stash?.topDonorsCount ?? 5}`
     );
     return;
   }
@@ -548,6 +578,8 @@ async function handleConfig(interaction, sub) {
         `\u2022 Manager notify channel: ${channel}\n` +
         `\u2022 Request cap: ${s.requestCap ?? 3}\n` +
         `\u2022 Stale-approval days: ${s.staleApprovalDays ?? 5}\n` +
+        `\u2022 Top Donors board: ${s.showTopDonors === false ? 'off' : 'on'}\n` +
+        `\u2022 Top Donors count: ${s.topDonorsCount ?? 5}\n` +
         `\u2022 Managers: ${fmtRoleList(s.managerRoleIds)}\n` +
         `\u2022 Requesters (Twink): ${fmtRoleList(s.requesterRoleIds)}`
     );
@@ -617,6 +649,7 @@ export async function execute(interaction) {
         const name = interaction.options.getString('name', true);
         const quantity = interaction.options.getInteger('quantity') ?? 1;
         const slot = interaction.options.getString('slot');
+        const donor = interaction.options.getString('donor');
         const wowheadId = normalizeWowheadId(interaction.options.getString('wowhead_id'));
         const forceNew = interaction.options.getBoolean('force_new') ?? false;
 
@@ -631,7 +664,8 @@ export async function execute(interaction) {
         if (target) {
           const updated = await store.restockItem(guildId, target.id, quantity, {
             wowheadId,
-            slot
+            slot,
+            donor
           });
           await interaction.editReply(
             `Restocked **${updated.name}** +${quantity} \u2192 \u00d7${updated.remaining}/${updated.quantity} (id \`${updated.id}\`). Pass \`force_new:true\` to add a separate entry instead.`
@@ -642,7 +676,7 @@ export async function execute(interaction) {
           name,
           quantity,
           slot,
-          donor: interaction.options.getString('donor'),
+          donor,
           wowheadId,
           notes: interaction.options.getString('notes'),
           tags

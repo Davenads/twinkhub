@@ -182,7 +182,12 @@ async function handleRefresh(interaction) {
     const items = await store.listItems(interaction.guildId, {
       statuses: ['available', 'requested']
     });
-    await interaction.editReply({ ...buildStashPanel({ items }), ...SEND_OPTS });
+    const cfg = await loadGuildConfig(interaction.guildId);
+    const topDonors =
+      cfg.stash?.showTopDonors === false
+        ? []
+        : await store.topDonors(interaction.guildId, { limit: cfg.stash?.topDonorsCount ?? 5 });
+    await interaction.editReply({ ...buildStashPanel({ items, topDonors }), ...SEND_OPTS });
   } catch (err) {
     logger.error({ err }, 'stash panel refresh failed');
     await interaction

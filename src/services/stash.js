@@ -341,10 +341,13 @@ function requestOptions(requests, names = {}) {
  * `{ embeds, components }`. When nothing is claimable the request select is
  * omitted (an empty/claimed stash still shows the list + My Requests/Refresh).
  *
- * @param {{ items: Array<{id,name,slot,remaining,status}> }} args
+ * A non-empty `topDonors` (lifetime leaderboard, highest first) adds a second
+ * "Top Donors" embed after the stash embed; empty omits it entirely.
+ *
+ * @param {{ items: Array<{id,name,slot,remaining,status}>, topDonors?: Array<{donor,units}> }} args
  * @returns {{ embeds: EmbedBuilder[], components: ActionRowBuilder[] }}
  */
-export function buildStashPanel({ items = [] } = {}) {
+export function buildStashPanel({ items = [], topDonors = [] } = {}) {
   const open = claimable(items);
   const hasAny = items.length > 0;
 
@@ -403,7 +406,18 @@ export function buildStashPanel({ items = [] } = {}) {
     )
   );
 
-  return { embeds: [embed], components };
+  const embeds = [embed];
+  if (topDonors.length) {
+    const lines = topDonors.map((d, i) => `${i + 1}. ${d.donor} \u2014 ${d.units}`);
+    embeds.push(
+      new EmbedBuilder()
+        .setColor(EMBED_COLOR)
+        .setTitle('Top Donors')
+        .setDescription(truncate(lines.join('\n'), LIMITS.description))
+    );
+  }
+
+  return { embeds, components };
 }
 
 /**
