@@ -639,10 +639,21 @@ copyable id. Render-only + handler-only, but the `wowhead_id` option description
 
 ### Deferred follow-ups
 
+- **Tags editing (post-intake) — open gap, next local candidate.** `tags` is settable **only at
+  `/stashadmin add`** intake; **no editor surface exposes it** afterward: the slash
+  `/stashadmin edit` subcommand carries no `tags` option (name/slot/wowhead_id/donor/notes only),
+  the panel edit modal `buildEditModal` is at Discord's **5-input cap** (name/wowhead/notes), and
+  the `editItem` store patch doesn't accept a `tags` key. To close it: (a) add `tags` to the
+  `editItem` patch contract (present ⇒ replace, `null`/empty ⇒ clear; parse comma-separated →
+  `jsonb` array exactly as `add` does) plus an integration test asserting replace/clear/absent;
+  (b) add a `tags` string option to `/stashadmin edit` (definition change ⇒ `deploy` + reload).
+  Panel-modal editing stays out (no input headroom) — tags edits live on the slash editor,
+  consistent with the earlier "tags/notes stay on the slash command" note.
 - `/stash bulk` batch intake.
 - Optional `stash.notifyRequesters` opt-out toggle (DMs are always-on today).
 - P4 Heroku durability for the `data/`-backed stash **config** block (inventory is already
-  off-dyno on Supabase). See **Storage durability (Heroku prereq)** below for the plan.
+  off-dyno on Supabase). See **Storage durability (Heroku prereq)** below for the plan — Slices
+  2-4 are **PAUSED** (local-only; see the 2026-08-15 decision note in that section).
 
 ## Storage durability (Heroku prereq) — the `data/` move off the ephemeral FS
 
@@ -659,6 +670,17 @@ be dropped in without touching call sites. Backend selection must be a **separat
 `STORAGE_BACKEND=postgres`, default `file`) — NOT keyed off `DATABASE_URL`, or the live local bot
 (which already has `DATABASE_URL` for the stash) would silently migrate config+latches to Postgres
 on its next reload.
+
+**Decision (2026-08-15) — Slices 2-4 PAUSED (local-only, not urgent).** We're staying on the
+local **pm2** box for the foreseeable future with **no imminent Heroku move**. This whole track
+exists solely to survive Heroku's ephemeral FS; on the local box the file backend is already
+**durable** (survives reload/reboot via pm2 resurrect), so there is no double-fire /
+`/setup`-reset risk here. **Slice 1's seam is the deliberate stopping point** — it captured the
+architectural insurance at zero ongoing cost, so Slices 2-4 drop in unchanged the day a cutover
+becomes concrete. Building them now would be inert surface area (they can't activate without
+`STORAGE_BACKEND=postgres`, which we won't set) plus test upkeep for code that does nothing.
+**Resume trigger:** a real decision to move to Heroku. Until then the slice specs below are the
+resume playbook, not an active queue.
 
 **Slices (one at a time):**
 1. **Logical-key seam** — **shipped 2026-08-14.** New `src/storage/kv.js` (`readKey`/`writeKey`/
