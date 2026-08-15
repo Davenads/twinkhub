@@ -2,8 +2,8 @@
 
 Review + plan for the manager-panel **"Manage an item…"** dropdown dropping items past
 the 25th. Companion to `14-community-stash.md` (which owns the full stash design); this
-file is the focused reference for this one fix. **Status: planned, not implemented — awaiting
-greenlight.**
+file is the focused reference for this one fix. **Status: shipped 2026-08-15 (`76f270d`) —
+as-built matches this plan (mirror of `reqslot`; `mslot` picker → `buildManageSlotPrompt`).**
 
 ## The symptom (manager report)
 
