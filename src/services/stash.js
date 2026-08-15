@@ -184,6 +184,36 @@ function claimable(items) {
   return items.filter((it) => it.status === 'available' && it.remaining > 0);
 }
 
+// Statuses a manager can act on (edit/withdraw), in the order they surface: live
+// stock first, given-history last so it never crowds active items off a select.
+const MANAGE_ORDER = { available: 0, requested: 1, given: 2 };
+
+/** Items a manager can edit/withdraw (excludes withdrawn), active-first then name. */
+function manageable(items) {
+  return items
+    .filter((it) => it.status in MANAGE_ORDER)
+    .sort((a, b) => {
+      const d = MANAGE_ORDER[a.status] - MANAGE_ORDER[b.status];
+      return d !== 0 ? d : String(a.name).localeCompare(String(b.name));
+    });
+}
+
+// One manage-select option per item: label is the name, value is the item id the
+// manage handler routes on, description carries a no-link warning + slot + status
+// + remaining. Capped at SELECT_LIMIT so a caller can pass an oversized list.
+function manageOptions(items) {
+  return items.slice(0, SELECT_LIMIT).map((it) => {
+    const opt = { label: truncate(it.name, 100), value: it.id };
+    const slotLabel = SLOT_LABEL.get(normalizeSlot(it.slot)) || it.slot;
+    const noLink = normalizeWowheadId(it.wowheadId) == null ? '\u26a0 no link' : null;
+    const desc = [noLink, slotLabel, it.status, `\u00d7${it.remaining}`]
+      .filter(Boolean)
+      .join(' \u00b7 ');
+    if (desc) opt.description = truncate(desc, 100);
+    return opt;
+  });
+}
+
 /** itemId -> display name lookup, for labelling request selects by item. */
 export function itemNames(items = []) {
   return Object.fromEntries(items.map((it) => [it.id, it.name]));
@@ -403,6 +433,42 @@ export function buildSlotRequestPrompt({ items = [], slot } = {}) {
 }
 
 /**
+ * Build the EPHEMERAL manage select scoped to a single slot, opened when a big
+ * stash's manager console routes through the slot picker (buildManagerPanel ->
+ * mslot). Ephemeral so drilling in never mutates the shared console message.
+ * `slot` is a canonical STASH_SLOTS value or the UNGROUPED_SLOT sentinel; only
+ * manageable items (available/requested/given) in that slot are offered,
+ * active-first then name. Returns a `{ content, components }` message (no embed)
+ * \u2014 an empty slot yields a plain refresh hint, no select.
+ *
+ * @param {{ items?: Array, slot?: string }} args
+ * @returns {{ content: string, components: ActionRowBuilder[] }}
+ */
+export function buildManageSlotPrompt({ items = [], slot } = {}) {
+  const wanted = slot === UNGROUPED_SLOT ? null : slot;
+  const label = slot === UNGROUPED_SLOT ? 'Ungrouped' : SLOT_LABEL.get(slot) || String(slot);
+  const inSlot = manageable(items).filter((it) => normalizeSlot(it.slot) === wanted);
+
+  if (!inSlot.length) {
+    return {
+      content: `No **${label}** items to manage right now \u2014 hit Refresh on the console.`,
+      components: []
+    };
+  }
+
+  const select = new StringSelectMenuBuilder()
+    .setCustomId(encodeStashId('mitem'))
+    .setPlaceholder(`Manage a ${label} item\u2026`)
+    .addOptions(manageOptions(inSlot));
+
+  let content = `**${label}** \u2014 pick an item to manage:`;
+  if (inSlot.length > SELECT_LIMIT) {
+    content += `\n_Showing the first ${SELECT_LIMIT}; handle some to see the rest._`;
+  }
+  return { content, components: [row(select)] };
+}
+
+/**
  * Build the Manager Console panel — a manager-only dashboard posted in a
  * restricted channel. Shows request/stock counts plus Pending/Approved selects:
  * picking a request spawns an ephemeral per-request action console (buildRequest
@@ -450,32 +516,35 @@ export function buildManagerPanel({ items = [], pending = [], approved = [], nam
     );
   }
   // Manage-item console: every non-withdrawn item (available/requested/given) is
-  // editable or withdrawable. Order active stock first so a long given-history
-  // never crowds live items out of the 25-option cap.
-  const MANAGE_ORDER = { available: 0, requested: 1, given: 2 };
-  const manageable = items
-    .filter((it) => it.status in MANAGE_ORDER)
-    .sort((a, b) => {
-      const d = MANAGE_ORDER[a.status] - MANAGE_ORDER[b.status];
-      return d !== 0 ? d : String(a.name).localeCompare(String(b.name));
-    });
-  if (manageable.length) {
+  // editable or withdrawable, active stock first. Mirrors the public request
+  // control: a small list is one flat select; a bigger-than-25 list would
+  // silently drop items 26+, so offer a slot picker whose pick opens an
+  // ephemeral manage select scoped to that slot (handleManageSlot ->
+  // buildManageSlotPrompt), keeping every item reachable.
+  const manageList = manageable(items);
+  if (manageList.length && manageList.length <= SELECT_LIMIT) {
     components.push(
       row(
         new StringSelectMenuBuilder()
           .setCustomId(encodeStashId('mitem'))
           .setPlaceholder('Manage an item\u2026')
+          .addOptions(manageOptions(manageList))
+      )
+    );
+  } else if (manageList.length) {
+    components.push(
+      row(
+        new StringSelectMenuBuilder()
+          .setCustomId(encodeStashId('mslot'))
+          .setPlaceholder('Browse by slot to manage\u2026')
           .addOptions(
-            manageable.slice(0, SELECT_LIMIT).map((it) => {
-              const opt = { label: truncate(it.name, 100), value: it.id };
-              const slotLabel = SLOT_LABEL.get(normalizeSlot(it.slot)) || it.slot;
-              const noLink = normalizeWowheadId(it.wowheadId) == null ? '\u26a0 no link' : null;
-              const desc = [noLink, slotLabel, it.status, `\u00d7${it.remaining}`]
-                .filter(Boolean)
-                .join(' \u00b7 ');
-              if (desc) opt.description = truncate(desc, 100);
-              return opt;
-            })
+            groupBySlot(manageList)
+              .slice(0, SELECT_LIMIT)
+              .map((g) => ({
+                label: truncate(g.label, 100),
+                value: g.value,
+                description: truncate(`${g.items.length} to manage`, 100)
+              }))
           )
       )
     );

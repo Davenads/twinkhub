@@ -7,6 +7,7 @@ import {
   parseStashCustomId,
   buildStashPanel,
   buildSlotRequestPrompt,
+  buildManageSlotPrompt,
   buildManagerPanel,
   buildRequestAction,
   buildDenyConfirm,
@@ -382,6 +383,28 @@ async function handleDenyCancel(interaction, parsed) {
   }
 }
 
+// Slot picker (big-stash console) -> open an EPHEMERAL manage select scoped to
+// the chosen slot. The console offers this instead of a flat select once there
+// are more manageable items than a select can hold, so no item is unreachable.
+// Ephemeral so one manager's drill-down never edits the shared console message.
+async function handleManageSlot(interaction) {
+  if (!(await requireManager(interaction))) return;
+  const slot = interaction.values?.[0];
+  if (!slot) {
+    await interaction.reply({ content: 'No slot selected.', flags: MessageFlags.Ephemeral });
+    return;
+  }
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+  try {
+    const items = await store.listItems(interaction.guildId, {
+      statuses: ['available', 'requested', 'given']
+    });
+    await interaction.editReply({ ...buildManageSlotPrompt({ items, slot }), ...SEND_OPTS });
+  } catch (err) {
+    await editStoreError(interaction, err, 'stash manager slot browse failed');
+  }
+}
+
 // Manage-item select (`mitem`) -> spawn the ephemeral manage-item console (Edit /
 // Withdraw) for the picked item. Reads authoritative state so a stale option
 // (already withdrawn) surfaces cleanly.
@@ -708,6 +731,7 @@ const HANDLERS = {
   deny: handleDenyPrompt,
   denyc: handleDenyConfirm,
   dcxl: handleDenyCancel,
+  mslot: handleManageSlot,
   mitem: handleManageSelect,
   medit: handleEditOpen,
   wdp: handleWithdrawPrompt,

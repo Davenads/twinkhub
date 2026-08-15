@@ -6,6 +6,7 @@ import {
   parseStashCustomId,
   buildStashPanel,
   buildSlotRequestPrompt,
+  buildManageSlotPrompt,
   buildManagerPanel,
   buildRequestAction,
   buildDenyConfirm,
@@ -397,6 +398,92 @@ test('buildManagerPanel: manage-item select flags rows missing a Wowhead link', 
   const desc = (v) => opts.find((o) => o.value === v).description;
   assert.ok(desc('itm_a').includes('no link'), 'linkless row flagged');
   assert.ok(!desc('itm_b').includes('no link'), 'linked row not flagged');
+});
+
+test('buildManagerPanel: 25 or fewer manageable items keep the flat manage select', () => {
+  const items = Array.from({ length: 25 }, (_, i) =>
+    item({ id: `m${i}`, name: `Item ${i}`, slot: 'head' })
+  );
+  const panel = buildManagerPanel({ items });
+  assert.ok(selectByAction(panel, 'mitem'), 'flat mitem select present at the 25-item boundary');
+  assert.equal(selectByAction(panel, 'mslot'), null, 'no slot picker while it still fits');
+});
+
+test('buildManagerPanel: more than 25 manageable items swap to a slot picker (no dropped items)', () => {
+  const items = [
+    ...Array.from({ length: 20 }, (_, i) => item({ id: `h${i}`, name: `Helm ${i}`, slot: 'head' })),
+    ...Array.from({ length: 8 }, (_, i) =>
+      item({ id: `f${i}`, name: `Boot ${i}`, slot: 'feet', status: 'given', remaining: 0 })
+    )
+  ];
+  const panel = buildManagerPanel({ items }); // 28 manageable > 25
+  assert.equal(
+    selectByAction(panel, 'mitem'),
+    null,
+    'flat mitem select is gone (would drop items)'
+  );
+  const picker = selectByAction(panel, 'mslot');
+  assert.ok(picker, 'slot picker present');
+  const byValue = Object.fromEntries(picker.options.map((o) => [o.value, o]));
+  assert.deepEqual(Object.keys(byValue), ['head', 'feet'], 'a slot per populated group, in order');
+  assert.ok(byValue.head.description.includes('20 to manage'), 'head count shown');
+  assert.ok(byValue.feet.description.includes('8 to manage'), 'given items still counted');
+});
+
+test('buildManageSlotPrompt: scopes a manage select to one slot, capped at 25', () => {
+  const items = [
+    ...Array.from({ length: 30 }, (_, i) => item({ id: `h${i}`, name: `Helm ${i}`, slot: 'head' })),
+    item({ id: 'f0', name: 'Boots', slot: 'feet' })
+  ];
+  const prompt = buildManageSlotPrompt({ items, slot: 'head' });
+  const select = prompt.components[0].toJSON().components[0];
+  assert.equal(
+    select.custom_id,
+    encodeStashId('mitem'),
+    'the scoped select is a normal mitem select'
+  );
+  assert.equal(select.options.length, 25, 'capped at Discord max of 25');
+  assert.ok(
+    select.options.every((o) => o.value.startsWith('itm_h')),
+    'only the chosen slot is offered'
+  );
+  assert.ok(prompt.content.includes('Showing the first 25'), 'notes the overflow');
+});
+
+test('buildManageSlotPrompt: manager scope includes given/requested items, active-first', () => {
+  const items = [
+    item({ id: 'g', name: 'Given', slot: 'head', status: 'given', remaining: 0 }),
+    item({ id: 'a', name: 'Avail', slot: 'head', status: 'available' }),
+    item({ id: 'r', name: 'Req', slot: 'head', status: 'requested' }),
+    item({ id: 'w', name: 'Gone', slot: 'head', status: 'withdrawn' })
+  ];
+  const select = buildManageSlotPrompt({ items, slot: 'head' }).components[0].toJSON()
+    .components[0];
+  assert.deepEqual(
+    select.options.map((o) => o.value),
+    ['itm_a', 'itm_r', 'itm_g'],
+    'available + requested before given; withdrawn excluded'
+  );
+});
+
+test('buildManageSlotPrompt: ungrouped sentinel scopes to slotless items', () => {
+  const items = [
+    item({ id: 'a', name: 'Potion' }), // slotless
+    item({ id: 'b', name: 'Helm', slot: 'head' })
+  ];
+  const select = buildManageSlotPrompt({ items, slot: 'ungrouped' }).components[0].toJSON()
+    .components[0];
+  assert.deepEqual(
+    select.options.map((o) => o.value),
+    ['itm_a'],
+    'only the slotless item is offered'
+  );
+});
+
+test('buildManageSlotPrompt: an empty slot yields a hint and no select', () => {
+  const prompt = buildManageSlotPrompt({ items: [item({ id: 'a', slot: 'head' })], slot: 'feet' });
+  assert.deepEqual(prompt.components, [], 'no select when nothing is manageable in that slot');
+  assert.ok(prompt.content.includes('No **Feet** items'), 'names the empty slot');
 });
 
 test('buildItemAction: offers Edit and Withdraw carrying the item id', () => {
