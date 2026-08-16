@@ -1,7 +1,21 @@
 # TwinkHub — project notes
 
-WoW WSG-19 twinking Discord bot (discord.js v14, ESM). Handlers stay thin; game
+WoW Classic Era twinking Discord bot (discord.js v14, ESM). Handlers stay thin; game
 knowledge lives in the JSON content store under `data/content/<bracket>/`, not in code.
+
+## Who it's for (community context)
+
+Built for and run by the **Twinks in Your Area** Classic Era community (guild tag
+`<Twinks in Your Area>`), which plays on **both Alliance and Horde** and primarily
+endorses the **19 and 29** twink brackets, aiming to revive Classic Era WSG PvP. The
+bot ships **19** content today; **29** is endorsed play with bot content still on the
+roadmap (no `data/content/29/` yet).
+
+**When generating any Discord message / announcement / community copy from this repo,
+read `COMMUNITY.md` first** — it is the single source of truth for guild identity,
+factions, brackets, the standing comms voice guide (informal WoW tone, no em-dashes,
+no cliche AI phrasing), and reusable boilerplate. Keep the 19-shipped vs 29-endorsed
+distinction accurate, and never assume a single faction.
 
 ## Commands / scripts
 - `npm start` — run the bot (`node src/index.js`)

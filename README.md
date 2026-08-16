@@ -29,6 +29,26 @@ The Community Stash has its own public panel plus a manager console.
 
 ---
 
+## Who it's for
+
+TwinkHub is built for and run by **Twinks in Your Area**, a **WoW Classic Era** twink
+community on the **NA Whitemane** connected-realm cluster that plays on **both Alliance
+and Horde** (in-game `<Twinks in your Area>` on Alliance, `<Twink in Your Area>` on
+Horde, with the Discord server as the shared hub) and primarily endorses the **19 and
+29** brackets. The community's goal is supporting the growth of Classic Era twinking and
+reviving low-level PvP, mostly in **Warsong Gulch**, and the bot exists to make that
+easier: answer the gear/enchant/spec questions, track the recurring in-game events, and
+run a donated-gear stash for new twinks.
+
+The bot ships **bracket-19** content today; **29** is endorsed play with bot content on
+the [Roadmap](#roadmap) (the content model is bracket-namespaced, so 29 is additive).
+
+> **Community context lives in [`COMMUNITY.md`](COMMUNITY.md)** — the single source of
+> truth for guild identity, factions, brackets, the standing comms voice guide, and
+> reusable message boilerplate. Read it before writing any community-facing copy.
+
+---
+
 ## Project status
 
 > **Shipping.** The bot runs in production under **pm2**. The timer engine, the content store +
