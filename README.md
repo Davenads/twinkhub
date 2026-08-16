@@ -34,14 +34,17 @@ The Community Stash has its own public panel plus a manager console.
 TwinkHub is built for and run by **Twinks in Your Area**, a **WoW Classic Era** twink
 community on the **NA Whitemane** connected-realm cluster that plays on **both Alliance
 and Horde** (in-game `<Twinks in your Area>` on Alliance, `<Twink in Your Area>` on
-Horde, with the Discord server as the shared hub) and primarily endorses the **19 and
-29** brackets. The community's goal is supporting the growth of Classic Era twinking and
-reviving low-level PvP, mostly in **Warsong Gulch**, and the bot exists to make that
-easier: answer the gear/enchant/spec questions, track the recurring in-game events, and
-run a donated-gear stash for new twinks.
+Horde, with the Discord server as the shared hub). Its **fundamental focus is the 19
+bracket**, with a **recent and growing 29** push. The community's goal is supporting the
+growth of Classic Era twinking and reviving low-level PvP, mostly in **Warsong Gulch**,
+and the bot exists to make that easier: answer the gear/enchant/spec questions, track the
+recurring in-game events, and run a donated-gear stash for new twinks.
 
-The bot ships **bracket-19** content today; **29** is endorsed play with bot content on
-the [Roadmap](#roadmap) (the content model is bracket-namespaced, so 29 is additive).
+The bot ships **bracket-19** content **only**, and there are **no plans yet** to extend
+its commands or panels to 29. The 29 endorsement is recent and lives on the community
+side (a coordinated WSG queue-pop push tentatively targeting **Sept 1, 2026**), separate
+from the bot's scope. The content model is bracket-namespaced, so adding 29 later stays
+additive. See [`COMMUNITY.md`](COMMUNITY.md).
 
 > **Community context lives in [`COMMUNITY.md`](COMMUNITY.md)** — the single source of
 > truth for guild identity, factions, brackets, the standing comms voice guide, and
@@ -501,7 +504,7 @@ added as a third pillar beyond the original plan.
 | **P3** | `/gear` `/consumable` `/quest` `/guide` `/optimize` + `/reloadcontent`; `/talents` `/spellcoef` | ✅ shipped |
 | **P4** | Interactive panels: component router, shared service layer, panel catalogue, `/panels` | ✅ shipped |
 | **+** | **Community Stash** — Postgres-backed giveaway system, panels, Top Donors ledger | ✅ shipped |
-| **P5** | Bracket expansion: add `29/` then `49/`; `/brackets` toggle | planned |
+| **P5** | Bracket expansion: add `29/` then `49/`; `/brackets` toggle | future (no date — 19 stays the bot's focus for now) |
 | **P6** | Cutover: point production alerts at TwinkHub; retire the legacy Python timer bots | planned |
 
 Full detail: `plans/07-roadmap.md`.

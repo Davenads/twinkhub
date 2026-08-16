@@ -6,8 +6,9 @@
   message stays consistent and accurate. CLAUDE.md points here; README links here.
 
   Volatile facts to re-verify before publishing: the Discord invite code (rotates)
-  and any leadership roster change. The 29 bot-content timeline is intentionally open
-  (endorsed play, no committed data/content/29/ date).
+  and any leadership roster change. 19 is the fundamental core bracket; 29 is a recent,
+  growing community endorsement. The Sept 1, 2026 target is a community queue-pop event,
+  NOT a bot-content date, and no 29 bot content is planned yet.
 -->
 
 # Community context — Twinks in Your Area
@@ -44,7 +45,7 @@ Founders and leads (use for attribution / sign-offs where appropriate):
 - **Ibe** — Founder / CFO.
 - **SweatyBetty** — Co-founder / CTO / software dev (builds TwinkHub).
 - **Lemonchello** — Co-founder / Head of HR.
-- **Lit** — 29s lead (point person for 29-bracket play).
+- **Lit** — 29s lead (point person for the 29-bracket push).
 
 Managers (no additional title):
 
@@ -54,26 +55,28 @@ Managers (no additional title):
 
 ## Mission
 
-Support the growth of Classic Era twinking and revive **Classic Era low-level PvP**.
-The focus is **Warsong Gulch (WSG)** for the 19 bracket and, alongside it, the 29
-bracket, keeping those brackets active, well-geared, and fun on both factions. The bot
+Support the growth of Classic Era twinking and revive **Classic Era low-level PvP** in
+**Warsong Gulch (WSG)**. The community's **fundamental focus is the 19 bracket** (the
+long-standing core); **29 is a recent, growing addition** (see Brackets). The bot
 exists to lower the barrier to entry: answer the "what should I use" questions, track
 the recurring in-game events, and run a donated-gear stash so new twinks can get
 kitted out.
 
 ## Brackets
 
-The community primarily endorses **two brackets: 19 and 29** (Lit leads 29s).
+The community's **fundamental focus is the 19 bracket**. **29 is a recent endorsement**
+(interest jumped over the last few weeks and is expected to keep growing) and Lit leads
+it, but it does not displace the 19 core.
 
 | Bracket | Community focus | Bot support today |
 |---|---|---|
-| **19** (10-19 WSG) | Primary. The flagship twink bracket. | **Shipped** — full content store under `data/content/19/`. |
-| **29** (20-29, WSG + Arathi Basin) | Endorsed alongside 19. | **Not in the bot yet** — no `data/content/29/`. The content model is bracket-namespaced, so it is purely additive when it happens. **No committed timeline yet.** |
+| **19** (10-19 WSG) | **Fundamental focus.** The long-standing flagship bracket. | **Shipped** — full content store under `data/content/19/`. |
+| **29** (20-29, WSG + Arathi Basin) | **Recent, growing push.** The community is organizing a coordinated effort to get as many players as possible queuing 29 WSG for a **Queue pop**, tentatively **Sept 1, 2026** — the first one in a long time on Classic Era. | **Not in the bot, and not planned yet.** No `data/content/29/`; TwinkHub stays **19-only for now**. The content model is bracket-namespaced, so adding 29 later is purely additive. |
 
-When writing community copy: it is accurate to say the community plays and endorses
-both 19 and 29. It is NOT yet accurate to say the bot answers 29 gear/enchant/spec
-questions. Frame 29 bot content as "coming, no date set" until `data/content/29/`
-ships.
+When writing community copy: **19 is the core.** Describe 29 as a recent, growing
+community push, not as bot functionality. The **Sept 1, 2026** target is a **community
+play event** (a coordinated 29 WSG queue pop), NOT a bot-content date — TwinkHub has no
+29 commands or panels and none are planned yet. Keep those two things separate.
 
 ## What the bot does for the community
 
@@ -116,7 +119,8 @@ delve, tapestry, testament to, navigate the landscape, "whether you're X or Y",
 **Faction and bracket accuracy**
 - Never assume a single faction. If gear/quests differ by faction, say so or cover
   both. Remember the two guild names differ by side.
-- Keep the 19 (shipped) vs 29 (endorsed, bot content pending) distinction correct.
+- Keep 19 as the core. Present 29 as a recent, growing push, never as shipped bot
+  functionality, and never conflate the Sept 1, 2026 play event with a bot date.
 
 **Attribution**
 - Default to community voice (unattributed "we"). When a sign-off helps, use the
@@ -131,18 +135,24 @@ These already follow the voice rules. Re-verify the Discord invite before publis
 
 **One-line blurb**
 > TwinkHub is the Discord bot for Twinks in Your Area, the NA Classic Era WSG twink
-> community running the 19 and 29 brackets on both factions.
+> community focused on the 19 bracket, on both factions.
 
 **Short "who we are" paragraph**
 > We are Twinks in Your Area, a Classic Era twink community on both factions on the
 > Whitemane realm cluster, here to help grow twinking and keep low-level PvP alive.
-> Our home brackets are 19 and 29, and most of the action is in Warsong Gulch.
-> TwinkHub is our bot: it answers the gear, enchant, and spec questions, tracks the
-> in-game event timers, and runs a donated gear stash so new twinks can get set up
-> fast.
+> Our core bracket is 19, with a recent and growing 29 push, and most of the action is
+> in Warsong Gulch. TwinkHub is our bot: it answers the gear, enchant, and spec
+> questions, tracks the in-game event timers, and runs a donated gear stash so new
+> twinks can get set up fast.
 
 **Bracket line**
-> Home brackets: 19 (10-19 WSG) and 29 (20-29 WSG and Arathi Basin).
+> Core bracket: 19 (10-19 WSG). Growing: 29 (20-29 WSG and Arathi Basin).
+
+**29 queue-pop event (tentative)**
+> We are organizing a coordinated 29 push: get as many players as possible on their
+> level 29s and queue WSG together for a Queue pop, tentatively Sept 1, 2026. It would
+> be the first 29 pop in a long time on Classic Era. Interest has jumped over the last
+> few weeks and we expect it to keep growing.
 
 **Faction guild line**
 > Find us in-game as `<Twinks in your Area>` on Alliance and `<Twink in Your Area>`
@@ -154,5 +164,7 @@ These already follow the voice rules. Re-verify the Discord invite before publis
 
 - **Discord invite** rotates; refresh it here and re-verify before any published use.
 - **Leadership roster** above will drift; update it when roles change.
-- **29 bot content** has no committed date. When `data/content/29/` ships, move 29
-  from "endorsed" to "shipped" in the Brackets table and the README.
+- **29 stays out of the bot for now** (19-only, no planned commands or panels). The
+  **Sept 1, 2026** date is a community play event, not a bot-content date; revisit bot
+  29 content only if the guild decides to expand. When `data/content/29/` ships, move
+  29 to "shipped" in the Brackets table and the README.
