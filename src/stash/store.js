@@ -569,10 +569,12 @@ export async function removeItem(guildId, itemId, managerId) {
 // One-time consolidation: fold each dupe row into the survivor. Re-points the
 // dupes' OPEN (pending/approved) requests onto the survivor (their sent/denied/
 // cancelled history stays on the dupe row, preserving provenance), sums
-// quantity+remaining onto the survivor, COALESCE-backfills the survivor's null
-// wowhead_id/slot from a dupe, then marks each dupe 'withdrawn' DIRECTLY — not
-// via removeItem — so the moved requests are NOT cancelled and no cancellation
-// DMs fire (the requester still wants the same item; the row swap is invisible).
+// quantity+remaining onto the survivor, marks each dupe 'withdrawn' DIRECTLY —
+// not via removeItem — so the moved requests are NOT cancelled and no
+// cancellation DMs fire (the requester still wants the same item; the row swap
+// is invisible), THEN COALESCE-backfills the survivor's null wowhead_id/slot
+// from a dupe. Withdraw-before-backfill order matters: it keeps the partial-
+// unique index (one active row per guild+wowhead_id) satisfied mid-txn.
 // One txn, FOR UPDATE on all rows (ids sorted to keep the lock order stable).
 // Returns { survivor, movedRequests, mergedQuantity, mergedRemaining, dupeIds }.
 export async function consolidateItems(guildId, survivorId, dupeIds) {
@@ -613,6 +615,16 @@ export async function consolidateItems(guildId, survivorId, dupeIds) {
     const addRem = dupes.reduce((s, id) => s + byId.get(id).remaining, 0);
     const fillId = dupes.map((id) => byId.get(id).wowhead_id).find((v) => v != null) ?? null;
     const fillSlot = dupes.map((id) => byId.get(id).slot).find((v) => v != null) ?? null;
+
+    // Withdraw the dupes FIRST so they drop out of the partial-unique index's
+    // predicate (status leaves available/requested/given). Only then can the
+    // survivor inherit a dupe's wowhead_id below without transiently colliding
+    // with a still-active dupe on stash_items_guild_wowhead_active_idx (23505).
+    await client.query(
+      `update stash_items set status = 'withdrawn', remaining = 0 where id = any($1::text[])`,
+      [dupes]
+    );
+
     await client.query(
       `update stash_items
          set quantity = quantity + $2,
@@ -621,11 +633,6 @@ export async function consolidateItems(guildId, survivorId, dupeIds) {
              slot = coalesce(slot, $5)
        where id = $1`,
       [survivorId, addQty, addRem, fillId, fillSlot]
-    );
-
-    await client.query(
-      `update stash_items set status = 'withdrawn', remaining = 0 where id = any($1::text[])`,
-      [dupes]
     );
 
     await recomputeItemStatus(client, survivorId);
