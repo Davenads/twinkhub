@@ -364,7 +364,7 @@
       "effect": "+8 Spell Damage and Healing (applies to head or legs).",
       "reqLevel": null,
       "noLevelReq": true,
-      "notes": "Dire Maul libram (Anniversary); the spellpower head/leg pick for glass-cannon fire/frost mages and damage warlocks. A level-50+ applies it, then hands the piece over through the trade window's will-not-be-traded slot so a 19 can equip it.",
+      "notes": "Dire Maul libram; the spellpower head/leg pick for glass-cannon fire/frost mages and damage warlocks. A level-50+ applies it, then hands the piece over through the trade window's will-not-be-traded slot so a 19 can equip it.",
       "classes": ["mage", "warlock", "priest", "shaman", "druid", "paladin"]
     },
     {
