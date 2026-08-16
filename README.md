@@ -351,20 +351,21 @@ Full detail: `plans/04-commands.md`.
 
 ## Timers module
 
-A consolidated port of the four event-timer bots into one subsystem. All schedules are
-timezone-aware and DST-safe.
+A consolidated subsystem covering the four event timers. All schedules are timezone-aware,
+DST-safe, and target **WoW Classic Era** — not the Anniversary progression realms the source
+`wow-timers` bots serve, so the Era cadence differs for BG, AGM, and DMF.
 
-| Event | Schedule | Advance ping | Occurrence | Delivery |
+| Event | Schedule (Classic Era) | Advance ping | Occurrence | Delivery |
 |---|---|---|---|---|
-| **BG Weekend** | Thu 2am → Tue 2am; rotates **AV → EOTS → WSG → AB** | none | **pings** on go-live | occurrence-ping |
-| **Arena Grand Master (AGM)** | every 3h from midnight, 5-min window | **10-min** | silent post | advance-ping + silent |
-| **Darkmoon Faire (DMF)** | first full week each month, Mon 00:01 | none | **pings** on open | occurrence-ping |
-| **STV Fishing** | Sundays 2–4pm | **30-min** | silent post | advance-ping + silent |
+| **BG Weekend** | Thu 2am → Tue 2am MT; rotates **AV → WSG → AB** (no EOTS — that's TBC) | none | **pings** on go-live | occurrence-ping |
+| **Arena Grand Master (AGM)** | every 3h at **01:00, 04:00, … 22:00 MT**, 5-min window | **10-min** | silent post | advance-ping + silent |
+| **Darkmoon Faire (DMF)** | construction first Friday; **opens the following Sunday** for 7 days; zone alternates **Elwynn / Mulgore** | none | **pings** on open | occurrence-ping |
+| **STV Fishing** | Sundays 2–4pm MT | **30-min** | silent post | advance-ping + silent |
 
 Key design points:
 
 - **Pure, `now`-injectable `getState(now)` functions** per event (unit-testable). BG rotation
-  anchors on a confirmed AV week.
+  anchors on a confirmed **AB** week (Jul 28 2026).
 - **Edge detection + advance-warning latches** — fire the occurrence only on the false→true
   transition; fire the advance ping once and re-arm only after the window clearly passes.
   Persisted so a restart mid-window doesn't double-ping.

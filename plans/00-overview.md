@@ -20,9 +20,11 @@ Two capability pillars:
    commands answering "what gear / enchant / consumable / quest / spec should I use,"
    plus curated guides and optimization help.
 2. **Event timers** — a consolidated, improved re-implementation of the recurring
-   in-game event logic currently split across the four `wow-timers` Python bots
-   (BG Weekend, Arena Grand Master, Darkmoon Faire, STV Fishing), folded into this one
-   bot. See `02-timers-module.md`.
+   in-game event logic split across the four `wow-timers` Python bots (BG Weekend, Arena
+   Grand Master, Darkmoon Faire, STV Fishing), folded into this one bot. Those bots serve the
+   **Anniversary** realms, so their schedules were **corrected for Classic Era** here (BG's
+   3-BG AV→WSG→AB rotation, AGM's +1h spawn phase, DMF's Sunday open + 2-zone rotation). See
+   `02-timers-module.md`.
 
 Both pillars are reachable two ways: **slash commands** (the primary surface, with
 autocomplete and parametric queries) and — for the common enduser reads — **interactive

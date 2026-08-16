@@ -4,29 +4,42 @@ Goal: reproduce the **event logic** of the four Python bots (`bot_bg`, `bot_agm`
 `bot_dmf`, `bot_stv`) as **one subsystem inside TwinkHub**, improving where consolidation
 allows and **dropping the machinery that only makes sense when each event is its own bot**.
 
-Source of truth for current behavior: `wow-timers/python-bots/shared.py` and the per-bot
-files. This doc records exactly what to carry over and what to change.
+> **Target realm: WoW Classic Era — NOT the Anniversary progression realms.** The
+> `wow-timers` bots serve Anniversary/TBC-era servers, so their schedules were the *starting
+> point*, not gospel: wherever Era's event cadence differs, TwinkHub follows **Era**. Three
+> corrections are already baked in (all verified against the NovaWorldBuffs Classic addon):
+> **BG** rotates only **AV → WSG → AB** (Eye of the Storm is a TBC BG, never in Era); **AGM**
+> spawns on the **odd hours** (01:00, 04:00 … 22:00 MT), one hour later than the naive port;
+> **DMF** opens the **Sunday** after first-Friday construction and rotates only **two zones**
+> (Elwynn Forest / Mulgore), never the 3-zone Anniversary/TBC table. STV (Sun 2–4pm) is
+> identical on both realms.
+
+Source of truth for current behavior: the shipped `src/timers/events/*.js` (Era-corrected).
+The original port reference is `wow-timers/python-bots/shared.py`, but where the two disagree,
+**Era wins**. This doc records what to carry over and what to change.
 
 ---
 
 ## The four events (behavior to preserve)
 
-All schedules are **Mountain Time** (`America/Denver`), DST-safe.
+All schedules are **Mountain Time** (`America/Denver`), DST-safe, and target **Classic Era**.
 
-| Event | Schedule | Advance ping | Occurrence | Delivery style |
+| Event | Schedule (Classic Era) | Advance ping | Occurrence | Delivery style |
 |---|---|---|---|---|
-| **BG Weekend** | Thu 2am → Tue 2am; rotates **AV → EOTS → WSG → AB** | none | **pings** on go-live | occurrence-ping |
-| **Arena Grand Master (AGM)** | every 3h from midnight, 5-min window | **10-min** ping | silent post | advance-ping + silent |
-| **Darkmoon Faire (DMF)** | first full week each month, Mon 00:01 | none | **pings** on open | occurrence-ping |
-| **STV Fishing** | Sundays 2–4pm | **30-min** ping | silent post | advance-ping + silent |
+| **BG Weekend** | Thu 2am → Tue 2am MT; rotates **AV → WSG → AB** (3 BGs, no EOTS) | none | **pings** on go-live | occurrence-ping |
+| **Arena Grand Master (AGM)** | every 3h at **01:00, 04:00, … 22:00 MT**, 5-min window | **10-min** ping | silent post | advance-ping + silent |
+| **Darkmoon Faire (DMF)** | construction first Friday; **opens the following Sunday ~02:00 MT** for 7 days; zone alternates **Elwynn Forest / Mulgore** | none | **pings** on open | occurrence-ping |
+| **STV Fishing** | Sundays 2–4pm MT | **30-min** ping | silent post | advance-ping + silent |
 
 **Two style pairs — keep them in lockstep unless told otherwise:**
 - **AGM + STV:** the role is pinged only by the *advance* warning; the actual occurrence
   post is silent (`broadcast`).
 - **BG + DMF:** no advance warning; the role is pinged on the occurrence itself (`ping`).
 
-**BG rotation anchor:** `_BG_ANCHOR = 2026-03-24 08:00 UTC` (a confirmed AV week). Port this
-constant exactly; rotation index derives from weeks elapsed since the anchor.
+**BG rotation anchor:** `BG_ANCHOR = 2026-07-28 08:00 UTC` (Tue) — a confirmed **AB** week
+(`ANCHOR_INDEX = 2`), whose weekend fell on Aug 1–2 2026. The 3-BG rotation index derives from
+whole weeks elapsed since the anchor. (The old `2026-03-24` AV-week anchor belonged to the
+4-BG Anniversary rotation and no longer applies on Era.)
 
 ## State computation (port these pure functions)
 
@@ -98,8 +111,9 @@ consolidated bot has **one** avatar, **one** nickname, **one** presence — so:
 
 ## What we KEEP / improve
 
-- All four `getState` schedule computations (BG anchor, AGM 3h windows, DMF first-full-week,
-  STV Sunday window) — verbatim logic, re-expressed in JS/luxon.
+- All four `getState` schedule computations (BG anchor + 3-BG rotation, AGM 3h/+1h-phase
+  windows, DMF first-Friday→Sunday open + 2-zone rotation, STV Sunday window) — re-expressed
+  in JS/luxon and **corrected for Classic Era**, not a verbatim copy of the Anniversary port.
 - The three delivery modes and their per-event assignment (table above).
 - Dev-role gating for test commands.
 - Per-guild config, `dmEnabled` default-on, preserved across re-setup.
