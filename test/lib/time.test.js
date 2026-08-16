@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DateTime } from 'luxon';
-import { MT_ZONE, mod, asDateTime, formatCountdown, risingEdge } from '../../src/lib/time.js';
+import { REALM_ZONE, mod, asDateTime, formatCountdown, risingEdge } from '../../src/lib/time.js';
 
-test('MT_ZONE is Mountain', () => {
-  assert.equal(MT_ZONE, 'America/Denver');
+test('REALM_ZONE is Pacific (Whitemane realm time)', () => {
+  assert.equal(REALM_ZONE, 'America/Los_Angeles');
 });
 
 test('mod is Euclidean (non-negative for positive m)', () => {

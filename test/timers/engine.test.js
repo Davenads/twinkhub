@@ -32,9 +32,9 @@ test('latchStore round-trips through a real file and seeds on missing', async ()
 });
 
 test('engine walks a real AGM window: exactly one warning + one occurrence', async () => {
-  // 2026-07-28 (Tue, MDT = UTC-6). AGM spawns 01:00/04:00/…/13:00 MT; use the
-  // 13:00 MT spawn = 19:00 UTC. Warning window 12:50-13:00 MT; occurrence window
-  // 13:00-13:05 MT. Walk one tick/min from 18:45 UTC (12:45 MT) to 19:10 UTC.
+  // 2026-07-28 (Tue, PDT = UTC-7). AGM spawns 01:00/04:00/…/13:00 PT; use the
+  // 13:00 PT spawn = 20:00 UTC. Warning window 12:50-13:00 PT; occurrence window
+  // 13:00-13:05 PT. Walk one tick/min from 19:45 UTC (12:45 PT) to 20:10 UTC.
   const store = memStore();
   const dispatched = [];
   const dispatch = async (fire) => {
@@ -43,12 +43,12 @@ test('engine walks a real AGM window: exactly one warning + one occurrence', asy
 
   const fired = [];
   for (let m = 45; m <= 70; m++) {
-    const now = DateTime.utc(2026, 7, 28, 18, 0).plus({ minutes: m });
+    const now = DateTime.utc(2026, 7, 28, 19, 0).plus({ minutes: m });
     const { fires } = await runTimerEngine({ now, dispatch, store });
     for (const f of fires) fired.push({ min: m, ...f });
   }
 
-  // 12:50 MT (m=50) warning, 13:00 MT (m=60) occurrence — and nothing else.
+  // 12:50 PT (m=50) warning, 13:00 PT (m=60) occurrence — and nothing else.
   assert.deepEqual(fired, [
     { min: 50, event: 'agm', kind: 'warning' },
     { min: 60, event: 'agm', kind: 'occurrence' }
@@ -62,11 +62,11 @@ test('engine walks a real AGM window: exactly one warning + one occurrence', asy
 });
 
 test('engine cold-start mid-window seeds without firing (no retro-spam)', async () => {
-  // Start fresh at 13:02 MT (19:02 UTC), already inside the AGM occurrence.
+  // Start fresh at 13:02 PT (20:02 UTC), already inside the AGM occurrence.
   const store = memStore();
   const seen = [];
   await runTimerEngine({
-    now: DateTime.utc(2026, 7, 28, 19, 2),
+    now: DateTime.utc(2026, 7, 28, 20, 2),
     dispatch: async (f) => seen.push(f),
     store
   });

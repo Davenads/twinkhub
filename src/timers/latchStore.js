@@ -2,7 +2,7 @@ import { logger } from '../lib/logger.js';
 import { readKey, writeKey } from '../storage/kv.js';
 
 /**
- * Global (not per-guild) latch storage key. Timer schedules are Mountain-Time-wide
+ * Global (not per-guild) latch storage key. Timer schedules are realm-time-wide
  * and identical for every guild, so edge/warning latches are tracked once per event
  * process-wide and fanned out to guilds at delivery time. Resolves to
  * data/timers/latches.json under the file backend.

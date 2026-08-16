@@ -1,11 +1,13 @@
 import { DateTime } from 'luxon';
 
 /**
- * Mountain Time — the zone every in-game event schedule is computed in
- * (DST-safe via the IANA database). Ports the `MT = ZoneInfo("America/Denver")`
- * convention from wow-timers/shared.py exactly.
+ * Realm time — the zone every in-game event schedule is computed in (DST-safe
+ * via the IANA database). TwinkHub tracks the Whitemane connected-realm cluster
+ * (NA "PvP West"), whose in-game events fire on US Pacific time. The upstream
+ * wow-timers port used `America/Denver` (Mountain) for Anniversary realms; on
+ * Whitemane that fired every timer one hour early, so Era uses Pacific.
  */
-export const MT_ZONE = 'America/Denver';
+export const REALM_ZONE = 'America/Los_Angeles';
 
 /** Euclidean modulo — always returns a non-negative result for positive `m`,
  *  matching Python's `%` (JS `%` keeps the sign of the dividend). Needed so the

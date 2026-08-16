@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { MT_ZONE, asDateTime, mod } from '../../lib/time.js';
+import { REALM_ZONE, asDateTime, mod } from '../../lib/time.js';
 
 /**
  * Darkmoon Faire — Classic Era schedule (per NovaWorldBuffs `Modules/DMF.lua`).
@@ -8,10 +8,10 @@ import { MT_ZONE, asDateTime, mod } from '../../lib/time.js';
  * `dayOffset` days later at the regional weekly reset. US realms use
  * `dayOffset = 2` → it opens the following **Sunday** and runs 7 full days.
  * (The prior port opened the first Monday, which is wrong for Era.) Open time
- * is taken as 02:00 Mountain, within the real US reset band (~1–5am MT across
+ * is taken as 02:00 Pacific, within the real US reset band (~1–5am PT across
  * east/west realms and DST) and unambiguously on the Sunday.
  */
-const OPEN_HOUR_MT = 2; // ~US weekly reset, Mountain
+const OPEN_HOUR_REALM = 2; // ~US weekly reset, Pacific
 const US_DAY_OFFSET = 2; // first Friday -> Sunday
 
 // Classic Era 2-zone rotation. Anniversary/TBC uses a 3-zone (Outlands/Elwynn/
@@ -28,7 +28,7 @@ const DMF_ZONES = {
  * month when the faire opens after the 20th; our US open is always the first
  * Sunday (day <= 9) so that edge never fires, but we mirror it for fidelity.
  *
- * @param {import('luxon').DateTime} start faire open in Mountain time
+ * @param {import('luxon').DateTime} start faire open in Pacific time
  */
 function dmfLocation(start) {
   let month = start.month;
@@ -36,29 +36,31 @@ function dmfLocation(start) {
   return month % 2 === 0 ? DMF_ZONES.mulgore : DMF_ZONES.elwynn;
 }
 
-/** First-Friday + 2 days (Sunday) at 02:00 Mountain (MT DateTime). */
+/** First-Friday + 2 days (Sunday) at 02:00 Pacific (realm DateTime). */
 function dmfStart(year, month) {
   const firstOfMonth = DateTime.fromObject(
     { year, month, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 },
-    { zone: MT_ZONE }
+    { zone: REALM_ZONE }
   );
   // luxon weekday Mon=1..Sun=7, so Friday=5. days-until-Friday, 0 if the 1st is
   // already Friday.
   const daysUntilFri = mod(5 - firstOfMonth.weekday, 7);
   return firstOfMonth
     .plus({ days: daysUntilFri + US_DAY_OFFSET })
-    .set({ hour: OPEN_HOUR_MT, minute: 0, second: 0, millisecond: 0 });
+    .set({ hour: OPEN_HOUR_REALM, minute: 0, second: 0, millisecond: 0 });
 }
 
 export function getState(now) {
   now = asDateTime(now);
-  const mt = now.setZone(MT_ZONE);
+  const realm = now.setZone(REALM_ZONE);
   const nowMs = now.toMillis();
 
   // Check this month and next — one of these always resolves the state.
   const months = [
-    { year: mt.year, month: mt.month },
-    mt.month === 12 ? { year: mt.year + 1, month: 1 } : { year: mt.year, month: mt.month + 1 }
+    { year: realm.year, month: realm.month },
+    realm.month === 12
+      ? { year: realm.year + 1, month: 1 }
+      : { year: realm.year, month: realm.month + 1 }
   ];
 
   for (const { year, month } of months) {
@@ -89,8 +91,8 @@ export function getState(now) {
 
   // Defensive fallback (the loop above always returns at "next month"; this only
   // guards against an unforeseen edge). Month-after-next, wrapping the year.
-  const total = mt.month + 2;
-  const fbYear = total > 12 ? mt.year + 1 : mt.year;
+  const total = realm.month + 2;
+  const fbYear = total > 12 ? realm.year + 1 : realm.year;
   const fbMonth = total > 12 ? total - 12 : total;
   const fbStart = dmfStart(fbYear, fbMonth);
   const sMs = fbStart.toMillis();

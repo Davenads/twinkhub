@@ -24,7 +24,7 @@ test('DMF Era zone: odd open-month -> Elwynn Forest', () => {
 });
 
 test('DMF Era zone rides the active faire', () => {
-  // Inside the Aug 2026 window (opens Aug 9 02:00 MT).
+  // Inside the Aug 2026 window (opens Aug 9 02:00 PT).
   const s = getState(at('2026-08-11T12:00:00'));
   assert.equal(s.active, true);
   assert.deepEqual(s.meta.location, { name: 'Mulgore', short: 'Mulgore' });

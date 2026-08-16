@@ -12,7 +12,7 @@ const UNKNOWN_MESSAGE = 10008;
  * edit the stored message in place with the current event summary. If that
  * message was deleted, repost a fresh one and re-persist the new id (self-heal).
  *
- * The board content is identical MT-wide, so the payload is rendered once per
+ * The board content is identical realm-wide, so the payload is rendered once per
  * tick and reused across guilds. Each guild is isolated in try/catch so one
  * broken board can't stall the others. Mirrors dispatch.js's guild fan-out.
  *
