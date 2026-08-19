@@ -101,6 +101,9 @@ rules unless a specific request overrides them.
 - Informal WoW-community tone. Talk like a guildmate, not a marketing team.
 - Direct and concrete. Say what a thing does and how to use it.
 - Assume WoW literacy (WSG, BiS, twink, brackets, factions), no over-explaining.
+- Partly informal yet organized. Keep the prose casual, but structure the info so it
+  stays skimmable: bold section labels and short bullet lists for steps, specs, and
+  dates. This applies especially to announcements.
 
 **Hard formatting rules**
 - **No em-dashes or en-dashes** (`—` `–`). Use commas, parentheses, or a plain
